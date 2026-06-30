@@ -21,18 +21,20 @@ DONE (resume) — CORE packaged into fedcore/ (golden green at every commit; exp
 fedcore/ now contains the importable CORE: certificate/ scores selector data/ models/ config certify.
 Ten old flat paths are explicit-re-export shims. `make repro-check` PASS.
 
-BOUNDARY DECISION (user, resume): STOP at the CORE-packaged boundary. fedcore/ is the library core;
-the experiment / plotting / aggregate SCRIPTS stay in experiments/fedcore/ and import fedcore.* (via
-the shims). Rationale: aggregate/plotting/experiments are entangled through experiment-script helpers
-(exp_feasibility_lever._group_map/_repartition, make_handoff._views_from_parts, make_figures.
-_staircase_by_G) and the GPU runners are golden-uncovered (would need the GPU-parity gate). The
-library-core / scripts split is a clean, defensible boundary at lower risk.
-
-NOT DONE (deferred; documented for any future continuation):
-- M3 plotting relocation, M4 aggregator consolidation (debt a; the 4 aggregators + grouping helpers),
-  M5 experiments/runners relocation + GPU-PARITY GATE, M6 internal import migration / shim pruning.
-  Prerequisite for these: extract the shared grouping helpers (_group_map/_repartition/_views_from_
-  parts) into fedcore, and add import-smoke + GPU-parity coverage for the runners before moving them.
+RESUMING (user, 2nd resume): continue the FULL relocation. Order (golden green before each commit):
+- PRECOND: extract shared helpers (_group_map/_repartition/_views_from_parts) -> fedcore/grouping.py
+  (behaviour-preserving) so plotting+aggregators import one copy, not experiment scripts. NOTE only the
+  exp_feasibility_lever versions are shared via import; make_figures._repartition and aggregate_T8.
+  _repartition are LOCAL variants (different formatting/signature) — left untouched.
+- M3: move plotting/(make_*) -> fedcore/plotting + shims; figure OUTPUT paths stay experiments/fedcore/
+  figs/*.png (verify a regenerated figure writes the same path).
+- M4: consolidate aggregate*/T8/covtype/selftrain -> fedcore/aggregate.py; convergence threshold is a
+  PER-CALLER PARAM (self-training 0.30; covtype/T8 keep current per-cell values); add a SUB-GUARD golden
+  fixture row; keep seed-aware n_seeds, sample SD ddof=1, grid-aware keys. *_agg golden byte-identical.
+- M5: move experiments/ runners (exp_*, run_*, selftrain*) -> fedcore/experiments + shims.
+- GPU-PARITY GATE (after M5): per GPU entry point import/--help parity + one short real job to valid
+  canonical output; bit-parity only if deterministic ref exists. STOP-AND-ASK with results.
+- M6 (optional): migrate internal call sites to fedcore.*; prune shims to public-CLI/docker/CLAUDE.md.
 
 Helper-script note: scripts/docker_test.sh + docker_smoke.sh CREATED; git_start_day.sh /
 git_end_day.sh referenced by the prompt do NOT exist — git was handled manually (branch + per-commit
