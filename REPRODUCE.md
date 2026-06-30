@@ -6,6 +6,10 @@ The structure-only refactor guarantees the **deterministic** (CPU) paths and cer
 GPU **training** bit-reproducibility is a separate, documented procedure (see the last section).
 
 Environment: `requirements.lock`; container `pytorch/pytorch:2.3.0-cuda12.1-cudnn8-runtime`.
+Install: the core is the project-root package `fedcore/`; run `pip install -e .` (or `make install`)
+once so `import fedcore` resolves with no sys.path hacks. The `experiments/fedcore/*.py` paths below
+are backward-compat shims that re-export `fedcore.*`, so every command here is unchanged. The Docker
+wrappers add `pip install -e .` automatically; the golden gate self-bootstraps and needs no install.
 Conventions: `runs/`, `data/`, `third_party/` are gitignored (results + heavy inputs live there).
 
 ## 0. Regression gate (run before every commit)

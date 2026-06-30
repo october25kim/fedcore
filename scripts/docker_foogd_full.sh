@@ -11,7 +11,7 @@ DIRICHLET_ALPHA="${DIRICHLET_ALPHA:-5}"; ROUNDS="${ROUNDS:-30}"; SEED="${SEED:-0
 LAMBDA1="${LAMBDA1:-0.1}"; LAMBDA2="${LAMBDA2:-0.1}"
 SMOKE_FLAG=""; [ "${SMOKE:-0}" = "1" ] && SMOKE_FLAG="--smoke"
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-PIP_INSTALL="${PIP_INSTALL:-pip install -q --no-cache-dir scipy scikit-learn}"
+PIP_INSTALL="${PIP_INSTALL:-pip install -q --no-cache-dir scipy scikit-learn && pip install -q -e .}"
 echo "[docker_foogd_full] d=${DIRICHLET_ALPHA} seed=${SEED} lambda1=${LAMBDA1} lambda2=${LAMBDA2} smoke=${SMOKE:-0}"
 docker run --rm --gpus all \
   -v "${REPO_ROOT}:/workspace" -v "${REPO_ROOT}/third_party/FOOGD-main:/foogd" \

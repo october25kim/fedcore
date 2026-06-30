@@ -9,3 +9,7 @@ experiments/fedcore/smoke_results.csv
 __pycache__/
 .DS_Store
 ._*
+# editable-install / build artifacts (pip install -e . after the project-root hoist)
+*.egg-info/
+/build/
+/dist/

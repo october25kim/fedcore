@@ -36,7 +36,7 @@ echo "[docker_cifar] tag=${TAG} -> ${OUT}"
 
 # The pytorch/pytorch runtime image ships torch+torchvision but not scipy,
 # which the CP core requires. Install it (cached in pip's dir) before running.
-PIP_INSTALL="${PIP_INSTALL:-pip install -q --no-cache-dir scipy}"
+PIP_INSTALL="${PIP_INSTALL:-pip install -q --no-cache-dir scipy && pip install -q -e .}"
 
 docker run --rm --gpus all \
   -v "${REPO_ROOT}:/workspace" \

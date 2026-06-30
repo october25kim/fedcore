@@ -78,24 +78,31 @@ dirichlet_alpha, n_clients`. Headline metric: **CertifiedCoverage@alpha**.
 
 ## 4. Repo layout
 
+The importable core lives in the project-root package `fedcore/` (installed with
+`pip install -e .`). The old flat `experiments/fedcore/*.py` paths remain as thin
+backward-compat shims so every documented command keeps working unchanged.
+
 ```
 Fed-CORE_draft.md                       paper draft (Intro/RW/Method + theorems + proof sketches)
 FedOSR_meta_analysis_and_novelty_brief.md   meta-analysis + novelty verification
-experiments/fedcore/
-  certificates.py   CP primitives + stratified (Thm1) + pooled (Thm3) certificates
-  clients.py        synthetic heterogeneous client populations
-  exp_lemma_L.py    Lemma L numerical verification              (runs on CPU)
-  exp_pooling_fail.py  pooling-fail ablation (non-reducibility) (runs on CPU)
-  config.py scores.py selector.py certify.py   numpy certification core
-  fedosr_split.py   open-set split + Dirichlet non-IID + calibration folds
-  models.py fed_train.py   FedAvg + logit export (torch)
-  run_smoke.py      fake-logit end-to-end smoke (no torch)
-  run_cifar.py      real CIFAR-10/100 FedOSR run (torch+torchvision, GPU)
+pyproject.toml                          installable package metadata (`pip install -e .`)
+fedcore/                                IMPORTABLE CORE PACKAGE (hoisted to project root)
+  certificate/      cp + theorem1 (simplex/Thm1' box) + theorem3 (pooled) + feasibility (Thm2)
+  certify.py config.py scores.py selector.py   numpy certification core
+  data/             fedosr_split (open-set + Dirichlet non-IID + calibration folds), clients, noise
+  models/           models.py fed_train.py   FedAvg + logit export (torch)
+  aggregate/        consolidated aggregators (main/covtype/t8/selftrain)
+  experiments/      exp_lemma_L, exp_pooling_fail, run_smoke, run_cifar, run_* (entry points)
+  plotting/ atomic_io.py grouping.py
+experiments/fedcore/*.py                BACKWARD-COMPAT SHIMS -> fedcore.* (documented CLI paths)
 ```
 
 ## 5. How to run (Docker-first)
 
 ```bash
+# One-time: make `import fedcore` resolve with no sys.path hacks (editable install).
+pip install -e .
+
 # CPU sanity (no torch needed)
 python experiments/fedcore/exp_lemma_L.py
 python experiments/fedcore/exp_pooling_fail.py

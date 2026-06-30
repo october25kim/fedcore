@@ -19,7 +19,7 @@ SMOKE_FLAG=""
 [ "${SMOKE:-0}" = "1" ] && SMOKE_FLAG="--smoke"
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-PIP_INSTALL="${PIP_INSTALL:-pip install -q --no-cache-dir scipy scikit-learn}"
+PIP_INSTALL="${PIP_INSTALL:-pip install -q --no-cache-dir scipy scikit-learn && pip install -q -e .}"
 
 echo "[docker_foogd] image=${IMAGE} d=${DIRICHLET_ALPHA} seed=${SEED} smoke=${SMOKE:-0}"
 

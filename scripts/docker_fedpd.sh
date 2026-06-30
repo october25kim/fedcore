@@ -7,7 +7,7 @@ DATASET="${DATASET:-cifar10}"; N_KNOWN="${N_KNOWN:-6}"; N_CLIENTS="${N_CLIENTS:-
 DIRICHLET_ALPHA="${DIRICHLET_ALPHA:-5}"; ROUNDS="${ROUNDS:-15}"; PRETRAIN_ROUNDS="${PRETRAIN_ROUNDS:-50}"; SEED="${SEED:-0}"
 SMOKE_FLAG=""; [ "${SMOKE:-0}" = "1" ] && SMOKE_FLAG="--smoke"
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-PIP_INSTALL="${PIP_INSTALL:-pip install -q --no-cache-dir scipy scikit-learn thop}"
+PIP_INSTALL="${PIP_INSTALL:-pip install -q --no-cache-dir scipy scikit-learn thop && pip install -q -e .}"
 echo "[docker_fedpd] d=${DIRICHLET_ALPHA} seed=${SEED} rounds=${ROUNDS} smoke=${SMOKE:-0}"
 docker run --rm --gpus all \
   -v "${REPO_ROOT}:/workspace" -v "${REPO_ROOT}/third_party/FedPD:/fedpd" \

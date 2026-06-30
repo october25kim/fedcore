@@ -27,7 +27,7 @@ NORM="${NORM:-bn}"
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 TAG="selftrain_${DATASET}_${BACKBONE}_d${DIRICHLET_ALPHA}_${NOISE_TYPE}${NOISE_RATE}_seed${SEED}"
 OUT="${OUT:-runs/${TAG}.csv}"
-PIP_INSTALL="${PIP_INSTALL:-pip install -q --no-cache-dir scipy}"
+PIP_INSTALL="${PIP_INSTALL:-pip install -q --no-cache-dir scipy && pip install -q -e .}"
 
 echo "[docker_selftrain] image=${IMAGE} tag=${TAG} -> ${OUT}"
 

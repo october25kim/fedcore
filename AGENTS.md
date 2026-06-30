@@ -39,6 +39,9 @@ the main object.
 ## Commands
 
 ```bash
+# One-time: editable install so `import fedcore` resolves (core hoisted to project-root fedcore/;
+# experiments/fedcore/*.py remain backward-compat shims so these commands are unchanged).
+pip install -e .
 # CPU, no torch
 python experiments/fedcore/exp_lemma_L.py
 python experiments/fedcore/exp_pooling_fail.py

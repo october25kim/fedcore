@@ -24,6 +24,9 @@ import numpy as np
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
+# ROOT itself so `import fedcore` resolves to the hoisted project-root package without relying
+# on `pip install -e .`; experiments/fedcore so the flat backward-compat shims still import.
+sys.path.insert(0, ROOT)
 sys.path.insert(0, os.path.join(ROOT, "experiments", "fedcore"))
 GOLD = os.environ.get("GOLDEN_OUT", os.path.join(HERE, "golden"))
 os.makedirs(GOLD, exist_ok=True)

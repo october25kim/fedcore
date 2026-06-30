@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "fedcore"
+version = "0.1.0"
+description = "Fed-CORE: Federated Certified Open-Set Recognition (certification core)"
+requires-python = ">=3.10"
+# Runtime deps are pinned in requirements.lock (numpy/scipy/scikit-learn; torch in the
+# GPU container). This file exists so `pip install -e .` makes `import fedcore` resolve
+# with no sys.path hacks after the structure-only hoist to the project root.
+
+# The importable package is the hoisted project-root fedcore/ directory (with all
+# subpackages: certificate, data, models, experiments, aggregate, plotting).
+# experiments/ holds backward-compat shims and is NOT part of the installed package.
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["fedcore*"]
+namespaces = false

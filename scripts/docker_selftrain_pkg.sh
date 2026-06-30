@@ -9,7 +9,7 @@ DIRICHLET_ALPHA="${DIRICHLET_ALPHA:-5}"; FEDAVG_ROUNDS="${FEDAVG_ROUNDS:-40}"; F
 MODES="${MODES:-none naive certified oracle}"; ALPHAS="${ALPHAS:-0.20}"; BETAS="${BETAS:-0.25}"
 AUDIT="${AUDIT:-1}"; SEEDS="${SEEDS:-0}"; OUT="${OUT:-runs/selftrain_pkg.csv}"
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-PIP_INSTALL="${PIP_INSTALL:-pip install -q --no-cache-dir scipy scikit-learn}"
+PIP_INSTALL="${PIP_INSTALL:-pip install -q --no-cache-dir scipy scikit-learn && pip install -q -e .}"
 echo "[docker_selftrain_pkg] modes='${MODES}' alphas='${ALPHAS}' betas='${BETAS}' audit='${AUDIT}' seeds='${SEEDS}'"
 docker run --rm --gpus all -v "${REPO_ROOT}:/workspace" -w /workspace "${IMAGE}" \
   bash -c "${PIP_INSTALL} && python experiments/fedcore/run_selftrain_pkg.py \

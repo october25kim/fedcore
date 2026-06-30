@@ -221,9 +221,11 @@ def main() -> None:
     print(f"\ncertified: simplex {n_cert_sx}/12, box {n_cert_box}/12")
 
     # smoke_results.csv stays in the flat experiments/fedcore dir (gitignored), NOT inside the
-    # package: anchor two levels up from this module (fedcore/experiments/ -> experiments/fedcore/)
-    # so the structure-only move neither relocates the artifact nor changes the printed path.
-    out_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+    # package. After the project-root hoist this module is fedcore/fedcore/experiments/run_smoke.py,
+    # so anchor two levels up to the project root, then into experiments/fedcore -- preserving the
+    # exact pre-hoist output path so the structure-only move does not relocate the artifact.
+    project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+    out_dir = os.path.join(project_root, "experiments", "fedcore")
     out_path = os.path.join(out_dir, "smoke_results.csv")
     save_csv(rows, out_path)
     print(f"saved {out_path}")
