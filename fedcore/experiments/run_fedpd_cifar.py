@@ -36,7 +36,7 @@ from fedcore.config import FedOSRConfig
 from fedcore.data.fedosr_split import build_calibration, dirichlet_partition, open_set_split
 from fedcore.experiments.run_cifar import _LabelRemapSubset, _gather_fold, _load_cifar
 
-# Load FedPD's WideResNet by file path: our experiments/fedcore/models.py already owns
+# Load FedPD's WideResNet by file path: our fedcore/models/models.py already owns
 # the top-level name `models` (imported via run_cifar), so a normal import would clash.
 import importlib.util as _ilu  # noqa: E402
 _spec = _ilu.spec_from_file_location("fedpd_wrn", "/fedpd/models/wide_resnet_embedding.py")

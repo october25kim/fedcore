@@ -16,7 +16,7 @@ context columns (native-score AUROC, closed-set accuracy, accepted r_hat).
 Emits runs/T8_fedosr_bases.csv (per-seed canonical schema) and
 runs/T8_fedosr_bases_agg.csv (mean+/-std, n_pass/seeds). CPU, no torch.
 
-Run: python experiments/fedcore/aggregate_T8.py
+Run: python -m fedcore.aggregate.t8
 """
 
 from __future__ import annotations

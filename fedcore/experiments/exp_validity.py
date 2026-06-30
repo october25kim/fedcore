@@ -6,7 +6,7 @@ coverage ``P(Ubar >= max_j r_j) >= 1 - delta`` for EVERY heterogeneity level.
 We sweep the high-risk client's error rate (heterogeneity) and confirm coverage
 never drops below ``1 - delta``.
 
-Run: ``python experiments/fedcore/exp_validity.py``  (CPU, no torch)
+Run: ``python -m fedcore.experiments.exp_validity``  (CPU, no torch)
 """
 
 from __future__ import annotations

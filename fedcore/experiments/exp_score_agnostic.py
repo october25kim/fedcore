@@ -7,7 +7,7 @@ held-out TEST risk is <= alpha), while (ii) the achieved certified COVERAGE
 differs across scores. The certificate's guarantee is score-agnostic; the score
 only affects how much coverage you can certify.
 
-Run: ``python experiments/fedcore/exp_score_agnostic.py``  (CPU, no torch)
+Run: ``python -m fedcore.experiments.exp_score_agnostic``  (CPU, no torch)
 """
 
 from __future__ import annotations

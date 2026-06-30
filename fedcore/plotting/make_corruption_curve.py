@@ -5,7 +5,7 @@ for d in {5, 0.5} and noise in {symmetric, asymmetric} at rates {0,0.1,0.2,0.35,
 (rate 0 = the clean run), compute the worst-group G=2 CertifiedCoverage@{0.10,0.20}
 (fixed-MSP, box, cert_frac=0.5) and plot vs noise rate. Missing cells are skipped.
 
-Run: ``python experiments/fedcore/make_corruption_curve.py``  (CPU, no torch)
+Run: ``python -m fedcore.plotting.make_corruption_curve``  (CPU, no torch)
 """
 
 from __future__ import annotations

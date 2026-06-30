@@ -12,7 +12,7 @@ Start small: --modes certified --alphas 0.20 --betas 0.25 --audit 1 (the smalles
 slice), then expand. Logs the package metric schema per run.
 
 Run (inside the torch container):
-  python experiments/fedcore/run_selftrain_pkg.py --backbone resnet18 --norm gn \
+  python -m fedcore.experiments.run_selftrain_pkg --backbone resnet18 --norm gn \
       --modes none naive certified oracle --alphas 0.20 --betas 0.25 --audit 1 --seeds 0
 """
 

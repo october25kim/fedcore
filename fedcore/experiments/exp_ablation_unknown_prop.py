@@ -18,7 +18,7 @@ resample) Monte-Carlo draws:
 Expectation: coverage ~>= 0.90 at rho = 1.0 (matched) and FALLS below 0.90 as rho
 shrinks -- confirming that under-representing unknowns is anti-conservative.
 
-Run: python experiments/fedcore/exp_ablation_unknown_prop.py
+Run: python -m fedcore.experiments.exp_ablation_unknown_prop
 """
 
 from __future__ import annotations

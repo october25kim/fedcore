@@ -4,7 +4,7 @@ No retraining -- reads exported npz only. Reuses certify_best_gamma_grouped and 
 feasibility-lever repartition (no reimplementation drift). Missing seeds/files are
 printed as 'pending' and the aggregate is computed over what exists.
 
-Run: ``python experiments/fedcore/make_handoff.py [--cert_frac 0.5]``
+Run: ``python -m fedcore.experiments.make_handoff [--cert_frac 0.5]``
 """
 
 from __future__ import annotations

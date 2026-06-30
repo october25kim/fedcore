@@ -33,7 +33,7 @@ echo "[docker_selftrain] image=${IMAGE} tag=${TAG} -> ${OUT}"
 
 docker run --rm --gpus all \
   -v "${REPO_ROOT}:/workspace" -w /workspace "${IMAGE}" \
-  bash -c "${PIP_INSTALL} && python experiments/fedcore/run_selftrain_cifar.py \
+  bash -c "${PIP_INSTALL} && python -m fedcore.experiments.run_selftrain_cifar \
     --dataset '${DATASET}' --n_known '${N_KNOWN}' --n_clients '${N_CLIENTS}' \
     --dirichlet_alpha '${DIRICHLET_ALPHA}' --T '${T_ROUNDS}' \
     --fedavg_rounds '${FEDAVG_ROUNDS}' --local_epochs '${LOCAL_EPOCHS}' \

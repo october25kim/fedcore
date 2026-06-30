@@ -8,7 +8,7 @@ Two guards prevent contaminated aggregates:
   2. SEED-AWARE grouping: n_seeds = number of DISTINCT seeds (not row count), so a duplicate
      row for the same seed cannot inflate n_seeds.
 
-Excluded rows are printed so nothing is hidden. Run: python experiments/fedcore/aggregate_selftrain.py
+Excluded rows are printed so nothing is hidden. Run: python -m fedcore.aggregate.selftrain
 """
 
 from __future__ import annotations

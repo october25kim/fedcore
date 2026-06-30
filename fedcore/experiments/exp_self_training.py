@@ -13,7 +13,7 @@ Three trajectories are compared under the same corruption:
 Acceptance expectation: ``certified`` ends safe and >= its start; ``naive`` ends
 below its start (diverges); ``none`` stays flat.
 
-Run: ``python experiments/fedcore/exp_self_training.py``  (CPU, no torch)
+Run: ``python -m fedcore.experiments.exp_self_training``  (CPU, no torch)
 """
 
 from __future__ import annotations

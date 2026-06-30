@@ -12,7 +12,7 @@ risk ``R_sel`` crosses the target ``alpha``, and measure the *unsafe-deploy rate
 Acceptance gate (alpha=0.05, delta=0.1): at the boundary ``R_sel = alpha``,
 naive unsafe-deploy ~0.52, pooled ~0.08, Fed-CORE ~0.00.
 
-Run: ``python experiments/fedcore/exp_necessity.py``  (CPU, no torch)
+Run: ``python -m fedcore.experiments.exp_necessity``  (CPU, no torch)
 """
 
 from __future__ import annotations

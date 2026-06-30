@@ -7,9 +7,9 @@ GPU **training** bit-reproducibility is a separate, documented procedure (see th
 
 Environment: `requirements.lock`; container `pytorch/pytorch:2.3.0-cuda12.1-cudnn8-runtime`.
 Install: the core is the project-root package `fedcore/`; run `pip install -e .` (or `make install`)
-once so `import fedcore` resolves with no sys.path hacks. The `experiments/fedcore/*.py` paths below
-are backward-compat shims that re-export `fedcore.*`, so every command here is unchanged. The Docker
-wrappers add `pip install -e .` automatically; the golden gate self-bootstraps and needs no install.
+once so `import fedcore` resolves with no sys.path hacks. Every command below invokes the installed
+package directly via `python -m fedcore.*` (the old `experiments/fedcore/*.py` path shims were removed).
+The Docker wrappers add `pip install -e .` automatically; the golden gate self-bootstraps, no install.
 Conventions: `runs/`, `data/`, `third_party/` are gitignored (results + heavy inputs live there).
 
 ## 0. Regression gate (run before every commit)
@@ -21,14 +21,14 @@ Conventions: `runs/`, `data/`, `third_party/` are gitignored (results + heavy in
 ## 1. CPU-only (no GPU; deterministic; covered by golden)
 | artifact | command | golden |
 |---|---|---|
-| Lemma L | `python experiments/fedcore/exp_lemma_L.py` | `exp_lemma_L.stdout.txt` |
-| pooling-fail ablation | `python experiments/fedcore/exp_pooling_fail.py` | `exp_pooling_fail.stdout.txt` |
-| smoke (fake logits) | `python experiments/fedcore/run_smoke.py` | `run_smoke.stdout.txt` |
-| Table 1 / agg_main (CertCov, all frozen npz) | `python experiments/fedcore/aggregate.py` [`--alpha 0.20`] | `agg_main.golden.csv` |
-| covtype breadth | `python experiments/fedcore/aggregate_covtype.py` | `agg_covtype.golden.csv` |
-| T8 real FedOSR bases | `python experiments/fedcore/aggregate_T8.py` | `T8_fedosr_bases_agg.golden.csv` |
-| self-training agg (pkg/lowlabel) | `python experiments/fedcore/aggregate_selftrain.py --src runs/<csv>` | `*_agg.golden.csv` |
-| figures F6 (composite) / F7 / F8 / F9 / gain / diagram | `python experiments/fedcore/make_{composites,figures,F8,corruption_curve,selftrain_gain,problem_diagram}.py` | (figs/ outputs) |
+| Lemma L | `python -m fedcore.experiments.exp_lemma_L` | `exp_lemma_L.stdout.txt` |
+| pooling-fail ablation | `python -m fedcore.experiments.exp_pooling_fail` | `exp_pooling_fail.stdout.txt` |
+| smoke (fake logits) | `python -m fedcore.experiments.run_smoke` | `run_smoke.stdout.txt` |
+| Table 1 / agg_main (CertCov, all frozen npz) | `python -m fedcore.aggregate.main` [`--alpha 0.20`] | `agg_main.golden.csv` |
+| covtype breadth | `python -m fedcore.aggregate.covtype` | `agg_covtype.golden.csv` |
+| T8 real FedOSR bases | `python -m fedcore.aggregate.t8` | `T8_fedosr_bases_agg.golden.csv` |
+| self-training agg (pkg/lowlabel) | `python -m fedcore.aggregate.selftrain --src runs/<csv>` | `*_agg.golden.csv` |
+| figures F6 (composite) / F7 / F8 / F9 / gain / diagram | `make figs` (= `python -m fedcore.plotting.make_{composites,F8,corruption_curve,selftrain_gain,problem_diagram}`) | (figs/ outputs) |
 
 ## 2. GPU (Docker-first; TRAINING — not bit-reproducible, see caveat)
 | artifact | command |

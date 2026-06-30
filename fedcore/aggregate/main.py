@@ -6,7 +6,7 @@ filename, and aggregates mean +/- std across seeds into ``runs/agg_main.csv``. N
 single-seed numbers leak into the final tables: cells are reported as mean+/-std
 with the seed count.
 
-Run: ``python experiments/fedcore/aggregate.py``  (CPU, no torch)
+Run: ``python -m fedcore.aggregate.main``  (CPU, no torch)
 """
 
 from __future__ import annotations

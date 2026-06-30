@@ -13,7 +13,7 @@ selection-optimistic single-seed number that produced the old "covtype 0.43" hea
 All use cert_frac=0.5 on the pooled trusted points, box-Lambda best-gamma, margin=0.01.
 Emits runs/agg_covtype.csv with per-seed coverage so nothing is hidden.
 
-Run: python experiments/fedcore/aggregate_covtype.py
+Run: python -m fedcore.aggregate.covtype
 """
 
 from __future__ import annotations

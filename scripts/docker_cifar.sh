@@ -42,7 +42,7 @@ docker run --rm --gpus all \
   -v "${REPO_ROOT}:/workspace" \
   -w /workspace \
   "${IMAGE}" \
-  bash -c "${PIP_INSTALL} && python experiments/fedcore/run_cifar.py \
+  bash -c "${PIP_INSTALL} && python -m fedcore.experiments.run_cifar \
     --dataset '${DATASET}' \
     --n_known '${N_KNOWN}' \
     --n_clients '${N_CLIENTS}' \

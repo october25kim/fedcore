@@ -39,16 +39,16 @@ the main object.
 ## Commands
 
 ```bash
-# One-time: editable install so `import fedcore` resolves (core hoisted to project-root fedcore/;
-# experiments/fedcore/*.py remain backward-compat shims so these commands are unchanged).
+# One-time: editable install so `import fedcore` resolves (core is the project-root fedcore/
+# package; entry points run as `python -m fedcore.experiments.<name>`, no path shims).
 pip install -e .
 # CPU, no torch
-python experiments/fedcore/exp_lemma_L.py
-python experiments/fedcore/exp_pooling_fail.py
-python experiments/fedcore/run_smoke.py
+python -m fedcore.experiments.exp_lemma_L
+python -m fedcore.experiments.exp_pooling_fail
+python -m fedcore.experiments.run_smoke
 # GPU (4070), real CIFAR
 bash scripts/docker_cifar.sh
-python experiments/fedcore/run_cifar.py --dataset cifar10 --n_known 6 \
+python -m fedcore.experiments.run_cifar --dataset cifar10 --n_known 6 \
     --dirichlet_alpha 0.1 --rounds 50 --local_epochs 2 --alpha 0.10 --delta 0.10
 ```
 

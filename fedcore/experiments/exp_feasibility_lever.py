@@ -21,7 +21,7 @@ test-set points, so repartitioning them into disjoint prop/cert/test is valid; t
 group map is public and data-independent; G=1 (pooled) is valid only under matched
 mixture (near-IID d=5) and is flagged as the bonus, kept subordinate to G>=2.
 
-Run: ``python experiments/fedcore/exp_feasibility_lever.py [--npz runs/<tag>_logits.npz]``
+Run: ``python -m fedcore.experiments.exp_feasibility_lever [--npz runs/<tag>_logits.npz]``
 """
 
 from __future__ import annotations

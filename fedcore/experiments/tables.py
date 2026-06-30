@@ -8,7 +8,7 @@ T6 privacy taxonomy    (pooled/stratified/grouped: released stats, leakage, scop
 T7 self-train delta/T  (simultaneous unsafe rate with vs without delta/T)
 (T4 superiority is produced by exp_superiority.py -> runs/T4.csv.)
 
-Run: ``python experiments/fedcore/tables.py``  (CPU, no torch)
+Run: ``python -m fedcore.experiments.tables``  (CPU, no torch)
 """
 
 from __future__ import annotations

@@ -6,7 +6,7 @@ Generates (PDF + PNG, mathtext-safe, colorblind-safe) into figs/:
                        Theorem-2 floor and the alpha line -- THE signature figure.
   F7 hetero collapse : min cert_ucb vs Dirichlet d (SimpleCNN), with the alpha line.
 
-Run: ``python experiments/fedcore/make_figures.py``  (CPU, no torch)
+Run: ``python -m fedcore.plotting.make_figures``  (CPU, no torch)
 """
 
 from __future__ import annotations

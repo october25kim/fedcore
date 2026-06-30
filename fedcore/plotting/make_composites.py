@@ -19,7 +19,7 @@ TASK B -> figs/F7_hetero_collapse.png (+pdf): ONE figure, two panels:
 
 The standalone figs/ablation_calib_budget.png and figs/F9_corruption_curve.png are kept.
 
-Run: python experiments/fedcore/make_composites.py   (CPU, no torch)
+Run: python -m fedcore.plotting.make_composites   (CPU, no torch)
 """
 
 from __future__ import annotations

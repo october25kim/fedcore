@@ -12,7 +12,7 @@ REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 PIP_INSTALL="${PIP_INSTALL:-pip install -q --no-cache-dir scipy scikit-learn && pip install -q -e .}"
 echo "[docker_selftrain_pkg] modes='${MODES}' alphas='${ALPHAS}' betas='${BETAS}' audit='${AUDIT}' seeds='${SEEDS}'"
 docker run --rm --gpus all -v "${REPO_ROOT}:/workspace" -w /workspace "${IMAGE}" \
-  bash -c "${PIP_INSTALL} && python experiments/fedcore/run_selftrain_pkg.py \
+  bash -c "${PIP_INSTALL} && python -m fedcore.experiments.run_selftrain_pkg \
     --backbone '${BACKBONE}' --norm '${NORM}' --score '${SCORE}' --dirichlet_alpha '${DIRICHLET_ALPHA}' \
     --fedavg_rounds '${FEDAVG_ROUNDS}' --finetune_rounds '${FINETUNE_ROUNDS}' \
     --modes ${MODES} --alphas ${ALPHAS} --betas ${BETAS} --audit ${AUDIT} --seeds ${SEEDS} \

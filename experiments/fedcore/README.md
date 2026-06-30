@@ -31,29 +31,29 @@ Proof note: `../../reports/LEMMA_L_proof.md` (Lemma L reduction + transfer argum
 CPU (no torch):
 
 ```bash
-python run_smoke.py            # fake-logit end-to-end smoke (full schema)
-python exp_lemma_L.py          # Lemma L: binomial CP conservative for Poisson-binomial mean
-python exp_pooling_fail.py     # non-reducibility: pooled collapses, conditional valid
-python exp_necessity.py        # without a certificate you deploy unsafe configs
+python -m fedcore.experiments.run_smoke            # fake-logit end-to-end smoke (full schema)
+python -m fedcore.experiments.exp_lemma_L          # Lemma L: binomial CP conservative for Poisson-binomial mean
+python -m fedcore.experiments.exp_pooling_fail     # non-reducibility: pooled collapses, conditional valid
+python -m fedcore.experiments.exp_necessity        # without a certificate you deploy unsafe configs
 # STEP 4 (paper sec 5):
-python exp_validity.py         # (a) P(R_sel<=Ubar) >= 1-delta vs heterogeneity
-python exp_tightness.py        # (b) conditional vs mass-ratio vs box vs pooled
-python exp_frontier.py         # (c) CertifiedCoverage@alpha frontier over alpha
-python exp_hetero_collapse.py  # (d) certified-coverage collapse vs Theorem 2
-python exp_score_agnostic.py   # (e) 4 scores keep validity, change only coverage
-python exp_necessity_real.py   # (f) naive deploy unsafe-rate > delta (real npz or synthetic)
-python exp_superiority.py      # (g) price of federation + baseline harness
-python exp_utilization.py      # (h) automation rate = CertifiedCoverage@alpha
-python exp_self_training.py    # (i) Prop 4: certified safe+improves, naive diverges (synthetic dynamics)
-python run_selftrain_smoke.py  # (i) Prop 4: delta/T temporal split keeps simultaneous unsafe <= delta
-python exp_lemma_L.py          # also runs the EXACT adversarial certificate (see ../../reports/LEMMA_L_proof.md)
+python -m fedcore.experiments.exp_validity         # (a) P(R_sel<=Ubar) >= 1-delta vs heterogeneity
+python -m fedcore.experiments.exp_tightness        # (b) conditional vs mass-ratio vs box vs pooled
+python -m fedcore.experiments.exp_frontier         # (c) CertifiedCoverage@alpha frontier over alpha
+python -m fedcore.experiments.exp_hetero_collapse  # (d) certified-coverage collapse vs Theorem 2
+python -m fedcore.experiments.exp_score_agnostic   # (e) 4 scores keep validity, change only coverage
+python -m fedcore.experiments.exp_necessity_real   # (f) naive deploy unsafe-rate > delta (real npz or synthetic)
+python -m fedcore.experiments.exp_superiority      # (g) price of federation + baseline harness
+python -m fedcore.experiments.exp_utilization      # (h) automation rate = CertifiedCoverage@alpha
+python -m fedcore.experiments.exp_self_training    # (i) Prop 4: certified safe+improves, naive diverges (synthetic dynamics)
+python -m fedcore.experiments.run_selftrain_smoke  # (i) Prop 4: delta/T temporal split keeps simultaneous unsafe <= delta
+python -m fedcore.experiments.exp_lemma_L          # also runs the EXACT adversarial certificate (see ../../reports/LEMMA_L_proof.md)
 ```
 
 GPU self-training (torch):
 
 ```bash
 bash ../../scripts/docker_selftrain.sh         # certified vs naive vs none (smoke-size)
-python run_selftrain_cifar.py --dataset cifar10 --T 4 ...
+python -m fedcore.experiments.run_selftrain_cifar --dataset cifar10 --T 4 ...
 ```
 
 GPU (torch, Docker-first):
@@ -61,7 +61,7 @@ GPU (torch, Docker-first):
 ```bash
 bash ../../scripts/docker_cifar.sh            # one rung (env-driven)
 bash ../../scripts/run_ladder.sh              # full ladder -> runs/<tag>.csv
-python run_cifar.py --dataset cifar10 ...     # direct (inside a torch container)
+python -m fedcore.experiments.run_cifar --dataset cifar10 ...     # direct (inside a torch container)
 ```
 
 ## Acceptance gate (CPU, validated)
@@ -218,7 +218,7 @@ T1 (worst-group G=2 CertifiedCoverage, cifar10, 5 clients, mean+/-std, n_pass/se
 | covtype (tabular, breadth) | 0 | seed-variable, NOT stable (see below) |
 
 The cifar10 alpha=0.20 row is now a SAVED 5-seed artifact (`runs/agg_alpha20.csv`,
-`python aggregate.py --alpha 0.20`): **d=5 G2 = 0.392+/-0.097 (5/5)**, **d=0.5 G2 =
+`python -m fedcore.experiments.aggregate --alpha 0.20`): **d=5 G2 = 0.392+/-0.097 (5/5)**, **d=0.5 G2 =
 0.353+/-0.130 (5/5)**; both 0/5 false certificates (all cert_ucb <= 0.20 AND all
 empirical test_risk <= 0.20). This replaces the earlier single-config T4 ~0.29.
 
@@ -226,7 +226,7 @@ empirical test_risk <= 0.20). This replaces the earlier single-config T4 ~0.29.
 "0.433 @ alpha=0.20" was `make_handoff.py::covtype_frontier` = best-of-4-scores x
 best-of-G in {1,2,3} (incl. pooled G=1) on a SINGLE seed. Under the matched CIFAR
 protocol (fixed single score, fixed worst-group G=2), 5-seed covtype is
-(`runs/agg_covtype.csv`, `python aggregate_covtype.py`): fixed-MSP/G2 = **0/5** at
+(`runs/agg_covtype.csv`, `python -m fedcore.experiments.aggregate_covtype`): fixed-MSP/G2 = **0/5** at
 alpha in {0.20,0.25,0.30}; best honest single score (neg_entropy)/G2 = 0.07+/-0.14
 (1/5) @0.20, 0.20+/-0.25 (3/5) @0.30; old selection protocol = 0.10+/-0.17 (2/5)
 @0.20 -- all positives concentrated in seed 0 (std > mean). Cause: the federated

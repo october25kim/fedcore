@@ -14,7 +14,7 @@ PIP_INSTALL="${PIP_INSTALL:-pip install -q --no-cache-dir scipy scikit-learn tho
 echo "[docker_selftrain_fedpd] alpha=${ALPHA} audit='${AUDIT}'(div=${AUDIT_DIV}) lf=${LABELED_FRAC} seed=${SEED} modes='${MODES}' smoke=${SMOKE:-0}"
 docker run --rm --gpus all -v "${REPO_ROOT}:/workspace" -v "${REPO_ROOT}/third_party/FedPD:/fedpd" \
   -w /workspace "${IMAGE}" \
-  bash -c "${PIP_INSTALL} && python experiments/fedcore/run_selftrain_fedpd.py \
+  bash -c "${PIP_INSTALL} && python -m fedcore.experiments.run_selftrain_fedpd \
     --dirichlet_alpha '${DIRICHLET_ALPHA}' --alpha '${ALPHA}' --audit ${AUDIT} --audit_div '${AUDIT_DIV}' --seed '${SEED}' \
     --labeled_frac '${LABELED_FRAC}' --prop_frac '${PROP_FRAC}' --test_frac '${TEST_FRAC}' \
     --pretrain_rounds '${PRETRAIN_ROUNDS}' --proser_rounds '${PROSER_ROUNDS}' --finetune_rounds '${FINETUNE_ROUNDS}' \

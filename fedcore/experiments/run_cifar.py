@@ -7,7 +7,7 @@ certify_grid for ``Lambda in {simplex, box}``).
 
 Example::
 
-    python experiments/fedcore/run_cifar.py --dataset cifar10 --n_known 6 \
+    python -m fedcore.experiments.run_cifar --dataset cifar10 --n_known 6 \
         --n_clients 5 --dirichlet_alpha 0.1 --rounds 50 --local_epochs 2 \
         --alpha 0.10 --delta 0.10 --noise_type symmetric --noise_rate 0.35
 """

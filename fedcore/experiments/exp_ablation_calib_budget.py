@@ -17,7 +17,7 @@ VALIDITY: model fixed; prop fold fixed and disjoint from cert/test; only the cer
 SIZE changes. The selector is a function of the proposal fold alone, so growing the
 certification budget never leaks. G=2 is the legitimate worst-group certificate.
 
-Run: python experiments/fedcore/exp_ablation_calib_budget.py
+Run: python -m fedcore.experiments.exp_ablation_calib_budget
 """
 
 from __future__ import annotations

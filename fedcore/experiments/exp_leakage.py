@@ -12,7 +12,7 @@ Protocol (over many synthetic trials, true accepted risk tuned near alpha):
            that SAME fold; deploy iff cert<=alpha.
   unsafe = deployed AND held-out TEST risk > alpha.  (TEST is always clean/unused.)
 
-Run: ``python experiments/fedcore/exp_leakage.py``  (CPU, no torch)
+Run: ``python -m fedcore.experiments.exp_leakage``  (CPU, no torch)
 """
 
 from __future__ import annotations

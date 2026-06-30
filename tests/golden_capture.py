@@ -25,17 +25,16 @@ import numpy as np
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
 # ROOT itself so `import fedcore` resolves to the hoisted project-root package without relying
-# on `pip install -e .`; experiments/fedcore so the flat backward-compat shims still import.
+# on `pip install -e .`.
 sys.path.insert(0, ROOT)
-sys.path.insert(0, os.path.join(ROOT, "experiments", "fedcore"))
 GOLD = os.environ.get("GOLDEN_OUT", os.path.join(HERE, "golden"))
 os.makedirs(GOLD, exist_ok=True)
 
-from certificates import (  # noqa: E402
+from fedcore.certificate import (  # noqa: E402
     conditional_risk_certificate, cp_lower, cp_upper, pooled_cp, stratified_certificate,
 )
-from scores import compute_score, scored_views  # noqa: E402
-from selector import choose_threshold, counts_per_client, open_set_error  # noqa: E402
+from fedcore.scores import compute_score, scored_views  # noqa: E402
+from fedcore.selector import choose_threshold, counts_per_client, open_set_error  # noqa: E402
 
 
 def _dump(name, obj):
@@ -101,7 +100,7 @@ def snap_scores_selector():
 # 3. split-index determinism (calibration folds from a FIXED seed)
 # --------------------------------------------------------------------------- #
 def snap_split_determinism():
-    from fedosr_split import build_calibration, dirichlet_partition, open_set_split
+    from fedcore.data.fedosr_split import build_calibration, dirichlet_partition, open_set_split
     rng = np.random.default_rng(0)
     labels = np.array(([c for c in range(10)] * 600))           # 6000 fixture labels
     known, unknown, remap = open_set_split(labels, 6, 0)
@@ -133,7 +132,7 @@ CANON = ["score_name", "gamma", "alpha", "delta", "Lambda", "dirichlet_alpha", "
 
 
 def snap_certify_frozen():
-    from certify import certify_best_gamma, certify_best_gamma_grouped, certify_for_score
+    from fedcore.certify import certify_best_gamma, certify_best_gamma_grouped, certify_for_score
     npzs = ["runs/cifar10_d5_resnet18_seed0_logits.npz", "runs/cifar100_d5_none0.0_seed0_logits.npz"]
     out = {}
     for rel in npzs:

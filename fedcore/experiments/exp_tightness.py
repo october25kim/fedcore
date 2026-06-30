@@ -12,7 +12,7 @@ Pooled is reported for reference but its validity collapses under shift
 (see ``exp_pooling_fail.py``). We also sweep heterogeneity to show conditional
 stays uniformly tighter than mass-ratio.
 
-Run: ``python experiments/fedcore/exp_tightness.py``  (CPU, no torch)
+Run: ``python -m fedcore.experiments.exp_tightness``  (CPU, no torch)
 """
 
 from __future__ import annotations

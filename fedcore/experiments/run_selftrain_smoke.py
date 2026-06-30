@@ -18,7 +18,7 @@ cp_upper(K, A; delta_round) -- this isolates the TEMPORAL union bound, which is
 Proposition 4's content; multi-client validity is covered by exp_pooling_fail /
 exp_validity.)
 
-Run: ``python experiments/fedcore/run_selftrain_smoke.py``  (CPU, no torch)
+Run: ``python -m fedcore.experiments.run_selftrain_smoke``  (CPU, no torch)
 """
 
 from __future__ import annotations

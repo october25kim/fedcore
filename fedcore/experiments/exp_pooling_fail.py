@@ -14,7 +14,7 @@ stays ~1.0 for EVERY mixture; box is valid for in-box mixtures and tighter than
 simplex. We also confirm the conditional simplex bound is TIGHTER (smaller
 median U) than the Appendix-C mass-ratio baseline.
 
-Run: ``python experiments/fedcore/exp_pooling_fail.py``  (CPU, no torch)
+Run: ``python -m fedcore.experiments.exp_pooling_fail``  (CPU, no torch)
 """
 
 from __future__ import annotations

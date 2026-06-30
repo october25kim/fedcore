@@ -16,7 +16,7 @@ echo "[docker_foogd_full] d=${DIRICHLET_ALPHA} seed=${SEED} lambda1=${LAMBDA1} l
 docker run --rm --gpus all \
   -v "${REPO_ROOT}:/workspace" -v "${REPO_ROOT}/third_party/FOOGD-main:/foogd" \
   -w /workspace "${IMAGE}" \
-  bash -c "${PIP_INSTALL} && python experiments/fedcore/run_foogd_full_cifar.py \
+  bash -c "${PIP_INSTALL} && python -m fedcore.experiments.run_foogd_full_cifar \
     --dataset '${DATASET}' --n_known '${N_KNOWN}' --n_clients '${N_CLIENTS}' \
     --dirichlet_alpha '${DIRICHLET_ALPHA}' --rounds '${ROUNDS}' --seed '${SEED}' \
     --lambda1 '${LAMBDA1}' --lambda2 '${LAMBDA2}' --data_root data ${SMOKE_FLAG} ${EXTRA_ARGS:-}"

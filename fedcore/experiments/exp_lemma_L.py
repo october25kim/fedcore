@@ -11,7 +11,7 @@ family of heterogeneity profiles, then report the empirical coverage of ``rbar``
 by ``cp_upper(K, A; delta)``. Acceptance gate: worst-case coverage >= 0.90
 (expect ~0.919); homogeneous near nominal; two-point profiles -> coverage ~1.0.
 
-Run: ``python experiments/fedcore/exp_lemma_L.py``  (CPU, no torch)
+Run: ``python -m fedcore.experiments.exp_lemma_L``  (CPU, no torch)
 """
 
 from __future__ import annotations

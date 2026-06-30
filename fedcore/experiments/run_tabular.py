@@ -8,7 +8,7 @@ linear model (per-client SGD logistic regression, FedAvg-averaged each round).
 Dataset: sklearn covtype (forest cover, 7 classes) if fetchable; else a synthetic
 multi-class tabular set (make_classification). Some classes are held out as unknown.
 
-Run: ``python experiments/fedcore/run_tabular.py [--dataset covtype|synthetic]``
+Run: ``python -m fedcore.experiments.run_tabular [--dataset covtype|synthetic]``
 """
 
 from __future__ import annotations

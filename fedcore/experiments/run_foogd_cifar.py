@@ -17,7 +17,7 @@ Output: runs/foogd_<dataset>_d<dirichlet>_seed<seed>.npz with, per fold, keys
 accept-score used downstream is ``-<fold>_sm`` (higher => more ID).
 
 Run (inside the torch container, see scripts/docker_foogd.sh):
-  python experiments/fedcore/run_foogd_cifar.py --dataset cifar10 --dirichlet_alpha 5 \
+  python -m fedcore.experiments.run_foogd_cifar --dataset cifar10 --dirichlet_alpha 5 \
       --seed 0 --rounds 50 --score_rounds 30
 """
 

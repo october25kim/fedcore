@@ -5,7 +5,7 @@ fraction of predictions can be AUTOMATED (accepted without human review)? That
 automation rate IS CertifiedCoverage@alpha. We report it per score together with
 the held-out TEST risk to confirm the guarantee is honored (test_risk <= alpha).
 
-Run: ``python experiments/fedcore/exp_utilization.py``  (CPU, no torch)
+Run: ``python -m fedcore.experiments.exp_utilization``  (CPU, no torch)
 """
 
 from __future__ import annotations

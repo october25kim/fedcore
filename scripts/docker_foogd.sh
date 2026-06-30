@@ -25,7 +25,7 @@ echo "[docker_foogd] image=${IMAGE} d=${DIRICHLET_ALPHA} seed=${SEED} smoke=${SM
 
 docker run --rm --gpus all \
   -v "${REPO_ROOT}:/workspace" -w /workspace "${IMAGE}" \
-  bash -c "${PIP_INSTALL} && python experiments/fedcore/run_foogd_cifar.py \
+  bash -c "${PIP_INSTALL} && python -m fedcore.experiments.run_foogd_cifar \
     --dataset '${DATASET}' --n_known '${N_KNOWN}' --n_clients '${N_CLIENTS}' \
     --dirichlet_alpha '${DIRICHLET_ALPHA}' --rounds '${ROUNDS}' \
     --score_rounds '${SCORE_ROUNDS}' --seed '${SEED}' --norm '${NORM}' \

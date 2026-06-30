@@ -10,7 +10,7 @@ non-IID skew / smaller dirichlet_alpha) and report the certified selective-risk
 feasibility and the achieved certified coverage, with the Theorem-2 threshold
 marked.
 
-Run: ``python experiments/fedcore/exp_hetero_collapse.py``  (CPU, no torch)
+Run: ``python -m fedcore.experiments.exp_hetero_collapse``  (CPU, no torch)
 """
 
 from __future__ import annotations

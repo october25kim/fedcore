@@ -15,7 +15,7 @@ Two parts:
    only formats the comparison and flags whether Fed-CORE is the only method with
    a finite-sample risk certificate.
 
-Run: ``python experiments/fedcore/exp_superiority.py``  (CPU, no torch)
+Run: ``python -m fedcore.experiments.exp_superiority``  (CPU, no torch)
 """
 
 from __future__ import annotations

@@ -6,7 +6,7 @@ best certified ``cert_coverage_lcb`` over score x gamma, for both simplex and
 box). The frontier is monotone non-decreasing in ``alpha``: a looser risk target
 certifies more coverage.
 
-Run: ``python experiments/fedcore/exp_frontier.py``  (CPU, no torch)
+Run: ``python -m fedcore.experiments.exp_frontier``  (CPU, no torch)
 """
 
 from __future__ import annotations

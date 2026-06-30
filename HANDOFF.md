@@ -12,11 +12,11 @@ folder is a synced copy, not a git repo). Have the agent read `CLAUDE.md` +
 
 ```bash
 # 0) ensure the repo has these files at root: CLAUDE.md AGENTS.md HANDOFF.md
-#    experiments/fedcore/  scripts/docker_cifar.sh
+#    fedcore/ (pip install -e .)  experiments/fedcore/  scripts/docker_cifar.sh
 # 1) CPU sanity (proves the certificate path; no torch needed)
-python experiments/fedcore/exp_lemma_L.py
-python experiments/fedcore/exp_pooling_fail.py
-python experiments/fedcore/run_smoke.py
+python -m fedcore.experiments.exp_lemma_L
+python -m fedcore.experiments.exp_pooling_fail
+python -m fedcore.experiments.run_smoke
 # 2) GPU smoke -> real run
 bash scripts/docker_cifar.sh         # cifar10, clean, seed 0 by default
 ```
@@ -104,14 +104,14 @@ self-flips. Example for step 3:
 |---|---|
 | `Fed-CORE_draft.md` | paper draft; theorems 1–3, proof sketches, §5 experiment plan |
 | `FedOSR_meta_analysis_and_novelty_brief.md` | landscape, gap, novelty verification, citations |
-| `experiments/fedcore/certificates.py` | Thm 1 stratified + Thm 3 pooled certificates |
-| `experiments/fedcore/exp_lemma_L.py` | Lemma L verification (CPU) |
-| `experiments/fedcore/exp_pooling_fail.py` | non-reducibility ablation (CPU) |
-| `experiments/fedcore/{config,scores,selector,certify,fedosr_split}.py` | numpy certification core |
-| `experiments/fedcore/{models,fed_train}.py` | FedAvg + logit export (torch) |
-| `experiments/fedcore/run_smoke.py` / `run_cifar.py` | fake-logit smoke / real CIFAR |
+| `fedcore/certificate/` | Thm 1 stratified + Thm 3 pooled certificates |
+| `fedcore/experiments/exp_lemma_L.py` | Lemma L verification (CPU) |
+| `fedcore/experiments/exp_pooling_fail.py` | non-reducibility ablation (CPU) |
+| `fedcore/{config,scores,selector,certify}.py`, `fedcore/data/fedosr_split.py` | numpy certification core |
+| `fedcore/models/{models,fed_train}.py` | FedAvg + logit export (torch) |
+| `fedcore/experiments/{run_smoke,run_cifar}.py` | fake-logit smoke / real CIFAR |
 | `experiments/fedcore/README.md` | what each experiment proves + results |
-| `scripts/docker_cifar.sh` | Docker wrapper for `run_cifar.py` |
+| `scripts/docker_cifar.sh` | Docker wrapper for `run_cifar` (`python -m fedcore.experiments.run_cifar`) |
 
 ---
 

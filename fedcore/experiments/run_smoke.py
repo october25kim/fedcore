@@ -11,7 +11,7 @@ the full metric schema is emitted; the box-Lambda certificate certifies a few
 ``(score, gamma=0.5)`` combos with ``cert_risk_ucb`` just under ``alpha`` while
 the (worst-case) simplex certificate certifies none.
 
-Run: ``python experiments/fedcore/run_smoke.py``
+Run: ``python -m fedcore.experiments.run_smoke``
 """
 
 from __future__ import annotations

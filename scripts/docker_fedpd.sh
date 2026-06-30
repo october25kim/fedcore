@@ -12,7 +12,7 @@ echo "[docker_fedpd] d=${DIRICHLET_ALPHA} seed=${SEED} rounds=${ROUNDS} smoke=${
 docker run --rm --gpus all \
   -v "${REPO_ROOT}:/workspace" -v "${REPO_ROOT}/third_party/FedPD:/fedpd" \
   -w /workspace "${IMAGE}" \
-  bash -c "${PIP_INSTALL} && python experiments/fedcore/run_fedpd_cifar.py \
+  bash -c "${PIP_INSTALL} && python -m fedcore.experiments.run_fedpd_cifar \
     --dataset '${DATASET}' --n_known '${N_KNOWN}' --n_clients '${N_CLIENTS}' \
     --dirichlet_alpha '${DIRICHLET_ALPHA}' --rounds '${ROUNDS}' \
     --pretrain_rounds '${PRETRAIN_ROUNDS}' --seed '${SEED}' \

@@ -12,7 +12,7 @@ The certificate guarantees the Fed-CORE unsafe-deploy rate <= delta; the naive
 rule should exceed delta. If no npz is supplied, a synthetic scored population
 (the smoke generator) is used so the script runs on CPU.
 
-Run: ``python experiments/fedcore/exp_necessity_real.py [--npz runs/<tag>_logits.npz]``
+Run: ``python -m fedcore.experiments.exp_necessity_real [--npz runs/<tag>_logits.npz]``
 """
 
 from __future__ import annotations

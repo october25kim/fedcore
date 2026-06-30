@@ -13,7 +13,7 @@ Three panels, ALL from a real run_selftrain_cifar CSV (no synthetic curves):
 The figure reads as a certified ADMISSION GATE, not an accuracy experiment. Accuracy is
 deliberately omitted (it is not the guaranteed quantity).
 
-Run: ``python experiments/fedcore/make_F8.py [--csv runs/<selftrain>.csv]``
+Run: ``python -m fedcore.plotting.make_F8 [--csv runs/<selftrain>.csv]``
 """
 
 from __future__ import annotations

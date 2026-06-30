@@ -9,7 +9,7 @@ flags once it runs end-to-end.
 
 Example::
 
-    python experiments/fedcore/run_selftrain_cifar.py --dataset cifar10 \
+    python -m fedcore.experiments.run_selftrain_cifar --dataset cifar10 \
         --T 4 --fedavg_rounds 5 --local_epochs 1 --dirichlet_alpha 0.1 \
         --noise_type symmetric --noise_rate 0.35
 """
