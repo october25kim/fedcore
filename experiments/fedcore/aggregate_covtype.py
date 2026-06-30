@@ -26,6 +26,7 @@ import numpy as np
 
 from certify import certify_best_gamma_grouped
 from make_handoff import _group_map, _repartition, _views_from_parts
+from atomic_io import atomic_write_csv
 
 SEEDS = (0, 1, 2, 3, 4)
 ALPHAS = (0.20, 0.25, 0.30)
@@ -83,10 +84,7 @@ def main() -> None:
         print()
 
     out = base + "runs/agg_covtype.csv"
-    with open(out, "w", newline="") as fh:
-        w = csv.DictWriter(fh, fieldnames=list(rows[0].keys()))
-        w.writeheader()
-        w.writerows(rows)
+    atomic_write_csv(out, list(rows[0].keys()), rows)
     print(f"saved {out}")
 
 

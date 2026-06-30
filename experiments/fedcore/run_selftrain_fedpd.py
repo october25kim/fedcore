@@ -32,6 +32,7 @@ from certificates import conditional_risk_certificate, cp_lower
 from run_selftrain_pkg import setup_data
 from scores import scored_views
 from selftrain import MappedSubset, _gather, best_gamma_selector
+from atomic_io import append_csv_locked
 from selector import Selector, counts_per_client, empirical_risk_coverage, open_set_error
 from certify import certify_best_gamma_grouped
 
@@ -236,13 +237,7 @@ def main():
               f"adm={rec['admitted_count']} known_acc={rec['known_acc']:.4f} bal={rec['balanced_acc']:.4f} "
               f"test_risk={rec['test_risk']:.3f} certcov={rec['certcov_alpha']:.3f} halt={rec['halted']}")
 
-    write_header = not os.path.exists(args.out)
-    with open(args.out, "a", newline="") as f:
-        w = csv.DictWriter(f, fieldnames=FIELDS, extrasaction="ignore")
-        if write_header:
-            w.writeheader()
-        for r in rows:
-            w.writerow(r)
+    append_csv_locked(args.out, FIELDS, rows, extrasaction="ignore")
     print(f"saved/appended {len(rows)} rows -> {args.out}")
     none = next((r["known_acc"] for r in rows if r["mode"] == "none"), None)
     for r in rows:

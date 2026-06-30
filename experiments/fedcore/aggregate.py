@@ -21,6 +21,7 @@ from collections import defaultdict
 import numpy as np
 
 from certify import certify_best_gamma, certify_best_gamma_grouped
+from atomic_io import atomic_write_csv
 from exp_feasibility_lever import _group_map, _repartition
 from scores import scored_views
 
@@ -124,28 +125,27 @@ def main() -> None:
     print(f"alpha={alpha:.2f}  delta={DELTA:.2f}  cert_frac={CERT_FRAC}  score=msp(fixed)  margin={MARGIN}")
     print(f"{'cell':>42} {'seeds':>5} {'CertCov@a(G=J)':>18} {'CertCov@a(G=2)':>18} {'G2pass':>8}")
     print("-" * 96)
-    with open(out, "w", newline="") as fh:
-        w = csv.DictWriter(fh, fieldnames=fields)
-        w.writeheader()
-        for key, lst in sorted(cells.items()):
-            ds, bb, dd, noise = key
-            covJ = np.array([x["covJ"] for x in lst]); cov2 = np.array([x["cov2"] for x in lst])
-            ucbJ = [x["ucbJ"] for x in lst]; ucb2 = [x["ucb2"] for x in lst]
-            np2 = int(sum(c > 0 for c in cov2))
-            row = {"dataset": ds, "backbone": bb, "d": dd, "noise": noise, "n_seeds": len(lst),
-                   "CertCovGJ_mean": round(covJ.mean(), 4), "CertCovGJ_std": round(covJ.std(), 4),
-                   "certucbGJ_median": round(_median_certified_ucb(ucbJ, covJ), 4),
-                   "CertCovG2_mean": round(cov2.mean(), 4), "CertCovG2_std": round(cov2.std(), 4),
-                   "certucbG2_median": round(_median_certified_ucb(ucb2, cov2), 4),
-                   "n_pass_G2": np2, "test_risk_mean": round(np.mean([x["risk"] for x in lst]), 4)}
-            w.writerow(row)
-            label = f"{ds}/{bb}/d{dd}/{noise}"
-            print(f"{label:>42} {len(lst):>5} "
-                  f"{covJ.mean():>9.3f}+/-{covJ.std():<6.3f} "
-                  f"{cov2.mean():>9.3f}+/-{cov2.std():<6.3f} {np2:>4}/{len(lst)}")
-            per_seed = ", ".join(f"s{x['seed']}={x['cov2']:.3f}"
-                                 for x in sorted(lst, key=lambda x: x["seed"]))
-            print(f"{'':>42} per-seed G=2: {per_seed}")
+    agg_rows = []
+    for key, lst in sorted(cells.items()):
+        ds, bb, dd, noise = key
+        covJ = np.array([x["covJ"] for x in lst]); cov2 = np.array([x["cov2"] for x in lst])
+        ucbJ = [x["ucbJ"] for x in lst]; ucb2 = [x["ucb2"] for x in lst]
+        np2 = int(sum(c > 0 for c in cov2))
+        row = {"dataset": ds, "backbone": bb, "d": dd, "noise": noise, "n_seeds": len(lst),
+               "CertCovGJ_mean": round(covJ.mean(), 4), "CertCovGJ_std": round(covJ.std(), 4),
+               "certucbGJ_median": round(_median_certified_ucb(ucbJ, covJ), 4),
+               "CertCovG2_mean": round(cov2.mean(), 4), "CertCovG2_std": round(cov2.std(), 4),
+               "certucbG2_median": round(_median_certified_ucb(ucb2, cov2), 4),
+               "n_pass_G2": np2, "test_risk_mean": round(np.mean([x["risk"] for x in lst]), 4)}
+        agg_rows.append(row)
+        label = f"{ds}/{bb}/d{dd}/{noise}"
+        print(f"{label:>42} {len(lst):>5} "
+              f"{covJ.mean():>9.3f}+/-{covJ.std():<6.3f} "
+              f"{cov2.mean():>9.3f}+/-{cov2.std():<6.3f} {np2:>4}/{len(lst)}")
+        per_seed = ", ".join(f"s{x['seed']}={x['cov2']:.3f}"
+                             for x in sorted(lst, key=lambda x: x["seed"]))
+        print(f"{'':>42} per-seed G=2: {per_seed}")
+    atomic_write_csv(out, fields, agg_rows)
     print(f"\nsaved {out}")
 
 

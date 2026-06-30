@@ -30,6 +30,7 @@ import numpy as np
 
 from certify import certify_best_gamma, certify_best_gamma_grouped
 from scores import msp as msp_score
+from atomic_io import atomic_write_csv
 
 GAMMAS = (0.5, 0.7, 1.0)
 DELTA, MARGIN, CERT_FRAC = 0.10, 0.01, 0.5
@@ -160,9 +161,7 @@ def main() -> None:
             })
 
     out = base_dir + "runs/T8_fedosr_bases.csv"
-    with open(out, "w", newline="") as fh:
-        w = csv.DictWriter(fh, fieldnames=list(rows[0].keys()))
-        w.writeheader(); w.writerows(rows)
+    atomic_write_csv(out, list(rows[0].keys()), rows)
     print(f"saved {out}  ({len(rows)} rows)")
 
     # ---- aggregate over seeds ----
@@ -176,25 +175,25 @@ def main() -> None:
     print(f"\n{'base_model':>14} {'kind':>14} {'d':>4} {'alpha':>5} "
           f"{'CertCov@a(G2)':>16} {'pass':>5} {'AUROC':>6} {'r_hat':>6}")
     print("-" * 92)
-    with open(aout, "w", newline="") as fh:
-        w = csv.DictWriter(fh, fieldnames=fields); w.writeheader()
-        for key, lst in sorted(agg.items()):
-            bm, kind, d, alpha = key
-            cov = np.array([x["cert_coverage_lcb"] if x["certified"] else 0.0 for x in lst])
-            ucb_cert = [x["cert_risk_ucb"] for x in lst if x["certified"]]
-            rhat = np.mean([x["test_risk"] for x in lst])
-            row = {"base_model": bm, "base_model_kind": kind, "dirichlet_alpha": d, "alpha": alpha,
-                   "n_seeds": len(lst), "CertCovG2_mean": round(cov.mean(), 4),
-                   "CertCovG2_std": round(cov.std(), 4), "n_pass_G2": int((cov > 0).sum()),
-                   "certucbG2_median": round(float(np.median(ucb_cert)), 4) if ucb_cert else float("inf"),
-                   "test_risk_mean": round(float(rhat), 4),
-                   "auroc_mean": round(float(np.nanmean([x["auroc"] for x in lst])), 4),
-                   "closed_acc_mean": round(float(np.nanmean([x["closed_acc"] for x in lst])), 4),
-                   "rhat_mean": round(float(rhat), 4)}
-            w.writerow(row)
-            print(f"{bm:>14} {kind:>14} {d:>4} {alpha:>5.2f} "
-                  f"{cov.mean():>9.3f}+/-{cov.std():<5.3f} {int((cov>0).sum())}/{len(lst)} "
-                  f"{row['auroc_mean']:>6.3f} {rhat:>6.3f}")
+    agg_rows = []
+    for key, lst in sorted(agg.items()):
+        bm, kind, d, alpha = key
+        cov = np.array([x["cert_coverage_lcb"] if x["certified"] else 0.0 for x in lst])
+        ucb_cert = [x["cert_risk_ucb"] for x in lst if x["certified"]]
+        rhat = np.mean([x["test_risk"] for x in lst])
+        row = {"base_model": bm, "base_model_kind": kind, "dirichlet_alpha": d, "alpha": alpha,
+               "n_seeds": len(lst), "CertCovG2_mean": round(cov.mean(), 4),
+               "CertCovG2_std": round(cov.std(), 4), "n_pass_G2": int((cov > 0).sum()),
+               "certucbG2_median": round(float(np.median(ucb_cert)), 4) if ucb_cert else float("inf"),
+               "test_risk_mean": round(float(rhat), 4),
+               "auroc_mean": round(float(np.nanmean([x["auroc"] for x in lst])), 4),
+               "closed_acc_mean": round(float(np.nanmean([x["closed_acc"] for x in lst])), 4),
+               "rhat_mean": round(float(rhat), 4)}
+        agg_rows.append(row)
+        print(f"{bm:>14} {kind:>14} {d:>4} {alpha:>5.2f} "
+              f"{cov.mean():>9.3f}+/-{cov.std():<5.3f} {int((cov>0).sum())}/{len(lst)} "
+              f"{row['auroc_mean']:>6.3f} {rhat:>6.3f}")
+    atomic_write_csv(aout, fields, agg_rows)
     print(f"\nsaved {aout}")
 
 

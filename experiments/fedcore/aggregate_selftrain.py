@@ -22,6 +22,7 @@ import numpy as np
 
 # Convergence guard threshold lives in config.py (single source of truth); value unchanged (0.30).
 from config import SELFTRAIN_MIN_ACC as MIN_ACC  # noqa: E402
+from atomic_io import atomic_write_csv  # noqa: E402
 BASE = "" if glob.glob("runs/*.csv") else "../../"
 
 
@@ -74,8 +75,7 @@ def main():
             "admitted_mean": int(np.mean([float(x["admitted_count"]) for x in l])),
             "certcov_mean": round(float(np.mean([float(x.get("certcov_alpha", 0) or 0) for x in l])), 4),
         })
-    with open(OUT, "w", newline="") as f:
-        w = csv.DictWriter(f, fieldnames=fields); w.writeheader(); w.writerows(out)
+    atomic_write_csv(OUT, fields, out)
     print(f"\nsaved {OUT} ({len(out)} cells)")
 
     # gain summary vs none, per (base, seed-count)

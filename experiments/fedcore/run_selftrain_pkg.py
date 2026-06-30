@@ -32,6 +32,7 @@ from noise import make_label_noise
 from run_cifar import _load_cifar
 from selftrain import partition_selftrain
 from selftrain_oneshot import run_oneshot, train_base
+from atomic_io import append_csv_locked
 
 FIELDS = ["base_model", "alpha", "mode", "audit_mult", "beta", "seed",
           "realized_contam", "admitted_count", "halted", "halt_freq",
@@ -148,14 +149,7 @@ def main():
                               f"test_risk={rec['test_risk']:.3f} certcov={rec['certcov_alpha']:.3f} "
                               f"halt={rec.get('halted')}")
 
-    os.makedirs(os.path.dirname(os.path.abspath(args.out)), exist_ok=True)
-    write_header = not os.path.exists(args.out)
-    with open(args.out, "a", newline="") as f:
-        w = csv.DictWriter(f, fieldnames=FIELDS, extrasaction="ignore")
-        if write_header:
-            w.writeheader()
-        for r in rows:
-            w.writerow(r)
+    append_csv_locked(args.out, FIELDS, rows, extrasaction="ignore")
     print(f"\nsaved/appended {len(rows)} rows -> {args.out}")
     # headline: gain vs 'none'
     none_acc = {(r["seed"], r["alpha"]): r["known_acc"] for r in rows if r["mode"] == "none"}

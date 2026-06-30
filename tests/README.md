@@ -25,3 +25,9 @@ Static golden CSVs (diffed when the aggregators are consolidated into one `aggre
 
 After consolidating, re-run each aggregator and `diff` its output against the corresponding
 `*.golden.csv` (must be identical). Re-snapshot ONLY if a numeric change is intended (it is not here).
+
+## Note on agg_main.golden.csv
+Re-snapshotted to the CURRENT full `runs/*_logits.npz` set (the original commit-2 copy was
+from a smaller npz set, predating the resnet18gn-noise exports). The aggregate.py atomic-io
+refactor was verified behaviour-preserving by an OLD-vs-NEW byte diff on the SAME npz set
+(identical) — the row-count change is npz-set growth, NOT a refactor regression.
