@@ -1,4 +1,35 @@
-# REFACTOR_PLAN — structure-only repro refactor (Phase 0 output; awaiting approval)
+# REFACTOR_PLAN — structure-only repro refactor
+
+## STATUS (checkpoint after 5 commits; all golden-green, behaviour-preserving)
+DONE:
+- efd1760 baseline: fedcore package (was untracked) + Phase-0 golden suite (tests/golden + golden_capture/check.py)
+- ed8853b test: covtype/T8/main aggregate golden references
+- e6f3e5b refactor: centralize CANONICAL_SCHEMA + SELFTRAIN_MIN_ACC in config.py (debt c; values unchanged)
+- 0c6cb62 refactor: atomic_io.py atomic/locked CSV writes; all 5 aggregators + 2 runners routed (debt b)
+- 6f53516 docs: REPRODUCE.md + Makefile manifest + requirements.lock (Phase 3)
+Verified: `make repro-check` PASS (golden + covtype + T8 + selftrain bit-identical); aggregate.py
+OLD-vs-NEW byte-identical. Branch `refactor/structure-repro`; only fedcore/ paths committed (parent
+repo's unrelated deletions untouched); nothing pushed.
+
+REMAINING (deferred by decision — HIGH RISK, next session):
+- debt a: consolidate the 4 aggregators' shared helpers (guard / seed-aware grouping / sample-SD)
+  into a common module (self-training agg already centralized in aggregate_selftrain.py).
+- the `fedcore/` PACKAGE RELOCATION (commits 4-8 below): move certificate/scores/selector/data/
+  models/plotting/experiments into the package with backward-compat shims. RISK: touches every
+  flat import; the golden suite covers the deterministic certify/scores/aggregate paths + run_smoke
+  but NOT the GPU entry points (run_cifar/run_foogd/run_fedpd/exp_*), so a shim mistake could break
+  an uncovered CLI silently. Mitigation before doing it: add import-smoke coverage for every public
+  entry point (import each module in-container) so the gate catches shim breakage.
+
+Helper-script note: scripts/docker_test.sh + docker_smoke.sh CREATED; git_start_day.sh /
+git_end_day.sh referenced by the prompt do NOT exist — git was handled manually (branch + per-commit
+fedcore-only staging).
+
+---
+
+(original Phase-0 plan follows)
+
+# REFACTOR_PLAN — structure-only repro refactor (Phase 0 output)
 
 **Scope:** structure + reproducibility ONLY. Zero change to any number, metric value, schema
 name, threshold, RNG seed, or split logic. The golden regression suite (Phase 0, below) is the
