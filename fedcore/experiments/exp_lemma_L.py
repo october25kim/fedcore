@@ -104,7 +104,7 @@ def coverage_of_mean(
 # --------------------------------------------------------------------------- #
 # EXACT adversarial certificate (no Monte-Carlo error)
 # --------------------------------------------------------------------------- #
-# Reduction (see LEMMA_L_proof.md): the failure event {rbar > U+(S,A;delta)} equals
+# Reduction (see reports/LEMMA_L_proof.md): the failure event {rbar > U+(S,A;delta)} equals
 # {S <= k_delta} with k_delta = max{ s : F_Bin(A,rbar)(s) < delta }. Hence the
 # EXACT coverage is 1 - F_PB(k_delta), and Lemma L holds iff F_PB(k_delta) <= delta.
 # We compute F_PB exactly by DP and search adversarially for the smallest coverage

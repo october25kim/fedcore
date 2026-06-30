@@ -24,7 +24,7 @@ See `../../CLAUDE.md` and `../../AGENTS.md` for the theory and hard rules.
 | `selftrain.py` | **Proposition 4** audit-fold split + certified/naive torch loops |
 | `models.py`, `fed_train.py` | SimpleCNN + FedAvg + logit export (torch) |
 
-Proof note: `LEMMA_L_proof.md` (Lemma L reduction + transfer argument + exact certificate).
+Proof note: `../../reports/LEMMA_L_proof.md` (Lemma L reduction + transfer argument + exact certificate).
 
 ## Runnable experiments
 
@@ -46,7 +46,7 @@ python exp_superiority.py      # (g) price of federation + baseline harness
 python exp_utilization.py      # (h) automation rate = CertifiedCoverage@alpha
 python exp_self_training.py    # (i) Prop 4: certified safe+improves, naive diverges (synthetic dynamics)
 python run_selftrain_smoke.py  # (i) Prop 4: delta/T temporal split keeps simultaneous unsafe <= delta
-python exp_lemma_L.py          # also runs the EXACT adversarial certificate (see LEMMA_L_proof.md)
+python exp_lemma_L.py          # also runs the EXACT adversarial certificate (see ../../reports/LEMMA_L_proof.md)
 ```
 
 GPU self-training (torch):
@@ -177,7 +177,7 @@ standardization + jointly-evolving backbone; FOOGD's published strength is covar
 OOD) — there the representative standardized SM3D head is the better vehicle. **Takeaway:**
 full reproduction certifies when the method's training recipe is honoured (CertCov tracks
 native-score AUROC: FedPD 0.80 > MSP 0.73 > FOOGD-repr 0.69 > FOOGD-SAG 0.47); Fed-CORE
-validity held in every case (0/N false certs). No faked rows. See `REPORT_T8_fedosr_bases.md`.
+validity held in every case (0/N false certs). No faked rows. See `../../reports/REPORT_T8_fedosr_bases.md`.
 
 ## Backbone push (worst-group alpha=0.1 lever)
 
