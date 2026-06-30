@@ -1,9 +1,11 @@
-# Fed-CORE: never commit runs/ or data/
-runs/
-data/
+# Fed-CORE: never commit results/data. Directory patterns are ANCHORED to the repo root
+# (leading slash) so they do NOT also match same-named package dirs nested deeper, e.g. the
+# fedcore/data sub-package introduced by the structure-only refactor.
+/runs/
+/data/
+/third_party/
 experiments/fedcore/smoke_results.csv
 *.pyc
 __pycache__/
 .DS_Store
 ._*
-third_party/
