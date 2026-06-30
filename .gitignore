@@ -1,0 +1,9 @@
+# Fed-CORE: never commit runs/ or data/
+runs/
+data/
+experiments/fedcore/smoke_results.csv
+*.pyc
+__pycache__/
+.DS_Store
+._*
+third_party/
