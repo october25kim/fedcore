@@ -11,15 +11,25 @@ Verified: `make repro-check` PASS (golden + covtype + T8 + selftrain bit-identic
 OLD-vs-NEW byte-identical. Branch `refactor/structure-repro`; only fedcore/ paths committed (parent
 repo's unrelated deletions untouched); nothing pushed.
 
-REMAINING (deferred by decision — HIGH RISK, next session):
-- debt a: consolidate the 4 aggregators' shared helpers (guard / seed-aware grouping / sample-SD)
-  into a common module (self-training agg already centralized in aggregate_selftrain.py).
-- the `fedcore/` PACKAGE RELOCATION (commits 4-8 below): move certificate/scores/selector/data/
-  models/plotting/experiments into the package with backward-compat shims. RISK: touches every
-  flat import; the golden suite covers the deterministic certify/scores/aggregate paths + run_smoke
-  but NOT the GPU entry points (run_cifar/run_foogd/run_fedpd/exp_*), so a shim mistake could break
-  an uncovered CLI silently. Mitigation before doing it: add import-smoke coverage for every public
-  entry point (import each module in-container) so the gate catches shim breakage.
+REMAINING — package relocation, RESUMING now (incremental; golden green before each commit;
+backward-compat shims at old flat paths; fedcore/* never imports a shim; explicit re-exports/__all__):
+- M1: split certificates.py -> fedcore/certificate/{cp,theorem1(simplex+box/Thm1'),theorem3(pooled/
+  stratified),feasibility(Thm2)}; certificates.py shim. (certificate_math.json must match.)
+- M2: move scores/selector + data/(fedosr_split,clients,noise) + models/(models,fed_train, byte-
+  unchanged) with shims. (scores_selector.json + split_determinism.json match.)
+- M3: move plotting/(make_*); figure OUTPUT path stays experiments/fedcore/figs/*.png (verify).
+- M4: consolidate aggregators -> fedcore/aggregate.py; convergence threshold is a PER-CALLER PARAM
+  (self-training 0.30; covtype/T8 keep their current per-cell values — NOT unified). Add a SUB-GUARD
+  fixture row (known_acc below threshold) to pin the guard path. Old names become shims; all *_agg
+  golden CSVs byte-identical.
+- M5: move certify.py + experiments/ runners (exp_*, run_smoke, run_cifar, run_foogd*, run_fedpd*,
+  run_selftrain*, selftrain*) with shims; public CLIs keep working.
+- GPU-PARITY GATE (after M5, before final commit): per GPU entry point, import/--help parity + ONE
+  short real job runs to completion exporting valid canonical-schema output (bit-parity only if a
+  deterministic run reference exists; else "runs+valid+certify-within-tol", stated per entry point).
+  STOP-AND-ASK with parity results.
+- M6 (optional): migrate internal call sites to fedcore.*; reduce shims to only public-CLI/docker/
+  CLAUDE.md-referenced ones.
 
 Helper-script note: scripts/docker_test.sh + docker_smoke.sh CREATED; git_start_day.sh /
 git_end_day.sh referenced by the prompt do NOT exist — git was handled manually (branch + per-commit
