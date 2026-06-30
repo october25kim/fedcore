@@ -22,7 +22,7 @@ import numpy as np
 
 from certify import certify_best_gamma, certify_best_gamma_grouped
 from atomic_io import atomic_write_csv
-from exp_feasibility_lever import _group_map, _repartition
+from fedcore.grouping import _group_map, _repartition
 from scores import scored_views
 
 ALPHA, DELTA = 0.10, 0.10

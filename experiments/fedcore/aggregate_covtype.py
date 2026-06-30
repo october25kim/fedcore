@@ -25,7 +25,7 @@ import os
 import numpy as np
 
 from certify import certify_best_gamma_grouped
-from make_handoff import _group_map, _repartition, _views_from_parts
+from fedcore.grouping import _group_map, _repartition, _views_from_parts
 from atomic_io import atomic_write_csv
 
 SEEDS = (0, 1, 2, 3, 4)

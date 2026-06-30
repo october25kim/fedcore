@@ -34,32 +34,13 @@ from scipy.stats import norm
 from certify import certify_best_gamma_grouped
 from scores import scored_views
 
+from fedcore.grouping import _group_map, _repartition
+
 ALPHA = 0.10
 DELTA = 0.10
 GAMMAS = (0.2, 0.3, 0.5, 0.7, 1.0)
 SCORES = ("msp", "neg_entropy", "margin", "energy")
 DEFAULT_NPZ = "runs/cifar10_d5_none0.0_seed0_logits.npz"
-
-
-def _group_map(n_clients: int, G: int) -> np.ndarray:
-    """Public, data-independent client->group map (contiguous balanced blocks)."""
-    return np.array([c * G // n_clients for c in range(n_clients)], dtype=int)
-
-
-def _repartition(pool, cert_frac, test_frac, seed):
-    """Split the pooled trusted points into disjoint prop/cert/test folds."""
-    rng = np.random.default_rng(seed)
-    n = len(pool["y_open"])
-    perm = rng.permutation(n)
-    n_test = int(round(n * test_frac))
-    n_cert = int(round(n * cert_frac))
-    idx = {"test": perm[:n_test],
-           "cert": perm[n_test:n_test + n_cert],
-           "prop": perm[n_test + n_cert:]}
-    out = {}
-    for fold, ix in idx.items():
-        out[fold] = {k: pool[k][ix] for k in ("logits", "y_open", "client")}
-    return out
 
 
 def main() -> None:

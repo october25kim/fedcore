@@ -19,7 +19,7 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
 from certify import certify_best_gamma_grouped
-from exp_feasibility_lever import _group_map, _repartition
+from fedcore.grouping import _group_map, _repartition
 from scores import scored_views
 
 DELTA = 0.10

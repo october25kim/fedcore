@@ -20,7 +20,7 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
 from certify import certify_best_gamma, certify_best_gamma_grouped
-from exp_feasibility_lever import _group_map
+from fedcore.grouping import _group_map
 from scores import scored_views
 
 ALPHA, DELTA = 0.10, 0.10

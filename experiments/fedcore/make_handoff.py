@@ -17,19 +17,14 @@ import os
 import numpy as np
 
 from certify import certify_best_gamma_grouped
-from exp_feasibility_lever import _group_map, _repartition
-from scores import scored_views
+
+from fedcore.grouping import _group_map, _repartition, _views_from_parts
 
 ALPHA, DELTA = 0.10, 0.10
 GAMMAS = (0.2, 0.3, 0.5, 0.7, 1.0)
 MARGIN = 0.01
 SCORE = "msp"   # fixed (matches the feasibility staircase; avoids score selection)
 BASE = "" if glob.glob("runs/*.npz") else "../../"
-
-
-def _views_from_parts(parts, score):
-    return {fn: scored_views(parts[fn]["logits"], parts[fn]["y_open"],
-                             parts[fn]["client"], [score])[score] for fn in ("prop", "cert", "test")}
 
 
 def _gate_one(npz, cert_frac, G, score=SCORE):
