@@ -59,3 +59,19 @@ class FedOSRConfig:
             self.cert_frac / total,
             self.test_frac / total,
         )
+
+
+# --------------------------------------------------------------------------- #
+# Canonical metric schema + guard constants -- single source of truth.
+# (Values UNCHANGED from their previous in-module definitions; see CLAUDE.md section 3.)
+# --------------------------------------------------------------------------- #
+CANONICAL_SCHEMA = [
+    "score_name", "gamma", "alpha", "delta", "Lambda", "dirichlet_alpha",
+    "n_clients", "certified", "cert_risk_ucb", "cert_coverage_lcb",
+    "cert_n", "cert_k", "prop_coverage", "prop_risk",
+    "test_coverage", "test_risk",
+]
+
+# Self-training aggregation convergence guard: drop runs whose base known_acc is ~chance
+# (training failure / smoke). 0.30 cleanly separates a ~0.20 smoke from a legit weak low-label base.
+SELFTRAIN_MIN_ACC = 0.30

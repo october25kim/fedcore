@@ -304,9 +304,5 @@ def certify_grid(
     return rows
 
 
-METRIC_KEYS = [
-    "score_name", "gamma", "alpha", "delta", "Lambda", "dirichlet_alpha",
-    "n_clients", "certified", "cert_risk_ucb", "cert_coverage_lcb",
-    "cert_n", "cert_k", "prop_coverage", "prop_risk",
-    "test_coverage", "test_risk",
-]
+# Canonical schema is defined once in config.py; re-exported here for backward compatibility.
+from config import CANONICAL_SCHEMA as METRIC_KEYS  # noqa: E402

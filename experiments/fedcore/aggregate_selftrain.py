@@ -20,10 +20,8 @@ from collections import defaultdict
 
 import numpy as np
 
-# Convergence guard: drop runs whose base is ~chance (training failure / smoke). For 6 known
-# classes chance = 0.167; smoke runs land ~0.20; a LEGIT low-label base (e.g. labeled_frac=0.10)
-# reaches ~0.36. 0.30 cleanly separates the two (excludes 0.20 smoke, keeps 0.36 weak-but-real).
-MIN_ACC = 0.30
+# Convergence guard threshold lives in config.py (single source of truth); value unchanged (0.30).
+from config import SELFTRAIN_MIN_ACC as MIN_ACC  # noqa: E402
 BASE = "" if glob.glob("runs/*.csv") else "../../"
 
 
