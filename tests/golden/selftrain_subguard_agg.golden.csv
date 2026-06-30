@@ -1,0 +1,3 @@
+base_model,labeled_frac,alpha,mode,audit_mult,beta,n_seeds,seeds,known_acc_mean,known_acc_sd,contam_mean,admitted_mean,certcov_mean
+FedAvg,0.5,0.10,certified,1,1.0,2,0|1,0.71,0.0141,0.055,1005,0.41
+FedAvg,0.5,0.10,none,1,1.0,2,0|1,0.655,0.0071,,905,0.0

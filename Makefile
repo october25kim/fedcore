@@ -30,8 +30,10 @@ agg-t8:
 agg-selftrain:
 	cd $(EXP) && $(PY) aggregate_selftrain.py --src runs/selftrain_pkg.csv >/dev/null
 	cd $(EXP) && $(PY) aggregate_selftrain.py --src runs/selftrain_lowlabel.csv >/dev/null
+	cd $(EXP) && $(PY) aggregate_selftrain.py --src tests/golden/fixtures/selftrain_subguard.csv --out runs/selftrain_subguard_agg.csv >/dev/null
 	diff runs/selftrain_pkg_agg.csv tests/golden/selftrain_pkg_agg.golden.csv && \
-	diff runs/selftrain_lowlabel_agg.csv tests/golden/selftrain_lowlabel_agg.golden.csv && echo "selftrain agg OK"
+	diff runs/selftrain_lowlabel_agg.csv tests/golden/selftrain_lowlabel_agg.golden.csv && \
+	diff runs/selftrain_subguard_agg.csv tests/golden/selftrain_subguard_agg.golden.csv && echo "selftrain agg OK (incl sub-guard drop)"
 
 agg-main:   ## HEAVY (all runs/*_logits.npz; minutes)
 	cd $(EXP) && $(PY) aggregate.py >/dev/null
