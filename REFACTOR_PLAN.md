@@ -11,25 +11,28 @@ Verified: `make repro-check` PASS (golden + covtype + T8 + selftrain bit-identic
 OLD-vs-NEW byte-identical. Branch `refactor/structure-repro`; only fedcore/ paths committed (parent
 repo's unrelated deletions untouched); nothing pushed.
 
-REMAINING — package relocation, RESUMING now (incremental; golden green before each commit;
-backward-compat shims at old flat paths; fedcore/* never imports a shim; explicit re-exports/__all__):
-- M1: split certificates.py -> fedcore/certificate/{cp,theorem1(simplex+box/Thm1'),theorem3(pooled/
-  stratified),feasibility(Thm2)}; certificates.py shim. (certificate_math.json must match.)
-- M2: move scores/selector + data/(fedosr_split,clients,noise) + models/(models,fed_train, byte-
-  unchanged) with shims. (scores_selector.json + split_determinism.json match.)
-- M3: move plotting/(make_*); figure OUTPUT path stays experiments/fedcore/figs/*.png (verify).
-- M4: consolidate aggregators -> fedcore/aggregate.py; convergence threshold is a PER-CALLER PARAM
-  (self-training 0.30; covtype/T8 keep their current per-cell values — NOT unified). Add a SUB-GUARD
-  fixture row (known_acc below threshold) to pin the guard path. Old names become shims; all *_agg
-  golden CSVs byte-identical.
-- M5: move certify.py + experiments/ runners (exp_*, run_smoke, run_cifar, run_foogd*, run_fedpd*,
-  run_selftrain*, selftrain*) with shims; public CLIs keep working.
-- GPU-PARITY GATE (after M5, before final commit): per GPU entry point, import/--help parity + ONE
-  short real job runs to completion exporting valid canonical-schema output (bit-parity only if a
-  deterministic run reference exists; else "runs+valid+certify-within-tol", stated per entry point).
-  STOP-AND-ASK with parity results.
-- M6 (optional): migrate internal call sites to fedcore.*; reduce shims to only public-CLI/docker/
-  CLAUDE.md-referenced ones.
+DONE (resume) — CORE packaged into fedcore/ (golden green at every commit; explicit-re-export shims):
+- c78ab63 fix: anchor .gitignore dir patterns to repo root (so the new fedcore/data sub-package is tracked)
+- b4878f8 M1: certificates.py -> fedcore.certificate.{cp,theorem1(simplex+box/Thm1'),theorem3(pooled/
+  stratified+true_selective_risk),feasibility(Thm2 floor)}; certificate_math.json bit-for-bit.
+- 47dd3a5 M2: scores/selector + data/(fedosr_split,clients,noise) + models/(models,fed_train, byte-
+  unchanged) -> fedcore; scores_selector.json + split_determinism.json match.
+- 939a36c M3a: config + certify -> fedcore (certify imports rewired flat->fedcore.*).
+fedcore/ now contains the importable CORE: certificate/ scores selector data/ models/ config certify.
+Ten old flat paths are explicit-re-export shims. `make repro-check` PASS.
+
+BOUNDARY DECISION (user, resume): STOP at the CORE-packaged boundary. fedcore/ is the library core;
+the experiment / plotting / aggregate SCRIPTS stay in experiments/fedcore/ and import fedcore.* (via
+the shims). Rationale: aggregate/plotting/experiments are entangled through experiment-script helpers
+(exp_feasibility_lever._group_map/_repartition, make_handoff._views_from_parts, make_figures.
+_staircase_by_G) and the GPU runners are golden-uncovered (would need the GPU-parity gate). The
+library-core / scripts split is a clean, defensible boundary at lower risk.
+
+NOT DONE (deferred; documented for any future continuation):
+- M3 plotting relocation, M4 aggregator consolidation (debt a; the 4 aggregators + grouping helpers),
+  M5 experiments/runners relocation + GPU-PARITY GATE, M6 internal import migration / shim pruning.
+  Prerequisite for these: extract the shared grouping helpers (_group_map/_repartition/_views_from_
+  parts) into fedcore, and add import-smoke + GPU-parity coverage for the runners before moving them.
 
 Helper-script note: scripts/docker_test.sh + docker_smoke.sh CREATED; git_start_day.sh /
 git_end_day.sh referenced by the prompt do NOT exist — git was handled manually (branch + per-commit
