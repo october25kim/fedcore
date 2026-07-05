@@ -52,7 +52,7 @@ def staircase_points(npz, score="msp"):
     for G in (5, 3, 2, 1):
         gmap = make_group_map(n_clients, G)
         for frac in (0.33, 0.5, 0.7):
-            parts = repartition_trusted_pool(pool, frac, 0.2)
+            parts = repartition_trusted_pool(pool, frac, 0.2, seed=0)
             views = {fn: scored_views(parts[fn]["logits"], parts[fn]["y_open"],
                                       parts[fn]["client"], [score])[score] for fn in ("prop", "cert", "test")}
             r = certify_best_gamma_grouped(views["prop"], views["cert"], views["test"],
@@ -66,7 +66,7 @@ def staircase_points(npz, score="msp"):
 def _staircase_by_G(npz, cert_frac=0.5, score="msp"):
     """{G: (per_group_n, cert_ucb, CertCov@0.1)} at a fixed cert_frac."""
     d = np.load(npz); n_clients = int(d["cert_client"].max()) + 1
-    pool = _pool(d); parts = repartition_trusted_pool(pool, cert_frac, 0.2)
+    pool = _pool(d); parts = repartition_trusted_pool(pool, cert_frac, 0.2, seed=0)
     views = {fn: scored_views(parts[fn]["logits"], parts[fn]["y_open"],
                               parts[fn]["client"], [score])[score] for fn in ("prop", "cert", "test")}
     out = {}
@@ -158,8 +158,8 @@ def fig_F7():
 
 def fig_F2():
     """Necessity: deploy rate vs true selective risk, naive vs pooled vs Fed-CORE."""
-    from certificates import conditional_risk_certificate, pooled_cp, true_selective_risk
-    from clients import ClientPopulation, draw_counts
+    from fedcore.certificate import conditional_risk_certificate, pooled_cp, true_selective_risk
+    from fedcore.data.clients import ClientPopulation, draw_counts
     alpha = 0.05
     n = np.array([300, 300, 300, 300, 400]); lam = n / n.sum()
     a = np.array([0.7] * 4 + [0.5])
