@@ -6,25 +6,25 @@ of a federated open-set classifier with a finite-sample distribution-free upper
 confidence bound, using secure-aggregatable counts. Judge by `cert_*` risk /
 coverage, **never by accuracy / AUROC**. Headline metric: **CertifiedCoverage@alpha**.
 
-See `../../CLAUDE.md` and `../../AGENTS.md` for the theory and hard rules.
+See `CLAUDE.md` and `AGENTS.md` for the theory and hard rules.
 
-## Modules (certification core, numpy + scipy only)
+## Current package layout
 
 | file | role |
 |---|---|
-| `certificates.py` | CP primitives; **conditional** cert (Thm 1/1', MAIN); mass-ratio (App C); pooled (Prop 3) |
-| `clients.py` | synthetic heterogeneous client populations |
-| `scores.py` | MSP / neg-entropy / margin / energy (higher = accept) + `scored_views` |
-| `selector.py` | open-set error, risk-buffered threshold (`prop_risk <= gamma*alpha`), per-client counts |
-| `certify.py` | proposal -> certification -> test glue; canonical metric schema |
-| `config.py` | `FedOSRConfig` |
-| `fedosr_split.py` | open-set split + Dirichlet non-IID partition + calibration folds |
-| `noise.py` | client-side TRAIN-label corruption (calibration/test stay clean) |
-| `self_training.py` | **Proposition 4** gate + synthetic accuracy-dynamics demo |
-| `selftrain.py` | **Proposition 4** audit-fold split + certified/naive torch loops |
-| `models.py`, `fed_train.py` | SimpleCNN + FedAvg + logit export (torch) |
+| `fedcore/certificate/` | CP primitives; **conditional** cert (Thm 1/1', MAIN); mass-ratio (App C); pooled (Prop 3); Thm-2 feasibility |
+| `fedcore/{scores,selector,certify,config}.py` | score functions, selector, proposal -> certify -> test glue, fixed metric schema |
+| `fedcore/{grouping,io_utils}.py` | shared grouped-certification helpers and atomic/locked CSV writers |
+| `fedcore/data/` | synthetic clients, FedOSR split, Dirichlet partition, train-label corruption |
+| `fedcore/models/` | SimpleCNN / ResNet-18 + FedAvg + logit export (torch) |
+| `fedcore/experiments/` | runnable experiment entry points (`python -m fedcore.experiments.<name>`) |
+| `fedcore/aggregate/` | seed-aware table builders for frozen logits and run CSVs |
+| `fedcore/plotting/` | paper figure generators |
 
-Proof note: `../../reports/LEMMA_L_proof.md` (Lemma L reduction + transfer argument + exact certificate).
+The old flat `experiments/fedcore/*.py` code paths have been removed. Install once with
+`pip install -e .`, then run modules through `python -m fedcore...`.
+
+Proof note: `reports/LEMMA_L_proof.md` (Lemma L reduction + transfer argument + exact certificate).
 
 ## Runnable experiments
 
@@ -46,21 +46,21 @@ python -m fedcore.experiments.exp_superiority      # (g) price of federation + b
 python -m fedcore.experiments.exp_utilization      # (h) automation rate = CertifiedCoverage@alpha
 python -m fedcore.experiments.exp_self_training    # (i) Prop 4: certified safe+improves, naive diverges (synthetic dynamics)
 python -m fedcore.experiments.run_selftrain_smoke  # (i) Prop 4: delta/T temporal split keeps simultaneous unsafe <= delta
-python -m fedcore.experiments.exp_lemma_L          # also runs the EXACT adversarial certificate (see ../../reports/LEMMA_L_proof.md)
+python -m fedcore.experiments.exp_lemma_L          # also runs the EXACT adversarial certificate (see reports/LEMMA_L_proof.md)
 ```
 
 GPU self-training (torch):
 
 ```bash
-bash ../../scripts/docker_selftrain.sh         # certified vs naive vs none (smoke-size)
+bash scripts/docker_selftrain.sh         # certified vs naive vs none (smoke-size)
 python -m fedcore.experiments.run_selftrain_cifar --dataset cifar10 --T 4 ...
 ```
 
 GPU (torch, Docker-first):
 
 ```bash
-bash ../../scripts/docker_cifar.sh            # one rung (env-driven)
-bash ../../scripts/run_ladder.sh              # full ladder -> runs/<tag>.csv
+bash scripts/docker_cifar.sh            # one rung (env-driven)
+bash scripts/run_ladder.sh              # full ladder -> runs/<tag>.csv
 python -m fedcore.experiments.run_cifar --dataset cifar10 ...     # direct (inside a torch container)
 ```
 
@@ -147,7 +147,7 @@ is trained FEDERATED on penultimate features of a shared FedAvg ResNet-GN backbo
 accept-score = `-||score_model(standardize(feat))||`. Identical CIFAR-10 FedOSR split as
 the headline (n_known=6, 5 clients, d in {5,0.5}); worst-group G=2, fixed native score,
 cert_frac=0.5, seeds {0,1,2}. Pipeline: `run_foogd_cifar.py` (GPU export) ->
-`aggregate_T8.py` (CPU certify). Runners: `scripts/docker_foogd.sh`, `scripts/run_foogd_all.sh`.
+`python -m fedcore.aggregate.t8` (CPU certify). Runners: `scripts/docker_foogd.sh`, `scripts/run_foogd_all.sh`.
 
 | base_model (kind) | d | AUROC | CertCov@0.20 (G=2) | r_hat |
 |---|---|---|---|---|
@@ -177,7 +177,7 @@ standardization + jointly-evolving backbone; FOOGD's published strength is covar
 OOD) — there the representative standardized SM3D head is the better vehicle. **Takeaway:**
 full reproduction certifies when the method's training recipe is honoured (CertCov tracks
 native-score AUROC: FedPD 0.80 > MSP 0.73 > FOOGD-repr 0.69 > FOOGD-SAG 0.47); Fed-CORE
-validity held in every case (0/N false certs). No faked rows. See `../../reports/REPORT_T8_fedosr_bases.md`.
+validity held in every case (0/N false certs). No faked rows. See `reports/REPORT_T8_fedosr_bases.md`.
 
 ## Backbone push (worst-group alpha=0.1 lever)
 
@@ -218,7 +218,7 @@ T1 (worst-group G=2 CertifiedCoverage, cifar10, 5 clients, mean+/-std, n_pass/se
 | covtype (tabular, breadth) | 0 | seed-variable, NOT stable (see below) |
 
 The cifar10 alpha=0.20 row is now a SAVED 5-seed artifact (`runs/agg_alpha20.csv`,
-`python -m fedcore.experiments.aggregate --alpha 0.20`): **d=5 G2 = 0.392+/-0.097 (5/5)**, **d=0.5 G2 =
+`python -m fedcore.aggregate.main --alpha 0.20`): **d=5 G2 = 0.392+/-0.097 (5/5)**, **d=0.5 G2 =
 0.353+/-0.130 (5/5)**; both 0/5 false certificates (all cert_ucb <= 0.20 AND all
 empirical test_risk <= 0.20). This replaces the earlier single-config T4 ~0.29.
 
@@ -226,7 +226,7 @@ empirical test_risk <= 0.20). This replaces the earlier single-config T4 ~0.29.
 "0.433 @ alpha=0.20" was `make_handoff.py::covtype_frontier` = best-of-4-scores x
 best-of-G in {1,2,3} (incl. pooled G=1) on a SINGLE seed. Under the matched CIFAR
 protocol (fixed single score, fixed worst-group G=2), 5-seed covtype is
-(`runs/agg_covtype.csv`, `python -m fedcore.experiments.aggregate_covtype`): fixed-MSP/G2 = **0/5** at
+(`runs/agg_covtype.csv`, `python -m fedcore.aggregate.covtype`): fixed-MSP/G2 = **0/5** at
 alpha in {0.20,0.25,0.30}; best honest single score (neg_entropy)/G2 = 0.07+/-0.14
 (1/5) @0.20, 0.20+/-0.25 (3/5) @0.30; old selection protocol = 0.10+/-0.17 (2/5)
 @0.20 -- all positives concentrated in seed 0 (std > mean). Cause: the federated

@@ -34,7 +34,7 @@ from scipy.stats import norm
 from fedcore.certify import certify_best_gamma_grouped
 from fedcore.scores import scored_views
 
-from fedcore.grouping import _group_map, _repartition
+from fedcore.grouping import make_group_map, repartition_trusted_pool
 
 ALPHA = 0.10
 DELTA = 0.10
@@ -62,10 +62,10 @@ def main() -> None:
     print("-" * 100)
 
     for G in (5, 3, 2, 1):
-        gmap = _group_map(n_clients, G)
+        gmap = make_group_map(n_clients, G)
         thm2 = np.log(G / DELTA) / (-np.log(1 - ALPHA))
         for frac in (0.33, 0.5, 0.7):
-            parts = _repartition(pool, frac, 0.2, seed=0)
+            parts = repartition_trusted_pool(pool, frac, 0.2, seed=0)
             views = {fn: scored_views(parts[fn]["logits"], parts[fn]["y_open"],
                                       parts[fn]["client"], [args.score])[args.score]
                      for fn in ("prop", "cert", "test")}

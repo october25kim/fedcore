@@ -18,7 +18,7 @@ import numpy as np
 
 from fedcore.certify import certify_best_gamma_grouped
 
-from fedcore.grouping import _group_map, _repartition, _views_from_parts
+from fedcore.grouping import make_group_map, repartition_trusted_pool, views_from_parts
 
 ALPHA, DELTA = 0.10, 0.10
 GAMMAS = (0.2, 0.3, 0.5, 0.7, 1.0)
@@ -32,9 +32,9 @@ def _gate_one(npz, cert_frac, G, score=SCORE):
     n_clients = int(d["cert_client"].max()) + 1
     pool = {k: np.concatenate([d[f"{f}_{k}"] for f in ("prop", "cert", "test")])
             for k in ("logits", "y_open", "client")}
-    parts = _repartition(pool, cert_frac, 0.2, seed=0)
-    views = _views_from_parts(parts, score)
-    gmap = _group_map(n_clients, G)
+    parts = repartition_trusted_pool(pool, cert_frac, 0.2, seed=0)
+    views = views_from_parts(parts, score)
+    gmap = make_group_map(n_clients, G)
     r = certify_best_gamma_grouped(views["prop"], views["cert"], views["test"], score_name=score,
                                    group_map=gmap, G=G, gammas=GAMMAS, alpha=ALPHA, delta=DELTA,
                                    Lambda="box", box=0.15, seed=0, margin=MARGIN)
@@ -48,14 +48,14 @@ def covtype_frontier(npz, cert_frac):
     n_clients = int(d["cert_client"].max()) + 1
     pool = {k: np.concatenate([d[f"{f}_{k}"] for f in ("prop", "cert", "test")])
             for k in ("logits", "y_open", "client")}
-    parts = _repartition(pool, cert_frac, 0.2, seed=0)
+    parts = repartition_trusted_pool(pool, cert_frac, 0.2, seed=0)
     rows = []
     for a in (0.10, 0.15, 0.20, 0.25, 0.30):
         best_cov, best_ucb, rhat = 0.0, np.inf, np.nan
         for score in ("msp", "energy", "neg_entropy", "margin"):
-            views = _views_from_parts(parts, score)
+            views = views_from_parts(parts, score)
             for G in (1, 2, 3):
-                gmap = _group_map(n_clients, G)
+                gmap = make_group_map(n_clients, G)
                 r = certify_best_gamma_grouped(views["prop"], views["cert"], views["test"],
                                                score_name=score, group_map=gmap, G=G, gammas=GAMMAS,
                                                alpha=a, delta=DELTA, Lambda="box", box=0.15,

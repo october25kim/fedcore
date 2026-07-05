@@ -30,7 +30,7 @@ import numpy as np
 
 from fedcore.certify import certify_best_gamma, certify_best_gamma_grouped
 from fedcore.scores import msp as msp_score
-from fedcore.atomic_io import atomic_write_csv
+from fedcore.io_utils import atomic_write_csv
 
 GAMMAS = (0.5, 0.7, 1.0)
 DELTA, MARGIN, CERT_FRAC = 0.10, 0.01, 0.5
@@ -60,7 +60,7 @@ def _pool(npz, keys):
     return out
 
 
-def _repartition(pool, keys, cert_frac, test_frac, seed):
+def _repartition_score_pool(pool, keys, cert_frac, test_frac, seed):
     rng = np.random.default_rng(seed)
     n = len(pool["y_open"]); perm = rng.permutation(n)
     nt, nc = int(round(n * test_frac)), int(round(n * cert_frac))
@@ -98,7 +98,7 @@ def _certify_one(npz, base, alpha, G):
     pool = _pool(npz, spec["needs"])
     accept_full = spec["score"](pool)
     pool = dict(pool); pool["_accept"] = accept_full
-    parts = _repartition(pool, tuple(spec["needs"]) + ("_accept",), CERT_FRAC, 0.2, seed=0)
+    parts = _repartition_score_pool(pool, tuple(spec["needs"]) + ("_accept",), CERT_FRAC, 0.2, seed=0)
     views = {f: _view(parts[f], parts[f]["_accept"], base) for f in ("prop", "cert", "test")}
     n_clients = int(pool["client"].max()) + 1
     if G is None or G >= n_clients:

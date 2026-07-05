@@ -19,7 +19,7 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
 from fedcore.certify import certify_best_gamma_grouped
-from fedcore.grouping import _group_map, _repartition
+from fedcore.grouping import make_group_map, repartition_trusted_pool
 from fedcore.scores import scored_views
 
 DELTA = 0.10
@@ -32,11 +32,11 @@ def _g2_cov(npz, alpha):
     d = np.load(npz); nc = int(d["cert_client"].max()) + 1
     pool = {k: np.concatenate([d[f"{f}_{k}"] for f in ("prop", "cert", "test")])
             for k in ("logits", "y_open", "client")}
-    p = _repartition(pool, 0.5, 0.2, 0)
+    p = repartition_trusted_pool(pool, 0.5, 0.2, 0)
     v = {fn: scored_views(p[fn]["logits"], p[fn]["y_open"], p[fn]["client"], ["msp"])["msp"]
          for fn in ("prop", "cert", "test")}
     r = certify_best_gamma_grouped(v["prop"], v["cert"], v["test"], score_name="msp",
-                                   group_map=_group_map(nc, 2), G=2, gammas=(0.2, 0.3, 0.5, 0.7, 1.0),
+                                   group_map=make_group_map(nc, 2), G=2, gammas=(0.2, 0.3, 0.5, 0.7, 1.0),
                                    alpha=alpha, delta=DELTA, Lambda="box", box=0.15, seed=0, margin=0.01)
     return r["cert_coverage_lcb"] if r["certified"] else 0.0
 

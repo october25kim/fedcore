@@ -20,7 +20,7 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
 from fedcore.certify import certify_best_gamma, certify_best_gamma_grouped
-from fedcore.grouping import _group_map
+from fedcore.grouping import make_group_map, repartition_trusted_pool
 from fedcore.scores import scored_views
 
 ALPHA, DELTA = 0.10, 0.10
@@ -43,14 +43,6 @@ def _pool(d):
             for k in ("logits", "y_open", "client")}
 
 
-def _repartition(pool, cert_frac, test_frac, seed=0):
-    rng = np.random.default_rng(seed)
-    n = len(pool["y_open"]); perm = rng.permutation(n)
-    n_test = int(round(n * test_frac)); n_cert = int(round(n * cert_frac))
-    ix = {"test": perm[:n_test], "cert": perm[n_test:n_test + n_cert], "prop": perm[n_test + n_cert:]}
-    return {f: {k: pool[k][i] for k in ("logits", "y_open", "client")} for f, i in ix.items()}
-
-
 def staircase_points(npz, score="msp"):
     """(per_group_n, cert_ucb, CertCov@0.1) over G x cert_frac (worst-group, box)."""
     d = np.load(npz)
@@ -58,9 +50,9 @@ def staircase_points(npz, score="msp"):
     pool = _pool(d)
     pts = []
     for G in (5, 3, 2, 1):
-        gmap = np.array([c * G // n_clients for c in range(n_clients)])
+        gmap = make_group_map(n_clients, G)
         for frac in (0.33, 0.5, 0.7):
-            parts = _repartition(pool, frac, 0.2)
+            parts = repartition_trusted_pool(pool, frac, 0.2)
             views = {fn: scored_views(parts[fn]["logits"], parts[fn]["y_open"],
                                       parts[fn]["client"], [score])[score] for fn in ("prop", "cert", "test")}
             r = certify_best_gamma_grouped(views["prop"], views["cert"], views["test"],
@@ -74,12 +66,12 @@ def staircase_points(npz, score="msp"):
 def _staircase_by_G(npz, cert_frac=0.5, score="msp"):
     """{G: (per_group_n, cert_ucb, CertCov@0.1)} at a fixed cert_frac."""
     d = np.load(npz); n_clients = int(d["cert_client"].max()) + 1
-    pool = _pool(d); parts = _repartition(pool, cert_frac, 0.2)
+    pool = _pool(d); parts = repartition_trusted_pool(pool, cert_frac, 0.2)
     views = {fn: scored_views(parts[fn]["logits"], parts[fn]["y_open"],
                               parts[fn]["client"], [score])[score] for fn in ("prop", "cert", "test")}
     out = {}
     for G in (5, 3, 2, 1):
-        gmap = _group_map(n_clients, G)
+        gmap = make_group_map(n_clients, G)
         r = certify_best_gamma_grouped(views["prop"], views["cert"], views["test"], score_name=score,
                                        group_map=gmap, G=G, gammas=GAMMAS, alpha=ALPHA, delta=DELTA,
                                        Lambda="box", box=0.15, seed=0, margin=0.01)

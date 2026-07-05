@@ -1,8 +1,8 @@
-"""Shared grouping / repartition / view helpers for aggregation and plotting.
+"""Shared grouping, repartition, and scored-view helpers.
 
-Extracted (behaviour-preserving) from exp_feasibility_lever (``_group_map``, ``_repartition``)
-and make_handoff (``_views_from_parts``) so the aggregators and figure generators import ONE
-copy instead of reaching into experiment scripts. Bodies moved verbatim.
+These utilities keep grouped-stratified certification code out of experiment
+entry points. The leading-underscore names remain as compatibility aliases for
+older scripts.
 """
 
 from __future__ import annotations
@@ -12,27 +12,39 @@ import numpy as np
 from fedcore.scores import scored_views
 
 
-def _group_map(n_clients: int, G: int) -> np.ndarray:
-    """Public, data-independent client->group map (contiguous balanced blocks)."""
+def make_group_map(n_clients: int, G: int) -> np.ndarray:
+    """Public, data-independent client-to-group map using balanced blocks."""
     return np.array([c * G // n_clients for c in range(n_clients)], dtype=int)
 
 
-def _repartition(pool, cert_frac, test_frac, seed):
-    """Split the pooled trusted points into disjoint prop/cert/test folds."""
+def repartition_trusted_pool(pool, cert_frac, test_frac, seed):
+    """Split pooled trusted points into disjoint prop/cert/test folds."""
     rng = np.random.default_rng(seed)
     n = len(pool["y_open"])
     perm = rng.permutation(n)
     n_test = int(round(n * test_frac))
     n_cert = int(round(n * cert_frac))
-    idx = {"test": perm[:n_test],
-           "cert": perm[n_test:n_test + n_cert],
-           "prop": perm[n_test + n_cert:]}
+    idx = {
+        "test": perm[:n_test],
+        "cert": perm[n_test:n_test + n_cert],
+        "prop": perm[n_test + n_cert:],
+    }
     out = {}
     for fold, ix in idx.items():
         out[fold] = {k: pool[k][ix] for k in ("logits", "y_open", "client")}
     return out
 
 
-def _views_from_parts(parts, score):
-    return {fn: scored_views(parts[fn]["logits"], parts[fn]["y_open"],
-                             parts[fn]["client"], [score])[score] for fn in ("prop", "cert", "test")}
+def views_from_parts(parts, score):
+    """Build scored fold views from repartitioned logits/y_open/client parts."""
+    return {
+        fn: scored_views(
+            parts[fn]["logits"], parts[fn]["y_open"], parts[fn]["client"], [score]
+        )[score]
+        for fn in ("prop", "cert", "test")
+    }
+
+
+_group_map = make_group_map
+_repartition = repartition_trusted_pool
+_views_from_parts = views_from_parts

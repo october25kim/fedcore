@@ -25,8 +25,8 @@ import os
 import numpy as np
 
 from fedcore.certify import certify_best_gamma_grouped
-from fedcore.grouping import _group_map, _repartition, _views_from_parts
-from fedcore.atomic_io import atomic_write_csv
+from fedcore.grouping import make_group_map, repartition_trusted_pool, views_from_parts
+from fedcore.io_utils import atomic_write_csv
 
 SEEDS = (0, 1, 2, 3, 4)
 ALPHAS = (0.20, 0.25, 0.30)
@@ -40,9 +40,9 @@ def _cov_one(npz, score, G, alpha):
     n_clients = int(d["cert_client"].max()) + 1
     pool = {k: np.concatenate([d[f"{f}_{k}"] for f in ("prop", "cert", "test")])
             for k in ("logits", "y_open", "client")}
-    parts = _repartition(pool, CERT_FRAC, 0.2, seed=0)
-    v = _views_from_parts(parts, score)
-    gmap = _group_map(n_clients, G)
+    parts = repartition_trusted_pool(pool, CERT_FRAC, 0.2, seed=0)
+    v = views_from_parts(parts, score)
+    gmap = make_group_map(n_clients, G)
     r = certify_best_gamma_grouped(v["prop"], v["cert"], v["test"], score_name=score,
                                    group_map=gmap, G=G, gammas=GAMMAS, alpha=alpha,
                                    delta=DELTA, Lambda="box", box=0.15, seed=0, margin=MARGIN)

@@ -21,8 +21,8 @@ from collections import defaultdict
 import numpy as np
 
 from fedcore.certify import certify_best_gamma, certify_best_gamma_grouped
-from fedcore.atomic_io import atomic_write_csv
-from fedcore.grouping import _group_map, _repartition
+from fedcore.io_utils import atomic_write_csv
+from fedcore.grouping import make_group_map, repartition_trusted_pool
 from fedcore.scores import scored_views
 
 ALPHA, DELTA = 0.10, 0.10
@@ -56,7 +56,7 @@ def _headline(npz, G, scores=("msp",), alpha=ALPHA):
     n_clients = int(d["cert_client"].max()) + 1
     pool = {k: np.concatenate([d[f"{f}_{k}"] for f in ("prop", "cert", "test")])
             for k in ("logits", "y_open", "client")}
-    parts = _repartition(pool, CERT_FRAC, 0.2, seed=0)
+    parts = repartition_trusted_pool(pool, CERT_FRAC, 0.2, seed=0)
     best = None
     for s in scores:
         views = {fn: scored_views(parts[fn]["logits"], parts[fn]["y_open"],
@@ -67,7 +67,7 @@ def _headline(npz, G, scores=("msp",), alpha=ALPHA):
                                    n_clients=n_clients, dirichlet_alpha=float("nan"),
                                    Lambda="box", box=0.15, seed=0, margin=MARGIN)
         else:
-            gmap = np.array([c * G // n_clients for c in range(n_clients)])
+            gmap = make_group_map(n_clients, G)
             r = certify_best_gamma_grouped(views["prop"], views["cert"], views["test"],
                                            score_name=s, group_map=gmap, G=G, gammas=GAMMAS,
                                            alpha=alpha, delta=DELTA, Lambda="box", box=0.15,

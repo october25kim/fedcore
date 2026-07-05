@@ -32,7 +32,7 @@ from fedcore.certificate import conditional_risk_certificate, cp_lower
 from fedcore.experiments.run_selftrain_pkg import setup_data
 from fedcore.scores import scored_views
 from fedcore.experiments.selftrain import MappedSubset, _gather, best_gamma_selector
-from fedcore.atomic_io import append_csv_locked
+from fedcore.io_utils import append_csv_locked
 from fedcore.selector import Selector, counts_per_client, empirical_risk_coverage, open_set_error
 from fedcore.certify import certify_best_gamma_grouped
 

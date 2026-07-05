@@ -22,7 +22,7 @@ import numpy as np
 
 # Convergence guard threshold lives in config.py (single source of truth); value unchanged (0.30).
 from fedcore.config import SELFTRAIN_MIN_ACC as MIN_ACC  # noqa: E402
-from fedcore.atomic_io import atomic_write_csv  # noqa: E402
+from fedcore.io_utils import atomic_write_csv  # noqa: E402
 BASE = "" if glob.glob("runs/*.csv") else "../../"
 
 

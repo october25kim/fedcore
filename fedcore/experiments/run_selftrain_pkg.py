@@ -32,7 +32,7 @@ from fedcore.data.noise import make_label_noise
 from fedcore.experiments.run_cifar import _load_cifar
 from fedcore.experiments.selftrain import partition_selftrain
 from fedcore.experiments.selftrain_oneshot import run_oneshot, train_base
-from fedcore.atomic_io import append_csv_locked
+from fedcore.io_utils import append_csv_locked
 
 FIELDS = ["base_model", "alpha", "mode", "audit_mult", "beta", "seed",
           "realized_contam", "admitted_count", "halted", "halt_freq",
