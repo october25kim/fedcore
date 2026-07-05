@@ -63,6 +63,11 @@ make repro-check
 
 Docker wrappers are available as `bash scripts/docker_test.sh` and `bash scripts/docker_smoke.sh`. Use them when Docker is available; otherwise the direct Python commands above are the canonical local checks.
 
+## Known gaps / follow-ups
+
+- Follow-up: lazy-import torchvision inside the training entry points (run_cifar / run_foogd_cifar / run_selftrain_pkg) so `--help` and arg-parsing work outside the GPU container — improves CLI ergonomics and makes bare-clone import checks meaningful. Do NOT add torchvision to pip install requirements (torch/CUDA version matching); keep it container-provided.
+- Follow-up (optional, later): make `run_smoke` print a repo-relative path for its `saved …/smoke_results.csv` line instead of an absolute CWD path, so its stdout is portable from the source machine itself. Deferred because it is a code change plus a golden re-snapshot; for now the golden gate canonicalizes absolute paths in `tests/golden_check.py` (`_canon_paths`) so the pinned stdout compares equal across clone locations.
+
 ## Next useful work
 
 1. Run `python tests/golden_check.py` after any structure change.
