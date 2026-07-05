@@ -1,7 +1,7 @@
 # Fed-CORE experiment package
 
 Federated Certified Open-Set Recognition. Every experiment here certifies the
-**accepted selective risk** $R_{sel}(\lambda) = sum_j {lamda}_j m_j / sum_{j} {lamda}_j a_j$
+**accepted selective risk** $R_{sel}(\lambda) = \sum_j {\lamda}_j m_j / \sum_{j} {\lamda}_j a_j$
 of a federated open-set classifier with a finite-sample distribution-free upper
 confidence bound, using secure-aggregatable counts. Judge by `cert_*` risk /
 coverage, **never by accuracy / AUROC**. Headline metric: **CertifiedCoverage@alpha**.
