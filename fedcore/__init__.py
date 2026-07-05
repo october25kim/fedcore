@@ -1,6 +1,6 @@
 """fedcore -- importable package for the Fed-CORE certification core.
 
-Structure-only refactor of the previously-flat experiments/fedcore modules. Old flat module
-paths remain as backward-compat shims that re-export from here (shims are leaves; fedcore.*
-never imports a flat shim path).
+The importable core lives entirely under the project-root `fedcore/` package.
+Run entry points with `python -m fedcore.experiments.<name>`; the old flat
+`experiments/fedcore/*.py` code paths have been removed.
 """
