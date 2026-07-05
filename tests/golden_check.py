@@ -22,6 +22,10 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
 GOLD = os.path.join(HERE, "golden")
 FAILS = []
+FROZEN_LOGITS = [
+    "runs/cifar10_d5_resnet18_seed0_logits.npz",
+    "runs/cifar100_d5_none0.0_seed0_logits.npz",
+]
 
 
 def _num_close(a, b):
@@ -66,13 +70,23 @@ def main():
     if r.returncode != 0:
         print("golden_capture.py FAILED to run:\n", r.stdout, r.stderr); sys.exit(2)
 
-    json_files = ["certificate_math.json", "scores_selector.json", "split_determinism.json",
-                  "certify_frozen.json"]
+    json_files = ["certificate_math.json", "scores_selector.json", "split_determinism.json"]
     for name in json_files:
         g, n = os.path.join(GOLD, name), os.path.join(tmp, name)
         if not os.path.exists(g):
             FAILS.append(f"{name}: golden missing"); continue
         _cmp(name, json.load(open(g)), json.load(open(n)))
+
+    frozen_present = all(os.path.exists(os.path.join(ROOT, p)) for p in FROZEN_LOGITS)
+    if frozen_present:
+        name = "certify_frozen.json"
+        g, n = os.path.join(GOLD, name), os.path.join(tmp, name)
+        if not os.path.exists(g):
+            FAILS.append(f"{name}: golden missing")
+        else:
+            _cmp(name, json.load(open(g)), json.load(open(n)))
+    else:
+        print("GOLDEN CHECK: SKIP certify_frozen.json (runs/*_logits.npz absent)")
 
     n_fail = len(FAILS)
     if n_fail:

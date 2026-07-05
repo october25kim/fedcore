@@ -28,20 +28,32 @@ smoke:
 	$(PY) -m fedcore.experiments.exp_lemma_L && $(PY) -m fedcore.experiments.exp_pooling_fail && $(PY) -m fedcore.experiments.run_smoke
 
 agg-covtype:
-	$(PY) -m fedcore.aggregate.covtype >/dev/null
-	diff runs/agg_covtype.csv tests/golden/agg_covtype.golden.csv && echo "agg_covtype OK"
+	@if [ -f runs/covtype_seed0_logits.npz ]; then \
+	  $(PY) -m fedcore.aggregate.covtype >/dev/null; \
+	  diff runs/agg_covtype.csv tests/golden/agg_covtype.golden.csv && echo "agg_covtype OK"; \
+	else \
+	  echo "agg_covtype SKIP (runs/covtype_seed*_logits.npz absent)"; \
+	fi
 
 agg-t8:
-	$(PY) -m fedcore.aggregate.t8 >/dev/null
-	diff runs/T8_fedosr_bases_agg.csv tests/golden/T8_fedosr_bases_agg.golden.csv && echo "T8 agg OK"
+	@if [ -f runs/T8_fedosr_bases.csv ]; then \
+	  $(PY) -m fedcore.aggregate.t8 >/dev/null; \
+	  diff runs/T8_fedosr_bases_agg.csv tests/golden/T8_fedosr_bases_agg.golden.csv && echo "T8 agg OK"; \
+	else \
+	  echo "T8 agg SKIP (runs/T8_fedosr_bases.csv absent)"; \
+	fi
 
 agg-selftrain:
-	$(PY) -m fedcore.aggregate.selftrain --src runs/selftrain_pkg.csv >/dev/null
-	$(PY) -m fedcore.aggregate.selftrain --src runs/selftrain_lowlabel.csv >/dev/null
-	$(PY) -m fedcore.aggregate.selftrain --src tests/golden/fixtures/selftrain_subguard.csv --out runs/selftrain_subguard_agg.csv >/dev/null
-	diff runs/selftrain_pkg_agg.csv tests/golden/selftrain_pkg_agg.golden.csv && \
-	diff runs/selftrain_lowlabel_agg.csv tests/golden/selftrain_lowlabel_agg.golden.csv && \
-	diff runs/selftrain_subguard_agg.csv tests/golden/selftrain_subguard_agg.golden.csv && echo "selftrain agg OK (incl sub-guard drop)"
+	@if [ -f runs/selftrain_pkg.csv ] && [ -f runs/selftrain_lowlabel.csv ]; then \
+	  $(PY) -m fedcore.aggregate.selftrain --src runs/selftrain_pkg.csv >/dev/null; \
+	  $(PY) -m fedcore.aggregate.selftrain --src runs/selftrain_lowlabel.csv >/dev/null; \
+	  $(PY) -m fedcore.aggregate.selftrain --src tests/golden/fixtures/selftrain_subguard.csv --out runs/selftrain_subguard_agg.csv >/dev/null; \
+	  diff runs/selftrain_pkg_agg.csv tests/golden/selftrain_pkg_agg.golden.csv && \
+	  diff runs/selftrain_lowlabel_agg.csv tests/golden/selftrain_lowlabel_agg.golden.csv && \
+	  diff runs/selftrain_subguard_agg.csv tests/golden/selftrain_subguard_agg.golden.csv && echo "selftrain agg OK (incl sub-guard drop)"; \
+	else \
+	  echo "selftrain agg SKIP (runs/selftrain_{pkg,lowlabel}.csv absent)"; \
+	fi
 
 agg-main:   ## HEAVY (all runs/*_logits.npz; minutes)
 	$(PY) -m fedcore.aggregate.main >/dev/null
