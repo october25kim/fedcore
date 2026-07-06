@@ -1,0 +1,31 @@
+# --- experiment outputs & data (never commit; Fed-CORE git workflow rule) ---
+runs/
+data/
+outputs/
+checkpoints/
+logs/
+wandb/
+*.pt
+*.pth
+*.npy
+*.npz
+
+# --- generated manuscript binaries (rebuild via build_docx.sh) ---
+docs/*.docx
+docs/*.pdf
+
+# --- generated figures (rebuilt by experiments/fedcore/figs/*.py; keep .py and .svg sources) ---
+experiments/fedcore/figs/*.png
+experiments/fedcore/figs/*.pdf
+
+# --- Python ---
+__pycache__/
+*.pyc
+.venv/
+venv/
+.ipynb_checkpoints/
+
+# --- OS / editor / temp ---
+.DS_Store
+*.tmp
+*.swp
