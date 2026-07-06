@@ -452,33 +452,33 @@ The CIFAR-10 and CIFAR-100 data sets are publicly available. The code and the de
 
 ## References
 
-[1] Yang et al., FedPD: Federated open set recognition with parameter disentanglement, in: ICCV, 2023.
+[1] C. Yang, M. Zhu, Y. Liu, Y. Yuan, FedPD: Federated open set recognition with parameter disentanglement, in: Proceedings of the IEEE/CVF International Conference on Computer Vision (ICCV), 2023.
 
-[2] C. Yang, M. Zhu, Y. Liu, Y. Yuan, FedPD++: Enhanced federated open-set recognition with parameter disentanglement, Int. J. Comput. Vis. (2026).
+[2] C. Yang, M. Zhu, Y. Liu, Y. Yuan, FedPD++: Enhanced federated open-set recognition with parameter disentanglement, Int. J. Comput. Vis. (2026). https://doi.org/10.1007/s11263-026-02861-9
 
-[3] FOOGD: Federated collaboration for both OOD generalization and detection, in: NeurIPS, 2024, arXiv:2410.11397.
+[3] X. Liao, W. Liu, P. Zhou, F. Yu, J. Xu, J. Wang, W. Wang, C. Chen, X. Zheng, FOOGD: Federated collaboration for both out-of-distribution generalization and detection, in: Advances in Neural Information Processing Systems (NeurIPS), 2024. arXiv:2410.11397.
 
-[4] E. Diao, J. Li, Z. He, Towards addressing label skews in one-shot federated learning (FedOV), in: ICLR, 2023.
+[4] Y. Diao, Q. Li, B. He, Towards addressing label skews in one-shot federated learning, in: International Conference on Learning Representations (ICLR), 2023.
 
-[5] Wang, Liu, Guo, Dong, Wang, Huang, Zhu, Federated continual novel class learning (FedNovel), arXiv:2312.13500, 2023.
+[5] L. Wang, C. Liu, J. Guo, J. Dong, X. Wang, H. Huang, Q. Zhu, Federated continual novel class learning, arXiv:2312.13500, 2023.
 
-[6] K. Lu, Y. Yu, S.P. Karimireddy, M. Jordan, R. Raskar, Federated conformal predictors for distributed uncertainty quantification, in: ICML, 2023, arXiv:2305.17564.
+[6] C. Lu, Y. Yu, S.P. Karimireddy, M.I. Jordan, R. Raskar, Federated conformal predictors for distributed uncertainty quantification, in: International Conference on Machine Learning (ICML), 2023. arXiv:2305.17564.
 
-[7] V. Plassier, M. Makni, A. Rubashevskii, E. Moulines, M. Panov, Conformal prediction for federated uncertainty quantification under label shift, in: ICML, 2023, arXiv:2306.05131.
+[7] V. Plassier, M. Makni, A. Rubashevskii, E. Moulines, M. Panov, Conformal prediction for federated uncertainty quantification under label shift, in: International Conference on Machine Learning (ICML), 2023. arXiv:2306.05131.
 
-[8] Certifiably Byzantine-robust federated conformal prediction (Rob-FCP), arXiv:2406.01960, 2024.
+[8] M. Kang, Z. Lin, J. Sun, C. Xiao, B. Li, Certifiably Byzantine-robust federated conformal prediction, in: International Conference on Machine Learning (ICML), 2024. arXiv:2406.01960.
 
-[9] Zhang et al., Towards unbiased training in federated open-world semi-supervised learning, in: ICML, 2023.
+[9] J. Zhang, X. Ma, S. Guo, W. Xu, Towards unbiased training in federated open-world semi-supervised learning, in: International Conference on Machine Learning (ICML), 2023.
 
-[10] Turning the curse of heterogeneity in FL into a blessing for OOD detection (FOSTER), in: ICLR, 2023.
+[10] S. Yu, J. Hong, H. Wang, Z. Wang, J. Zhou, Turning the curse of heterogeneity in federated learning into a blessing for out-of-distribution detection, in: International Conference on Learning Representations (ICLR), 2023.
 
-[11] Gao, Liu, Qin, Ou, Noise-resistant federated open set recognition, in: KSEM, 2025.
+[11] H. Gao, Y. Liu, Z. Qin, W. Ou, Noise-resistant federated open set recognition, in: Knowledge Science, Engineering and Management (KSEM 2025), Lecture Notes in Computer Science, vol. 15920, Springer, Singapore, 2026, pp. 1–13.
 
-[12] Adversarial compact wrapping classifier learning for open set recognition, Inf. Sci. (2024).
+[12] L. Zhang, M. Wan, P. Huang, G. Yang, Adversarial compact wrapping classifier learning for open set recognition, Inf. Sci. 680 (2024).
 
-[13] Towards heterogeneous federated graph learning via structural entropy and prototype aggregation, Inf. Sci. 718 (2025) 122338.
+[13] Z. Dai, G. Shen, H. Yuan, S. Zheng, Y. Hu, J. Du, X. Kong, F. Xia, Towards heterogeneous federated graph learning via structural entropy and prototype aggregation, Inf. Sci. 718 (2025) 122338.
 
-[14] Personalized federated learning: A clustered distributed co-meta-learning approach, Inf. Sci. (2023).
+[14] M. Ren, Z. Wang, X. Yu, Personalized federated learning: A clustered distributed co-meta-learning approach, Inf. Sci. 647 (2023) 119499.
 
 [15] X. Li, S. Zhao, C. Chen, Z. Zheng, Heterogeneity-aware fair federated learning, Inf. Sci. 619 (2023) 968–986.
 
@@ -490,11 +490,11 @@ The CIFAR-10 and CIFAR-100 data sets are publicly available. The code and the de
 
 [19] X. Zhou, G. Yang, Communication-efficient and privacy-preserving large-scale federated learning counteracting heterogeneity, Inf. Sci. 661 (2024) 120167.
 
-[20] Exploiting reject option in classification for social discrimination control, Inf. Sci. (2017).
+[20] F. Kamiran, S. Mansha, A. Karim, X. Zhang, Exploiting reject option in classification for social discrimination control, Inf. Sci. 425 (2018) 18–33.
 
-[21] Graph autoencoder-based unsupervised outlier detection, Inf. Sci. (2022).
+[21] X. Du, J. Yu, Z. Chu, L. Jin, J. Chen, Graph autoencoder-based unsupervised outlier detection, Inf. Sci. 608 (2022) 532–550.
 
-[22] Concept drift detection with quadtree-based spatial mapping of streaming data, Inf. Sci. (2023).
+[22] R.A. Coelho, L.C.B. Torres, C.L. de Castro, Concept drift detection with quadtree-based spatial mapping of streaming data, Inf. Sci. 625 (2023) 578–592.
 
 [23] A.N. Angelopoulos, S. Bates, A. Fisch, L. Lei, T. Schuster, Conformal risk control, in: ICLR, 2024, arXiv:2208.02814.
 
@@ -502,15 +502,15 @@ The CIFAR-10 and CIFAR-100 data sets are publicly available. The code and the de
 
 [25] Y. Xu, W. Guo, Z. Wei, Selective conformal risk control, arXiv:2512.12844, 2025.
 
-[26] Conformal selective prediction with general risk control (SCoRE), arXiv:2603.24704 (e-value selective risk; centralized).
+[26] T. Bai, Y. Jin, Conformal selective prediction with general risk control, arXiv:2603.24704, 2026.
 
-[27] Y. Xie, Y. Zhou, T. Liang, S. Favaro, M. Sesia, Conformal inference for open-set and imbalanced classification, arXiv:2510.13037, 2025.
+[27] T. Xie, Y. Zhou, Z. Liang, S. Favaro, M. Sesia, Conformal inference for open-set and imbalanced classification, arXiv:2510.13037, 2025.
 
-[28] Classification with reject option: Distribution-free error guarantees via conformal prediction, Mach. Learn. Appl. (2025).
+[28] J. Hallberg Szabadváry, T. Löfström, U. Johansson, C. Sönströd, E. Ahlberg, L. Carlsson, Classification with reject option: Distribution-free error guarantees via conformal prediction, Mach. Learn. Appl. 20 (2025).
 
-[29] Decentralized conformal novelty detection via quantized model exchange, arXiv:2605.08263, 2026.
+[29] K. Loh, Y. Xiang, Decentralized conformal novelty detection via quantized model exchange, arXiv:2605.08263, 2026.
 
-[30] Zhu, Liao, Liu, Yuan, FedOSS: Federated open set recognition via inter-client discrepancy and collaboration, IEEE Trans. Med. Imaging (2023).
+[30] M. Zhu, J. Liao, J. Liu, Y. Yuan, FedOSS: Federated open set recognition via inter-client discrepancy and collaboration, IEEE Trans. Med. Imaging 43 (1) (2024) 190–202.
 
 [31] D. Hendrycks, K. Gimpel, A baseline for detecting misclassified and out-of-distribution examples in neural networks, in: ICLR, 2017.
 
