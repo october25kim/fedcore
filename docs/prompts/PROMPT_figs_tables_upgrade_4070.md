@@ -21,24 +21,35 @@ Context of what was already done (do NOT redo):
   5 anatomy, 6 feasibility law, 7 frontier, 8 stress axes, 9 self-training,
   10 client scaling (App C), 11 self-training gain (App C), 12 tightness (App C).
 
-## Task A — Verify the G=2 grouping rule (correctness gate; do this first)
+## Task A — Identify the exact headline aggregation protocol (correctness gate; do this first)
 
 `exp_resampling_validity.py` and `make_e1_figs.py` group clients into G=2
-CONTIGUOUS blocks via `np.array_split(np.arange(J), G)`. The original worst-
-group headline (Table 5: 0.392/0.353 at alpha=0.20, and `agg_main.csv`
-CertCovG2 columns) was produced by an aggregation script that lives on this
-machine (it is not in the repo — locate it; it produced `runs/agg_main.csv`
-and `runs/T1_main.csv`).
+CONTIGUOUS blocks via `np.array_split(np.arange(J), G)` and use the STORED
+prop/cert/test folds in the npz. The original headline (Table 5: 0.392/0.353
+at alpha=0.20, `agg_main.csv` CertCovG2 columns, "cf=0.5" in the T1 header)
+was produced by an aggregation script that lives on this machine (not in the
+repo — locate it; it produced `runs/agg_main.csv` and `runs/T1_main.csv`).
 
-1. Find that script and identify its G=2 grouping rule.
-2. If it matches contiguous `array_split`: commit the script into
-   `experiments/fedcore/` (it is a reproducibility gap) and report "match".
-3. If it differs (e.g., sorted-by-size pairing): re-run
-   `python experiments/fedcore/exp_resampling_validity.py` and
-   `python experiments/fedcore/figs/make_e1_figs.py` with the original rule
-   (add a `--grouping` flag rather than editing constants), then update the
-   numbers in `docs/Fed-CORE_draft.md` Sections 5.2 and 5.4 and the Figure 3/5
-   captions. Report old vs new numbers explicitly.
+IMPORTANT FINDING from the laptop session (2026-07-06): reconstructing with
+contiguous grouping + stored folds does NOT reproduce agg_main exactly —
+GN d=5 matches n_pass 2/5 but median UCB differs (0.092 vs 0.0878), and GN
+d=0.5 gives n_pass 2/5 vs agg's 3/5. The "cf=0.5" tag suggests the original
+script RE-SPLIT the trusted pool with cert fraction 0.5 rather than using the
+stored 0.34/0.33/0.33 folds, and its gamma-selection rule may differ.
+
+1. Find the script; identify (a) fold re-splitting protocol, (b) G=2 grouping
+   rule, (c) gamma selection rule, (d) WHICH coverage quantity CertCov reports
+   (test-fold accepted coverage? cert-fold coverage? cert_coverage_lcb?).
+2. Commit the script into `experiments/fedcore/` (reproducibility gap).
+3. State the identified coverage quantity explicitly in every Table 5/6/7/8
+   caption and in the CertifiedCoverage@alpha definition in Section 5.1
+   (the draft currently defines the certified quantity as cert_coverage_lcb
+   per Corollary 1 and calls test_coverage the deployment estimate — align
+   the captions with what the numbers actually are).
+4. If the protocol differs materially from the resampling script's, note in
+   Section 5.2 that the resampling study uses its own fixed protocol (stored
+   folds, contiguous groups) — the draft already says "contiguous public
+   groups, fixed a priori" — and do NOT silently renumber it.
 
 ## Task B — Table 5 diagnostics at alpha=0.20
 
@@ -53,11 +64,16 @@ ResNet-GN d=0.5, ResNet-BN d=5; 5 seeds each):
 - `cert_coverage_lcb` mean over certified seeds
 
 Write `runs/T9_diagnostics.csv` with schema
-`backbone,d,alpha,seed,cert_risk_ucb_G2,cert_n_min_group,cert_coverage_lcb,test_risk,certified`
-and extend Table 5 in the draft with the alpha=0.20 medians (replace the
-"Diagnostics ... are from the alpha=0.10 runs" caveat in the caption and the
-Section 5.5 headline paragraph accordingly). Do not alter the CertifiedCoverage
-numbers themselves.
+`backbone,d,alpha,seed,cert_risk_ucb_G2,cert_n_min_group,cert_k_worst_group,cert_coverage_lcb,test_risk,test_coverage,certified`
+and extend Table 5 in the draft so the main table itself shows, per cell:
+`certified seeds`, `cert_n` (min per-group), `cert_k` (worst group),
+`cert_risk_ucb` (median), `cert_coverage_lcb` (mean over certified),
+`test_risk`, `test_coverage` — at BOTH alpha=0.10 and alpha=0.20 (replace the
+"Diagnostics ... are from the alpha=0.10 runs" caveat). The reviewer
+requirement is that the paper itself, not the code release, carries the
+certification diagnostics. Do not alter the CertifiedCoverage numbers
+themselves; if Task A reveals they are not cert_coverage_lcb, label the
+column accordingly rather than recomputing.
 
 ## Task C — Regenerate four figures to match the rewritten captions
 
@@ -81,6 +97,20 @@ filenames, scripts committed under `experiments/fedcore/figs/`):
    total audit budget) so the curve reads "certified coverage cost of
    splitting a fixed audit budget across J clients". CPU-only synthetic —
    extend `exp_ablation_extra.py` if that is where FJ came from.
+
+Publication-ready embedded titles (replace debug-style titles):
+
+| current embedded title | replacement |
+|---|---|
+| "Non-reducibility: pooling collapses, stratified holds" | "Pooling certifies the wrong mixture under heterogeneity" |
+| "F5 Certified-coverage frontier (cifar10 d=5)" | "Certified coverage frontier on CIFAR-10" |
+| "A5 Audit must represent unknowns" | "Audit representativeness (A4) is required for validity" |
+| "J Per-client starvation / log(J) penalty" | "Fixed audit budgets induce a federation penalty" |
+| "SAFE accuracy gain" | "Certified self-training: accuracy gain under admitted pseudo-labels" |
+
+Also: increase font sizes in the 3-panel feasibility figure (journal column
+width), and unify all in-figure assumption labels to A4 (several PNGs still
+say A5).
 
 After regenerating: `bash build_docx.sh` and visually check the four figures
 in the docx.
