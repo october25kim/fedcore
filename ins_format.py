@@ -229,5 +229,14 @@ for t in d.tables:
                     if ri == 0:
                         r.font.bold = True
 
+# 9) suppress proofing marks (red/green underlines) in rendered output
+try:
+    settings = d.settings.element
+    for tag in ('w:hideSpellingErrors', 'w:hideGrammaticalErrors'):
+        if settings.find(qn(tag)) is None:
+            settings.insert(0, OxmlElement(tag))
+except Exception:
+    pass
+
 d.save(P)
 print(f"[ins_format] applied Information Sciences style to {P}")

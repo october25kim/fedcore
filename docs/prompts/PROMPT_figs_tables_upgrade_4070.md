@@ -1,5 +1,28 @@
 # PROMPT — Figure/Table upgrade + diagnostics regeneration (Ubuntu 4070)
 
+> **UPDATE 2026-07-06 (post appendix-free restructure).** The manuscript was
+> renumbered: Theorem 2 = bounded-Lambda (was 1'), Theorem 3 = feasibility
+> (was 2), Proposition 3 = self-training (was 4), Remark 1 = pooled. Tables:
+> T1 prior work, T2 notation, T3 variants, T4 validity, T5 master (panels
+> a/b/c), T6 self-training. Figures 1-5 only. Tasks A-D are DONE. The
+> remaining open items, in priority order:
+>
+> 1. **Delta-split recomputation (new, P0).** Recompute the headline cells of
+>    Table 5 with the simultaneous budget of Corollary 1 (delta_r = delta_c =
+>    delta/2): risk certificate at delta/2, coverage LCB at delta/2. Report
+>    old vs new values; if changes are marginal (expected), update Table 5
+>    and switch the Section 5.1 metric definition to the simultaneous
+>    statement (currently it declares the auxiliary-level convention).
+> 2. **Full diagnostics for Table 5 (P0).** Extend T9_diagnostics.csv with
+>    cert_k_worst_group, test_coverage, selected gamma, for BOTH alpha in
+>    {0.10, 0.20} and for the FedPD/FOOGD detector runs, so panels (a)/(b)
+>    can show cert_n / cert_k / test_coverage without dashes.
+> 3. **Figure fonts (P1).** Increase axis/legend font sizes in
+>    F6_feasibility_law (draft Fig 4) and F7_hetero_collapse (draft Fig 5);
+>    align panel titles with metric names (cert_risk_ucb, cert_coverage_lcb,
+>    pass probability).
+> 4. Task E (optional GPU seed extensions) as below.
+
 Read `CLAUDE.md` and `AGENTS.md` at the repo root FIRST and follow them. This
 prompt continues the manuscript revision in `docs/Fed-CORE_draft.md` (source of
 truth; `bash build_docx.sh` regenerates the docx). Docker-first for anything
