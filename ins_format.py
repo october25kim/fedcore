@@ -125,5 +125,109 @@ for p in d.paragraphs:
         pf.line_spacing = 1.0
         pf.space_after = Pt(6)
 
+
+# 8) tables: booktabs look (thick top/bottom rule, thin rule under header,
+#    no vertical/inner borders), 10pt Times, single-spaced, tight margins
+def _border(tag, val, sz):
+    el = OxmlElement(f'w:{tag}')
+    el.set(qn('w:val'), val)
+    el.set(qn('w:sz'), sz)          # eighths of a point
+    el.set(qn('w:space'), '0')
+    el.set(qn('w:color'), '000000')
+    return el
+
+
+def _cell_len(cell):
+    """Longest visual line in a cell, counting OMML math text too."""
+    longest = 0
+    for p in cell.paragraphs:
+        s = p.text or ''
+        for mt in p._p.findall('.//' + qn('m:t')):
+            s += (mt.text or '')
+        longest = max(longest, len(s))
+    return longest
+
+
+TOTAL_TW = 9360  # ~6.5 in of usable width
+
+for t in d.tables:
+    tbl = t._tbl
+    tblPr = tbl.tblPr
+    # content-proportional fixed column widths
+    ncols = max([len(t.columns)] + [len(r.cells) for r in t.rows])
+    if ncols == 0:
+        continue
+    maxlens = []
+    for ci in range(ncols):
+        m = 0
+        for row in t.rows:
+            try:
+                m = max(m, _cell_len(row.cells[ci]))
+            except IndexError:
+                pass
+        maxlens.append(min(max(m, 6), 34))
+    weights = [l ** 0.85 for l in maxlens]
+    ws = [max(900, int(TOTAL_TW * w / sum(weights))) for w in weights]
+    grid = tbl.find(qn('w:tblGrid'))
+    if grid is not None:
+        tbl.remove(grid)
+    grid = OxmlElement('w:tblGrid')
+    for w in ws:
+        gc = OxmlElement('w:gridCol'); gc.set(qn('w:w'), str(w)); grid.append(gc)
+    tblPr.addnext(grid)
+    for lay in tblPr.findall(qn('w:tblLayout')):
+        tblPr.remove(lay)
+    lay = OxmlElement('w:tblLayout'); lay.set(qn('w:type'), 'fixed')
+    tblPr.append(lay)
+    for w in tblPr.findall(qn('w:tblW')):
+        tblPr.remove(w)
+    tw = OxmlElement('w:tblW'); tw.set(qn('w:w'), str(sum(ws))); tw.set(qn('w:type'), 'dxa')
+    tblPr.append(tw)
+    for row in t.rows:
+        for ci, cell in enumerate(row.cells):
+            tcPr = cell._tc.get_or_add_tcPr()
+            for x in tcPr.findall(qn('w:tcW')):
+                tcPr.remove(x)
+            tcw = OxmlElement('w:tcW')
+            tcw.set(qn('w:w'), str(ws[min(ci, ncols - 1)]))
+            tcw.set(qn('w:type'), 'dxa')
+            tcPr.append(tcw)
+    # booktabs borders
+    for b in tblPr.findall(qn('w:tblBorders')):
+        tblPr.remove(b)
+    borders = OxmlElement('w:tblBorders')
+    borders.append(_border('top', 'single', '12'))
+    borders.append(_border('bottom', 'single', '12'))
+    for tag in ('left', 'right', 'insideH', 'insideV'):
+        borders.append(_border(tag, 'none', '0'))
+    tblPr.append(borders)
+    # tight default cell margins
+    for m in tblPr.findall(qn('w:tblCellMar')):
+        tblPr.remove(m)
+    mar = OxmlElement('w:tblCellMar')
+    for side, wtw in (('top', '20'), ('bottom', '20'), ('left', '80'), ('right', '80')):
+        el = OxmlElement(f'w:{side}'); el.set(qn('w:w'), wtw); el.set(qn('w:type'), 'dxa')
+        mar.append(el)
+    tblPr.append(mar)
+    for ri, row in enumerate(t.rows):
+        for cell in row.cells:
+            if ri == 0:  # header: bold + thin rule below
+                tcPr = cell._tc.get_or_add_tcPr()
+                for tb in tcPr.findall(qn('w:tcBorders')):
+                    tcPr.remove(tb)
+                tcB = OxmlElement('w:tcBorders')
+                tcB.append(_border('bottom', 'single', '6'))
+                tcPr.append(tcB)
+            for p in cell.paragraphs:
+                pf = p.paragraph_format
+                pf.line_spacing = 1.0
+                pf.space_before = Pt(1)
+                pf.space_after = Pt(1)
+                for r in p.runs:
+                    r.font.size = Pt(10)
+                    r.font.name = 'Times New Roman'
+                    if ri == 0:
+                        r.font.bold = True
+
 d.save(P)
 print(f"[ins_format] applied Information Sciences style to {P}")

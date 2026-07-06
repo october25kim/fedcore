@@ -61,15 +61,15 @@ Section 2 positions the work against the four nearest literatures, Sections 3–
 
 **Positioning.** Existing selective conformal/risk-control methods certify post-selection risk in centralized/exchangeable settings; federated conformal methods (including FedOSS-style FedOSR [30] and FCP [6]) certify either empirical rejection quality or closed-set prediction-set coverage. Table 1 organizes the prior work by the object it certifies. Fed-CORE fills the missing intersection: **federated open-set accepted-risk certification under client heterogeneity and deployment-mixture uncertainty.** It contributes the conditional selective-risk certificate (and its mixture-robust form) that the federated setting newly requires; the calibration statistic is a conditional-binomial proportion, not a score quantile. In one sentence: **Fed-CORE is not the first selective-risk certificate — it is the first federated, client-stratified, deployment-mixture-robust certificate for the accepted selective risk of open-set point predictions, the setting in which naive pooling is invalid under heterogeneity.**
 
-**Table 1. Prior work organized by certified object.** Fed-CORE occupies the previously empty intersection of the first four columns.
+**Table 1. Prior work organized by certified object.** Fed-CORE occupies the previously empty intersection of the first four columns. FedOSR methods report AUROC/FPR95 only; FCP certifies closed-set prediction-set coverage under partial exchangeability; decentralized novelty detection controls batch FDR over inlier/outlier decisions.
 
-| method family | federated? | open-set? | accepted point-prediction risk? | unknown deployment mixture $\lambda$? | federated information released | finite-sample? |
-|---|---|---|---|---|---|---|
-| FedPD / FedOSS / FOOGD [1,2,3,30] | ✓ | ✓ | ✗ (AUROC/FPR95 only) | ✗ | model updates only | ✗ |
-| FCP and variants [6,7,8] | ✓ | ✗ (closed-set coverage) | ✗ | partial exchangeability | score quantile sketch | ✓ |
-| CRC / SCRC / SCoRE / joint certificate [23,25,26,37] | ✗ | optional | ✓ | ✗ | centralized calibration sample | ✓ |
-| decentralized novelty FDR [29] | decentralized | novelty only | ✗ (batch FDR) | limited | quantized score functions | ✓ |
-| **Fed-CORE (this work)** | ✓ | ✓ | ✓ | ✓ ($\lambda\in\Lambda$) | per-client/per-group counts | ✓ |
+| method family | fed. | open-set | accepted risk | unknown $\lambda$ | released statistic | finite-sample |
+|---|:-:|:-:|:-:|:-:|---|:-:|
+| FedPD / FedOSS / FOOGD [1,2,3,30] | ✓ | ✓ | ✗ | ✗ | model updates | ✗ |
+| FCP and variants [6,7,8] | ✓ | ✗ | ✗ | partial exch. | quantile sketch | ✓ |
+| CRC / SCRC / SCoRE / joint cert. [23,25,26,37] | ✗ | optional | ✓ | ✗ | — (centralized) | ✓ |
+| decentralized novelty FDR [29] | partial | novelty | ✗ | limited | quantized scores | ✓ |
+| **Fed-CORE (this work)** | ✓ | ✓ | ✓ | ✓ | count pairs | ✓ |
 
 ---
 
@@ -241,15 +241,15 @@ The full protocol is summarized as Algorithm 1.
 
 The privacy footprint depends on **which** certificate is deployed: sum-only secure aggregation suffices **only for the pooled diagnostic**, while the stratified certificate requires per-client count pairs. Table 3 summarizes, for each variant, the certified target, the counts released, and the key assumption.
 
-**Table 3. Certificate variants — certified target, privacy, and role.**
+**Table 3. Certificate variants — certified target, privacy, and role.** "Released" is what leaves each client; "sec. agg." marks compatibility with secure aggregation.
 
-| variant | certified target | counts released | secure aggregation | key assumption | role |
-|---|---|---|---|---|---|
-| stratified simplex (Thm 1) | any client mixture $\lambda\in\Delta^{J-1}$ | per-client pairs | no | A1–A4 | most robust guarantee |
-| bounded-$\Lambda$ (Thm 2) | client mixtures $\lambda\in\Lambda$ | per-client pairs | no | A1–A5 (correct $\Lambda$) | recommended deployment |
-| grouped-stratified | any mixture **over groups** | per-group pairs | within groups | A1–A4, **A6** (within-group composition) | privacy/feasibility compromise |
-| pooled matched-mixture (Remark 1) | matched deployment mixture only | sums only | yes (sum-only) | calibration mixture $=$ deployment | diagnostic only; not a headline certificate |
-| mass-ratio baseline | any client mixture | per-client pairs | no | A1–A4 | valid but looser diagnostic |
+| variant | certified target | released | sec. agg. | assumption | role |
+|---|---|---|:-:|---|---|
+| simplex (Thm 1) | any client mixture | client pairs | ✗ | A1–A4 | most robust |
+| box-$\Lambda$ (Thm 2) | $\lambda\in\Lambda$ | client pairs | ✗ | A1–A5 | recommended |
+| grouped-stratified | group mixtures | group pairs | within groups | A1–A4, A6 | privacy/feasibility |
+| pooled (Remark 1) | matched mixture only | sums | ✓ | matched calibration | diagnostic only |
+| mass-ratio | any client mixture | client pairs | ✗ | A1–A4 | loose diagnostic |
 
 Because Theorem 1 needs **per-client** counts, it is *not* compatible with sum-only secure aggregation. The recommended compromise is a **grouped-stratified certificate**: partition clients into $G$ public strata of $\ge k$ clients each, secure-aggregate counts *within* each stratum, and run the certificate over the $G$ groups. This keeps a group-mixture guarantee while releasing only $G$ aggregated pairs — but the certified object weakens accordingly (assumption A6): the guarantee is robust to mixture shift *across* groups, not to arbitrary client-mixture shift *within* a group. Grouping is therefore a declared relaxation, qualitatively distinct from naive pooling (which certifies only the matched mixture and silently fails off it, Proposition 2); the grouped certificate states its coarser target up front. Even per-client counts leak far less than the per-client score *distributions* (T-Digest) of federated conformal prediction or the quantized score *functions* of decentralized conformal novelty detection. A differentially private count-release variant — calibrated noise on the counts with correspondingly widened Clopper–Pearson levels — is a natural extension but is left as future work; no formal DP guarantee is claimed here.
 
@@ -340,29 +340,41 @@ This subsection reports the real-data certification results in one place (Table 
 
 *Headline.* All results in this subsection use the grouped ($G{=}2$) certificate: the certified object is the mixture over two public groups under assumption A6, a declared relaxation of the client-simplex guarantee (Section 4.6) — not a rediscovery of pooling, which certifies only the matched mixture and fails silently off it (Proposition 2). At $\alpha{=}0.20$ the GroupNorm certificate is non-vacuous on **all five seeds**: CertifiedCoverage $0.392\pm0.097$ ($d{=}5$) and $0.353\pm0.130$ ($d{=}0.5$), with $0/10$ held-out violations among certified runs (Table 5). This is a finite-sample feasibility demonstration under the current audit budget, not a safety target. At $\alpha{=}0.10$ the grouped result is seed-variable ($2$–$3/5$), reported as a secondary result. Table 5 carries the certification diagnostics directly: at $\alpha{=}0.20$ the median certified bound sits at $0.156$–$0.163$ with median per-group accepted counts of $783$–$796$ — comfortably past the Theorem-3 floor — and realized test risk $0.098$–$0.119$, quantifying the finite-sample margin between bound, target, and realization. BatchNorm attains the highest certified coverage at $\alpha{=}0.20$ ($0.431\pm0.048$) but GroupNorm remains the headline as the principled FL normalization; validity holds under both. The edge and negative cells (lower block of Table 5) are exactly where the feasibility law predicts collapse — extreme non-IID, corruption, or a backbone whose $\hat r$ is near $\alpha$.
 
-**Table 5. Real-data certification diagnostics** (CIFAR-10 unless noted; grouped $G{=}2$ certificate — a group-mixture guarantee under A6). CertifiedCoverage@$\alpha$ is the mean certified coverage lower bound `cert_coverage_lcb` (Corollary 1) across seeds, uncertified seeds contributing zero; certified-seed counts in parentheses. **Top block:** FedAvg+MSP baseline, 5 seeds, cert_frac$=0.5$; median per-group accepted counts at $\alpha{=}0.20$ are $783$–$796$. **Middle block:** native scores of real FedOSR detectors, 3 seeds. **Bottom block:** edge/negative settings, correctly vacuous, with the feasibility-law reason. No held-out risk violation occurs in any certified cell. Per-run values follow the canonical metric schema and are released with the code.
+**Table 5. Real-data certification diagnostics** (CIFAR-10 unless noted; grouped $G{=}2$ certificate — a group-mixture guarantee under A6). CertifiedCoverage@$\alpha$ (CertCov) is the mean certified coverage lower bound `cert_coverage_lcb` (Corollary 1) across seeds, uncertified seeds contributing zero; "cert." counts certified seeds. No held-out risk violation occurs in any certified cell; per-run values follow the canonical metric schema and are released with the code. **(a)** FedAvg+MSP baseline (5 seeds, cert_frac$=0.5$; median per-group accepted counts at $\alpha{=}0.20$: $783$–$796$). **(b)** Native scores of real FedOSR detectors (3 seeds). **(c)** Edge and negative settings, correctly vacuous, with the feasibility-law reason ($\dagger$ single seed).
 
-| setting (base / score) | $d$ | $\alpha$ | certified seeds | CertCov@$\alpha$ | median $\bar U_{G2}$ | mean `test_risk` | note |
-|---|---|---|---|---|---|---|---|
-| FedAvg ResNet-GN / MSP | $5$ | $0.20$ | 5/5 | $\mathbf{0.392\pm0.097}$ | 0.160 | 0.119 | feasibility positive |
-| FedAvg ResNet-GN / MSP | $5$ | $0.10$ | 2/5 | $0.077\pm0.097$ | 0.088 | 0.007 | feasibility edge |
-| FedAvg ResNet-GN / MSP | $0.5$ | $0.20$ | 5/5 | $\mathbf{0.353\pm0.130}$ | 0.156 | 0.098 | feasibility positive |
-| FedAvg ResNet-GN / MSP | $0.5$ | $0.10$ | 3/5 | $0.091\pm0.103$ | 0.080 | 0.007 | feasibility edge |
-| FedAvg ResNet-BN / MSP | $5$ | $0.20$ | 5/5 | $0.431\pm0.048$ | 0.163 | 0.119 | less principled FL norm |
-| FedAvg ResNet-BN / MSP | $5$ | $0.10$ | 3/5 | $0.106\pm0.098$ | 0.075 | 0.041 | — |
-| FedPD–PROSER / native (AUROC 0.80) | $5$ | $0.20$ | 3/3 | $\mathbf{0.483\pm0.100}$ | — | 0.112 | strongest positive |
-| FedPD–PROSER / native | $5$ | $0.10$ | 2/3 | $0.174\pm0.125$ | — | 0.029 | hard target |
-| FedPD–PROSER / native (AUROC 0.79) | $0.5$ | $0.20$ | 3/3 | $0.455\pm0.090$ | — | 0.105 | robust to heterogeneity |
-| FedPD–PROSER / native | $0.5$ | $0.10$ | 3/3 | $\mathbf{0.210\pm0.089}$ | — | 0.036 | hard target, full method |
-| FedAvg+MSP control (AUROC 0.73) | $5$ | $0.20$ | 3/3 | $0.350\pm0.077$ | — | — | harness validation |
-| FOOGD–SM3D / native (AUROC 0.69) | $5$ | $0.20$ | 3/3 | $0.071\pm0.053$ | — | — | representative head |
-| FOOGD–SAG / native (AUROC 0.47) | $5$ | $0.20$ | 0/1 | $0$ | — | — | single-seed negative |
-| FedAvg ResNet / MSP, $d{=}0.1$ clean | $0.1$ | both | 0 | $0$ | — | — | Theorem-3 infeasible (extreme non-IID) |
-| FedAvg ResNet / MSP, sym-$0.35$ | — | both | 0 | $0$ | — | 0.167 ($d{=}0.5$) | corruption raises $\hat r>\alpha$ |
-| SimpleCNN / MSP | $5$ | $0.20$ | — | $0.063$ | — | — | looser backbone |
-| CIFAR-100 SimpleCNN / MSP (1 seed) | $0.1$ | $0.10$ | 0 | $0$ | — | 0.078 | below Theorem-3 floor |
-| CIFAR-100 SimpleCNN / MSP (1 seed) | $5$ | $0.10$ | 0 | $0$ | — | 0.143 | $\hat r>\alpha$ |
-| covtype MLP / fixed MSP | — | $0.20$ | 0/5 | $0$ | — | — | feasibility edge; see text |
+(a) FedAvg+MSP baseline
+
+| backbone | $d$ | $\alpha$ | cert. | CertCov | median $\bar U$ | test risk |
+|---|:-:|:-:|:-:|---|:-:|:-:|
+| ResNet-GN | 5 | 0.20 | 5/5 | $\mathbf{0.392\pm0.097}$ | 0.160 | 0.119 |
+| ResNet-GN | 5 | 0.10 | 2/5 | $0.077\pm0.097$ | 0.088 | 0.007 |
+| ResNet-GN | 0.5 | 0.20 | 5/5 | $\mathbf{0.353\pm0.130}$ | 0.156 | 0.098 |
+| ResNet-GN | 0.5 | 0.10 | 3/5 | $0.091\pm0.103$ | 0.080 | 0.007 |
+| ResNet-BN | 5 | 0.20 | 5/5 | $0.431\pm0.048$ | 0.163 | 0.119 |
+| ResNet-BN | 5 | 0.10 | 3/5 | $0.106\pm0.098$ | 0.075 | 0.041 |
+
+(b) Real FedOSR detectors, native scores
+
+| base model | $d$ | AUROC | $\alpha$ | cert. | CertCov | test risk |
+|---|:-:|:-:|:-:|:-:|---|:-:|
+| FedPD–PROSER | 5 | 0.80 | 0.20 | 3/3 | $\mathbf{0.483\pm0.100}$ | 0.112 |
+| FedPD–PROSER | 5 | 0.80 | 0.10 | 2/3 | $0.174\pm0.125$ | 0.029 |
+| FedPD–PROSER | 0.5 | 0.79 | 0.20 | 3/3 | $0.455\pm0.090$ | 0.105 |
+| FedPD–PROSER | 0.5 | 0.79 | 0.10 | 3/3 | $\mathbf{0.210\pm0.089}$ | 0.036 |
+| FedAvg+MSP (control) | 5 | 0.73 | 0.20 | 3/3 | $0.350\pm0.077$ | — |
+| FOOGD–SM3D | 5 | 0.69 | 0.20 | 3/3 | $0.071\pm0.053$ | — |
+| FOOGD–SAG | 5 | 0.47 | 0.20 | 0/1 | $0$ | — |
+
+(c) Edge and negative settings
+
+| setting | CertCov | reason it does not certify |
+|---|:-:|---|
+| ResNet, $d{=}0.1$, clean | $0$ | extreme non-IID; Theorem-3 infeasible |
+| ResNet, symmetric $0.35$ | $0$ | corruption: $\hat r>\alpha$ (test risk $0.167$ at $d{=}0.5$) |
+| SimpleCNN, $d{=}5$ ($\alpha{=}0.20$) | $0.063$ | looser backbone, higher $\hat r$ |
+| CIFAR-100 SimpleCNN, $d{=}0.1$&dagger; | $0$ | below Theorem-3 floor (test risk $0.078$) |
+| CIFAR-100 SimpleCNN, $d{=}5$&dagger; | $0$ | $\hat r>\alpha$ (test risk $0.143$) |
+| covtype MLP, fixed MSP | $0$ (0/5) | feasibility edge; see text |
 
 covtype is reported as a second domain that exhibits the same feasibility law at its edge, **not** as a positive. With the fixed-MSP protocol it certifies $0/5$ at $\alpha{=}0.20$. Two *procedurally valid* multi-score protocols — selecting the score on the proposal fold (A2-compliant), or certifying all four scores at Bonferroni level $\delta/4$ — reach $0.068\pm0.135$ ($1/5$ seeds) at $\alpha{=}0.20$, growing to $0.213\pm0.247$ ($3/5$) and $0.192\pm0.211$ ($3/5$) respectively at $\alpha{=}0.30$ (per-seed values in `runs/covtype_valid_multiscore.csv`): the domain crosses from vacuous to non-vacuous exactly along the risk-target axis, as the feasibility law predicts for a backbone whose risk sits near the target.
 
