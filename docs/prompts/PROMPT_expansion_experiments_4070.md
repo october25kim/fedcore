@@ -27,9 +27,20 @@ G4. The deployment knobs the deployer must choose — box radius rho and
     sensitivity evidence.
 G5. The corruption curve (Fig. 5b) uses single fixed configurations.
 
+## Seed policy (applies to every task below)
+
+Target is 10 seeds per new cell; the hard floor is 5. Concretely: E2 runs
+10 seeds as specified; E1 and E5 run seeds {0..4} first and extend toward
+{0..9} if GPU time remains (extension order: E1 J=20, then E5, then E1
+J=10); expensive detector pipelines (E3 FedPD/FOOGD, E6) may stop at 5
+seeds, stated explicitly. Always write per-seed rows, never only
+aggregates, and never mix seed counts inside one reported cell without
+flagging it.
+
 ## Task E1 (P0) — Client scaling on real CIFAR-10  [GPU]
 
-For J in {10, 20} (J=5 exists), ResNet-18-GN, d=0.5, clean, seeds {0,1,2}:
+For J in {10, 20} (J=5 exists), ResNet-18-GN, d=0.5, clean, seeds {0..4}
+(extend toward {0..9} per the seed policy if budget remains):
 
 ```bash
 python experiments/fedcore/run_cifar.py --dataset cifar10 --n_known 6 \
@@ -49,9 +60,11 @@ report where CertCov@0.20 survives. Also run ONE partial-participation
 variant if the trainer supports client sampling (participation 0.5 at J=20,
 seed 0); if it does not, say so and skip — do not hack the trainer.
 
-## Task E2 (P0) — CIFAR-100 with the headline backbone  [GPU]
+## Task E2 (P0) — CIFAR-100 across multiple models, 10 seeds  [GPU]
 
-ResNet-18-GN, n_known 60, d in {0.5, 5}, clean, seeds {0,1,2}:
+CIFAR-100 must stop resting on one SimpleCNN seed. Run a MULTI-MODEL,
+TEN-SEED grid: backbones {resnet18gn, resnet18bn, simplecnn}, n_known 60,
+d in {0.5, 5}, clean, seeds {0..9}:
 
 ```bash
 python experiments/fedcore/run_cifar.py --dataset cifar100 --n_known 60 \
@@ -59,11 +72,21 @@ python experiments/fedcore/run_cifar.py --dataset cifar100 --n_known 60 \
   --alpha 0.10 --delta 0.10 --seed S
 ```
 
-Evaluate grouped G=2 at alpha in {0.10, 0.20}; append rows to
-`runs/T9_diagnostics.csv` (same schema) and write a per-cell summary
-`runs/cifar100_gn.csv`. Either outcome is publishable: a positive at
-alpha=0.20 upgrades CIFAR-100 from stress domain to second positive; a clean
-3-seed negative replaces the current single-seed SimpleCNN evidence.
+(3 backbones x 2 d x 10 seeds = 60 training runs; SimpleCNN is cheap, the
+two ResNets dominate the budget. If GPU time forces a cut, keep all 10 seeds
+for resnet18gn and drop to 5 seeds for resnet18bn/simplecnn — never below 5,
+and say explicitly which cells got fewer.)
+
+Evaluate grouped G in {2, J} at alpha in {0.10, 0.20}; append per-seed rows
+to `runs/T9_diagnostics.csv` (same schema, backbone column distinguishes
+models) and write a per-cell summary `runs/cifar100_multimodel.csv`.
+Stretch goal, only after the grid completes: one FedPD-PROSER CIFAR-100 cell
+(d=5, 3 seeds) to test whether the strong-detector effect transfers.
+
+Either outcome is publishable: any 10-seed positive at alpha=0.20 upgrades
+CIFAR-100 to a second positive dataset with per-model contrast; a clean
+10-seed multi-model negative is a properly powered stress-domain result that
+also shows the feasibility law is not an artifact of one backbone.
 
 ## Task E3 (P1) — Seed extensions  [GPU; supersedes previous Task E]
 
@@ -93,8 +116,8 @@ On the stored GN d=5 and d=0.5 logits (5 seeds), alpha in {0.10, 0.20}:
 
 ## Task E5 (P2) — Corruption curve, seeded  [GPU]
 
-Extend Fig. 5b cells to 3 seeds: symmetric rates {0.1, 0.2, 0.35} at
-d in {0.5, 5}, ResNet-18-GN -> `runs/corruption_curve_3seed.csv`
+Extend Fig. 5b cells to 5 seeds (toward 10 per the seed policy): symmetric rates {0.1, 0.2, 0.35} at
+d in {0.5, 5}, ResNet-18-GN -> `runs/corruption_curve_seeded.csv`
 (noise_type,rate,d,seed,CertCov@0.10,CertCov@0.20,test_risk).
 
 ## Task E6 (P1) — One client-simplex (or small-J) deep positive  [GPU]
