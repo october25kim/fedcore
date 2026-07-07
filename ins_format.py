@@ -138,13 +138,14 @@ def _border(tag, val, sz):
 
 
 def _cell_len(cell):
-    """Longest visual line in a cell, counting OMML math text too."""
-    longest = 0
+    """Longest visual line in a cell; OMML math text weighted 1.35x since
+    math glyphs render wider than the surrounding text."""
+    longest = 0.0
     for p in cell.paragraphs:
-        s = p.text or ''
-        for mt in p._p.findall('.//' + qn('m:t')):
-            s += (mt.text or '')
-        longest = max(longest, len(s))
+        n_plain = len(p.text or '')
+        n_math = sum(len(mt.text or '')
+                     for mt in p._p.findall('.//' + qn('m:t')))
+        longest = max(longest, n_plain + 1.35 * n_math)
     return longest
 
 

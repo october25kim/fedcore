@@ -97,9 +97,45 @@ Extend Fig. 5b cells to 3 seeds: symmetric rates {0.1, 0.2, 0.35} at
 d in {0.5, 5}, ResNet-18-GN -> `runs/corruption_curve_3seed.csv`
 (noise_type,rate,d,seed,CertCov@0.10,CertCov@0.20,test_risk).
 
+## Task E6 (P1) — One client-simplex (or small-J) deep positive  [GPU]
+
+The main real-data positives are grouped certificates under A6. One
+full-simplex deep positive removes the "grouping = hidden pooling" attack.
+Attempt, in order, stopping at the first non-vacuous cell:
+1. CIFAR-10 / FedPD-PROSER / J=5 / full simplex (Theorem 1) / alpha=0.20,
+   with an enlarged audit budget (cert_frac 0.5 or the 4x protocol).
+2. Same with J=3 (retrain FedPD at J=3, seeds {0,1,2}).
+Write `runs/simplex_positive.csv`
+(J,seed,alpha,cert_risk_ucb,cert_coverage_lcb,cert_n_min_client,certified).
+A 2/3-or-better cell is reportable; a clean failure is also informative —
+report it as the measured price of client-simplex robustness.
+
+## Task E7 (P1) — covtype as a stable second positive  [GPU/CPU]
+
+Goal: 4/5 or 5/5 non-vacuous under a fully A2-compliant protocol.
+Proposal-fold score selection (not fixed MSP), enlarged audit budget, and if
+helpful a slightly stronger tabular backbone (wider MLP). alpha in
+{0.20, 0.25, 0.30}, delta=0.10, grouped G=2, seeds {0..4} ->
+`runs/covtype_stable.csv` (same schema as T9). If 5-seed stability is not
+reachable, report the best honest cell; the paper keeps covtype as a
+feasibility-edge domain in that case.
+
+## Task E8 (P0) — Detector diagnostics reconciliation  [CPU]
+
+T9_diagnostics.csv (54 rows) disagrees with the published detector cells:
+FedPD d=5 alpha=0.20 mean cert_coverage_lcb 0.4912 vs T8's 0.483, and FOOGD
+d=5 0.3498 vs T8's 0.071 (5x). Identify the protocol difference (gamma grid?
+fold definition? representative-head vs native score? coverage quantity?).
+Deliver ONE consistent protocol for panel (b): regenerate detector rows of
+T9 under exactly the protocol that produced T8's published numbers, or
+document why T8's FOOGD number is a different quantity and state which is
+correct for the paper. Until resolved, the manuscript keeps panel (b)
+without T9 diagnostics. Also regenerate the full T9 at the simultaneous
+budget delta_r=delta_c=delta/2 so a future headline switch is drop-in.
+
 ## Priorities and budget
 
-E1 > E2 > E3 > E4 > E5. E4 is CPU and can run anytime. If GPU time is short,
+E8 > E1 > E2 > E3 > E6 > E7 > E4 > E5 (E8 and E4 are CPU). E4 is CPU and can run anytime. If GPU time is short,
 E1 (J=20 only) + E2 already remove the two biggest attack surfaces.
 
 ## Guardrails
