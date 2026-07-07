@@ -93,3 +93,5 @@ camera-ready 시 인용 정리의 근거 문서. 번호는 등장 순서 재정�
   [5–10] FedOSR → [11–13] FCP 라인 → [14–16] conformal novelty/open-set →
   [17–19] centralized selective risk → [20] decentralized novelty → 이후
   §2–§5 등장 순.
+
+- 2026-07-06 (2차): 단일 인용 문장 규칙 적용 후 재번호. 문장당 인용 1건(Table 1 셀 제외); 42편 전부 사용 확인.
