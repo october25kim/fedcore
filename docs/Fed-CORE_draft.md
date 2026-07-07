@@ -61,7 +61,7 @@ Section 2 positions the work against the four nearest literatures, Sections 3–
 
 **Positioning.** Existing selective conformal/risk-control methods certify post-selection risk in centralized/exchangeable settings. FedOSR methods such as FedPD report empirical rejection quality [5]. Federated conformal methods such as FCP certify closed-set prediction-set coverage [9]. Neither line certifies accepted point-prediction risk under an unknown client mixture. Table 1 organizes the prior work by the object it certifies. Fed-CORE fills the missing intersection: **federated open-set accepted-risk certification under client heterogeneity and deployment-mixture uncertainty.** It contributes the conditional selective-risk certificate (and its mixture-robust form) that the federated setting newly requires; the calibration statistic is a conditional-binomial proportion, not a score quantile. In one sentence: **Fed-CORE is not the first selective-risk certificate: it is the first federated, client-stratified, deployment-mixture-robust certificate for the accepted selective risk of open-set point predictions, the setting in which naive pooling is invalid under heterogeneity.**
 
-**Table 1. Prior work organized by certified object.** Fed-CORE occupies the previously empty intersection of the first four columns.
+**Table 1. Prior work organized by certified object.**
 
 | method family | fed. | open-set | accepted risk | unknown $\lambda$ | released statistic | finite-sample |
 |---|:-:|:-:|:-:|:-:|---|:-:|
@@ -241,9 +241,9 @@ The full protocol is summarized as Algorithm 1.
 4. **Certify.** The server computes $\bar r_j=U^+(K_j,A_j;\varepsilon)$ and the certificate: $\bar U_\Delta^{\,r}=\max_j\bar r_j$ (Theorem 1) or the robust linear-fractional bound $\bar U_\Lambda^{\,r,a}$ (Theorem 2), plus the coverage LCB $\underline C_\Lambda$ (Corollary 1).
 5. **Decide.** Deploy $A$ iff $\bar U\le\alpha$ and $\underline C_\Lambda>0$; otherwise report "cannot certify" (with the Theorem-3 diagnosis of whether the failure is risk- or feasibility-driven).
 
-The privacy footprint depends on **which** certificate is deployed: sum-only secure aggregation suffices **only for the pooled diagnostic**, while the stratified certificate requires per-client count pairs. Table 3 summarizes, for each variant, the certified target, the counts released, and the key assumption.
+The privacy footprint depends on **which** certificate is deployed: sum-only secure aggregation suffices **only for the pooled diagnostic**, while the stratified certificate requires per-client count pairs. Table 3 summarizes, for each variant, the certified target, the counts released, and the key assumption; in the table, "released" is what leaves each client, and "sec. agg." marks compatibility with secure aggregation.
 
-**Table 3. Certificate variants: certified target, privacy, and role.** "Released" is what leaves each client; "sec. agg." marks compatibility with secure aggregation.
+**Table 3. Certificate variants: certified target, privacy, and role.**
 
 | variant | certified target | released | sec. agg. | assumption | role |
 |---|---|---|:-:|---|---|
@@ -406,7 +406,7 @@ As $d$ fell (more non-IID), per-group accepted counts thinned and the grouped bo
 
 The certificate's first downstream use, safe automation, is CertifiedCoverage@$\alpha$ itself (Section 4.7). The second use is **a certified admission gate, not an accuracy booster**: accepted predictions are folded back into FedAvg as pseudo-labels only when their contamination can be certified below the target. On real CIFAR self-training (ResNet-GN, $d{=}5$), naive self-training kept injecting pseudo-labels whose realized error rate was far above the target ($0.19$–$0.67$ and growing, reaching $0.59$–$0.98$ over longer runs while the certificate correctly output $\bar U{=}1.0$), whereas the certified procedure found the very first round Theorem-3-infeasible (the accepted set was too thin to certify below $\alpha$) and **halted, admitting nothing** rather than an uncertified batch. This is the safe outcome the feasibility law predicts: Fed-CORE never injects a contaminated batch, even when that means admitting none. Over the rounds the Proposition-3 contract ($\delta/T$) was verified (Table 6): the simultaneous unsafe rate was $0.086\le\delta$ with the round-wise fresh-fold split, whereas reusing one audit fold across adaptive rounds inflated it to $0.386>\delta$, and naive self-training admitted contaminated batches in every round. Round-wise certification is therefore necessary because reusing audit evidence across adaptive rounds breaks the simultaneous guarantee.
 
-**Table 6. Certified pseudo-label admission** (contamination gate; simultaneous unsafe rate must be $\le\delta{=}0.10$).
+**Table 6. Certified pseudo-label admission.**
 
 | scheme | fresh audit fold per round? | admitted contaminated batches | simultaneous unsafe rate | valid? |
 |---|---|---|---|---|
