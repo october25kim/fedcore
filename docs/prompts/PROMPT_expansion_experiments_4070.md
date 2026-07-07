@@ -29,18 +29,20 @@ G5. The corruption curve (Fig. 5b) uses single fixed configurations.
 
 ## Seed policy (applies to every task below)
 
-Target is 10 seeds per new cell; the hard floor is 5. Concretely: E2 runs
-10 seeds as specified; E1 and E5 run seeds {0..4} first and extend toward
-{0..9} if GPU time remains (extension order: E1 J=20, then E5, then E1
-J=10); expensive detector pipelines (E3 FedPD/FOOGD, E6) may stop at 5
-seeds, stated explicitly. Always write per-seed rows, never only
-aggregates, and never mix seed counts inside one reported cell without
-flagging it.
+MINIMUM 10 seeds per new cell ({0..9}); this is a floor, not a target.
+Concretely: E1, E2, E5, and E7 all deliver seeds {0..9}. The ONLY
+permitted exception is detector retraining pipelines (E3 FedPD/FOOGD, E6,
+and the in-flight Task E cells), whose pretrain-then-finetune cost
+justifies a floor of 5; extend those toward 10 if budget remains, and
+flag every cell below 10 explicitly in the report. Always write per-seed
+rows, never only aggregates, and never mix seed counts inside one
+reported cell without flagging it.
 
 ## Task E1 (P0) — Client scaling on real CIFAR-10  [GPU]
 
-For J in {10, 20} (J=5 exists), ResNet-18-GN, d=0.5, clean, seeds {0..4}
-(extend toward {0..9} per the seed policy if budget remains):
+For J in {10, 20} (J=5 exists), ResNet-18-GN, d=0.5, clean, seeds {0..9}
+(if budget forces staging, run {0..4} for both J first, then complete
+{5..9} in order J=20 then J=10; the deliverable is 10 seeds per J):
 
 ```bash
 python experiments/fedcore/run_cifar.py --dataset cifar10 --n_known 6 \
@@ -73,9 +75,10 @@ python experiments/fedcore/run_cifar.py --dataset cifar100 --n_known 60 \
 ```
 
 (3 backbones x 2 d x 10 seeds = 60 training runs; SimpleCNN is cheap, the
-two ResNets dominate the budget. If GPU time forces a cut, keep all 10 seeds
-for resnet18gn and drop to 5 seeds for resnet18bn/simplecnn — never below 5,
-and say explicitly which cells got fewer.)
+two ResNets dominate the budget. Do NOT cut seeds below 10 in this task;
+if GPU time runs short, complete the grid in the order resnet18gn ->
+resnet18bn -> simplecnn and report any still-incomplete backbone cell as
+INCOMPLETE rather than delivering it at fewer seeds.)
 
 Evaluate grouped G in {2, J} at alpha in {0.10, 0.20}; append per-seed rows
 to `runs/T9_diagnostics.csv` (same schema, backbone column distinguishes
@@ -116,7 +119,8 @@ On the stored GN d=5 and d=0.5 logits (5 seeds), alpha in {0.10, 0.20}:
 
 ## Task E5 (P2) — Corruption curve, seeded  [GPU]
 
-Extend Fig. 5b cells to 5 seeds (toward 10 per the seed policy): symmetric rates {0.1, 0.2, 0.35} at
+Extend Fig. 5b cells to 10 seeds ({0..9}, per the seed policy): symmetric
+rates {0.1, 0.2, 0.35} at
 d in {0.5, 5}, ResNet-18-GN -> `runs/corruption_curve_seeded.csv`
 (noise_type,rate,d,seed,CertCov@0.10,CertCov@0.20,test_risk).
 
@@ -135,13 +139,13 @@ report it as the measured price of client-simplex robustness.
 
 ## Task E7 (P1) — covtype as a stable second positive  [GPU/CPU]
 
-Goal: 4/5 or 5/5 non-vacuous under a fully A2-compliant protocol.
+Goal: at least 8/10 non-vacuous under a fully A2-compliant protocol.
 Proposal-fold score selection (not fixed MSP), enlarged audit budget, and if
 helpful a slightly stronger tabular backbone (wider MLP). alpha in
-{0.20, 0.25, 0.30}, delta=0.10, grouped G=2, seeds {0..4} ->
-`runs/covtype_stable.csv` (same schema as T9). If 5-seed stability is not
-reachable, report the best honest cell; the paper keeps covtype as a
-feasibility-edge domain in that case.
+{0.20, 0.25, 0.30}, delta=0.10, grouped G=2, seeds {0..9} ->
+`runs/covtype_stable.csv` (same schema as T9). Goal: >=8/10 non-vacuous.
+If 10-seed stability is not reachable, report the best honest cell; the
+paper keeps covtype as a feasibility-edge domain in that case.
 
 ## Task E8 (P0) — Detector diagnostics reconciliation  [CPU]
 
