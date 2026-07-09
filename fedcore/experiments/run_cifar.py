@@ -119,7 +119,12 @@ def main() -> None:
                     help="resnet18 normalization: bn (BatchNorm) or gn (GroupNorm, FL-appropriate)")
     ap.add_argument("--pretrained", action="store_true",
                     help="resnet18: load torchvision ImageNet weights")
+    ap.add_argument("--unknown_classes", default=None,
+                    help="comma-separated class ids to FIX as unknown (open-set split held "
+                         "constant across seeds); default None = seed-driven random split")
     args = ap.parse_args()
+    fixed_unknown = ([int(c) for c in args.unknown_classes.split(",")]
+                     if args.unknown_classes else None)
 
     cfg = FedOSRConfig(
         dataset=args.dataset, n_known=args.n_known, n_clients=args.n_clients,
@@ -137,9 +142,10 @@ def main() -> None:
     test_labels = np.array(test.targets)
 
     known_classes, unknown_classes, remap = open_set_split(
-        train_labels, cfg.n_known, cfg.seed
+        train_labels, cfg.n_known, cfg.seed, unknown_classes=fixed_unknown
     )
-    print(f"known={known_classes.tolist()} unknown={unknown_classes.tolist()}")
+    print(f"known={known_classes.tolist()} unknown={unknown_classes.tolist()}"
+          f"{' (FIXED split)' if fixed_unknown is not None else ''}")
 
     # ---- TRAIN: known points only, Dirichlet-partitioned across clients -----
     known_mask = np.isin(train_labels, known_classes)

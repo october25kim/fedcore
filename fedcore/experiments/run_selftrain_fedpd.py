@@ -127,7 +127,7 @@ def run_mode(mode, base, D, n_known, n_clients, alpha, delta, audit_mult, device
         sel = best_gamma_selector(ps, pp, pyo, group_map[pcl], (0.2, 0.3, 0.5, 0.7, 1.0),
                                   alpha, delta, G, Lambda="box")
     elif mode == "oracle":
-        from selftrain import naive_selector
+        from fedcore.experiments.selftrain import naive_selector
         sel = naive_selector(ps, pp, pyo, alpha, conf_thresh=0.95)
     else:
         sel = Selector(threshold=np.inf, feasible=False)

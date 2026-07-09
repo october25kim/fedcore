@@ -20,19 +20,32 @@ import numpy as np
 
 
 def open_set_split(
-    labels, n_known: int, seed: int
+    labels, n_known: int, seed: int, unknown_classes=None
 ) -> Tuple[np.ndarray, np.ndarray, Dict[int, int]]:
     """Choose known/unknown classes and remap knowns to ``[0, n_known)``.
 
     Returns ``(known_classes, unknown_classes, remap)`` where ``remap`` maps each
     original known class id to its contiguous index in ``[0, n_known)``.
+
+    If ``unknown_classes`` is given (an explicit iterable of class ids), it FIXES
+    the open-set split independently of ``seed`` (the known set is the complement).
+    This lets a robustness study hold a pre-declared unknown-class set constant
+    across training seeds. Default ``None`` preserves the seed-driven random split.
     """
     labels = np.asarray(labels)
     classes = np.unique(labels)
-    rng = np.random.default_rng(seed)
-    perm = rng.permutation(classes)
-    known_classes = np.sort(perm[:n_known])
-    unknown_classes = np.sort(perm[n_known:])
+    if unknown_classes is not None:
+        unknown_classes = np.sort(np.asarray(list(unknown_classes), dtype=classes.dtype))
+        known_classes = np.sort(np.array([c for c in classes if c not in set(unknown_classes.tolist())],
+                                         dtype=classes.dtype))
+        if len(known_classes) != n_known:
+            raise ValueError(f"explicit unknown_classes leaves {len(known_classes)} known "
+                             f"classes but n_known={n_known}")
+    else:
+        rng = np.random.default_rng(seed)
+        perm = rng.permutation(classes)
+        known_classes = np.sort(perm[:n_known])
+        unknown_classes = np.sort(perm[n_known:])
     remap = {int(c): i for i, c in enumerate(known_classes)}
     return known_classes, unknown_classes, remap
 
