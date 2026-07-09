@@ -35,7 +35,7 @@ from fedcore.io_utils import atomic_write_csv
 GAMMAS = (0.5, 0.7, 1.0)
 DELTA, MARGIN, CERT_FRAC = 0.10, 0.01, 0.5
 ALPHAS = (0.10, 0.20)
-SEEDS = (0, 1, 2)
+SEEDS = (0, 1, 2, 3, 4)  # R3/Task-E seed extension; per-cell coverage limited by available npz (glob-filtered)
 
 # base model registry: name -> (kind, score extractor on a pooled fold dict)
 def _accept_from_sm(pool):
