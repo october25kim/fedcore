@@ -11,7 +11,6 @@ Code moved verbatim from the original flat ``certificates.py`` -- behaviour unch
 
 from __future__ import annotations
 
-import itertools
 from dataclasses import dataclass
 from typing import Optional, Sequence, Union
 
@@ -44,15 +43,29 @@ def _inner_sup_over_a(
 ) -> float:
     """Inner ``sup`` of ``(sum lam a rbar)/(sum lam a)`` over the a-box.
 
-    The objective is linear-fractional in ``a``, so its supremum over a box is
-    attained at a vertex. Enumerate the ``2^J`` vertices (each ``a_j`` is either
-    ``alow_j`` or ``ahigh_j``). A vertex with non-positive denominator means the
-    denominator bound vanishes -> the program is infeasible there -> ``+inf``.
+    The objective is linear-fractional in ``a``, so its supremum over the box is
+    attained at a vertex (each ``a_j`` is either ``alow_j`` or ``ahigh_j``). With
+    ``lam_j >= 0`` and ``ahigh_j >= alow_j``, the *maximizing* vertex sets
+    ``a_j = ahigh_j`` exactly for the clients whose ``rbar_j`` exceeds the optimal
+    ratio (Dinkelbach: at the optimum ``t*``, ``a*`` maximizes
+    ``sum lam_j a_j (rbar_j - t*)``, which picks ``ahigh_j`` iff ``rbar_j > t*``).
+    Hence the optimal vertex is a *prefix* in ``rbar``-descending order, so only
+    the ``J+1`` prefix vertices need be evaluated -- the exact same supremum as
+    enumerating all ``2^J`` vertices, in ``O(J log J)`` instead of ``O(2^J)``.
+
+    The minimum-denominator vertex is all-``alow`` (raising any ``a_j`` toward
+    ``ahigh`` only increases the denominator); if its denominator is non-positive
+    the bound vanishes and the program is infeasible -> ``+inf`` (matching the
+    brute-force behavior, which likewise returns ``+inf`` at that vertex).
     """
-    J = len(lam)
+    order = np.argsort(-rbar, kind="stable")
+    a = np.array(alow, dtype=float, copy=True)
     best = -np.inf
-    for bits in itertools.product((0, 1), repeat=J):
-        a = np.where(np.array(bits, dtype=bool), ahigh, alow)
+    # k = 0 (all alow), then flip the highest-rbar clients to ahigh one at a time.
+    for k in range(len(order) + 1):
+        if k > 0:
+            j = order[k - 1]
+            a[j] = ahigh[j]
         denom = float(np.sum(lam * a))
         if denom <= 0.0:
             return np.inf
