@@ -1,4 +1,13 @@
-# Reference Rationale — Fed-CORE (최종 번호 기준, 2026-07-06 2차 재정렬 이후)
+# Reference Rationale — Fed-CORE (최종 번호 기준, 2026-07-09 3차 재정렬 이후)
+
+> 2026-07-09 (3차): major-revision 리뷰 반영으로 **[36] Farinhas et al.,
+> Non-exchangeable conformal risk control (ICLR 2024, arXiv:2310.01262)** 신규
+> 삽입 (§2 FCP 문단, Table 1). 사유: exchangeability 완화 계열의 대표로
+> 리뷰어가 반드시 떠올릴 최근접 축이며, drift-축 완화(가중 calibration) vs
+> Fed-CORE의 client-stratified mixture-축 완화를 정면 대비해 novelty 경계를
+> 긋는다. 이에 따라 구 36–42가 +1 shift: RCPS 36→37, joint cert 37→38,
+> FedOSS 38→39, MSP 39→40, energy 40→41, SelectiveNet 41→42, El-Yaniv 42→43.
+> 총 43편. 아래 표의 번호는 2차(42편) 기준이므로 36 이상은 +1로 읽는다.
 
 목적: 각 인용의 (a) 본문 내 위치, (b) 인용 이유를 기록한다. 리뷰 대응과
 camera-ready 시 인용 정리의 근거 문서. 규칙: 문장당 인용 1건(Table 1의
