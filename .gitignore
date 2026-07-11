@@ -29,3 +29,4 @@ venv/
 .DS_Store
 *.tmp
 *.swp
+third_party/
