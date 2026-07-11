@@ -82,12 +82,34 @@ def r5_jobs():
     return lines
 
 
+def r5asym_jobs():
+    """Corruption curve, asymmetric arm: asymmetric rates {0.1,0.2,0.35} x d{0.5,5},
+    resnet18gn, seeds 0..9. Byte-for-byte the r5_jobs() protocol with
+    --noise_type asymmetric (tag asym<rate>); run_cifar corrupts TRAIN labels only,
+    calibration folds stay clean. Certified with certify_grid.py --task r5asym
+    (appends noise_type=asymmetric rows; never overwrites the symmetric rows)."""
+    bb, nm = BB["resnet18gn"]
+    lines = []
+    for rate in ("0.1", "0.2", "0.35"):
+        for d in ("0.5", "5"):
+            for s in SEEDS:
+                out = f"runs/r5_cifar10_d{d}_asym{rate}_seed{s}.csv"
+                npz = out[:-4] + "_logits.npz"
+                cmd = (f"{RUN} --dataset cifar10 --n_known 6 --n_clients 5 "
+                       f"--dirichlet_alpha {d} --seed {s} --backbone {bb} --norm {nm} "
+                       f"--noise_type asymmetric --noise_rate {rate} "
+                       f"{COMMON} --out {out}")
+                lines.append(_line(f"r5_d{d}_asym{rate}_s{s}", npz, cmd))
+    return lines
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--outdir", default="scripts/ws4090")
     args = ap.parse_args()
     os.makedirs(args.outdir, exist_ok=True)
-    for name, jobs in (("R1", r1_jobs()), ("R2", r2_jobs()), ("R5", r5_jobs())):
+    for name, jobs in (("R1", r1_jobs()), ("R2", r2_jobs()), ("R5", r5_jobs()),
+                       ("R5_asym", r5asym_jobs())):
         path = os.path.join(args.outdir, f"manifest_{name}.txt")
         with open(path, "w") as f:
             f.write(f"# manifest_{name}: {len(jobs)} run_cifar jobs (device-agnostic; dispatch pins the GPU)\n")

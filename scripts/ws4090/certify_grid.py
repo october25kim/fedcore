@@ -119,11 +119,51 @@ def run_r5():
            ["noise_type", "rate", "d", "seed", "CertCov@0.10", "CertCov@0.20", "test_risk"], rows)
 
 
+def run_r5asym():
+    """Asymmetric arm of the corruption curve. Same G=2 headline protocol as
+    run_r5, over r5_cifar10_d*_asym*_seed* npz, but APPENDS noise_type=asymmetric
+    rows to the existing runs/corruption_curve_seeded.csv WITHOUT touching the
+    symmetric rows (idempotent: skips (rate,d,seed) triples already present)."""
+    out = "runs/corruption_curve_seeded.csv"
+    if not os.path.exists(out):
+        print(f"[warn] {out} missing -- run certify_grid.py --task r5 (symmetric) first")
+        return
+    fields = ["noise_type", "rate", "d", "seed", "CertCov@0.10", "CertCov@0.20", "test_risk"]
+    with open(out) as f:
+        comment = f.readline().rstrip("\n")
+        existing = list(csv.DictReader(f))
+    have = {(r["noise_type"], r["rate"], r["d"], r["seed"]) for r in existing}
+    new_rows = []
+    for f in sorted(glob.glob("runs/r5_cifar10_d*_asym*_seed*_logits.npz")):
+        m = re.search(r"r5_cifar10_d([0-9.]+)_asym([0-9.]+)_seed(\d+)_logits\.npz$", os.path.basename(f))
+        if not m:
+            print(f"[skip] {f}"); continue
+        d, rate, s = m.group(1), m.group(2), int(m.group(3))
+        if ("asymmetric", rate, d, str(s)) in have:
+            print(f"[have] asym d={d} rate={rate} seed={s} (already in csv)"); continue
+        cov = {}
+        test_risk = None
+        for alpha in ALPHAS:
+            res, _nmin, _J = certify_grouped(f, 2, alpha)   # G=2 headline
+            cov[alpha] = round(float(res["cert_coverage_lcb"]) if res["certified"] else 0.0, 4)
+            test_risk = round(float(res["test_risk"]), 4)
+        new_rows.append({"noise_type": "asymmetric", "rate": rate, "d": d, "seed": s,
+                         "CertCov@0.10": cov[0.10], "CertCov@0.20": cov[0.20], "test_risk": test_risk})
+        print(f"[ok] asym d={d} rate={rate} seed={s}")
+    if not new_rows:
+        print("[warn] no new asymmetric rows to append (no r5 asym npz, or all present)"); return
+    with open(out, "a", newline="") as f:      # APPEND, preserve symmetric rows + header
+        w = csv.DictWriter(f, fieldnames=fields)
+        w.writerows(new_rows)
+    print(f"appended {len(new_rows)} asymmetric rows to {out} "
+          f"({len(existing)} pre-existing rows preserved)")
+
+
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--task", choices=["r2", "r5"], required=True)
+    ap.add_argument("--task", choices=["r2", "r5", "r5asym"], required=True)
     args = ap.parse_args()
-    (run_r2 if args.task == "r2" else run_r5)()
+    {"r2": run_r2, "r5": run_r5, "r5asym": run_r5asym}[args.task]()
 
 
 if __name__ == "__main__":
