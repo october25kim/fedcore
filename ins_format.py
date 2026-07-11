@@ -230,6 +230,34 @@ for t in d.tables:
                     if ri == 0:
                         r.font.bold = True
 
+# 8a) normalize every table to the text width (6.5in = 9360 dxa);
+# pandoc emits fixed layouts that can exceed the margins in Word.
+TEXT_W = 9360
+for t in d.tables:
+    tblPr = t._tbl.tblPr
+    tblW = tblPr.find(qn('w:tblW'))
+    cur = int(tblW.get(qn('w:w'))) if tblW is not None and tblW.get(qn('w:type')) == 'dxa' else None
+    if cur and cur != TEXT_W:
+        scale = TEXT_W / cur
+        grid = t._tbl.find(qn('w:tblGrid'))
+        if grid is not None:
+            for gc in grid.findall(qn('w:gridCol')):
+                gc.set(qn('w:w'), str(max(1, round(int(gc.get(qn('w:w'))) * scale))))
+        for row in t.rows:
+            for cell in row.cells:
+                tcW = cell._tc.tcPr.find(qn('w:tcW')) if cell._tc.tcPr is not None else None
+                if tcW is not None and tcW.get(qn('w:type')) == 'dxa':
+                    tcW.set(qn('w:w'), str(max(1, round(int(tcW.get(qn('w:w'))) * scale))))
+        tblW.set(qn('w:w'), str(TEXT_W))
+    # wide tables: drop to 9pt so cells do not wrap line-by-line
+    ncols = len(t.rows[0].cells) if t.rows else 0
+    if ncols >= 9:
+        for row in t.rows:
+            for cell in row.cells:
+                for pp in cell.paragraphs:
+                    for r in pp.runs:
+                        r.font.size = Pt(9)
+
 # 8b) captions (Figure N. / Table N.) single-spaced 10.5pt
 import re as _re
 _cap = _re.compile(r'^(Figure|Table)\s+\d+\.')

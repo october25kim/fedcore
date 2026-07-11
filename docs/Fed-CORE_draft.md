@@ -366,18 +366,18 @@ Table 5 collects the real-data certification results: the FedAvg+MSP baseline, t
 
 *Headline.* Unless noted, this subsection uses the grouped ($G{=}2$) certificate, whose certified object is the **group-mixture** $R_{\mathrm{sel}}$ over two public groups under assumption A6 and Proposition 3 — a declared relaxation of the client-simplex guarantee (Section 4.6), not a rediscovery of pooling; the full-simplex per-client certificate reported at the end of this subsection certifies $5/5$ seeds with no grouping, so the grouped form is an audit-budget device, not the source of the positives. At $\alpha{=}0.20$ the GroupNorm certificate was non-vacuous over ten seeds — CertifiedCoverage $0.269\pm0.200$ at $d{=}5$ ($8/10$) and $0.273\pm0.171$ at $d{=}0.5$ ($9/10$), with no held-out violation among certified runs (Table 5); at $\alpha{=}0.10$ it was seed-variable ($2/10$ at both levels, secondary). BatchNorm attained the highest baseline coverage ($0.393\pm0.088$, $10/10$), but GroupNorm remains the headline as the principled FL normalization (BatchNorm's running statistics diverge under non-IID FedAvg); validity holds under both. The edge and negative cells (lower Table 5) are where the feasibility law predicts collapse: extreme non-IID, corruption, or a backbone whose $\hat r$ is near $\alpha$.
 
-**Table 5. Real-data certification diagnostics** (CIFAR-10 unless noted; grouped $G{=}2$ certificate under A6): (a) FedAvg+MSP baseline (ten seeds), (b) real FedOSR detectors (five seeds; FOOGD-SAG single seed), (c) edge and negative settings. *Notes.* CertCov = CertifiedCoverage@$\alpha$; "cert." = certified seeds; GN/BN = ResNet-18 GroupNorm/BatchNorm. In block (a) (cert\_frac $0.5$), $\bar U$, $A_g$, $K_g$ (worst-group risk bound, min per-group accepted count, worst-group accepted-error count) are medians over certified seeds; test risk/coverage are means; $\gamma$ reports proposal-fold selections. The $\alpha{=}0.20$ median $A_g$ of $539$–$696$ sits far above the Theorem-3 floor, whereas $\alpha{=}0.10$ certifies with roughly half the accepted mass. Block (c) tags each vacuous cell as risk-driven ($\hat r$ near or above $\alpha$) or count-driven (below the floor). Coverage uses the simultaneous $\delta/2$ budget; a risk-only full-$\delta$ budget moves the boundary cell (GN $d{=}5$, $\alpha{=}0.20$) from $0.269$ ($8/10$) to $0.305$ ($9/10$), all other cells by $\le0.003$, and drops one marginal FOOGD seed ($0.089\to0.067$). Per-run values are released with the code.
+**Table 5. Real-data certification diagnostics** (CIFAR-10 unless noted; grouped $G{=}2$ certificate under A6): (a) FedAvg+MSP baseline (ten seeds), (b) real FedOSR detectors (five seeds; FOOGD-SAG single seed), (c) edge and negative settings. *Notes.* CertCov = CertifiedCoverage@$\alpha$; "cert." = certified seeds; GN/BN = ResNet-18 GroupNorm/BatchNorm. In block (a) (cert\_frac $0.5$), $\bar U$ and $A_g$ (worst-group risk bound; min per-group accepted count) are medians over certified seeds; test risk/coverage are means; $\gamma$ reports proposal-fold selections. The $\alpha{=}0.20$ median $A_g$ of $539$–$696$ sits far above the Theorem-3 floor, whereas $\alpha{=}0.10$ certifies with roughly half the accepted mass. Block (c) tags each vacuous cell as risk-driven ($\hat r$ near or above $\alpha$) or count-driven (below the floor). Coverage uses the simultaneous $\delta/2$ budget; a risk-only full-$\delta$ budget moves the boundary cell (GN $d{=}5$, $\alpha{=}0.20$) from $0.269$ ($8/10$) to $0.305$ ($9/10$), all other cells by $\le0.003$, and drops one marginal FOOGD seed ($0.089\to0.067$). Per-run values are released with the code.
 
 (a) FedAvg+MSP baseline
 
-| model | $d$ | $\alpha$ | cert. | CertCov | med. $\bar U$ | med. $A_g$ | med. $K_g$ | $\gamma$ | test risk | test cov. |
-|---|:-:|:-:|:-:|---|:-:|:-:|:-:|:-:|:-:|:-:|
-| GN | 5 | 0.20 | 8/10 | $\mathbf{0.269\pm0.200}$ | 0.158 | 677 | 123 | 0.5–0.7 | 0.114 | 0.373 |
-| GN | 5 | 0.10 | 2/10 | $0.037\pm0.079$ | 0.086 | 358.5 | 32.5 | 0.3–0.5 | 0.043 | 0.214 |
-| GN | 0.5 | 0.20 | 9/10 | $\mathbf{0.273\pm0.171}$ | 0.160 | 539 | 87 | 0.5–0.7 | 0.103 | 0.339 |
-| GN | 0.5 | 0.10 | 2/10 | $0.027\pm0.057$ | 0.067 | 259 | 14 | 0.3 | 0.020 | 0.164 |
-| BN | 5 | 0.20 | 10/10 | $0.393\pm0.088$ | 0.165 | 695.5 | 138.5 | 0.5–0.7 | 0.117 | 0.431 |
-| BN | 5 | 0.10 | 6/10 | $0.086\pm0.103$ | 0.081 | 281 | 13 | 0.2–0.5 | 0.034 | 0.171 |
+| model | $d$ | $\alpha$ | cert. | CertCov | med. $\bar U$ | med. $A_g$ | $\gamma$ | test risk | test cov. |
+|---|:-:|:-:|:-:|---|:-:|:-:|:-:|:-:|:-:|
+| GN | 5 | 0.20 | 8/10 | $\mathbf{0.269\pm0.200}$ | 0.158 | 677 | 0.5–0.7 | 0.114 | 0.373 |
+| GN | 5 | 0.10 | 2/10 | $0.037\pm0.079$ | 0.086 | 358.5 | 0.3–0.5 | 0.043 | 0.214 |
+| GN | 0.5 | 0.20 | 9/10 | $\mathbf{0.273\pm0.171}$ | 0.160 | 539 | 0.5–0.7 | 0.103 | 0.339 |
+| GN | 0.5 | 0.10 | 2/10 | $0.027\pm0.057$ | 0.067 | 259 | 0.3 | 0.020 | 0.164 |
+| BN | 5 | 0.20 | 10/10 | $0.393\pm0.088$ | 0.165 | 695.5 | 0.5–0.7 | 0.117 | 0.431 |
+| BN | 5 | 0.10 | 6/10 | $0.086\pm0.103$ | 0.081 | 281 | 0.2–0.5 | 0.034 | 0.171 |
 
 (b) Real FedOSR detectors, native scores
 
