@@ -131,7 +131,17 @@ arXiv:2510.13037.
 - 커밋: runs/·npz는 gitignore 정책상 제외, 코드·reports·docs만 커밋 (서버 제안
   커밋 목록에서 runs/* 항목은 정책 사유로 미적용).
 
-## 9. 잔여 옵션 (49pp → 45pp가 꼭 필요하면)
+## 9. 4차 작업분 (2026-07-11, Task 4a 반영)
+
+- **Figure 6 → 3-panel 확장**: (a) CIFAR-10 frontier / **(b) CIFAR-100 frontier
+  (신규)** / (c) detector scatter. 패널 (b)는 ws4090 Task 4a 산출물
+  (`runs/cifar100_frontier_gn_perseed.csv`) — **Table 6과 bit-identical한 frozen
+  r2 export에서 재계산** (재학습 0, GPU 0h). α=0.10 vacuous → 0.15부터 비공허 →
+  0.30에서 0.180/0.127 (d=5/0.5). Table 6 대비 정합성 drift 0 seeds 확인.
+- §5.5 CIFAR-100 문단에 frontier 문장 추가, 캡션 갱신, scatter 참조 (b)→(c) 정정.
+- 페이지: 49pp 유지.
+
+## 10. 잔여 옵션 (49pp → 45pp가 꼭 필요하면)
 
 1. 증명 7개를 Appendix로 이동: 약 −3pp (가장 효과 큼, 본문 가독성도 향상).
 2. Table 2(가정 목록)를 반으로 압축: −0.5pp.

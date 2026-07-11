@@ -503,9 +503,9 @@ def _certcov_at(path, alpha, delta=0.10, score_key=None):
 
 
 def fig6_frontier_detectors(delta=0.10):
-    fig, axes = plt.subplots(1, 2, figsize=(7.1, 3.0))
+    fig, axes = plt.subplots(1, 3, figsize=(9.9, 3.0))
 
-    # (a) real-data alpha-frontier, grouped G=2 best-gamma (headline protocol)
+    # (a) CIFAR-10 alpha-frontier, grouped G=2 best-gamma (headline protocol)
     ax = axes[0]
     alphas = [0.05, 0.10, 0.15, 0.20, 0.25, 0.30]
     series = [
@@ -528,10 +528,34 @@ def fig6_frontier_detectors(delta=0.10):
     ax.set_xlabel("risk target $\\alpha$")
     ax.set_ylabel("CertifiedCoverage@$\\alpha$")
     ax.legend(frameon=False, fontsize=8, loc="upper left")
-    ax.set_title("(a) certified-coverage frontier ($d$=5)", fontsize=10.5)
+    ax.set_title("(a) CIFAR-10 frontier ($d$=5)", fontsize=10.5)
 
-    # (b) detector quality vs certified coverage (T8 aggregates, alpha=0.20)
+    # (b) CIFAR-100 alpha-frontier from frozen r2 GN exports (Task 4a, ws4090;
+    # bit-identical to the Table-6 models -- no retraining)
     ax = axes[1]
+    rows100 = [r for r in csv.DictReader(
+        open(os.path.join(RUNS, "cifar100_frontier_gn_perseed.csv")))]
+    for d_, col, mk, ls in (("5", C["blue"], "o", "-"),
+                            ("0.5", C["green"], "s", "--")):
+        alphas100, m, sd = [], [], []
+        for a in ("0.1", "0.15", "0.2", "0.25", "0.3"):
+            cell = [float(r["CertCov"]) for r in rows100
+                    if r["d"] == d_ and r["alpha"] == a]
+            if cell:
+                alphas100.append(float(a)); m.append(np.mean(cell))
+                sd.append(np.std(cell))
+        m, sd = np.array(m), np.array(sd)
+        ax.fill_between(alphas100, np.maximum(m - sd, 0), m + sd, color=col,
+                        alpha=0.12, lw=0)
+        ax.plot(alphas100, m, color=col, marker=mk, ls=ls, lw=1.9, ms=4.5,
+                label=f"GN, $d$={d_} (10 seeds)")
+    ax.set_xlabel("risk target $\\alpha$")
+    ax.set_ylabel("CertifiedCoverage@$\\alpha$")
+    ax.legend(frameon=False, fontsize=8, loc="upper left")
+    ax.set_title("(b) CIFAR-100 frontier", fontsize=10.5)
+
+    # (c) detector quality vs certified coverage (T8 aggregates, alpha=0.20)
+    ax = axes[2]
     rows = list(csv.DictReader(open(os.path.join(RUNS, "T8_fedosr_bases_agg.csv"))))
     rows = [r for r in rows if r["alpha"] == "0.2"]
     style = {"5": ("o", 1.0), "0.5": ("s", 0.55)}
@@ -554,7 +578,7 @@ def fig6_frontier_detectors(delta=0.10):
     ax.set_xlabel("native-score AUROC (base model)")
     ax.set_ylabel("CertifiedCoverage@$0.20$")
     ax.legend(frameon=False, fontsize=8.5, loc="upper left")
-    ax.set_title("(b) coverage tracks detector quality", fontsize=10.5)
+    ax.set_title("(c) coverage tracks detector quality", fontsize=10.5)
     fig.tight_layout(w_pad=2.0)
     save(fig, "F8_frontier_detectors")
 
