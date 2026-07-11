@@ -230,6 +230,18 @@ for t in d.tables:
                     if ri == 0:
                         r.font.bold = True
 
+# 8b) captions (Figure N. / Table N.) single-spaced 10.5pt
+import re as _re
+_cap = _re.compile(r'^(Figure|Table)\s+\d+\.')
+for p in d.paragraphs:
+    if _cap.match(p.text.strip()):
+        pf = p.paragraph_format
+        pf.line_spacing = 1.0
+        pf.space_before = Pt(4)
+        pf.space_after = Pt(8)
+        for r in p.runs:
+            r.font.size = Pt(10.5)
+
 # 9) suppress proofing marks (red/green underlines) in rendered output
 try:
     settings = d.settings.element
