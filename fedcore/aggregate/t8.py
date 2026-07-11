@@ -48,6 +48,7 @@ BASES = {
     "FOOGD-SM3D":     {"kind": "representative", "needs": ("logits", "sm"), "score": _accept_from_sm},
     "FOOGD-SM3D-SAG": {"kind": "full",           "needs": ("logits", "sm"), "score": _accept_from_sm},
     "FedPD-PROSER":   {"kind": "full",           "needs": ("logits", "sm"), "score": _accept_from_sm},
+    "FedOSS":         {"kind": "full",           "needs": ("logits", "sm"), "score": _accept_from_sm},
 }
 
 
@@ -138,6 +139,12 @@ def main() -> None:
         if not m or int(m.group(2)) not in SEEDS:
             continue
         jobs.append(("FedPD-PROSER", m.group(1), int(m.group(2)), f))
+    # FedOSS npz (real DUSS+FOSS virtual-unknown training): native unknown-prob score only
+    for f in sorted(glob.glob(base_dir + "runs/fedoss_cifar10_d*_seed*.npz")):
+        m = re.search(r"_d([0-9.]+)_seed(\d+)", os.path.basename(f))
+        if not m or int(m.group(2)) not in SEEDS:
+            continue
+        jobs.append(("FedOSS", m.group(1), int(m.group(2)), f))
 
     print(f"T8: {len(jobs)} (base,d,seed) jobs")
     for base, d, seed, npz in jobs:
