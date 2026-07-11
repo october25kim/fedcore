@@ -78,33 +78,42 @@ dirichlet_alpha, n_clients`. Headline metric: **CertifiedCoverage@alpha**.
 
 ## 4. Repo layout
 
+The importable core is the project-root package `fedcore/` (installed with `pip install -e .`).
+Entry points run as modules: `python -m fedcore.experiments.<name>` (and `fedcore.aggregate.*`,
+`fedcore.plotting.*`). There are no path shims; `experiments/fedcore/` now holds only artifacts
+(figures, README).
+
 ```
 Fed-CORE_draft.md                       paper draft (Intro/RW/Method + theorems + proof sketches)
 FedOSR_meta_analysis_and_novelty_brief.md   meta-analysis + novelty verification
-experiments/fedcore/
-  certificates.py   CP primitives + stratified (Thm1) + pooled (Thm3) certificates
-  clients.py        synthetic heterogeneous client populations
-  exp_lemma_L.py    Lemma L numerical verification              (runs on CPU)
-  exp_pooling_fail.py  pooling-fail ablation (non-reducibility) (runs on CPU)
-  config.py scores.py selector.py certify.py   numpy certification core
-  fedosr_split.py   open-set split + Dirichlet non-IID + calibration folds
-  models.py fed_train.py   FedAvg + logit export (torch)
-  run_smoke.py      fake-logit end-to-end smoke (no torch)
-  run_cifar.py      real CIFAR-10/100 FedOSR run (torch+torchvision, GPU)
+pyproject.toml                          installable package metadata (`pip install -e .`)
+fedcore/                                IMPORTABLE CORE PACKAGE (hoisted to project root)
+  certificate/      cp + theorem1 (simplex/Thm1' box) + theorem3 (pooled) + feasibility (Thm2)
+  certify.py config.py scores.py selector.py   numpy certification core
+  atomic_io.py grouping.py                      atomic CSV writes + grouping helpers
+  data/             fedosr_split (open-set + Dirichlet non-IID + calibration folds), clients, noise
+  models/           models.py fed_train.py   FedAvg + logit export (torch)
+  aggregate/        consolidated aggregators (main/covtype/t8/selftrain)
+  experiments/      exp_lemma_L, exp_pooling_fail, run_smoke, run_cifar, run_* (entry points)
+  plotting/         make_* figure generators
+experiments/fedcore/                    paper figures (figs/) + README (no code; shims removed)
 ```
 
 ## 5. How to run (Docker-first)
 
 ```bash
+# One-time: make `import fedcore` resolve with no sys.path hacks (editable install).
+pip install -e .
+
 # CPU sanity (no torch needed)
-python experiments/fedcore/exp_lemma_L.py
-python experiments/fedcore/exp_pooling_fail.py
-python experiments/fedcore/run_smoke.py
+python -m fedcore.experiments.exp_lemma_L
+python -m fedcore.experiments.exp_pooling_fail
+python -m fedcore.experiments.run_smoke
 
 # GPU, real data (4070) — prefer the Docker wrapper
 bash scripts/docker_cifar.sh                 # uses env vars; see the script
 # or directly inside a torch container:
-python experiments/fedcore/run_cifar.py --dataset cifar10 --n_known 6 \
+python -m fedcore.experiments.run_cifar --dataset cifar10 --n_known 6 \
     --n_clients 5 --dirichlet_alpha 0.1 --rounds 50 --local_epochs 2 \
     --alpha 0.10 --delta 0.10
 ```

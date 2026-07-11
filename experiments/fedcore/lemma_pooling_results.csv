@@ -1,5 +1,0 @@
-mixture,R_true,cov_pooled,cov_stratified_simplex,cov_stratified_box,medU_pooled,medU_simplex,medU_box
-matched (control),0.0517,0.9996,1.0,1.0,0.0716,0.4452,0.1673
-uniform,0.0624,0.9164,1.0,1.0,0.0721,0.4452,0.1684
-shift->bad(0.6),0.1648,0.0,1.0,0.5564,0.0716,0.4439,0.1675
-all->bad,0.3,0.0,0.9996,0.0,0.0719,0.4456,0.1665
