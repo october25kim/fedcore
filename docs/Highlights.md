@@ -4,7 +4,9 @@
 > the manuscript body. 3–5 bullet points, each ≤ 85 characters.
 
 - Certify the accepted selective risk of federated open-set models without retraining.
-- A conditional-binomial certificate is valid where naive pooling is anti-conservative.
-- Certified coverage follows a finite-sample feasibility law in risk and audit size.
-- Worst-group certified coverage is positive at a 0.20 risk target on CIFAR-10.
-- Certified self-training bounds injected pseudo-label contamination across rounds.
+- Finite-sample, distribution-free guarantees under unknown deployment mixtures.
+- Naive pooling across heterogeneous clients is provably anti-conservative.
+- A finite-sample feasibility law dictates when certification is possible at all.
+- Certified coverage tracks detector quality; validity holds for any score.
+
+<!-- character counts (incl. spaces): 85 / 76 / 73 / 79 / 73 — all ≤85 ✓ -->
