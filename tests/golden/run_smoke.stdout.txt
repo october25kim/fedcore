@@ -1,0 +1,36 @@
+score_name     gamma     alpha     delta    Lambda  dirichlet_alpha  n_clients  certified  cert_risk_ucb  cert_coverage_lcb    cert_n    cert_k  prop_coverage  prop_risk  test_coverage  test_risk
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+       msp    0.5000    0.1000    0.1000   simplex              nan          5      False         0.1201             0.6170      1076        47         0.7155     0.0496         0.7187     0.0464
+       msp    0.7000    0.1000    0.1000   simplex              nan          5      False         0.1247             0.6589      1105        65         0.7390     0.0697         0.7313     0.0583
+       msp    1.0000    0.1000    0.1000   simplex              nan          5      False         0.1638             0.6977      1154       109         0.7690     0.0988         0.7567     0.0863
+neg_entropy    0.5000    0.1000    0.1000   simplex              nan          5      False         0.1242             0.6274      1076        44         0.7155     0.0482         0.7193     0.0454
+neg_entropy    0.7000    0.1000    0.1000   simplex              nan          5      False         0.1485             0.6659      1107        67         0.7390     0.0670         0.7340     0.0581
+neg_entropy    1.0000    0.1000    0.1000   simplex              nan          5      False         0.1643             0.6871      1139        96         0.7690     0.0982         0.7507     0.0755
+    margin    0.5000    0.1000    0.1000   simplex              nan          5      False         0.1206             0.6136      1071        44         0.7125     0.0470         0.7133     0.0421
+    margin    0.7000    0.1000    0.1000   simplex              nan          5      False         0.1213             0.6449      1105        69         0.7355     0.0693         0.7340     0.0618
+    margin    1.0000    0.1000    0.1000   simplex              nan          5      False         0.1720             0.6871      1155       112         0.7660     0.0999         0.7600     0.0921
+    energy    0.5000    0.1000    0.1000   simplex              nan          5      False         0.1126             0.6554      1088        44         0.7255     0.0489         0.7267     0.0440
+    energy    0.7000    0.1000    0.1000   simplex              nan          5      False         0.1396             0.6694      1114        67         0.7425     0.0673         0.7407     0.0594
+    energy    1.0000    0.1000    0.1000   simplex              nan          5      False         0.1862             0.7013      1160       113         0.7725     0.0997         0.7673     0.0912
+       msp    0.5000    0.1000    0.1000       box              nan          5       True         0.0982             0.6471      1076        47         0.7155     0.0496         0.7187     0.0464
+       msp    0.7000    0.1000    0.1000       box              nan          5      False         0.1177             0.6689      1105        65         0.7390     0.0697         0.7313     0.0583
+       msp    1.0000    0.1000    0.1000       box              nan          5      False         0.1607             0.7044      1154       109         0.7690     0.0988         0.7567     0.0863
+neg_entropy    0.5000    0.1000    0.1000       box              nan          5       True         0.0967             0.6484      1076        44         0.7155     0.0482         0.7193     0.0454
+neg_entropy    0.7000    0.1000    0.1000       box              nan          5      False         0.1210             0.6725      1107        67         0.7390     0.0670         0.7340     0.0581
+neg_entropy    1.0000    0.1000    0.1000       box              nan          5      False         0.1484             0.6947      1139        96         0.7690     0.0982         0.7507     0.0755
+    margin    0.5000    0.1000    0.1000       box              nan          5       True         0.0955             0.6436      1071        44         0.7125     0.0470         0.7133     0.0421
+    margin    0.7000    0.1000    0.1000       box              nan          5      False         0.1186             0.6684      1105        69         0.7355     0.0693         0.7340     0.0618
+    margin    1.0000    0.1000    0.1000       box              nan          5      False         0.1632             0.7031      1155       112         0.7660     0.0999         0.7600     0.0921
+    energy    0.5000    0.1000    0.1000       box              nan          5       True         0.0930             0.6596      1088        44         0.7255     0.0489         0.7267     0.0440
+    energy    0.7000    0.1000    0.1000       box              nan          5      False         0.1184             0.6762      1114        67         0.7425     0.0673         0.7407     0.0594
+    energy    1.0000    0.1000    0.1000       box              nan          5      False         0.1635             0.7085      1160       113         0.7725     0.0997         0.7673     0.0912
+
+certified: simplex 0/12, box 4/12
+saved /home/sanghoon/projects/fedcore/experiments/fedcore/smoke_results.csv
+
+=== certify_best_gamma CPU sanity ===
+          msp: gamma*=0.5 certified=True u_proxy=0.101 cert_ucb=0.098 cov_lcb=0.647 test_risk=0.046 [OK]
+  neg_entropy: gamma*=0.5 certified=True u_proxy=0.100 cert_ucb=0.097 cov_lcb=0.648 test_risk=0.045 [OK]
+       margin: gamma*=0.5 certified=True u_proxy=0.099 cert_ucb=0.096 cov_lcb=0.644 test_risk=0.042 [OK]
+       energy: gamma*=0.5 certified=True u_proxy=0.102 cert_ucb=0.093 cov_lcb=0.660 test_risk=0.044 [OK]
+  validity MC: 21/120 certified; unsafe-among-certified = 0.000 (<= delta=0.1: True)

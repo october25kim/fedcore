@@ -1,0 +1,16 @@
+# Fed-CORE pinned environment (reproducibility refactor).
+# The DETERMINISTIC paths (certificate math, scores, selector, split-index construction,
+# aggregation, exp_lemma_L, exp_pooling_fail, run_smoke) are verified bit-for-bit (<=1e-9)
+# under tests/golden/ with these versions (host, captured in tests/golden/ENV.txt):
+numpy==2.4.6
+scipy==1.17.1
+scikit-learn==1.9.0
+
+# GPU TRAINING / certify-on-frozen-logits path runs Docker-first in the pinned image:
+#   pytorch/pytorch:2.3.0-cuda12.1-cudnn8-runtime   (torch 2.3.0, torchvision bundled)
+# Inside the container the above three are installed via pip (see scripts/docker_*.sh).
+# thop is additionally required by the FedPD WideResNet (scripts/docker_fedpd.sh, docker_selftrain_fedpd.sh).
+#
+# Bit-for-bit GPU TRAINING reproducibility is a SEPARATE, documented procedure (see REPRODUCE.md),
+# NOT a pass/fail of this structure-only refactor: the refactor only guarantees the deterministic
+# paths + certification on the EXISTING frozen runs/*_logits.npz are unchanged.

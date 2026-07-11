@@ -1,0 +1,52 @@
+Lemma L: coverage of Poisson-binomial mean by Binomial CP (delta=0.1)
+           profile      A   rbar   coverage
+--------------------------------------------
+       homogeneous    100   0.02     1.0000
+       homogeneous    100   0.05     0.9624
+       homogeneous    300   0.02     0.9392
+       homogeneous    300   0.05     0.9333
+       homogeneous   1000   0.02     0.9378
+       homogeneous   1000   0.05     0.9193
+              mild    100   0.02     1.0000
+              mild    100   0.05     0.9667
+              mild    300   0.02     0.9381
+              mild    300   0.05     0.9348
+              mild   1000   0.02     0.9366
+              mild   1000   0.05     0.9181
+    strong_bimodal    100   0.02     1.0000
+    strong_bimodal    100   0.05     0.9647
+    strong_bimodal    300   0.02     0.9405
+    strong_bimodal    300   0.05     0.9388
+    strong_bimodal   1000   0.02     0.9360
+    strong_bimodal   1000   0.05     0.9229
+   two_point_p0.25    100   0.02     1.0000
+   two_point_p0.25    100   0.05     0.9762
+   two_point_p0.25    300   0.02     0.9608
+   two_point_p0.25    300   0.05     0.9544
+   two_point_p0.25   1000   0.02     0.9587
+   two_point_p0.25   1000   0.05     0.9435
+   two_point_p0.50    100   0.02     1.0000
+   two_point_p0.50    100   0.05     0.9883
+   two_point_p0.50    300   0.02     0.9806
+   two_point_p0.50    300   0.05     0.9794
+   two_point_p0.50   1000   0.02     0.9800
+   two_point_p0.50   1000   0.05     0.9724
+   two_point_p0.75    100   0.02     1.0000
+   two_point_p0.75    100   0.05     0.9970
+   two_point_p0.75    300   0.02     0.9961
+   two_point_p0.75    300   0.05     0.9961
+   two_point_p0.75   1000   0.02     0.9965
+   two_point_p0.75   1000   0.05     0.9948
+--------------------------------------------
+worst-case coverage: 0.9181  (gate: >= 0.90, expect ~0.919)
+homogeneous coverage range: [0.9193, 1.0000] (near nominal)
+VERDICT (MC): PASS
+
+EXACT adversarial search (no MC error), 990 configs, delta=0.1
+  smallest exact coverage          : 0.90212  at ('homog', 500, 0.2)
+  min GLOBAL margin (b<=mu)         : -1.424e-02  (< 0 => global domination FAILS, expected)
+  min margin AT k_delta            : -3.123e-15  (>= 0 => domination holds where it matters)
+  Lemma L (coverage >= 1-delta) holds everywhere : True
+  domination at CP threshold k_delta holds       : True
+  -> global pointwise domination is FALSE, but domination AT k_delta
+     holds and the binomial is the coverage-minimizer, so Lemma L stands.

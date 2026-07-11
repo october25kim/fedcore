@@ -1,0 +1,8 @@
+read 13 rows; kept 13; DROPPED 0 non-converged (known_acc < 0.3):
+
+saved runs/selftrain_lowlabel_agg.csv (4 cells)
+
+gain vs none (mean over distinct seeds):
+  FedPD-PROSER lf=0.1 certified a=0.2 audit=4x b=1.0: 0.5208 -> 0.5639 (Δ=+0.0431) n_seeds=3 [0|1|2] contam=0.0651
+  FedPD-PROSER lf=0.1 certified a=0.2 audit=8x b=1.0: 0.5208 -> 0.5633 (Δ=+0.0425) n_seeds=1 [0] contam=0.0651
+  FedPD-PROSER lf=0.1 oracle    a=0.2 audit=4x b=1.0: 0.5208 -> 0.6819 (Δ=+0.1611) n_seeds=3 [0|1|2] contam=0.0
