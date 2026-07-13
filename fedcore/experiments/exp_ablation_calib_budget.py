@@ -159,7 +159,7 @@ def _plot(rows, base):
     ax2.tick_params(axis="y", labelcolor="C3")
     fig.suptitle("A4-real: calibration-budget sweep (model fixed)")
     fig.tight_layout()
-    path = base + "experiments/fedcore/figs/ablation_calib_budget.png"
+    path = base + "runs/figs/ablation_calib_budget.png"
     os.makedirs(os.path.dirname(path), exist_ok=True)
     fig.savefig(path, dpi=130)
     print(f"saved {path}")

@@ -23,7 +23,7 @@ CSV columns:
 ('theorem3_floor_G' = per-group accepted-count feasibility floor ln(G/delta)/(-ln(1-alpha)),
  the Theorem 3 feasibility law in the current manuscript.)
 
-Run: python experiments/fedcore/exp_client_scaling_synth.py   (CPU, no torch)
+Run: python -m fedcore.experiments.exp_client_scaling_synth   (CPU, no torch)
 """
 
 from __future__ import annotations

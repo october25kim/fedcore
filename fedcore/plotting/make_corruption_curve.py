@@ -71,9 +71,9 @@ def main():
     fig.suptitle("Corruption axis of the feasibility law (ResNet-GN, cifar10)")
     fig.tight_layout()
     import os
-    os.makedirs(BASE + "experiments/fedcore/figs", exist_ok=True)
+    os.makedirs(BASE + "runs/figs", exist_ok=True)
     for ext in ("pdf", "png"):
-        fig.savefig(f"{BASE}experiments/fedcore/figs/F9_corruption_curve.{ext}", bbox_inches="tight", dpi=150)
+        fig.savefig(f"{BASE}runs/figs/F9_corruption_curve.{ext}", bbox_inches="tight", dpi=150)
     plt.close(fig)
     with open(BASE + "runs/corruption_curve.csv", "w", newline="") as f:
         w = csv.writer(f); w.writerow(["noise_type", "d", "rate", "CertCov@0.10", "CertCov@0.20"])

@@ -34,7 +34,7 @@ ALPHA, DELTA = 0.10, 0.10
 GAMMAS = (0.2, 0.3, 0.5, 0.7, 1.0)
 CB = {"simplecnn": "#0072B2", "resnet18": "#D55E00", "floor": "#009E73", "alpha": "#444444"}
 BASE = "" if glob.glob("runs/*.npz") else "../../"
-FIGS = BASE + "experiments/fedcore/figs"
+FIGS = BASE + "runs/figs"
 
 
 def _load_views(npz, score):

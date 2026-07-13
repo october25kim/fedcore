@@ -129,7 +129,7 @@ def main():
     fig.suptitle("Certified pseudo-label admission prevents unsafe self-training",
                  fontsize=12, y=1.02)
     fig.tight_layout()
-    figs = BASE + "experiments/fedcore/figs"
+    figs = BASE + "runs/figs"
     os.makedirs(figs, exist_ok=True)
     for ext in ("png", "pdf"):
         fig.savefig(f"{figs}/F8_selftraining.{ext}", bbox_inches="tight", dpi=200)

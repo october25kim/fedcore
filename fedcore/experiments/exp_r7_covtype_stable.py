@@ -13,7 +13,7 @@ Extends the covtype cell to 10 seeds with the PROCEDURALLY-VALID protocol:
 Emits per-seed rows in the T9 schema (+ selected_score for provenance) ->
 runs/covtype_stable.csv. Goal: >= 8/10 non-vacuous at some alpha.
 
-Run: python experiments/fedcore/exp_r7_covtype_stable.py   (CPU, no torch)
+Run: python -m fedcore.experiments.exp_r7_covtype_stable   (CPU, no torch)
 """
 from __future__ import annotations
 

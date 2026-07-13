@@ -30,7 +30,7 @@ break validity even at matched fraction; the reverse is conservative. This sharp
 CSV: runs/a4_composition_stress.csv
   columns: d,audit_classes,deploy_classes,coverage,mean_ucb,true_risk,trials
 
-Run: python experiments/fedcore/exp_a4_composition_stress.py   (CPU, no torch)
+Run: python -m fedcore.experiments.exp_a4_composition_stress   (CPU, no torch)
 """
 from __future__ import annotations
 

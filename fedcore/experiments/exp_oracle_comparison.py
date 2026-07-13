@@ -21,7 +21,7 @@ same alpha/delta as the T9 diagnostics -> the three methods are directly compara
 CSV: runs/oracle_comparison.csv
   columns: method,seed,coverage_or_lcb,valid,uses_test_labels,cert_risk_ucb,test_risk,alpha
 
-Run: python experiments/fedcore/exp_oracle_comparison.py   (CPU, no torch)
+Run: python -m fedcore.experiments.exp_oracle_comparison   (CPU, no torch)
 """
 from __future__ import annotations
 

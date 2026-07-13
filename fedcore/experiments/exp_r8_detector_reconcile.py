@@ -29,7 +29,7 @@ the detector backbone). exp_alpha20_diagnostics.py now scores detector cells wit
 -sm + the {0.5,0.7,1.0} grid, reproducing T8 exactly (verified: 0/24 mismatch).
 
 Output: runs/T9_detector_reconciliation.csv
-Run:    python experiments/fedcore/exp_r8_detector_reconcile.py
+Run:    python -m fedcore.experiments.exp_r8_detector_reconcile
 """
 from __future__ import annotations
 

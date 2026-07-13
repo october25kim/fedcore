@@ -21,7 +21,7 @@ detector runs (3 seeds, d in {0.5, 5}). Both alpha in {0.10, 0.20}.
 Output: runs/T9_diagnostics.csv  (schema:
   backbone,d,alpha,seed,cert_risk_ucb_G2,cert_n_min_group,cert_k_worst_group,
   cert_coverage_lcb,test_risk,test_coverage,selected_gamma,certified)
-Run: python experiments/fedcore/exp_alpha20_diagnostics.py   (CPU, no torch)
+Run: python -m fedcore.experiments.exp_alpha20_diagnostics   (CPU, no torch)
 
 Diagnostic regeneration only; does NOT alter the CertifiedCoverage headline
 numbers (produced by fedcore/aggregate/main.py).

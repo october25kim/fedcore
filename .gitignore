@@ -1,32 +1,46 @@
-# --- experiment outputs & data (never commit; Fed-CORE git workflow rule) ---
-runs/
-data/
-outputs/
-checkpoints/
-logs/
-wandb/
+# Generated experiment artifacts and datasets
+/runs/
+/data/
+/outputs/
+/checkpoints/
+/logs/
+/wandb/
+/third_party/
 *.pt
 *.pth
 *.npy
 *.npz
 
-# --- generated manuscript binaries (rebuild via build_docx.sh) ---
-docs/*.docx
-docs/*.pdf
+# Internal project material excluded from the research-code release
+/docs/
+/reports/
+/experiments/
+/tests/
+/.agents/
+/.claude/
+/.codex/
+/AGENTS.md
+/CLAUDE.md
+/HANDOFF.md
+/REFACTOR_PLAN.md
+/REPRODUCE.md
+/PROMPT_*.md
+/scripts/ws4090/RUNBOOK.md
+/scripts/docker_test.sh
+/fedcore/experiments/make_handoff.py
 
-# --- generated figures (rebuilt by experiments/fedcore/figs/*.py; keep .py and .svg sources) ---
-experiments/fedcore/figs/*.png
-experiments/fedcore/figs/*.pdf
-
-# --- Python ---
+# Python and build artifacts
 __pycache__/
 *.pyc
-.venv/
-venv/
+*.egg-info/
+/.venv/
+/venv/
+/build/
+/dist/
 .ipynb_checkpoints/
 
-# --- OS / editor / temp ---
+# OS, editor, and temporary files
 .DS_Store
+._*
 *.tmp
 *.swp
-third_party/

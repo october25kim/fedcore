@@ -14,7 +14,7 @@ split sensitivity. Primary-split GN d=0.5 numbers live in runs/T9_diagnostics.cs
 
 CSV: runs/unknown_split_robustness.csv  (T9 schema + backbone,d,split columns)
 
-Run: python experiments/fedcore/exp_unknown_split_robustness.py   (CPU, no torch)
+Run: python -m fedcore.experiments.exp_unknown_split_robustness   (CPU, no torch)
 """
 from __future__ import annotations
 

@@ -160,7 +160,7 @@ def main() -> None:
         "cifar10_d5": "runs/cifar10_d5_none0.0_seed0_logits.npz",
         "cifar10_d0.5": "runs/cifar10_d0.5_none0.0_seed0_logits.npz",
     }
-    # allow running from repo root or experiments/fedcore
+    # Resolve inputs from the repository root.
     base = "" if glob.glob("runs/*.npz") else "../../"
     all_rows = []
     print("\nSTEP 5 C3 superiority -- T4 (matched-risk coverage; oracle peeks test)")

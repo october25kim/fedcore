@@ -22,7 +22,7 @@ certification RATE over draws. epsilon = inf is the no-DP baseline.
 CSV: runs/dp_count_release.csv
   columns: epsilon,seed,alpha,cert_risk_ucb,cert_coverage_lcb,certified
 
-Run: python experiments/fedcore/exp_dp_count_release.py   (CPU, no torch)
+Run: python -m fedcore.experiments.exp_dp_count_release   (CPU, no torch)
 """
 from __future__ import annotations
 
