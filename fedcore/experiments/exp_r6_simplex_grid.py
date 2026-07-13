@@ -18,7 +18,7 @@ same code path).
 
   schema: J,d,seed,alpha,cert_risk_ucb,cert_coverage_lcb,cert_n_min_client,certified
 
-Run: python experiments/fedcore/exp_r6_simplex_grid.py   (CPU, no torch)
+Run: python -m fedcore.experiments.exp_r6_simplex_grid   (CPU, no torch)
 """
 from __future__ import annotations
 

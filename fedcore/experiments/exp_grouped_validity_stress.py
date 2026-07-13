@@ -53,7 +53,7 @@ CSV: runs/grouped_validity_stress.csv
   columns: study,sampling,G,within_group_risk_spread,n_per_client,coverage,mean_ucb,trials
   ('within_group_risk_spread' = the risk triple for SYNTHETIC, or "d=<val>" for REAL.)
 
-Run: python experiments/fedcore/exp_grouped_validity_stress.py   (CPU, no torch)
+Run: python -m fedcore.experiments.exp_grouped_validity_stress   (CPU, no torch)
 """
 
 from __future__ import annotations

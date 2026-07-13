@@ -164,7 +164,7 @@ def _plot(rows, base):
     ax.set_ylim(0, 1.02)
     ax.legend()
     fig.tight_layout()
-    stem = base + "experiments/fedcore/figs/ablation_unknown_prop"
+    stem = base + "runs/figs/ablation_unknown_prop"
     os.makedirs(os.path.dirname(stem), exist_ok=True)
     for ext in ("pdf", "png"):
         fig.savefig(f"{stem}.{ext}", dpi=130, bbox_inches="tight")

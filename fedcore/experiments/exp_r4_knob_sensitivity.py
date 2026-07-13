@@ -12,7 +12,7 @@ alpha in {0.10, 0.20}.
     (rho,seed,d,alpha,cert_risk_ucb,cert_coverage_lcb,certified)
 
 (2) gamma ablation -- FIXED gamma, NO best-gamma selection, at the headline
-    Lambda (box=0.15). Shows the risk buffer matters (per CLAUDE.md: do not
+    Lambda (box=0.15). Shows why the proposal-side risk buffer matters: do not
     conclude gamma=1.0 suffices without checking). -> runs/gamma_ablation.csv
     (gamma,seed,d,alpha,cert_n,cert_risk_ucb,cert_coverage_lcb,certified,test_risk)
 
@@ -20,7 +20,7 @@ NOTE: GN has 5 stored seeds (0..4); this ablation reuses stored logits (no new
 training), so the 10-seed floor for NEW cells does not apply -- flagged in the
 report.
 
-Run: python experiments/fedcore/exp_r4_knob_sensitivity.py   (CPU, no torch)
+Run: python -m fedcore.experiments.exp_r4_knob_sensitivity   (CPU, no torch)
 """
 from __future__ import annotations
 

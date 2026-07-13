@@ -63,7 +63,7 @@ class FedOSRConfig:
 
 # --------------------------------------------------------------------------- #
 # Canonical metric schema + guard constants -- single source of truth.
-# (Values UNCHANGED from their previous in-module definitions; see CLAUDE.md section 3.)
+# Public experiment defaults.
 # --------------------------------------------------------------------------- #
 CANONICAL_SCHEMA = [
     "score_name", "gamma", "alpha", "delta", "Lambda", "dirichlet_alpha",

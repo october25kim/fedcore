@@ -15,7 +15,7 @@ UCB, so the draft can decide whether the (expected-marginal) tightening is worth
 switching the Section 5.1 metric definition.
 
 Output: runs/delta_split_recompute.csv
-Run: python experiments/fedcore/exp_delta_split.py   (CPU, no torch)
+Run: python -m fedcore.experiments.exp_delta_split   (CPU, no torch)
 """
 
 from __future__ import annotations

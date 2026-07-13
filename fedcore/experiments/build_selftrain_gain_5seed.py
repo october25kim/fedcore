@@ -13,7 +13,7 @@ runs/selftrain_pkg_5seed.csv (Task E extension). Emits runs/selftrain_gain_5seed
 with schema: seed,certified_gain,oracle_gain,admitted,max_contamination
 and prints the mean+/-std summary.
 
-Run: python experiments/fedcore/build_selftrain_gain_5seed.py   (CPU, no torch)
+Run: python -m fedcore.experiments.build_selftrain_gain_5seed   (CPU, no torch)
 """
 
 from __future__ import annotations

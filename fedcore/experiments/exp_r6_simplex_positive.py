@@ -12,7 +12,7 @@ client-simplex robustness (reportable, per the R6 brief).
   -> runs/simplex_positive.csv
      schema: J,seed,alpha,cert_risk_ucb,cert_coverage_lcb,cert_n_min_client,certified
 
-Run: python experiments/fedcore/exp_r6_simplex_positive.py   (CPU, no torch)
+Run: python -m fedcore.experiments.exp_r6_simplex_positive   (CPU, no torch)
 """
 from __future__ import annotations
 

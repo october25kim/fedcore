@@ -11,7 +11,7 @@ alpha in {0.10, 0.20}.
 Preserves the existing MSP rows: reads the current CSV, drops any prior fedpd_proser rows
 (idempotent), appends the fresh fedpd_proser rows, and rewrites comment+header+all rows.
 
-Run: python experiments/fedcore/exp_m6_cifar100_fedpd.py   (CPU, no torch)
+Run: python -m fedcore.experiments.exp_m6_cifar100_fedpd   (CPU, no torch)
 """
 from __future__ import annotations
 

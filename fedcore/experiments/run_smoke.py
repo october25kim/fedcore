@@ -135,6 +135,7 @@ def print_metric_table(rows: List[Dict[str, object]]) -> None:
 
 
 def save_csv(rows: List[Dict[str, object]], path: str) -> None:
+    os.makedirs(os.path.dirname(path) or ".", exist_ok=True)
     with open(path, "w", newline="") as f:
         w = csv.DictWriter(f, fieldnames=METRIC_KEYS)
         w.writeheader()
@@ -220,12 +221,8 @@ def main() -> None:
     n_cert_sx = sum(1 for r in rows if r["Lambda"] == "simplex" and r["certified"])
     print(f"\ncertified: simplex {n_cert_sx}/12, box {n_cert_box}/12")
 
-    # smoke_results.csv stays in the flat experiments/fedcore dir (gitignored), NOT inside the
-    # package. After the project-root hoist this module is fedcore/fedcore/experiments/run_smoke.py,
-    # so anchor two levels up to the project root, then into experiments/fedcore -- preserving the
-    # exact pre-hoist output path so the structure-only move does not relocate the artifact.
     project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
-    out_dir = os.path.join(project_root, "experiments", "fedcore")
+    out_dir = os.path.join(project_root, "runs")
     out_path = os.path.join(out_dir, "smoke_results.csv")
     save_csv(rows, out_path)
     print(f"saved {out_path}")

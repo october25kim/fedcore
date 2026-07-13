@@ -8,7 +8,7 @@ The certification path is IDENTICAL for the synthetic smoke and real CIFAR runs:
    PRIMARY) and derive a coverage lower confidence bound;
 4. evaluate empirically on the held-out TEST fold.
 
-Metric schema keys (do not rename) -- see ``CLAUDE.md`` section 3.
+Metric schema keys are part of the public experiment output contract.
 """
 
 from __future__ import annotations

@@ -5,7 +5,7 @@ certification points is split equally across ``J`` clients (n_j = N_TOTAL / J).
 As J grows, two things tighten the screw on the STRATIFIED certificate
 (Theorem 1/1', full simplex): (i) each per-client CP interval is taken at the
 Bonferroni level delta/J, and (ii) the per-client accepted count A_j = a * n_j
-shrinks toward -- and eventually below -- the Theorem 3 feasibility floor
+shrinks toward -- and eventually below -- the Theorem 2 feasibility floor
 ln(J/delta)/(-ln(1-alpha)). J=1 is the centralized anchor (a single binomial at
 the full delta, no split). The curve therefore reads as the certified-coverage
 COST of splitting one fixed audit budget across J clients.
@@ -13,8 +13,8 @@ COST of splitting one fixed audit budget across J clients.
 Homogeneous clients (a, r fixed, r < alpha) isolate the federation price from
 heterogeneity: any decline here is purely the cost of stratifying a fixed budget.
 
-Output: runs/client_scaling.csv + experiments/fedcore/figs/FJ_client_scaling.{pdf,png}
-Run: python experiments/fedcore/exp_client_scaling.py   (CPU, no torch)
+Output: runs/client_scaling.csv + runs/figs/FJ_client_scaling.{pdf,png}
+Run: python -m fedcore.experiments.exp_client_scaling   (CPU, no torch)
 """
 
 from __future__ import annotations
@@ -114,7 +114,7 @@ def _plot(rows, base):
     ax.set_ylim(bottom=0)
     ax.legend(fontsize=8)
     fig.tight_layout()
-    stem = base + "experiments/fedcore/figs/FJ_client_scaling"
+    stem = base + "runs/figs/FJ_client_scaling"
     os.makedirs(os.path.dirname(stem), exist_ok=True)
     for ext in ("pdf", "png"):
         fig.savefig(f"{stem}.{ext}", dpi=130, bbox_inches="tight")

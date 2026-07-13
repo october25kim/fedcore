@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# Fed-CORE: run the full CIFAR experiment ladder (CLAUDE.md sec 4 / HANDOFF sec 2)
-# sequentially via docker_cifar.sh. Idempotent: a rung whose CSV already exists is
+# Fed-CORE: run the CIFAR experiment ladder sequentially via docker_cifar.sh.
+# Idempotent: a rung whose CSV already exists is
 # skipped, so the script is safe to re-run after an interruption.
 #
 #   bash scripts/run_ladder.sh

@@ -20,7 +20,7 @@ best-gamma, margin=0.01. For reference we also recompute the fixed-MSP honest
 number and the OLD selection-optimistic best-of-4x{G1,2,3} diagnostic.
 
 Output: runs/covtype_valid_multiscore.csv
-Run: python experiments/fedcore/exp_covtype_valid_multiscore.py   (CPU, no torch)
+Run: python -m fedcore.experiments.exp_covtype_valid_multiscore   (CPU, no torch)
 """
 
 from __future__ import annotations
