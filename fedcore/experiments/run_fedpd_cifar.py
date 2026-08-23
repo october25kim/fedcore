@@ -34,7 +34,9 @@ from torch.utils.data import DataLoader, Subset
 
 from fedcore.config import FedOSRConfig
 from fedcore.data.fedosr_split import build_calibration, dirichlet_partition, open_set_split
-from fedcore.experiments.run_cifar import _LabelRemapSubset, _gather_fold, _load_cifar
+from fedcore.experiments.run_cifar import (
+    _LabelRemapSubset, _gather_fold, _load_cifar, add_split_fingerprint,
+)
 
 # Load FedPD's WideResNet by file path: our fedcore/models/models.py already owns
 # the top-level name `models` (imported via run_cifar), so a normal import would clash.
@@ -158,6 +160,11 @@ def main() -> None:
     ap.add_argument("--pretrain_lr", type=float, default=0.1); ap.add_argument("--lr", type=float, default=0.01)
     ap.add_argument("--data_root", default="data"); ap.add_argument("--out", default=None)
     ap.add_argument("--smoke", action="store_true")
+    ap.add_argument("--split_id", default="split0",
+                    help="predeclared class-split identity, recorded in the artifact")
+    ap.add_argument("--unknown_classes", default=None,
+                    help="comma-separated class ids to FIX as unknown (holds the open-set "
+                         "split constant across seeds / pipelines); default None = seed-driven")
     args = ap.parse_args()
     if args.smoke:
         args.pretrain_rounds, args.rounds, args.local_epochs = 2, 2, 1
@@ -172,8 +179,12 @@ def main() -> None:
 
     train, test = _load_cifar(cfg.dataset, args.data_root)
     train_labels = np.array(train.targets); test_labels = np.array(test.targets)
-    known_classes, unknown_classes, remap = open_set_split(train_labels, cfg.n_known, cfg.seed)
-    print(f"known={known_classes.tolist()} unknown={unknown_classes.tolist()}")
+    fixed_unknown = ([int(c) for c in args.unknown_classes.split(",")]
+                     if args.unknown_classes else None)
+    known_classes, unknown_classes, remap = open_set_split(
+        train_labels, cfg.n_known, cfg.seed, unknown_classes=fixed_unknown)
+    print(f"split_id={args.split_id} known={known_classes.tolist()} "
+          f"unknown={unknown_classes.tolist()}")
 
     known_train_idx = np.where(np.isin(train_labels, known_classes))[0]
     known_train_remapped = np.array([remap[int(c)] for c in train_labels[known_train_idx]])
@@ -232,10 +243,15 @@ def main() -> None:
         from sklearn.metrics import roc_auc_score
         print(f"[context] FedPD PROSER conf AUROC (unknown detection) = {roc_auc_score(is_unk.astype(int), sm):.3f}")
 
+    raw["split_id"] = np.asarray(args.split_id)
+    raw["known_classes"] = np.asarray(known_classes, dtype=np.int64)
+    raw["unknown_classes"] = np.asarray(unknown_classes, dtype=np.int64)
+    raw["seed_legacy"] = np.asarray(cfg.seed, dtype=np.int64)
+    add_split_fingerprint(raw, cfg.seed)
     out = args.out or f"runs/fedpd_{cfg.dataset}_d{cfg.dirichlet_alpha:g}_seed{cfg.seed}.npz"
     os.makedirs(os.path.dirname(os.path.abspath(out)), exist_ok=True)
     np.savez_compressed(out, **raw)
-    print(f"saved {out}")
+    print(f"saved {out} (split_fp test={raw['test_fp']}, numpy={raw['numpy_version']})")
 
 
 if __name__ == "__main__":

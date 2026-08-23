@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Fed-CORE: run the real CIFAR FedOSR experiment inside a CUDA torch container.
 #
-# Environment-driven configuration examples:
+# Env-driven so it composes with the run ladder in CLAUDE.md / HANDOFF.md, e.g.:
 #   bash scripts/docker_cifar.sh
 #   NOISE_TYPE=symmetric  NOISE_RATE=0.35 bash scripts/docker_cifar.sh
 #   NOISE_TYPE=asymmetric NOISE_RATE=0.20 bash scripts/docker_cifar.sh

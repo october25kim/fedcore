@@ -8,7 +8,7 @@ The certification path is IDENTICAL for the synthetic smoke and real CIFAR runs:
    PRIMARY) and derive a coverage lower confidence bound;
 4. evaluate empirically on the held-out TEST fold.
 
-Metric schema keys are part of the public experiment output contract.
+Metric schema keys (do not rename) -- see ``CLAUDE.md`` section 3.
 """
 
 from __future__ import annotations
@@ -243,26 +243,76 @@ def certify_best_gamma_grouped(
     box: float = 0.15,
     seed: int = 0,
     margin: float = 0.0,
+    mixture_spec=None,
 ) -> Dict[str, object]:
     """Grouped-stratified certificate (paper sec 4.4): worst-GROUP guarantee.
 
-    Relabels each point's client id to its PUBLIC group id and applies the
-    conditional certificate over ``G`` groups (eps = delta/G). Larger groups carry
-    more accepted points, raising per-group counts toward the Theorem-2 floor. This
-    is also the privacy compromise (secure-aggregate within groups). ``G=1`` is the
-    pooled certificate -- valid only under matched mixture; label accordingly.
+    TWO PATHS, and they are NOT interchangeable
+    -------------------------------------------
+    * ``mixture_spec`` GIVEN -> the EXACT path. The certification sample is DRAWN from
+      the declared group mixture via the pre-registered sampler
+      (``fedcore.group_draw.draw_group_certification_sample``): per observation,
+      ``client ~ Categorical(pi_{.|g})`` then one unit from that client's frozen
+      certification reservoir WITH REPLACEMENT. Each observation is i.i.d. from the
+      group-g mixture, so ``K_g | A_g ~ Bin(A_g, r_g)`` holds EXACTLY and the result is
+      a grouped-mixture CERTIFICATE.
+
+    * ``mixture_spec`` OMITTED -> the LEGACY DIAGNOSTIC path. It merely relabels each
+      point's client id to its group id and certifies the fixed-quota certification
+      fold. Fixed quotas are deterministic largest-remainder allocations, NOT draws from
+      the group mixture, so the conditional binomial law does NOT hold exactly. The
+      returned row is tagged ``draw_construction='fixed_quota_largest_remainder'`` and
+      ``theorem_exact=False``: it is a diagnostic and MUST NOT be reported as a
+      grouped-mixture certificate result.
+
+    ``eps = delta/G``. ``G=1`` is the pooled certificate -- valid only under matched
+    mixture; label accordingly.
+
+    The selector still sees the PROPOSAL fold only: the drawn sample replaces the
+    CERTIFICATION fold alone, which is exactly where the conditional law must hold.
     """
     def regroup(view):
         v = dict(view)
         v["client"] = group_map[np.asarray(view["client"])]
         return v
 
-    return certify_best_gamma(
-        regroup(prop_view), regroup(cert_view), regroup(test_view),
+    cert_for_certificate = regroup(cert_view)
+    draw_tags: Dict[str, object] = {
+        "draw_construction": "fixed_quota_largest_remainder",
+        "sampler_invoked": "none",
+        "theorem_exact": False,
+        "artifact_class": "diagnostic_fixed_quota",
+        "manuscript_status": (
+            "not_theorem_exact__not_manuscript_headline__"
+            "superseded_until_reproduced_under_exact_sampler"
+        ),
+    }
+
+    if mixture_spec is not None:
+        from fedcore.group_draw import draw_group_certification_sample
+
+        cert_for_certificate, record = draw_group_certification_sample(
+            cert_view, mixture_spec
+        )
+        draw_tags = {
+            "draw_construction": record.draw_construction,
+            "sampler_invoked": record.sampler,
+            "theorem_exact": True,
+            "artifact_class": "exact_group_mixture_certificate",
+            "manuscript_status": "manuscript_facing_exact_sampler",
+            "n_g": dict(record.n_g),
+            "seed_per_group": dict(record.seed_per_group),
+            "draw_record": record,
+        }
+
+    out = certify_best_gamma(
+        regroup(prop_view), cert_for_certificate, regroup(test_view),
         score_name=score_name, gammas=gammas, alpha=alpha, delta=delta,
         n_clients=G, dirichlet_alpha=float("nan"), Lambda=Lambda,
         box=box, seed=seed, margin=margin,
     )
+    out.update(draw_tags)
+    return out
 
 
 def certify_grid(

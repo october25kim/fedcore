@@ -36,7 +36,9 @@ from torch.utils.data import DataLoader, Subset
 
 from fedcore.config import FedOSRConfig
 from fedcore.data.fedosr_split import build_calibration, dirichlet_partition, open_set_split
-from fedcore.experiments.run_cifar import _LabelRemapSubset, _gather_fold, _load_cifar
+from fedcore.experiments.run_cifar import (
+    _LabelRemapSubset, _gather_fold, _load_cifar, add_split_fingerprint,
+)
 
 # FOOGD repo (mounted at /foogd) provides the real training code.
 sys.path.insert(0, "/foogd")
@@ -173,10 +175,11 @@ def main() -> None:
         from sklearn.metrics import roc_auc_score
         print(f"[context] FOOGD-full sm AUROC (unknown detection) = {roc_auc_score(is_unk.astype(int), sm):.3f}")
 
+    add_split_fingerprint(raw, cfg.seed)
     out = args.out or f"runs/foogdfull_{cfg.dataset}_d{cfg.dirichlet_alpha:g}_seed{cfg.seed}.npz"
     os.makedirs(os.path.dirname(os.path.abspath(out)), exist_ok=True)
     np.savez_compressed(out, **raw)
-    print(f"saved {out}")
+    print(f"saved {out} (split_fp test={raw['test_fp']}, numpy={raw['numpy_version']})")
 
 
 if __name__ == "__main__":

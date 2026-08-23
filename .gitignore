@@ -1,46 +1,23 @@
-# Generated experiment artifacts and datasets
+# Fed-CORE: never commit results / data / heavy inputs / vendored baselines.
 /runs/
+/results/
 /data/
-/outputs/
-/checkpoints/
-/logs/
-/wandb/
 /third_party/
-*.pt
-*.pth
-*.npy
-*.npz
+experiments/fedcore/smoke_results.csv
 
-# Internal project material excluded from the research-code release
-/docs/
-/reports/
-/experiments/
-/tests/
-/.agents/
-/.claude/
-/.codex/
-/AGENTS.md
-/CLAUDE.md
-/HANDOFF.md
-/REFACTOR_PLAN.md
-/REPRODUCE.md
-/PROMPT_*.md
-/scripts/ws4090/RUNBOOK.md
-/scripts/docker_test.sh
-/fedcore/experiments/make_handoff.py
-
-# Python and build artifacts
-__pycache__/
+# python / build artifacts
 *.pyc
+__pycache__/
 *.egg-info/
-/.venv/
-/venv/
 /build/
 /dist/
-.ipynb_checkpoints/
+/.venv/
+.venv/
+/.pytest_cache/
+.pytest_cache/
 
-# OS, editor, and temporary files
+# OS / editor junk
 .DS_Store
 ._*
-*.tmp
-*.swp
+.vscode/
+.idea/

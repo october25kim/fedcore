@@ -1,0 +1,14 @@
+Pooling-fail ablation (delta=0.1, J=5, n_j=300)
+population a=[0.7, 0.7, 0.7, 0.7, 0.5]  r=[0.02, 0.02, 0.02, 0.02, 0.3]
+
+     mixture   R_sel*  cov_pooled  cov_cond_sx  cov_cond_box
+------------------------------------------------------------
+     matched   0.0624       0.914        1.000         1.000
+     uniform   0.0624       0.914        1.000         1.000
+  shift->bad   0.1648       0.000        1.000         0.379
+    all->bad   0.3000       0.000        0.983         0.000
+
+Tightness (simplex), median U over trials:
+  conditional (Thm 1) : 0.3823  (expect ~0.37, TIGHTER)
+  mass-ratio  (App C) : 0.4727  (expect ~0.45)
+  conditional tighter than mass-ratio: True

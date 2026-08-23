@@ -38,7 +38,9 @@ from fedcore.models.fed_train import fedavg, export_logits
 from fedcore.data.fedosr_split import build_calibration, dirichlet_partition, open_set_split
 from fedcore.experiments.foogd_score import sm_score, train_federated_score_model
 from fedcore.models.models import make_model
-from fedcore.experiments.run_cifar import _LabelRemapSubset, _gather_fold, _load_cifar
+from fedcore.experiments.run_cifar import (
+    _LabelRemapSubset, _gather_fold, _load_cifar, add_split_fingerprint,
+)
 
 
 @torch.no_grad()
@@ -146,10 +148,11 @@ def main() -> None:
         auroc = roc_auc_score(is_unk.astype(int), sm)  # sm high => OOD
         print(f"[context] FOOGD sm-score AUROC (unknown detection) = {auroc:.3f}")
 
+    add_split_fingerprint(raw, cfg.seed)
     out = args.out or f"runs/foogd_{cfg.dataset}_d{cfg.dirichlet_alpha:g}_seed{cfg.seed}.npz"
     os.makedirs(os.path.dirname(os.path.abspath(out)), exist_ok=True)
     np.savez_compressed(out, **raw)
-    print(f"saved {out}")
+    print(f"saved {out} (split_fp test={raw['test_fp']}, numpy={raw['numpy_version']})")
 
 
 if __name__ == "__main__":

@@ -3,12 +3,12 @@
 TASK A -> figs/F6_feasibility_law.png (+pdf): ONE figure, three panels, same data as the
   standalone F6 (grouped staircase) + the calibration-budget sweep:
     (a) worst-group certified risk-UCB vs per-group accepted count (log x), G=5,3,2,1,
-        with alpha=0.10 and the Theorem-2 floor   [source: make_figures._staircase_by_G on
+        with alpha=0.10 and the Theorem 3 floor   [source: make_figures._staircase_by_G on
         runs/cifar10_d5_resnet18_seed{0..4}_logits.npz (5-seed band) + simplecnn ref];
     (b) CertifiedCoverage@0.10 vs per-group accepted count                 [same source];
     (c) calibration-budget sweep: cert_ucb (left y) and P(certified) (right y) vs per-client
         calibration count (log x), alpha=0.10  [source: runs/ablation_calib_budget.csv].
-  Message: grouping (G) and audit budget are the SAME sample-size lever of Theorem 2.
+  Message: grouping (G) and audit budget are the SAME sample-size lever of Theorem 3.
 
 TASK B -> figs/F7_hetero_collapse.png (+pdf): ONE figure, two panels:
     (a) heterogeneity axis: min certified risk-UCB vs Dirichlet d (SimpleCNN stress)
@@ -53,7 +53,7 @@ def _save(fig, name):
 # ---------------------------------------------------------------------------- #
 def fig_F6_composite():
     fig, (axa, axb, axc) = plt.subplots(1, 3, figsize=(15, 4.0))
-    thm2 = np.log(2 / DELTA) / (-np.log(1 - ALPHA))   # ~37 (per-group Thm-2 floor, G=2)
+    thm2 = np.log(2 / DELTA) / (-np.log(1 - ALPHA))   # ~37 (per-group Theorem 3 floor, G=2)
 
     # (a)+(b) grouped staircase: ResNet d=5 5-seed band + simplecnn ref
     res = sorted(glob.glob(BASE + "runs/cifar10_d5_resnet18_seed*_logits.npz"))
@@ -80,7 +80,7 @@ def fig_F6_composite():
         axa.plot(xs, [s[G][1] for G in GS], "s--", color=CB["simplecnn"], ms=5, label="simplecnn (1 seed)")
         axb.plot(xs, [s[G][2] for G in GS], "s--", color=CB["simplecnn"], ms=5, label="simplecnn (1 seed)")
     axa.axhline(ALPHA, ls="--", color=CB["alpha"], label=r"$\alpha=0.1$")
-    axa.axvline(thm2, ls=":", color=CB["floor"], label=r"Thm 2 floor")
+    axa.axvline(thm2, ls=":", color=CB["floor"], label=r"Thm 3 floor")
     axb.axvline(thm2, ls=":", color=CB["floor"])
     axa.legend(fontsize=8); axb.legend(fontsize=8)
 
@@ -104,7 +104,7 @@ def fig_F6_composite():
     lines = axc.get_lines()[:2] + axr.get_lines()
     axc.legend(lines, [l.get_label() for l in lines], fontsize=8, loc="center right")
 
-    fig.suptitle("Feasibility law (Theorem 2): grouping and audit budget are the same sample-size lever",
+    fig.suptitle("Feasibility law (Theorem 3): grouping and audit budget are the same sample-size lever",
                  fontsize=12, y=1.02)
     _save(fig, "F6_feasibility_law")
     print(f"  (a,b) source: {[os.path.basename(f) for f in src_ab]} + simplecnn ref")

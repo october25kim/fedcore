@@ -15,7 +15,7 @@ set -euo pipefail
 
 # 2.6.0-cu118 is the image present on the 4xTITAN-RTX box and verified against the
 # golden gate (numpy 2.2.2, scipy 1.17.1 -> GOLDEN CHECK PASS). Override with IMAGE=
-# to pin the CUDA image (pytorch/pytorch:2.3.0-cuda12.1-cudnn8-runtime).
+# to pin the REPRODUCE image (pytorch/pytorch:2.3.0-cuda12.1-cudnn8-runtime).
 IMAGE="${IMAGE:-pytorch/pytorch:2.6.0-cuda11.8-cudnn9-runtime}"
 MANIFEST="${MANIFEST:?set MANIFEST=scripts/ws4090/manifest_R*.txt}"
 NUM_GPUS="${NUM_GPUS:-4}"

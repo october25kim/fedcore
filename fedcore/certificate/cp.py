@@ -22,12 +22,26 @@ def cp_upper(k: int, n: int, eps: float) -> float:
     Returns ``p_hi`` such that ``P(Bin(n, p_hi) <= k) = eps`` (coverage at level
     ``1 - eps``). Conventions: ``1.0`` if ``n <= 0`` (no data => no information)
     and ``1.0`` if ``k >= n`` (saturated).
+
+    Implemented with the inverse survival function rather than
+    ``ppf(1 - eps, ...)``. The two are mathematically identical, but ``1 - eps``
+    rounds to exactly ``1.0`` in float64 once ``eps < 2^-53 ~ 1.1e-16``, which
+    would make this return ``1.0`` regardless of the data. Such tiny per-client
+    budgets are not hypothetical: they are precisely what the Theorem-4
+    allocation rules (R1/R3) hand to count-rich clients -- a proposal count of
+    400 at ``alpha = 0.10`` already yields ``eps ~ 8e-19``. Via ``isf`` that
+    client correctly certifies at ``rbar = 0.0988``; via ``ppf`` it would have
+    spuriously refused at ``rbar = 1.0``. For the uniform allocation
+    (``eps = delta/J ~ 0.02``) the two agree to machine precision, so no legacy
+    result changes.
     """
     if n <= 0:
         return 1.0
     if k >= n:
         return 1.0
-    return float(_beta.ppf(1.0 - eps, k + 1, n - k))
+    if eps <= 0.0:
+        return 1.0
+    return float(_beta.isf(eps, k + 1, n - k))
 
 
 def cp_lower(k: int, n: int, eps: float) -> float:

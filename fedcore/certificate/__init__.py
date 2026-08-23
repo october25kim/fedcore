@@ -14,10 +14,21 @@ from .theorem1 import (
 )
 from .theorem3 import pooled_cp, true_selective_risk
 from .feasibility import thm2_floor
+from .joint import JointCertificate, joint_conditional_certificate
 
 __all__ = [
-    "cp_upper", "cp_lower", "_sample_lambdas", "_resolve_box_radius",
-    "ConditionalCertificate", "_inner_sup_over_a", "conditional_risk_certificate",
-    "StratifiedCertificate", "stratified_certificate",
-    "pooled_cp", "true_selective_risk", "thm2_floor",
+    "cp_upper",
+    "cp_lower",
+    "_sample_lambdas",
+    "_resolve_box_radius",
+    "ConditionalCertificate",
+    "_inner_sup_over_a",
+    "conditional_risk_certificate",
+    "StratifiedCertificate",
+    "stratified_certificate",
+    "pooled_cp",
+    "true_selective_risk",
+    "thm2_floor",
+    "JointCertificate",
+    "joint_conditional_certificate",
 ]

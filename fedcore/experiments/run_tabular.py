@@ -18,7 +18,9 @@ import argparse
 import numpy as np
 
 from fedcore.certify import certify_best_gamma, certify_grid
-from fedcore.data.fedosr_split import build_calibration, dirichlet_partition, open_set_split
+from fedcore.data.fedosr_split import (
+    add_split_fingerprint, build_calibration, dirichlet_partition, open_set_split,
+)
 from fedcore.experiments.run_smoke import print_metric_table, save_csv
 from fedcore.scores import scored_views
 
@@ -128,11 +130,12 @@ def main():
         lg, yo, cl = fold_logits(fold)
         views[fold] = scored_views(lg, yo, cl, list(scores))
         raw[f"{fold}_logits"] = lg; raw[f"{fold}_y_open"] = yo; raw[f"{fold}_client"] = cl
+    add_split_fingerprint(raw, args.seed)
     import os as _os
     npz = _os.path.splitext(args.out)[0] + "_logits.npz"
     _os.makedirs(_os.path.dirname(_os.path.abspath(npz)), exist_ok=True)
     np.savez_compressed(npz, **raw)
-    print(f"saved {npz}")
+    print(f"saved {npz} (split_fp test={raw['test_fp']}, numpy={raw['numpy_version']})")
 
     rows = certify_grid(views["prop"], views["cert"], views["test"], scores=scores,
                         gammas=(0.2, 0.3, 0.5, 0.7, 1.0), alpha=args.alpha, delta=args.delta,

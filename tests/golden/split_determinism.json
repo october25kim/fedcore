@@ -1,0 +1,44 @@
+{
+  "dirichlet_client_sizes": [
+    581,
+    571,
+    624,
+    473,
+    751
+  ],
+  "folds": {
+    "cert": {
+      "idx_max": 5997,
+      "idx_min": 108,
+      "idx_sum": 1191032,
+      "n": 255
+    },
+    "prop": {
+      "idx_max": 5999,
+      "idx_min": 121,
+      "idx_sum": 1664191,
+      "n": 345
+    },
+    "test": {
+      "idx_max": 5996,
+      "idx_min": 10,
+      "idx_sum": 1222451,
+      "n": 255
+    }
+  },
+  "known_classes": [
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ],
+  "prop_cert_test_disjoint": true,
+  "unknown_classes": [
+    0,
+    1,
+    8,
+    9
+  ]
+}

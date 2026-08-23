@@ -37,7 +37,7 @@ class FedOSRConfig:
     # certification targets
     alpha: float = 0.10
     delta: float = 0.10
-    gammas: Tuple[float, ...] = (0.2, 0.3, 0.5, 0.7, 1.0)
+    gammas: Tuple[float, ...] = (0.5, 0.7, 1.0)
     Lambda: str = "simplex"
     box_radius: float = 0.15
 
@@ -63,13 +63,25 @@ class FedOSRConfig:
 
 # --------------------------------------------------------------------------- #
 # Canonical metric schema + guard constants -- single source of truth.
-# Public experiment defaults.
+# (Values UNCHANGED from their previous in-module definitions; see CLAUDE.md section 3.)
 # --------------------------------------------------------------------------- #
 CANONICAL_SCHEMA = [
-    "score_name", "gamma", "alpha", "delta", "Lambda", "dirichlet_alpha",
-    "n_clients", "certified", "cert_risk_ucb", "cert_coverage_lcb",
-    "cert_n", "cert_k", "prop_coverage", "prop_risk",
-    "test_coverage", "test_risk",
+    "score_name",
+    "gamma",
+    "alpha",
+    "delta",
+    "Lambda",
+    "dirichlet_alpha",
+    "n_clients",
+    "certified",
+    "cert_risk_ucb",
+    "cert_coverage_lcb",
+    "cert_n",
+    "cert_k",
+    "prop_coverage",
+    "prop_risk",
+    "test_coverage",
+    "test_risk",
 ]
 
 # Self-training aggregation convergence guard: drop runs whose base known_acc is ~chance

@@ -3,7 +3,7 @@
 Generates (PDF + PNG, mathtext-safe, colorblind-safe) into figs/:
   F5 alpha-frontier  : CertCov@alpha vs alpha (d=5), SimpleCNN vs ResNet, proxy margin.
   F6 feasibility law : cert_ucb & CertCov@0.1 vs per-group accepted count, with the
-                       Theorem-2 floor and the alpha line -- THE signature figure.
+                       Theorem 3 floor and the alpha line -- THE signature figure.
   F7 hetero collapse : min cert_ucb vs Dirichlet d (SimpleCNN), with the alpha line.
 
 Run: ``python -m fedcore.plotting.make_figures``  (CPU, no torch)
@@ -34,7 +34,7 @@ ALPHA, DELTA = 0.10, 0.10
 GAMMAS = (0.2, 0.3, 0.5, 0.7, 1.0)
 CB = {"simplecnn": "#0072B2", "resnet18": "#D55E00", "floor": "#009E73", "alpha": "#444444"}
 BASE = "" if glob.glob("runs/*.npz") else "../../"
-FIGS = BASE + "runs/figs"
+FIGS = BASE + "experiments/fedcore/figs"
 
 
 def _load_views(npz, score):
@@ -103,32 +103,8 @@ def _certcov_vs_budget(npz, G=2, score="msp", fracs=(0.2, 0.33, 0.5, 0.6, 0.7)):
     return out
 
 
-def _client_scaling_cells(csv_path, alpha=0.20):
-    """{J: [(G, mean_certcov, std_certcov, n_pass, n)]} from runs/client_scaling.csv.
-
-    CertCov convention: uncertified seeds contribute zero (Section 5.1 headline metric).
-    """
-    import csv as _csv
-    rows = [r for r in _csv.DictReader(
-        (l for l in open(csv_path) if not l.startswith("#")))]
-    out = {}
-    for J in sorted({int(r["J"]) for r in rows}):
-        cells = []
-        Gs = sorted({int(r["G"]) for r in rows if int(r["J"]) == J}, reverse=True)
-        for G in Gs:
-            c = [r for r in rows if int(r["J"]) == J and int(r["G"]) == G
-                 and abs(float(r["alpha"]) - alpha) < 1e-9]
-            if not c:
-                continue
-            cov = [float(r["cert_coverage_lcb"]) if r["certified"] == "1" else 0.0 for r in c]
-            cells.append((G, float(np.mean(cov)), float(np.std(cov)),
-                          sum(r["certified"] == "1" for r in c), len(c)))
-        out[J] = cells
-    return out
-
-
 def fig_F6():
-    fig, (ax1, ax2, ax3, ax4) = plt.subplots(1, 4, figsize=(20, 4.4))
+    fig, (ax1, ax2, ax3) = plt.subplots(1, 3, figsize=(15, 4.4))
     Gs = (5, 3, 2, 1)
     res = sorted(glob.glob(BASE + "runs/cifar10_d5_resnet18_seed*_logits.npz"))
     n_clients = None
@@ -152,11 +128,11 @@ def fig_F6():
         s = _staircase_by_G(sc)
         ax1.plot([s[G][0] for G in Gs], [s[G][1] for G in Gs], "s--",
                  color=CB["simplecnn"], ms=5, label="simplecnn (1 seed)")
-    # per-CLIENT Theorem-3 floor: ln(J/delta) / (-ln(1-alpha)), J = n_clients (~37/client)
+    # per-CLIENT Theorem 3 floor: ln(J/delta) / (-ln(1-alpha)), J = n_clients (~37/client)
     J = n_clients if n_clients else 5
-    thm3 = np.log(J / DELTA) / (-np.log(1 - ALPHA))
+    thm2 = np.log(J / DELTA) / (-np.log(1 - ALPHA))
     ax1.axhline(ALPHA, ls="--", color=CB["alpha"], label=r"$\alpha=0.1$")
-    ax1.axvline(thm3, ls=":", color=CB["floor"], label=f"Thm 3 floor ({thm3:.0f}/client)")
+    ax1.axvline(thm2, ls=":", color=CB["floor"], label=f"Thm 3 floor ({thm2:.0f}/client)")
     ax1.set_xscale("log"); ax1.set_xlabel("per-group accepted count")
     ax1.set_ylabel(r"certified $\bar{U}$ (risk UCB)")
     ax1.set_title("(a) cert_risk_ucb vs per-group count"); ax1.legend(fontsize=11)
@@ -173,26 +149,6 @@ def fig_F6():
         ax3.fill_between(fracs, bm - bs, bm + bs, color=CB["resnet18"], alpha=0.2)
     ax3.set_xlabel("audit budget (cert_frac)"); ax3.set_ylabel(r"CertifiedCoverage@$\alpha=0.1$ (G=2)")
     ax3.set_title("(c) cert_coverage_lcb vs audit budget"); ax3.legend(fontsize=11)
-    # (d) client scaling J in {10, 20}: CertCov@0.20 vs grouping G (10 seeds, d=0.5)
-    cs_csv = BASE + "runs/client_scaling.csv"
-    if glob.glob(cs_csv):
-        marker = {10: ("o-", "#0072B2"), 20: ("s--", "#D55E00")}
-        for J_, cells in _client_scaling_cells(cs_csv, alpha=0.20).items():
-            mk, col = marker.get(J_, ("^-.", "#009E73"))
-            gx = [c[0] for c in cells]
-            m = np.array([c[1] for c in cells]); s = np.array([c[2] for c in cells])
-            n = cells[0][4]
-            ax4.plot(gx, m, mk, color=col, ms=6, label=f"J={J_} ({n} seeds)")
-            ax4.fill_between(gx, m - s, m + s, color=col, alpha=0.15)
-            for G_, mi, _, npass, ntot in cells:
-                ax4.annotate(f"{npass}/{ntot}", (G_, mi), textcoords="offset points",
-                             xytext=(4, 6), fontsize=9)
-        ax4.set_xscale("log")
-        ax4.set_xticks([2, 5, 10, 20]); ax4.set_xticklabels(["2", "5", "10", "20"])
-        ax4.invert_xaxis()
-        ax4.set_xlabel("grouping G (left = per-client, right = coarser)")
-        ax4.set_ylabel(r"CertifiedCoverage@$\alpha=0.2$")
-        ax4.set_title("(d) client scaling ($d=0.5$)"); ax4.legend(fontsize=11)
     _save(fig, "F6_feasibility_law")
 
 

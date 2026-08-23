@@ -1,0 +1,5 @@
+base_model,labeled_frac,alpha,mode,audit_mult,beta,n_seeds,seeds,known_acc_mean,known_acc_sd,contam_mean,admitted_mean,certcov_mean
+FedPD-PROSER,0.1,0.2,certified,4,1.0,3,0|1|2,0.5639,0.0829,0.0651,276,0.0
+FedPD-PROSER,0.1,0.2,certified,8,1.0,1,0,0.5633,0.0,0.0651,830,0.0114
+FedPD-PROSER,0.1,0.2,none,4,1.0,3,0|1|2,0.5208,0.1033,,0,0.0058
+FedPD-PROSER,0.1,0.2,oracle,4,1.0,3,0|1|2,0.6819,0.0818,0.0,13756,0.0054

@@ -23,7 +23,7 @@ import matplotlib.pyplot as plt
 from matplotlib.patches import FancyBboxPatch, FancyArrowPatch
 
 BASE = "" if glob.glob("runs") else "../../"
-FIGS = BASE + "runs/figs"
+FIGS = BASE + "experiments/fedcore/figs"
 
 INK = "#222222"
 C_MODEL = "#0072B2"

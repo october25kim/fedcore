@@ -1,0 +1,1 @@
+DEPRECATED 2026-07-20 (DECISION_001): this script is PROSER-FedAvg (NOT FedPD). Use proser-fedavg-confirmatory/run_proser_fedavg_cifar.py. Retained as evidence.

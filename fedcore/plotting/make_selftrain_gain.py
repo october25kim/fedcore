@@ -27,7 +27,7 @@ import matplotlib.pyplot as plt
 ALPHA = 0.20
 CB = {"certified": "#009E73", "oracle": "#56B4E9", "naive": "#D55E00", "alpha": "#444444"}
 BASE = "" if glob.glob("runs/*.csv") else "../../"
-FIGS = BASE + "runs/figs"
+FIGS = BASE + "experiments/fedcore/figs"
 SRC = BASE + "runs/selftrain_pkg.csv"
 AUDIT, BETA = "4", "1.0"          # the operating point where certified admits
 

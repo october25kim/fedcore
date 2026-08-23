@@ -1,0 +1,11 @@
+# Sibling image for the Fed-ISIC DINOv2 arm: base confirmatory image + timm +
+# pre-baked DINOv2 ViT-L/14 (lvd142m) weights so training runs OFFLINE and
+# reproducibly. The base image (fedcore-c400r) is unchanged; this only adds timm
+# (Apache-2.0) and the HF weight cache.
+FROM fedcore-c400r:latest
+RUN pip install --no-cache-dir "timm==1.0.28"
+ENV HF_HOME=/opt/hf
+# Pre-pull the DINOv2 ViT-L/14 weights into a world-readable cache baked in the image.
+RUN mkdir -p /opt/hf && \
+    python3 -c "import timm; m=timm.create_model('vit_large_patch14_dinov2.lvd142m', pretrained=True, num_classes=0, img_size=224); print('baked_params', sum(p.numel() for p in m.parameters()))" && \
+    chmod -R a+rX /opt/hf

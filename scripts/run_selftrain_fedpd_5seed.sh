@@ -2,7 +2,7 @@
 # M0: complete the 5-seed certified self-training gain cell (FedPD-PROSER base, 4x audit,
 # one-shot delta certification). Runs the SAME recipe as seeds 0-2 for the requested seeds
 # and appends to runs/selftrain_pkg_5seed.csv (the extension source that
-# fedcore.experiments.build_selftrain_gain_5seed reads for seeds 3,4).
+# experiments/fedcore/build_selftrain_gain_5seed.py reads for seeds 3,4).
 #
 #   SEEDS="3 4" GPUS="0 1" bash scripts/run_selftrain_fedpd_5seed.sh
 #

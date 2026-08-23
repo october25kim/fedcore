@@ -47,6 +47,25 @@ def atomic_write_csv(
         raise
 
 
+def atomic_write_text(path: str, text: str) -> None:
+    """Write text atomically, same temp-file + os.replace pattern as the CSV writer."""
+    directory = os.path.dirname(os.path.abspath(path)) or "."
+    os.makedirs(directory, exist_ok=True)
+    fd, tmp = tempfile.mkstemp(dir=directory, prefix=".tmp_", suffix=".txt")
+    try:
+        with os.fdopen(fd, "w") as f:
+            f.write(text)
+            f.flush()
+            os.fsync(f.fileno())
+        os.replace(tmp, path)
+    except BaseException:
+        try:
+            os.unlink(tmp)
+        except OSError:
+            pass
+        raise
+
+
 def append_csv_locked(
     path: str,
     fieldnames: Sequence[str],

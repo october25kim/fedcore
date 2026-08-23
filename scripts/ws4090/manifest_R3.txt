@@ -1,3 +1,0 @@
-# manifest_R3: FOOGD-SM3D d=5 seed extension (detector exception, floor 5). seeds 3,4 committed; append 5-9 if budget.
-r3_foogd_d5_s3	runs/foogd_cifar10_d5_seed3.npz	python -m fedcore.experiments.run_foogd_cifar --dataset cifar10 --n_known 6 --n_clients 5 --dirichlet_alpha 5 --rounds 50 --score_rounds 30 --norm gn --data_root data --seed 3 --out runs/foogd_cifar10_d5_seed3.npz
-r3_foogd_d5_s4	runs/foogd_cifar10_d5_seed4.npz	python -m fedcore.experiments.run_foogd_cifar --dataset cifar10 --n_known 6 --n_clients 5 --dirichlet_alpha 5 --rounds 50 --score_rounds 30 --norm gn --data_root data --seed 4 --out runs/foogd_cifar10_d5_seed4.npz

@@ -2,5 +2,5 @@
 
 The importable core lives entirely under the project-root `fedcore/` package.
 Run entry points with `python -m fedcore.experiments.<name>`; the old flat
-Runnable entry points are available under `fedcore.experiments`.
+`experiments/fedcore/*.py` code paths have been removed.
 """
