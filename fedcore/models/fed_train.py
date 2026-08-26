@@ -252,7 +252,15 @@ def fedavg(
         # the GPU by map_location, which is what broke torch.cuda.set_rng_state_all
         # on --resume.  The model weights are copied onto ``device`` below via
         # load_state_dict into the already-on-device global_model.
-        payload = torch.load(checkpoint_path, map_location="cpu")
+        # This checkpoint was created by this run and stores NumPy/Python RNG
+        # states in addition to tensors. PyTorch >=2.6 defaults to
+        # weights_only=True, which rejects those trusted local state objects.
+        try:
+            payload = torch.load(
+                checkpoint_path, map_location="cpu", weights_only=False
+            )
+        except TypeError:  # PyTorch versions predating the keyword.
+            payload = torch.load(checkpoint_path, map_location="cpu")
         expected_meta = dict(checkpoint_metadata or {})
         stored_meta = dict(payload.get("metadata", {}))
         expected_hash = expected_meta.get("training_config_sha256")

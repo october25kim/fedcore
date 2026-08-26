@@ -36,8 +36,13 @@ from fedcore.campaign.plan import TrainingCell, expand_training_cells, load_plan
 
 CANONICAL_METRIC_FIELDS = (
     "certified",
+    "risk_output_type",
+    "risk_pass",
     "cert_risk_ucb",
     "cert_coverage_lcb",
+    "iut_raw_pvalue",
+    "holm_adjusted_pvalue",
+    "holm_rank",
     "cert_n",
     "cert_k",
     "prop_coverage",
@@ -48,6 +53,9 @@ CANONICAL_METRIC_FIELDS = (
     "gamma",
     "alpha",
     "delta",
+    "delta_r",
+    "delta_c",
+    "family_procedure",
     "Lambda",
     "dirichlet_alpha",
     "n_clients",
@@ -428,7 +436,9 @@ def _validate_training_manifest(
             raise CampaignValidationError("scheduler manifest artifact hash mismatch")
         if int(record.get("size_bytes", -1)) != os.path.getsize(artifact.path):
             raise CampaignValidationError("scheduler manifest artifact size mismatch")
-        if os.path.abspath(str(record.get("path", ""))) != artifact.path:
+        # macOS exposes /var through /private/var.  Compare canonical real paths
+        # so a manifest made from one spelling validates under the other.
+        if os.path.realpath(str(record.get("path", ""))) != os.path.realpath(artifact.path):
             raise CampaignValidationError("scheduler manifest artifact path mismatch")
         return
     if manifest.get("experiment_id") != cell.experiment_id:
@@ -449,7 +459,8 @@ def _validate_training_manifest(
     if not isinstance(records, list) or not any(
         isinstance(record, dict)
         and record.get("sha256") == artifact.sha256
-        and os.path.abspath(str(record.get("path", ""))) == artifact.path
+        and os.path.realpath(str(record.get("path", "")))
+        == os.path.realpath(artifact.path)
         for record in records
     ):
         raise CampaignValidationError(
@@ -514,6 +525,38 @@ def _number(value: Any, name: str, *, nullable: bool = False) -> Optional[float]
     return result
 
 
+def _normalize_metric_row(row: Mapping[str, Any]) -> dict[str, Any]:
+    """Return the canonical risk-output schema, including legacy defaults.
+
+    Historical one-shot artifacts contain only numerical risk UCBs and the
+    component-level failure-budget names.  They remain readable as single-
+    selector numerical-UCB rows.  New producers should write every field
+    explicitly, especially for fixed-alpha Holm/IUT decisions.
+    """
+
+    normalized = dict(row)
+    normalized.setdefault("delta_r", normalized.get("delta_conditional_risk"))
+    normalized.setdefault("delta_c", normalized.get("delta_acceptance_lower"))
+    normalized.setdefault("family_procedure", "single_selector")
+    normalized.setdefault("risk_output_type", "numerical_ucb")
+    if "risk_pass" not in normalized:
+        risk = normalized.get("cert_risk_ucb")
+        alpha = normalized.get("alpha")
+        normalized["risk_pass"] = bool(
+            isinstance(risk, (int, float))
+            and not isinstance(risk, bool)
+            and math.isfinite(float(risk))
+            and isinstance(alpha, (int, float))
+            and not isinstance(alpha, bool)
+            and math.isfinite(float(alpha))
+            and float(risk) <= float(alpha)
+        )
+    normalized.setdefault("iut_raw_pvalue", None)
+    normalized.setdefault("holm_adjusted_pvalue", None)
+    normalized.setdefault("holm_rank", None)
+    return normalized
+
+
 def _validate_metric_row(row: Mapping[str, Any], cell: TrainingCell) -> None:
     missing = set(
         CANONICAL_METRIC_FIELDS + GRID_FIELDS + ACCOUNTING_FIELDS + PROVENANCE_FIELDS
@@ -525,11 +568,41 @@ def _validate_metric_row(row: Mapping[str, Any], cell: TrainingCell) -> None:
     if not isinstance(row["certified"], bool):
         raise CampaignValidationError("certified must be boolean")
     alpha = _number(row["alpha"], "alpha")
+    delta_r = _number(row["delta_r"], "delta_r")
+    delta_c = _number(row["delta_c"], "delta_c")
     gamma = _number(row["gamma"], "gamma")
     audit_fraction = _number(row["audit_budget_fraction"], "audit_budget_fraction")
     rho = _number(row["rho"], "rho", nullable=True)
     if alpha is None or not 0.0 < alpha < 1.0:
         raise CampaignValidationError("alpha must lie in (0, 1)")
+    if delta_r is None or not 0.0 < delta_r < 1.0:
+        raise CampaignValidationError("delta_r must lie in (0, 1)")
+    if delta_c is None or not 0.0 < delta_c < 1.0:
+        raise CampaignValidationError("delta_c must lie in (0, 1)")
+    if (
+        not isinstance(row["family_procedure"], str)
+        or not row["family_procedure"]
+    ):
+        raise CampaignValidationError("family_procedure must be non-empty")
+    risk_output_type = row["risk_output_type"]
+    if risk_output_type not in {"numerical_ucb", "fixed_alpha_decision"}:
+        raise CampaignValidationError(
+            "risk_output_type must be numerical_ucb or fixed_alpha_decision"
+        )
+    risk_pass = row["risk_pass"]
+    if not isinstance(risk_pass, bool):
+        raise CampaignValidationError("risk_pass must be boolean")
+    for name in ("iut_raw_pvalue", "holm_adjusted_pvalue"):
+        pvalue = _number(row[name], name, nullable=True)
+        if pvalue is not None and not 0.0 <= pvalue <= 1.0:
+            raise CampaignValidationError(f"{name} must be null or lie in [0, 1]")
+    holm_rank = row["holm_rank"]
+    if holm_rank is not None and (
+        isinstance(holm_rank, bool)
+        or not isinstance(holm_rank, int)
+        or holm_rank <= 0
+    ):
+        raise CampaignValidationError("holm_rank must be null or a positive integer")
     if gamma not in {0.5, 0.7, 1.0}:
         raise CampaignValidationError("gamma must be one of {0.5, 0.7, 1.0}")
     if audit_fraction is None or not 0.0 < audit_fraction <= 1.0:
@@ -540,6 +613,7 @@ def _validate_metric_row(row: Mapping[str, Any], cell: TrainingCell) -> None:
         d_value = _number(row["dirichlet_alpha"], "dirichlet_alpha")
         if d_value is None or d_value <= 0.0:
             raise CampaignValidationError("dirichlet_alpha must be positive or null")
+    metric_values: dict[str, float] = {}
     for name in (
         "cert_coverage_lcb",
         "prop_coverage",
@@ -550,17 +624,79 @@ def _validate_metric_row(row: Mapping[str, Any], cell: TrainingCell) -> None:
         value = _number(row[name], name)
         if value is None or not 0.0 <= value <= 1.0:
             raise CampaignValidationError(f"{name} must lie in [0, 1]")
+        metric_values[name] = value
     risk = _number(row["cert_risk_ucb"], "cert_risk_ucb", nullable=True)
     feasible = row.get("certificate_feasible")
-    if risk is None:
-        if feasible is not False or row["certified"]:
+    if risk_output_type == "numerical_ucb":
+        if any(
+            row[name] is not None
+            for name in ("iut_raw_pvalue", "holm_adjusted_pvalue", "holm_rank")
+        ):
             raise CampaignValidationError(
-                "null cert_risk_ucb is allowed only for an explicitly infeasible certificate"
+                "numerical_ucb rows must not carry Holm/IUT decision fields"
             )
-    elif not 0.0 <= risk <= 1.0:
-        raise CampaignValidationError("cert_risk_ucb must lie in [0, 1]")
-    if row["certified"] and (risk is None or risk > alpha):
-        raise CampaignValidationError("certified row has risk UCB above alpha")
+        if risk is None:
+            if feasible is not False or row["certified"]:
+                raise CampaignValidationError(
+                    "null cert_risk_ucb is allowed only for an explicitly infeasible certificate"
+                )
+        elif not 0.0 <= risk <= 1.0:
+            raise CampaignValidationError("cert_risk_ucb must lie in [0, 1]")
+        expected_risk_pass = bool(risk is not None and risk <= alpha)
+        if risk_pass != expected_risk_pass:
+            raise CampaignValidationError(
+                "numerical-UCB risk_pass is inconsistent with cert_risk_ucb and alpha"
+            )
+        if row["certified"] and (risk is None or risk > alpha):
+            raise CampaignValidationError("certified row has risk UCB above alpha")
+    else:
+        if risk is not None:
+            raise CampaignValidationError(
+                "fixed_alpha_decision requires null cert_risk_ucb"
+            )
+        if row["family_procedure"] != "holm_iut":
+            raise CampaignValidationError(
+                "fixed_alpha_decision requires family_procedure='holm_iut'"
+            )
+        raw_pvalue = _number(
+            row["iut_raw_pvalue"], "iut_raw_pvalue", nullable=True
+        )
+        adjusted_pvalue = _number(
+            row["holm_adjusted_pvalue"], "holm_adjusted_pvalue", nullable=True
+        )
+        holm_fields = (raw_pvalue, adjusted_pvalue, holm_rank)
+        if any(value is None for value in holm_fields) and not all(
+            value is None for value in holm_fields
+        ):
+            raise CampaignValidationError(
+                "Holm raw p-value, adjusted p-value, and rank must be jointly present or null"
+            )
+        if risk_pass and adjusted_pvalue is None:
+            raise CampaignValidationError(
+                "a passing fixed-alpha decision requires its Holm evidence"
+            )
+        if (
+            adjusted_pvalue is not None
+            and raw_pvalue is not None
+            and adjusted_pvalue + 1e-15 < raw_pvalue
+        ):
+            raise CampaignValidationError(
+                "Holm-adjusted p-value must not be smaller than its raw IUT p-value"
+            )
+        if adjusted_pvalue is not None and risk_pass != bool(adjusted_pvalue <= delta_r):
+            raise CampaignValidationError(
+                "fixed-alpha risk_pass is inconsistent with adjusted p-value and delta_r"
+            )
+        if row["certified"] and (
+            not risk_pass or metric_values["cert_coverage_lcb"] <= 0.0
+        ):
+            raise CampaignValidationError(
+                "fixed-alpha certified row requires risk_pass=true and positive coverage LCB"
+            )
+        if row["certified"] and feasible is False:
+            raise CampaignValidationError(
+                "explicitly infeasible fixed-alpha row cannot be certified"
+            )
     for name in (
         "cert_n",
         "cert_k",
@@ -671,11 +807,11 @@ def _validate_posthoc_manifest(
     if not isinstance(records, list):
         raise CampaignValidationError("post-hoc manifest lacks artifact records")
     expected = {
-        (os.path.abspath(training.path), training.sha256),
-        (os.path.abspath(result_path), result_sha),
+        (os.path.realpath(training.path), training.sha256),
+        (os.path.realpath(result_path), result_sha),
     }
     observed = {
-        (os.path.abspath(str(record.get("path", ""))), str(record.get("sha256", "")))
+        (os.path.realpath(str(record.get("path", ""))), str(record.get("sha256", "")))
         for record in records
         if isinstance(record, dict)
     }
@@ -733,11 +869,9 @@ def _load_posthoc_result(
         raise CampaignValidationError(
             "post-hoc result is not bound to the training artifact"
         )
-    if os.path.abspath(
-        str(input_record.get("path", ""))
-    ) != training.path or input_record.get("size_bytes") != os.path.getsize(
+    if os.path.realpath(str(input_record.get("path", ""))) != os.path.realpath(
         training.path
-    ):
+    ) or input_record.get("size_bytes") != os.path.getsize(training.path):
         raise CampaignValidationError("post-hoc input artifact path or size mismatch")
     if result.get("training_config_sha256") != training.training_config_hash:
         raise CampaignValidationError("post-hoc result training config hash mismatch")
@@ -761,7 +895,7 @@ def _load_posthoc_result(
     for raw in rows:
         if not isinstance(raw, dict):
             raise CampaignValidationError("post-hoc rows must be objects")
-        row = dict(raw)
+        row = _normalize_metric_row(raw)
         _validate_metric_row(row, cell)
         if row["input_artifact_sha256"] != training.sha256:
             raise CampaignValidationError("row input artifact hash mismatch")
@@ -1157,7 +1291,12 @@ def _write_csv(
 def _parquet_type(column: str, values: Sequence[Any]):
     import pyarrow as pa
 
-    boolean_fields = {"certified", "proposal_feasible", "certificate_feasible"}
+    boolean_fields = {
+        "certified",
+        "risk_pass",
+        "proposal_feasible",
+        "certificate_feasible",
+    }
     integer_fields = {
         "cert_n",
         "cert_k",
@@ -1166,6 +1305,7 @@ def _parquet_type(column: str, values: Sequence[Any]):
         "traffic_sample_size",
         "audit_redraw_index",
         "traffic_draw_index",
+        "holm_rank",
     }
     float_fields = {
         "cert_risk_ucb",
@@ -1177,6 +1317,10 @@ def _parquet_type(column: str, values: Sequence[Any]):
         "gamma",
         "alpha",
         "delta",
+        "delta_r",
+        "delta_c",
+        "iut_raw_pvalue",
+        "holm_adjusted_pvalue",
         "dirichlet_alpha",
         "rho",
         "audit_budget_fraction",

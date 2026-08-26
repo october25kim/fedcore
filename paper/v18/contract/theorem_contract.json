@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "target_population": "source-deduplicated frozen empirical-reservoir conditional",
+  "headline_operating_point": {
+    "alpha": 0.2,
+    "delta_r": 0.05,
+    "delta_c": 0.05,
+    "M": 12
+  },
+  "full_simplex": {
+    "single_fixed_selector": {
+      "risk": "max_j U_plus(K_j, A_j; delta_r)",
+      "coverage": "min_j L_minus(A_j, n_j; delta_c)",
+      "client_divisor": false
+    },
+    "simple_simultaneous_family": {
+      "risk": "max_j U_plus(K_mj, A_mj; delta_r/M) for every frozen m",
+      "coverage": "min_j L_minus(A_mj, n_j; delta_c/M) for every frozen m",
+      "client_divisor": false,
+      "reports_numeric_risk_ucb": true
+    },
+    "holm_iut_family": {
+      "member_pvalue": "p_m = max_j BinomCDF(K_mj; A_mj, alpha), with p_m = 1 when A_mj = 0",
+      "family_correction": "Holm over M at delta_r",
+      "coverage": "min_j L_minus(A_mj, n_j; delta_c/M)",
+      "client_divisor": false,
+      "reports_numeric_risk_ucb": false,
+      "reports": [
+        "risk decision",
+        "adjusted p-value",
+        "coverage lower confidence bound"
+      ]
+    }
+  },
+  "legacy_comparator_B": {
+    "role": "conservative comparator only",
+    "risk": "max_j U_plus(K_mj, A_mj; delta_r/(M J))",
+    "coverage": "min_j L_minus(A_mj, n_j; delta_c/(M J))",
+    "headline_method": false
+  },
+  "strict_bounded_mixture": {
+    "role": "secondary branch, not the v18 headline comparison",
+    "single_selector_risk_allocation": "delta_r/(3S) for each of the three simultaneous endpoint families",
+    "single_selector_coverage_allocation": "delta_c/S",
+    "simple_family_risk_allocation": "delta_r/(3SM) for each selector, stratum, and endpoint family",
+    "simple_family_coverage_allocation": "delta_c/(SM)",
+    "risk_endpoints": "simultaneous lower and upper acceptance endpoints plus accepted-error upper endpoints",
+    "coverage_endpoints": "a separately allocated acceptance lower endpoint family",
+    "solver": "verified conservative positive-denominator robust solver",
+    "positive_denominator_required": true,
+    "empty_feasible_domain": "cannot certify",
+    "solver_failure_policy": "fail closed"
+  },
+  "decision_rule": {
+    "family_frozen_before_certification": true,
+    "positive_coverage_required": true,
+    "all_validity_and_relevance_gates_required": true,
+    "failure_policy": "cannot certify"
+  }
+}

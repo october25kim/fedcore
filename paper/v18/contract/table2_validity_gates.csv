@@ -1,0 +1,6 @@
+Validity gate,Minimum evidence or action,Claim lost if absent
+A1 / Independent fixed-size audit,Use independent stratum draws. Fix audit sizes and stopping before outcomes are observed.,Finite-sample coverage for the stated sampling law
+A2 / Frozen pipeline,"Freeze the model, score, selector or family, mixture set, grouping, ties, and selection rule.",Selection-valid certification
+A3 / Trusted labels,Provide trusted correctness labels and verify labeled unknown support.,Clean accepted-error estimation or open-set relevance
+A4 / Matched audit target,Match future client conditionals. Reservoir audits target only the frozen reservoir.,Future-population interpretation
+A5 / Mixture membership,Require realized traffic to belong to the predeclared mixture set.,Protection outside the declared set

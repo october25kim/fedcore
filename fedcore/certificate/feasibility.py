@@ -1,44 +1,46 @@
-"""Zero-error feasibility floor -- MANUSCRIPT NUMBERING: **Theorem 3**.
+"""Accepted-count planning formulas.
 
-Extracts the per-group accepted-count floor formula used inline across the codebase
-(``ln(J/delta) / (-ln(1-alpha))``) into one named pure function. Behaviour-identical to
-the inline expression; no caller is changed by this extraction (internal call sites may be
-migrated in a later import-migration step).
-
-CODE/MANUSCRIPT NUMBERING COLLISION -- READ BEFORE CITING THIS FUNCTION
-----------------------------------------------------------------------
-The symbol ``thm2_floor`` is STALE and is deliberately NOT renamed: it is load-bearing
-for the golden/regression gate, and renaming it would move legacy results for a purely
-cosmetic gain.
-
-The quantity it computes is **Theorem 3** in the manuscript. Two independent, sealed
-authorities agree on that numbering:
-
-* ``results/preregistration.yaml`` -> ``statistics.theorem_3``:
-  "zero-error floor A_j >= ceil(ln(J/delta_r)/(-ln(1-alpha)))";
-* ``fedcore/certificate/allocation.py``'s docstring, which already uses Theorem 3.
-
-Only this module's legacy symbol and ``CLAUDE.md`` section 2 still say "Theorem 2"
-(``CLAUDE.md`` additionally reserves "Theorem 2" for the feasibility statement, which is
-the origin of the clash). MANUSCRIPT-FACING OUTPUT MUST SAY "Theorem 3" -- e.g.
-``results/fedisic/count_feasibility_by_budget.csv`` carries the column
-``A_min_theorem_manuscript = "Theorem 3"``. Do not propagate the ``thm2`` spelling into
-any table, figure label, or paper text.
+The current manuscript's Theorem 4 gives the exact zero-error threshold for one
+fixed full-simplex selector. The historical ``thm2_floor`` symbol is retained
+only for archived clientwise analyses that divided the tail by ``J``.
 """
 
 from __future__ import annotations
 
+import math
+
 import numpy as np
 
 
-def thm2_floor(J: int, delta: float, alpha: float) -> float:
-    """Per-group accepted-count floor: ``ln(J/delta) / (-ln(1-alpha))``.
+def zero_error_count_threshold(alpha: float, delta_r: float) -> int:
+    """Theorem 4: smallest ``A`` with ``U+(0, A; delta_r) <= alpha``.
 
-    MANUSCRIPT NUMBERING: this is **Theorem 3**, not Theorem 2 -- the function name is a
-    stale spelling retained only for golden-regression stability. See the module
-    docstring. Manuscript-facing output must say "Theorem 3".
-
-    A group whose accepted count falls below this floor cannot certify selective risk
-    ``<= alpha`` at confidence ``1 - delta`` (infeasible round / non-deployable).
+    This is the fixed-selector, no-stratum-penalty threshold
+    ``ceil(log(1/delta_r) / -log(1-alpha))``.
     """
-    return float(np.log(J / delta) / (-np.log(1 - alpha)))
+    if not 0.0 < float(alpha) < 1.0:
+        raise ValueError("alpha must lie in (0, 1)")
+    if not 0.0 < float(delta_r) < 1.0:
+        raise ValueError("delta_r must lie in (0, 1)")
+    return int(
+        math.ceil(math.log(1.0 / float(delta_r)) / -math.log1p(-float(alpha)))
+    )
+
+
+def thm2_floor(J: int, delta: float, alpha: float) -> float:
+    """Archived unrounded clientwise floor ``log(J/delta)/-log(1-alpha)``.
+
+    The function name and return type are kept for compatibility with historical
+    campaign artifacts. It is not the current manuscript's Theorem 4 API. Use
+    :func:`zero_error_count_threshold` for a fixed full-simplex selector.
+    """
+    if isinstance(J, bool) or int(J) != J or J <= 0:
+        raise ValueError("J must be a positive integer")
+    if not 0.0 < float(delta) < 1.0:
+        raise ValueError("delta must lie in (0, 1)")
+    if not 0.0 < float(alpha) < 1.0:
+        raise ValueError("alpha must lie in (0, 1)")
+    return float(np.log(int(J) / float(delta)) / (-np.log1p(-float(alpha))))
+
+
+__all__ = ["thm2_floor", "zero_error_count_threshold"]

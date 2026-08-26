@@ -1,0 +1,38 @@
+{
+  "audit_size": {
+    "A_K_n_elements_checked_remotely": 14400000,
+    "A_K_n_invariant": true,
+    "dataset_size_group_rows": {
+      "cifar10_n128": 30000,
+      "cifar10_n256": 30000,
+      "cifar10_n514": 30000,
+      "cifar10_n1028": 30000,
+      "cifar100_n128": 30000,
+      "cifar100_n256": 30000,
+      "cifar100_n514": 30000,
+      "cifar100_n1028": 30000
+    },
+    "duplicate_cell_size_replicate_keys": 0,
+    "nested_prefixes": true,
+    "replicate_rows": 240000,
+    "selected_index_out_of_range": 0,
+    "uncertified_nonzero_effective_acceptance": 0,
+    "unique_cell_size_replicate_keys": 240000
+  },
+  "manifest": {
+    "files_checked": 14,
+    "hash_or_size_mismatches": 0
+  },
+  "precision": {
+    "coverage_indicator_mismatches": 0,
+    "duplicate_cell_replicate_keys": 0,
+    "replicate_rows": 200000,
+    "summary_rows": 20,
+    "unique_cell_replicate_keys": 200000
+  },
+  "remote_repo": {
+    "head_before_after_equal": true,
+    "host_status_sha256_before_after_equal": true,
+    "repo_mounted_read_only": true
+  }
+}

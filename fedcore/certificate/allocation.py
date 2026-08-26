@@ -1,4 +1,9 @@
-"""Proposal-allocated certification: Theorem 4, Corollary 2, and rules R1-R3.
+"""Archived proposal-allocated clientwise sensitivity: rules R1-R3.
+
+These rules implement a valid conservative union-bound allocation across
+clients and are retained to reproduce the historical campaign. They are not the
+current full-simplex fixed-member theorem, whose scalar-extremum API has no
+client-count penalty. See ``full_simplex_fixed_member_certificate``.
 
 This module implements the *allocated* branch of the Fed-CORE certificate, in which
 the per-client error budgets ``eps_j`` are chosen on the PROPOSAL fold only and
@@ -6,19 +11,19 @@ frozen before the certification fold is touched.
 
 Contract (see the pre-registered brief, section 0):
 
-* **Theorem 4** (proposal-allocated certificate). For any allocation
+* **Historical allocated certificate.** For any allocation
   ``eps = (eps_1, ..., eps_J)`` with ``sum_j eps_j <= delta_r`` that is measurable
   w.r.t. the proposal fold and fixed before the certification fold is observed,
   ``rbar_j = U(K_j, A_j; eps_j)`` and ``Ubar = max_j rbar_j`` is a valid
   ``1 - delta_r`` upper bound on ``R_sel(lambda)`` for every ``lambda`` with
   positive accepted mass.  Validity is a union bound over the ``J`` per-client
-  events; uniform allocation ``eps_j = delta_r / J`` (Theorem 1) is the special
-  case.
+  events; uniform allocation ``eps_j = delta_r / J`` is the conservative legacy
+  special case.
 
-* **Corollary 2** (zero-error frontier).  With ``K_j = 0`` for all ``j``, an
+* **Archived zero-error allocation frontier.** With ``K_j = 0`` for all ``j``, an
   allocation meeting ``max_j rbar_j <= alpha`` exists **iff**
   ``sum_j (1 - alpha)^{A_j} <= delta_r``.  This is strictly weaker than the
-  uniform requirement ``max_j (1 - alpha)^{A_j} <= delta_r / J`` (Theorem 3)
+  legacy uniform requirement ``max_j (1 - alpha)^{A_j} <= delta_r / J``
   whenever the accepted counts ``A_j`` are heterogeneous.
 
 * **Allocation rules** (predeclared; never selected post hoc):
@@ -74,7 +79,7 @@ def zero_error_floor(eps: float, alpha: float) -> int:
     """Smallest accepted count ``A`` with ``U(0, A, eps) <= alpha``.
 
     Inverts ``1 - eps^{1/A} <= alpha`` to ``A >= ln(1/eps) / (-ln(1 - alpha))``.
-    With ``eps = delta_r / J`` this is the Theorem 3 uniform floor
+    With ``eps = delta_r / J`` this is the archived clientwise uniform floor
     ``ceil(ln(J / delta_r) / (-ln(1 - alpha)))``.
     """
     if not 0.0 < eps <= 1.0:
@@ -92,7 +97,7 @@ def _zero_error_floor_real(eps: float, alpha: float) -> float:
 
 
 def zero_error_frontier(A: Sequence[int], alpha: float) -> float:
-    """Corollary 2 frontier value ``sum_j (1 - alpha)^{A_j}``.
+    """Archived allocation-frontier value ``sum_j (1 - alpha)^{A_j}``.
 
     A zero-error allocation certifying at level ``alpha`` exists iff this value is
     ``<= delta_r``. Returned even when some ``K_j > 0`` (as a diagnostic); the
@@ -117,7 +122,7 @@ def _validate_budget(delta_r: float, J: int) -> None:
 
 
 def uniform_allocation(J: int, delta_r: float) -> np.ndarray:
-    """Theorem 1's uniform allocation ``eps_j = delta_r / J``."""
+    """Archived conservative allocation ``eps_j = delta_r / J``."""
     _validate_budget(delta_r, J)
     return np.full(J, delta_r / J, dtype=float)
 
@@ -149,7 +154,7 @@ def allocate_R1(A_hat: Sequence[float], delta_r: float, alpha: float) -> np.ndar
     # wide enough. Any coordinate that still reaches 0 is clamped to the smallest
     # positive normal double, then the vector is rescaled to spend exactly
     # delta_r. Clamping UP is the safe direction: it keeps sum(eps) == delta_r,
-    # so Theorem 4's union bound still holds, and a larger eps_j only tightens
+    # so the archived allocation union bound still holds, and a larger eps_j only tightens
     # rbar_j. Without the clamp a count-rich client would receive eps_j = 0,
     # hence rbar_j = 1, and the cell would be refused despite being certifiable.
     log_w = counts * math.log1p(-alpha)
@@ -276,11 +281,11 @@ def allocate(
 
 
 # --------------------------------------------------------------------------- #
-# Theorem 4 -- the allocated certificate
+# Archived proposal-allocated clientwise certificate
 # --------------------------------------------------------------------------- #
 @dataclass(frozen=True)
 class AllocatedCertificate:
-    """Result of :func:`allocated_risk_certificate` (Theorem 4)."""
+    """Result of the archived proposal-allocated clientwise certificate."""
 
     U: float
     rbar: np.ndarray
@@ -306,7 +311,7 @@ def allocated_risk_certificate(
     rule: str = "custom",
     alpha: Optional[float] = None,
 ) -> AllocatedCertificate:
-    """Theorem 4: certify ``max_j U(K_j, A_j; eps_j)`` at level ``1 - delta_r``.
+    """Certify ``max_j U(K_j, A_j; eps_j)`` with an archived clientwise allocation.
 
     ``eps`` must have been computed from the proposal fold only and frozen before
     ``(A, K)`` were observed -- this function cannot verify that, and it is the

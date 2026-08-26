@@ -19,7 +19,7 @@ import os
 
 import numpy as np
 
-from fedcore.certificate import (conditional_risk_certificate, pooled_cp,
+from fedcore.certificate import (conditional_risk_certificate, pooled_cp_diagnostic,
                           stratified_certificate, true_selective_risk)
 from fedcore.data.clients import ClientPopulation, draw_counts, heterogeneous_population
 from fedcore.certify import certify_grid
@@ -68,7 +68,7 @@ def T2():
         up, ub, us, um = [], [], [], []
         for t in range(1000):
             A, K = draw_counts(pop, n, rng)
-            up.append(pooled_cp(A, K, DELTA))
+            up.append(pooled_cp_diagnostic(A, K, DELTA))
             ub.append(conditional_risk_certificate(A, K, n, DELTA, Lambda="box", box=0.10, n_lam_samples=48, seed=t).U)
             us.append(conditional_risk_certificate(A, K, n, DELTA, Lambda="simplex").U)
             um.append(stratified_certificate(A, K, n, DELTA, Lambda="simplex").U)
@@ -95,7 +95,7 @@ def T3():
             A, K = draw_counts(pop, n, rng)
             tA, tK = int(A.sum()), int(K.sum())
             dn += (tK / tA if tA else 0) <= alpha
-            dp += pooled_cp(A, K, DELTA) <= alpha
+            dp += pooled_cp_diagnostic(A, K, DELTA) <= alpha
             df += conditional_risk_certificate(A, K, n, DELTA, Lambda="known", lam=lam).U <= alpha
         rows.append([f"{r_bad:.3f}", f"{R:.4f}", str(R > alpha),
                      f"{dn/N:.3f}", f"{dp/N:.3f}", f"{df/N:.3f}"])

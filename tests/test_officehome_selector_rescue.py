@@ -33,6 +33,7 @@ from fedcore.officehome_rescue import (
     candidate_null_pvalue,
     family_keys,
     fresh_draw_seed,
+    holm_adjusted_pvalues,
     holm_family_certificate,
     holm_step_down_reject,
     select_family_candidate,
@@ -200,8 +201,10 @@ def test_simultaneous_family_simultaneous_coverage() -> None:
     for _ in range(reps):
         A, K = simulate_conditional_counts(true_a, true_r, n, rng)
         fc = simultaneous_family_certificate(A, K, n, alpha=alpha, delta_r=delta_r, delta_c=delta_c)
-        risk_ok = np.all(fc.rbar >= true_r - 1e-12)
-        cov_ok = np.all(fc.alow <= true_a + 1e-12)
+        # The no-J theorem covers each member's scalar max-risk and min-coverage
+        # targets, not all clientwise intervals simultaneously.
+        risk_ok = np.all(fc.U >= true_r.max(axis=1) - 1e-12)
+        cov_ok = np.all(fc.C <= true_a.min(axis=1) + 1e-12)
         if risk_ok and cov_ok:
             simultaneous_hits += 1
         # selection-level: certifying a candidate whose true worst-client risk > alpha
@@ -209,8 +212,8 @@ def test_simultaneous_family_simultaneous_coverage() -> None:
         if sel is not None and float(np.max(true_r[sel])) > alpha + 1e-12:
             false_certified += 1
     coverage = simultaneous_hits / reps
-    # The theorem: simultaneous coverage of all M*J risk + M*J coverage events is
-    # at least 1 - delta_r - delta_c.
+    # The theorem: all M member-level scalar extrema are covered jointly at
+    # least 1 - delta_r - delta_c, with no additional full-simplex J factor.
     assert coverage >= 1.0 - delta_r - delta_c, f"simultaneous coverage {coverage:.4f}"
     # Non-trivial: with truths placed at the CP-tight boundary, some events really
     # do fail, so the bounds are not vacuously [0, 1].
@@ -225,13 +228,29 @@ def test_simultaneous_certificate_uses_multiplicity_budget() -> None:
     K = np.zeros((M_CANDIDATES, 4), dtype=int)
     n = np.full(4, 500)
     fc = simultaneous_family_certificate(A, K, n, alpha=0.20, delta_r=0.05, delta_c=0.05)
-    assert fc.eps_r == pytest.approx(0.05 / (M_CANDIDATES * 4))
-    assert fc.eps_c == pytest.approx(0.05 / (M_CANDIDATES * 4))
+    assert fc.eps_r == pytest.approx(0.05 / M_CANDIDATES)
+    assert fc.eps_c == pytest.approx(0.05 / M_CANDIDATES)
     # a candidate certified under multiplicity has a strictly larger rbar than the
-    # same counts at the single-selector budget delta/J (the multiplicity price).
-    rbar_mult = cp_upper(0, 200, 0.05 / (M_CANDIDATES * 4))
-    rbar_single = cp_upper(0, 200, 0.05 / 4)
+    # same counts at the fixed-selector member budget delta (the M price).
+    rbar_mult = cp_upper(0, 200, 0.05 / M_CANDIDATES)
+    rbar_single = cp_upper(0, 200, 0.05)
     assert rbar_mult > rbar_single
+
+
+def test_holm_refuses_non_simplex_target() -> None:
+    A = np.full((2, 3), 100)
+    K = np.zeros((2, 3), dtype=int)
+    n = np.full(3, 200)
+    with pytest.raises(ValueError, match="full-simplex"):
+        holm_family_certificate(
+            A,
+            K,
+            n,
+            alpha=0.20,
+            delta_r=0.05,
+            delta_c=0.05,
+            mixture_target="box",
+        )
 
 
 # --------------------------------------------------------------------------- #
@@ -274,10 +293,31 @@ def test_holm_family_controls_fwer() -> None:
 def test_holm_step_down_matches_manual() -> None:
     p = np.array([0.001, 0.02, 0.5, 0.009])
     fwer = 0.05
+    adjusted, ranks = holm_adjusted_pvalues(p)
     rej = holm_step_down_reject(p, fwer)
     # sorted: 0.001(thr .0125), 0.009(thr .0167), 0.02(thr .025), 0.5(thr .05)
     # reject 0.001, 0.009, 0.02; stop at 0.5.
+    assert adjusted == pytest.approx([0.004, 0.04, 0.5, 0.027])
+    assert ranks.tolist() == [1, 3, 4, 2]
     assert rej.tolist() == [True, True, False, True]
+
+
+def test_holm_certificate_reports_adjustment_rank_and_no_risk_ucb() -> None:
+    A = np.array([[100, 100], [60, 60], [0, 0]], dtype=int)
+    K = np.zeros_like(A)
+    n = np.array([120, 120])
+    cert = holm_family_certificate(
+        A, K, n, alpha=0.20, delta_r=0.05, delta_c=0.05
+    )
+
+    expected_adjusted, expected_ranks = holm_adjusted_pvalues(cert.pvalues)
+    assert cert.adjusted_pvalues == pytest.approx(expected_adjusted)
+    assert cert.holm_rank.tolist() == expected_ranks.tolist()
+    assert cert.holm_reject.tolist() == (cert.adjusted_pvalues <= 0.05).tolist()
+    assert cert.eps_c == pytest.approx(0.05 / 3)
+    assert cert.risk_decision_alpha == pytest.approx(0.20)
+    assert cert.risk_ucb is None
+    assert cert.pvalues[2] == pytest.approx(1.0)
 
 
 # --------------------------------------------------------------------------- #
@@ -347,6 +387,7 @@ def test_fresh_draw_positions_stay_in_reservoir() -> None:
 # --------------------------------------------------------------------------- #
 # 8. ORIGINAL PRIMARY byte-identical
 # --------------------------------------------------------------------------- #
+@pytest.mark.skipif(not os.path.isfile(PRIMARY_CSV), reason="primary Office-Home CSV absent")
 def test_primary_final_cell_results_byte_identical() -> None:
     assert os.path.isfile(PRIMARY_CSV)
     assert _sha256(PRIMARY_CSV) == PRIMARY_SHA256

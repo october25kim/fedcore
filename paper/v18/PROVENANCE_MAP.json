@@ -1,0 +1,276 @@
+{
+  "schema_version": 1,
+  "release_id": "fedcore-v0.2.0-theorem-aligned",
+  "hash_binding": "SHA256SUMS",
+  "original_analysis": {
+    "checkout_head": "ee3c646d6190c86d96c3bcf0c9ddbe260a09a8e6",
+    "checkout_clean": false,
+    "status_entry_count": 6165,
+    "scope_statement": "The original GPU checkout does not establish source closure. This release begins from hash-bound frozen counts and does not claim training-to-logits reproduction."
+  },
+  "entries": [
+    {
+      "release_path": "artifacts/counts/candidate_counts_A_K_n.csv.gz",
+      "kind": "frozen count tensor",
+      "source_stage": "450-cell theorem-aligned recertification",
+      "byte_relation": "deterministic gzip with filename and timestamp suppressed",
+      "uncompressed_sha256": "3074c2d8039b64707bbf27524ebd8baa60548825758c89c77454efc9f0cb3f45",
+      "release_sha256": "4e75063de5c54f03a3d8fb698b0d75fdd8d38972e49de2a1d1fd24af789ed865"
+    },
+    {
+      "release_path": "artifacts/counts/recertification_per_cell.csv",
+      "kind": "cell-level result",
+      "source_stage": "450-cell theorem-aligned recertification",
+      "byte_relation": "verbatim copy",
+      "origin_sha256": "b82e80f4becd09bbe29874ac43b2415bff3a844913449a8f3a8af7fbdfc32f84"
+    },
+    {
+      "release_path": "artifacts/counts/family_manifest.csv.gz",
+      "kind": "ordered selector-family manifest",
+      "source_stage": "deterministic deduplication of the frozen count tensor",
+      "byte_relation": "derived and deterministic",
+      "release_sha256": "8771ded5334910dec3be688861df161a80cf19dfd4868053f661ec26fa2a5470"
+    },
+    {
+      "release_path": "artifacts/counts/family_hashes.csv",
+      "kind": "cell-alpha ordered family hashes",
+      "source_stage": "canonical hashing of the ordered selector-family manifest",
+      "byte_relation": "derived and deterministic",
+      "release_sha256": "bf31eb7ccbbe9f52d0f9ee45049d8f074f68093093d76ddcbea0f6274507578e"
+    },
+    {
+      "release_path": "artifacts/noJ/per_cell_three_procedures_alpha020.csv",
+      "kind": "headline cell comparison",
+      "source_stage": "no-J procedure audit",
+      "byte_relation": "verbatim copy",
+      "origin_sha256": "118fbbe079283fd8042b6084798bae46c1ae02ce58d7672b080b8db2412fe82d"
+    },
+    {
+      "release_path": "artifacts/noJ/paired_effects_alpha020.csv",
+      "kind": "paired effect summary",
+      "source_stage": "no-J procedure audit",
+      "byte_relation": "verbatim copy",
+      "origin_sha256": "c4649ee133806e9d3e00ea5fa53519d4633be8e2dceff8b5f574d33c6e6ed9ae"
+    },
+    {
+      "release_path": "artifacts/noJ/paired_bootstrap_replicates_alpha020.csv.gz",
+      "kind": "paired bootstrap replicates",
+      "source_stage": "no-J procedure audit",
+      "byte_relation": "verbatim copy",
+      "origin_sha256": "f86ff3ad0216e6ced89780ff3a18a275df9800316a4aa0c865efa56bc899d5de"
+    },
+    {
+      "release_path": "artifacts/noJ/verification_report.json",
+      "kind": "upstream numerical verification report",
+      "source_stage": "no-J procedure audit",
+      "byte_relation": "verbatim copy",
+      "origin_sha256": "e69067f6d9473c4fdbe0b6fa08bd35a954b89ced191774dccc2f90a66bfe2697"
+    },
+    {
+      "release_path": "artifacts/validity/validity_B1000_per_cell.csv",
+      "kind": "reservoir-validity summary",
+      "source_stage": "1,000-repeat frozen-reservoir audit",
+      "byte_relation": "verbatim copy",
+      "origin_sha256": "9048ed6e6ed726c79a07588e4a9884f8d54d6b2df8f28b5ee9a0f39cb0678d19"
+    },
+    {
+      "release_path": "artifacts/validity/validity_B1000_replicates.csv.gz",
+      "kind": "reservoir-validity replicates",
+      "source_stage": "1,000-repeat frozen-reservoir audit",
+      "byte_relation": "verbatim copy",
+      "origin_sha256": "afa1db4cfad29ba8783497cb540cba4181a646cbf2277c8de2ad9be4d67a169b"
+    },
+    {
+      "release_path": "artifacts/validity/reservoir_source_uniqueness_and_truth.csv",
+      "kind": "reservoir accounting and exact truth",
+      "source_stage": "source-deduplicated reservoir construction",
+      "byte_relation": "verbatim copy",
+      "origin_sha256": "6710b0cee3165e28bfc3d45ce261b9eeb019029b5a90dce0604c27807fda21e4"
+    },
+    {
+      "release_path": "artifacts/validity/precision_B10000_summary_20_cells.csv",
+      "kind": "higher-precision validity summary",
+      "source_stage": "10,000-repeat post-hoc precision audit",
+      "byte_relation": "verbatim copy",
+      "origin_sha256": "ae8a1661893c7e7a42f8a8ae332f4fb27045a4c2a0e1e89e42507b54faa1ac4c"
+    },
+    {
+      "release_path": "artifacts/validity/precision_B10000_replicates_20_cells.csv.gz",
+      "kind": "higher-precision validity replicates",
+      "source_stage": "10,000-repeat post-hoc precision audit",
+      "byte_relation": "verbatim copy",
+      "origin_sha256": "259ee0a1c49f0874f3dbd81d16c591e4cd79a3ae02fc3c6fda3252b6a8b79215"
+    },
+    {
+      "release_path": "artifacts/validity/precision_selected_20_from_B1000.csv",
+      "kind": "frozen precision-audit selection",
+      "source_stage": "10,000-repeat post-hoc precision audit",
+      "byte_relation": "verbatim copy",
+      "origin_sha256": "bc75109a935233193bd6cc455b8692cce6fd65ae71da6a2e1b35385447d21b3f"
+    },
+    {
+      "release_path": "artifacts/validity/precision_seed_manifest.csv",
+      "kind": "precision-audit seed manifest",
+      "source_stage": "10,000-repeat post-hoc precision audit",
+      "byte_relation": "verbatim copy",
+      "origin_sha256": "2cf4836852a4b98bd52a9c1ae3a722876be413d7ca3e559f68c219291df0462c"
+    },
+    {
+      "release_path": "artifacts/audit_size/audit_size_sensitivity_replicates.csv.gz",
+      "kind": "nested audit-size replicates",
+      "source_stage": "audit-size sensitivity analysis",
+      "byte_relation": "verbatim copy",
+      "origin_sha256": "bd32a91a2fc2d4f393b5e247e6b7ba353226ecb49ec72f746ed098cd924d6fe5"
+    },
+    {
+      "release_path": "artifacts/audit_size/audit_size_sensitivity_by_dataset.csv",
+      "kind": "audit-size dataset summary",
+      "source_stage": "audit-size sensitivity analysis",
+      "byte_relation": "verbatim copy",
+      "origin_sha256": "ae97be2ada7f12eaeb32f07b28c269ed7e59935e1f0c1e3175a737347d2ebf46"
+    },
+    {
+      "release_path": "artifacts/audit_size/audit_size_sensitivity_by_dataset_d.csv",
+      "kind": "audit-size dataset-condition summary",
+      "source_stage": "audit-size sensitivity analysis",
+      "byte_relation": "verbatim copy",
+      "origin_sha256": "9052c3032d172333f56d2b980c39435210c3bda49702b70df9371e0b11d940b0"
+    },
+    {
+      "release_path": "artifacts/audit_size/audit_size_sensitivity_by_cell.csv",
+      "kind": "audit-size cell summary",
+      "source_stage": "audit-size sensitivity analysis",
+      "byte_relation": "verbatim copy",
+      "origin_sha256": "ffc93e7f02818a8bc640db3793e5db2a362c820a42e1683317a16578d3a457da"
+    },
+    {
+      "release_path": "artifacts/audit_size/audit_size_seed_manifest.csv",
+      "kind": "audit-size seed manifest",
+      "source_stage": "audit-size sensitivity analysis",
+      "byte_relation": "verbatim copy",
+      "origin_sha256": "fda08c25fa1ab8891149a875146048fc41ce914f04d57d2b608cc216fb6b66cb"
+    },
+    {
+      "release_path": "artifacts/audit_size/audit_size_invariants.json",
+      "kind": "audit-size invariant report",
+      "source_stage": "audit-size sensitivity analysis",
+      "byte_relation": "verbatim copy",
+      "origin_sha256": "5349d66114b87821bf5f005f38ec53e6b853969b4830d78207e0a80e5c56c890"
+    },
+    {
+      "release_path": "artifacts/audit_size/LOCAL_VALIDATION.json",
+      "kind": "secondary-analysis validation report",
+      "source_stage": "post-transfer local validation",
+      "byte_relation": "verbatim copy",
+      "origin_sha256": "47637ebac941adcdf64279c6f2d18067aad7597bbbf07aaefa8d9d32ef8c5082"
+    },
+    {
+      "release_path": "artifacts/phase_map/recertification_summary_by_dataset_condition_alpha.csv",
+      "kind": "Figure 5 phase-map summary",
+      "source_stage": "450-cell theorem-aligned recertification",
+      "byte_relation": "verbatim copy",
+      "origin_sha256": "46a8da7dd4676bdbde4a2813b5979a4a5b53e2e547d4557fe464549ac727edaa"
+    },
+    {
+      "release_path": "artifacts/phase_map/failure_transitions.csv",
+      "kind": "Figure 5 failure anatomy",
+      "source_stage": "CIFAR utility phase-map analysis",
+      "byte_relation": "verbatim copy",
+      "origin_sha256": "0b06e3d8863e0ff609f3915c08f4fdae5f71b2283b0d331d044fd66f01e7d540"
+    },
+    {
+      "release_path": "artifacts/pathmnist/Figure7_PathMNIST_Data.csv",
+      "kind": "Figure 7 numerical source",
+      "source_stage": "PathMNIST compact summary",
+      "byte_relation": "verbatim copy",
+      "origin_sha256": "e00fc0367c58c966bc37250438866ba6ffc8a7bb33f48f2def5daa90b1cae175"
+    },
+    {
+      "release_path": "artifacts/registry/cifar_officehome_training_matrix.csv",
+      "kind": "training and checkpoint registry",
+      "source_stage": "v18 experimental registry",
+      "byte_relation": "verbatim copy",
+      "origin_sha256": "4c29e04eef53de948e682ea7cc10101293663948eda03516b9f44a6de5ab3220"
+    },
+    {
+      "release_path": "artifacts/registry/analysis_input_manifest.csv",
+      "kind": "actual 450-cell analysis-input registry",
+      "source_stage": "v18 theorem-aligned CPU analysis",
+      "byte_relation": "verbatim copy",
+      "origin_sha256": "7651e6f16ab43839c2d57f914b68cc188158ce5b1dd9f048f780c54d6375209c"
+    },
+    {
+      "release_path": "reference/figures/Figure1.png",
+      "kind": "manuscript Figure",
+      "source_stage": "v18 visual consolidation",
+      "byte_relation": "verbatim copy",
+      "origin_sha256": "404bccb4830f8b6d3efd355cc39f341c2bddcb462aa4e654a2edea2db702edf0"
+    },
+    {
+      "release_path": "reference/figures/Figure2.png",
+      "kind": "manuscript Figure",
+      "source_stage": "v18 visual consolidation",
+      "byte_relation": "verbatim copy",
+      "origin_sha256": "816906c12992d38d68a808eb7a9b6336bd8170835b4632cf5e57d919ab656cd7"
+    },
+    {
+      "release_path": "reference/figures/Figure3.png",
+      "kind": "manuscript Figure",
+      "source_stage": "v18 core-evidence visualization",
+      "byte_relation": "verbatim copy",
+      "origin_sha256": "ddf8c19e4a7907b300e23a8ce58b59f4f80b97f47d927d70951a18b766661ef9"
+    },
+    {
+      "release_path": "reference/figures/Figure4.png",
+      "kind": "manuscript Figure",
+      "source_stage": "v18 core-evidence visualization",
+      "byte_relation": "verbatim copy",
+      "origin_sha256": "824589f8a03d693ee9babb3863ae664145e3954e647c5139e1c7f828da0f57c6"
+    },
+    {
+      "release_path": "reference/figures/Figure5.png",
+      "kind": "manuscript Figure",
+      "source_stage": "v18 core-evidence visualization",
+      "byte_relation": "verbatim copy",
+      "origin_sha256": "26a33c3f7cfeb4a894242c3efac90a9076c3fa1f18de6307589f7d0414203c02"
+    },
+    {
+      "release_path": "reference/figures/Figure6.png",
+      "kind": "manuscript Figure",
+      "source_stage": "v18 core-evidence visualization",
+      "byte_relation": "verbatim copy",
+      "origin_sha256": "04b22b79abac47d1fd2b896eb761347b49bf6bd79ddcf1249945c03b3786774b"
+    },
+    {
+      "release_path": "reference/figures/Figure7.png",
+      "kind": "manuscript Figure",
+      "source_stage": "v18 core-evidence visualization",
+      "byte_relation": "verbatim copy",
+      "origin_sha256": "8f3287969417c392976ddfd62f2983945b10f6f35ba46a9e5c6e08e560830fb7"
+    },
+    {
+      "release_path": "reference/tables/Table1.csv",
+      "kind": "machine-readable manuscript Table",
+      "source_stage": "v18 manuscript Table 1",
+      "byte_relation": "machine-readable transcription"
+    },
+    {
+      "release_path": "reference/tables/Table2.csv",
+      "kind": "machine-readable manuscript Table",
+      "source_stage": "v18 manuscript Table 2",
+      "byte_relation": "machine-readable transcription"
+    },
+    {
+      "release_path": "reference/tables/Table3.csv",
+      "kind": "machine-readable manuscript Table",
+      "source_stage": "v18 manuscript Table 3",
+      "byte_relation": "machine-readable transcription"
+    },
+    {
+      "release_path": "reference/tables/Table4.csv",
+      "kind": "machine-readable manuscript Table",
+      "source_stage": "v18 manuscript Table 4",
+      "byte_relation": "machine-readable transcription"
+    }
+  ]
+}

@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "release_id": "fedcore-v0.2.0-theorem-aligned",
+  "status": "versioned-release",
+  "created_utc": "2026-08-26",
+  "repository_base_commit": "45218edf10e193274414dce0253659fe49cebe92",
+  "experimental_provenance": {
+    "analysis_checkout_head": "ee3c646d6190c86d96c3bcf0c9ddbe260a09a8e6",
+    "analysis_checkout_clean": false,
+    "analysis_checkout_status_entries": 6165,
+    "source_closure_claimed": false,
+    "governing_count_tensor_uncompressed_sha256": "3074c2d8039b64707bbf27524ebd8baa60548825758c89c77454efc9f0cb3f45"
+  },
+  "source_binding": {
+    "tag": "v0.2.0",
+    "resolution": "git rev-list -n 1 v0.2.0"
+  },
+  "scope": {
+    "included": [
+      "frozen client-level count tensor",
+      "count-to-decision theorem-aligned recomputation",
+      "numerical sources and reference copies for the v18 Tables and Figures",
+      "frozen empirical-reservoir validity summaries",
+      "nested audit-size sensitivity summaries and replicates"
+    ],
+    "excluded": [
+      "model retraining",
+      "raw NPZ reproduction",
+      "machine-readable raw Dataset contents",
+      "checkpoint reproduction",
+      "unobserved deployment-population inference"
+    ]
+  },
+  "headline_contract": {
+    "target": "source-deduplicated frozen empirical-reservoir conditional",
+    "alpha": 0.2,
+    "delta_r": 0.05,
+    "delta_c": 0.05,
+    "family_size": 12,
+    "cells": 450,
+    "count_rows": 154800,
+    "procedures": {
+      "H": "full-simplex memberwise intersection-union tests followed by Holm over M; coverage delta_c/M",
+      "S": "full-simplex simple simultaneous family decision; risk delta_r/M and coverage delta_c/M",
+      "B": "legacy clientwise comparator; risk and coverage delta/(M J)"
+    },
+    "certified_cells": {
+      "H": 198,
+      "S": 198,
+      "B": 148
+    },
+    "effective_acceptance": {
+      "H": 0.10049009894485754,
+      "S": 0.09694642128834831,
+      "B": 0.07182488653286874
+    }
+  },
+  "verification": {
+    "command": "make reproduce-v18",
+    "script": "scripts/verify_release.py",
+    "hash_manifest": "SHA256SUMS",
+    "policy": "fail-closed; no skipped headline checks"
+  }
+}

@@ -1,0 +1,6 @@
+Method family,Certified output,Traffic contract,Gap relative to Fed-CORE
+"Federated open-set recognition training [4,5,15,31]",Predictor performance,Empirical benchmark distributions,No finite-sample deploy-or-refuse decision
+"Conformal coverage methods [6-8,25,38,39]",Prediction-set coverage,Fixed distributed contract or source family,Not accepted point-label risk over a traffic set
+"Selective-risk methods [11,12,26,30,36,40]",Selected risk and selection rate,One calibration population or site contract,No uniform protection over client mixtures
+Akter et al. [14],Accepted selective risk,One mixture with total-variation transfer,No uniform declared-set protection
+Fed-CORE,Accepted point-prediction risk and acceptance rate,Every mixture in a declared client-traffic set,Count-based deploy-or-refuse contract under uncertain traffic

@@ -91,6 +91,25 @@ def test_bounded_exact_path_runs():
     )
     assert len(rows) == 4
     assert all(np.isfinite(row["cert_risk_ucb"]) for row in rows)
+    assert all(row["solver_certificate_valid"] for row in rows)
+    for row in rows:
+        for key in (
+            "risk_solver_status",
+            "risk_solver_tolerance",
+            "risk_solver_iterations",
+            "risk_solver_bracket_lower",
+            "risk_solver_bracket_upper",
+            "risk_solver_residual_lower",
+            "risk_solver_residual_upper",
+            "coverage_solver_status",
+            "coverage_solver_tolerance",
+            "coverage_solver_iterations",
+            "coverage_solver_bracket_lower",
+            "coverage_solver_bracket_upper",
+            "coverage_solver_residual_lower",
+            "coverage_solver_residual_upper",
+        ):
+            assert key in row
 
 
 def test_traffic_lambda_hat_uses_client_identity_counts():

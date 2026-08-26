@@ -1,6 +1,8 @@
 # Fed-CORE pinned environment (reproducibility refactor).
 # The DETERMINISTIC paths (certificate math, scores, selector, split-index construction,
-# aggregation, exp_lemma_L, exp_pooling_fail, run_smoke) are verified bit-for-bit (<=1e-9)
+# aggregation, exp_pooling_fail, run_smoke) were captured against deterministic
+# references.  Frozen-run checks additionally require the external artifacts
+# listed in REPRODUCE.md; their absence is not reported as a full PASS.
 # under tests/golden/ with these versions (host, captured in tests/golden/ENV.txt):
 numpy==2.4.6
 scipy==1.17.1

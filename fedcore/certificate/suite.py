@@ -1,4 +1,11 @@
-"""The pre-registered certificate variant suite.
+"""Historical pre-registered allocation-variant suite.
+
+This module reproduces the campaign's conservative clientwise union-bound
+allocation experiments.  It is not the current no-stratum-penalty Theorem-1
+API; use :func:`fedcore.certificate.full_simplex_fixed_member_certificate` for
+the theorem-facing full-simplex calculation.  Keeping the distinction explicit
+prevents archived sensitivity rows from being mistaken for current-theorem
+recertification.
 
 One call to :func:`certify_variant` produces one canonical row: a single
 (run, threshold policy, allocation rule, mixture target, alpha) cell of the
@@ -8,17 +15,19 @@ Budget composition (Corollary 1). The total failure budget ``delta`` splits as
 ``delta_r + delta_c <= delta``; the headline is ``delta_r = delta_c = delta / 2``.
 The risk budget ``delta_r`` is spent as follows:
 
-* ``simplex`` target -- one event per client. Client ``j`` spends its whole
+* ``simplex`` historical branch -- one event per client. Client ``j`` spends its whole
   ``eps_j`` on ``rbar_j = U(K_j, A_j; eps_j)``; the certificate is
-  ``max_j rbar_j`` (Theorem 1 when ``eps_j = delta_r / J``, Theorem 4 in
-  general).
+  ``max_j rbar_j``. Uniform ``eps_j = delta_r / J`` is a valid conservative
+  legacy union-bound calculation, not the sharper current Theorem 1.
 * ``box`` target -- three events per client: ``rbar_j`` and the two ends of the
   acceptance box. Client ``j`` therefore spends ``eps_j / 3`` on each, so the
   union over all ``3J`` events is still ``sum_j eps_j <= delta_r``. With the
   uniform allocation this reproduces the brief's ``eps_r = delta_r / (3J)``
   exactly; with an allocated ``eps`` it is the natural union-bound composition of
-  Theorem 4 with Theorem 2. The certificate is the exact supremum over
-  ``Lambda_G(rho)`` (:mod:`fedcore.certificate.lambda_sets`), never a sampled max.
+  the archived proposal allocation with the bounded-mixture certificate. The
+  certificate is a deterministic global supremum
+  over ``Lambda_G(rho)`` with a conservative numerical upper endpoint
+  (:mod:`fedcore.certificate.lambda_sets`), never a sampled max.
 
 The coverage bound spends ``delta_c`` as ``delta_c / J`` per client on
 ``L(A_j, n_j; delta_c / J)`` and reports
@@ -51,8 +60,8 @@ from .allocation import (
 from .cp import cp_lower, cp_upper
 from .lambda_sets import (
     NormalizedBox,
-    exact_coverage_infimum,
-    exact_risk_supremum,
+    solve_normalized_box_coverage,
+    solve_normalized_box_risk,
     uniform_box,
 )
 
@@ -69,6 +78,7 @@ FAILURE_MODES = (
     "observed-risk",
     "zero-error-count",
     "margin-limited",
+    "solver-failure",
 )
 
 MIXTURE_TARGETS = ("simplex", "box")
@@ -155,7 +165,7 @@ def _failure_mode(
         return "observed-risk"
     if np.all(K == 0):
         # Perfect accepted sets, still too few of them: a pure counting failure,
-        # which is exactly what the Corollary 2 frontier diagnoses.
+        # which is exactly what the archived allocation frontier diagnoses.
         return "zero-error-count"
     return "margin-limited"
 
@@ -208,7 +218,7 @@ def certify_variant(
     policy_feasible = bool(np.any(policy.feasible))
 
     # (2) ALLOCATION -- proposal fold only, frozen before the certification fold
-    #     is touched. This ordering is the whole content of Theorem 4.
+    #     is touched. This ordering is required by the proposal-allocated rule.
     A_prop, K_prop, n_prop = policy_counts(
         prop_view["score"],
         prop_view["pred"],
@@ -257,6 +267,14 @@ def certify_variant(
         )
         U = float(min(rbar.max(), 1.0))
         feasible = True
+        risk_solver_status = "closed_form_full_simplex"
+        risk_solver_valid = True
+        solver_meta: Dict[str, object] = {
+            "risk_solver_status": risk_solver_status,
+            "risk_solver_certificate_valid": True,
+            "risk_solver_tolerance": 0.0,
+            "risk_solver_iterations": 0,
+        }
     else:
         # Three events per client (rbar, alow, ahigh) -> eps_j / 3 each.
         eps_risk = eps / 3.0
@@ -279,7 +297,14 @@ def certify_variant(
             ]
         )
         box = mixture_box if mixture_box is not None else uniform_box(n_clients, rho)
-        U, feasible = exact_risk_supremum(rbar, alow, ahigh, box)
+        risk_solver = solve_normalized_box_risk(rbar, alow, ahigh, box)
+        U = float(risk_solver.value)
+        risk_solver_valid = bool(
+            risk_solver.domain_feasible and risk_solver.certificate_valid
+        )
+        feasible = risk_solver_valid
+        risk_solver_status = risk_solver.status
+        solver_meta = risk_solver.diagnostics("risk_solver")
 
     # (5) Corollary 1 coverage LCB at the separate budget delta_c.
     eps_cov = delta_c / n_clients
@@ -287,9 +312,36 @@ def certify_variant(
     if target == "simplex":
         # inf over the full simplex is the worst single client.
         coverage_lcb = float(L.min())
+        coverage_solver_valid = True
+        coverage_solver_status = "closed_form_full_simplex"
+        solver_meta.update(
+            {
+                "coverage_solver_status": coverage_solver_status,
+                "coverage_solver_certificate_valid": True,
+                "coverage_solver_tolerance": 0.0,
+                "coverage_solver_iterations": 0,
+            }
+        )
     else:
         box = mixture_box if mixture_box is not None else uniform_box(n_clients, rho)
-        coverage_lcb = exact_coverage_infimum(L, box)
+        coverage_solver = solve_normalized_box_coverage(L, box)
+        coverage_lcb = float(coverage_solver.value)
+        coverage_solver_valid = bool(
+            coverage_solver.domain_feasible and coverage_solver.certificate_valid
+        )
+        coverage_solver_status = coverage_solver.status
+        solver_meta.update(coverage_solver.diagnostics("coverage_solver"))
+
+    solver_valid = bool(risk_solver_valid and coverage_solver_valid)
+    feasible = bool(feasible and solver_valid)
+    solver_meta.update(
+        {
+            "solver_status": (
+                f"risk:{risk_solver_status};coverage:{coverage_solver_status}"
+            ),
+            "solver_certificate_valid": solver_valid,
+        }
+    )
 
     # (6) Empirical proposal / test diagnostics. Test labels are read HERE ONLY,
     #     after the certificate is fixed, and never feed back into it.
@@ -305,6 +357,8 @@ def certify_variant(
 
     certified = bool(feasible and policy_feasible and U <= alpha and coverage_lcb > 0.0)
     mode = _failure_mode(U if feasible else np.inf, alpha, A, K, policy_feasible)
+    if not solver_valid:
+        mode = "solver-failure"
     if certified:
         mode = ""
     elif feasible and policy_feasible and U <= alpha and coverage_lcb <= 0.0:
@@ -345,5 +399,7 @@ def certify_variant(
             "allocation_rule": allocation_rule,
             "n_clients": int(n_clients),
             "budget_spent": float(np.sum(eps)),
+            "theorem_contract": "legacy-conservative-stratum-allocation",
+            **solver_meta,
         },
     )

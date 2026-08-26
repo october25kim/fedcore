@@ -1,6 +1,6 @@
 """Clopper-Pearson confidence limits + lambda-box sampling helpers.
 
-Pure CP primitives shared by the Theorem 1/1', stratified, and pooled certificates.
+Pure CP primitives shared by the full-simplex, bounded-mixture, and pooled APIs.
 Depends only on numpy + scipy (no torch). Code moved verbatim from the original flat
 ``certificates.py`` during the structure-only refactor -- behaviour unchanged.
 """
@@ -32,8 +32,8 @@ def cp_upper(k: int, n: int, eps: float) -> float:
     400 at ``alpha = 0.10`` already yields ``eps ~ 8e-19``. Via ``isf`` that
     client correctly certifies at ``rbar = 0.0988``; via ``ppf`` it would have
     spuriously refused at ``rbar = 1.0``. For the uniform allocation
-    (``eps = delta/J ~ 0.02``) the two agree to machine precision, so no legacy
-    result changes.
+    (for example a conservative archived ``eps = delta/J ~ 0.02`` allocation)
+    the two agree to machine precision.
     """
     if n <= 0:
         return 1.0

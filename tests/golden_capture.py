@@ -31,7 +31,12 @@ GOLD = os.environ.get("GOLDEN_OUT", os.path.join(HERE, "golden"))
 os.makedirs(GOLD, exist_ok=True)
 
 from fedcore.certificate import (  # noqa: E402
-    conditional_risk_certificate, cp_lower, cp_upper, pooled_cp, stratified_certificate,
+    conditional_risk_certificate,
+    cp_lower,
+    cp_upper,
+    full_simplex_fixed_member_certificate,
+    pooled_cp,
+    stratified_certificate,
 )
 from fedcore.scores import compute_score, scored_views  # noqa: E402
 from fedcore.selector import choose_threshold, counts_per_client, open_set_error  # noqa: E402
@@ -67,12 +72,25 @@ def snap_certificate_math():
         lam = [0.2, 0.2, 0.2, 0.2, 0.2] if Lambda == "known" else None
         c = conditional_risk_certificate(A, K, n, delta, Lambda=Lambda, lam=lam, box=0.15, seed=0)
         out[f"conditional_{Lambda}"] = {"U": _f(c.U), "feasible": bool(c.feasible)}
+    current = full_simplex_fixed_member_certificate(
+        A, K, n, delta_r=0.05, delta_c=0.05, family_size=12
+    )
+    out["current_full_simplex_member_M12"] = {
+        "risk_ucb": _f(current.risk_ucb),
+        "coverage_lcb": _f(current.coverage_lcb),
+        "risk_tail": _f(current.risk_tail),
+        "coverage_tail": _f(current.coverage_tail),
+    }
     # stratified certificate
     st = stratified_certificate(A, K, n, delta)
     out["stratified"] = {k: _f(getattr(st, k)) for k in ("U", "feasible") if hasattr(st, k)}
     # pooled (Prop 3 / Thm 3)
-    out["pooled_cp"] = pooled_cp([sum(A)], [sum(K)], delta)
-    out["pooled_cp_perclient_sum"] = pooled_cp(A, K, delta)
+    out["pooled_cp"] = pooled_cp(
+        [sum(A)], [sum(K)], delta, matched_mixture_iid=True
+    )
+    out["pooled_cp_perclient_sum"] = pooled_cp(
+        A, K, delta, matched_mixture_iid=True
+    )
     # Theorem-2 floor (per-group), J in {2,3,5}, alpha 0.10/0.20
     out["thm2_floor"] = {f"J{J}_a{a}_d{delta}": float(np.log(J / delta) / (-np.log(1 - a)))
                          for J in (2, 3, 5) for a in (0.10, 0.20)}

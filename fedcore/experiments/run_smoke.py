@@ -6,10 +6,9 @@ they look acceptable but are errors) and one hardest / most-contaminated client.
 It then runs the IDENTICAL certification path used for real CIFAR
 (``scored_views`` -> ``certify_grid``) for ``Lambda in {simplex, box}``.
 
-Purpose: validate wiring, not science. Expected behavior (acceptance gate):
-the full metric schema is emitted; the box-Lambda certificate certifies a few
-``(score, gamma=0.5)`` combos with ``cert_risk_ucb`` just under ``alpha`` while
-the (worst-case) simplex certificate certifies none.
+Purpose: validate wiring, not science. The acceptance gate is completion with
+the full metric schema and an output CSV. No fixed number of certified synthetic
+cells is a scientific or regression claim.
 
 Run: ``python -m fedcore.experiments.run_smoke``
 """
@@ -226,6 +225,7 @@ def main() -> None:
     # exact pre-hoist output path so the structure-only move does not relocate the artifact.
     project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
     out_dir = os.path.join(project_root, "experiments", "fedcore")
+    os.makedirs(out_dir, exist_ok=True)
     out_path = os.path.join(out_dir, "smoke_results.csv")
     save_csv(rows, out_path)
     print(f"saved {out_path}")

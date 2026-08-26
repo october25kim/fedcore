@@ -4,7 +4,10 @@ Fed-CORE certifies, with a **finite-sample distribution-free upper confidence
 bound**, the **accepted selective risk** of a federated-trained open-set
 classifier — the probability that an *accepted* prediction is wrong — under
 client heterogeneity and an unknown deployment mixture, computing the certificate
-from **secure-aggregatable counts only**.
+from selector-indexed stratum count triples `(A, K, n)`. Raw examples, logits,
+and scores do not enter the certification decision. Cryptographic secure
+aggregation and differential privacy are separate deployment mechanisms and are
+not implemented by this research code.
 
 This is **not** a federated-accuracy paper and **not** a noisy-label-robust
 training method. The object is *certification of which open-set predictions can be
@@ -20,37 +23,65 @@ safely accepted*, not improving the model.
 heterogeneous / corrupted FL-trained classifier
   -> score-agnostic accept/reject proposal (risk-buffered, gamma*alpha)
   -> federated independent certification under partial exchangeability
-  -> certified accepted coverage (secure-aggregation-only leakage)
+  -> certified accepted coverage from released count triples
 ```
 
 Headline metric: **CertifiedCoverage@alpha**. Judge results by the `cert_*`
 risk / coverage fields — **never** by accuracy or AUROC.
 
-## Theory (what the code certifies)
+## Theory contract implemented by the current API
 
 - **Controlled object:** `R_sel(lambda) = sum_j lam_j m_j / sum_j lam_j a_j`,
   where per client `j`: `a_j = P_j(accept)`, `m_j = P_j(accept & error)`,
   `r_j = m_j / a_j`. Goal: certify `R_sel(lambda) <= alpha` while maximizing
   accepted coverage.
-- **Theorem 1 / 1′ (main, conditional selective-risk certificate).** Use the
-  conditional law `K_j | A_j ~ Bin(A_j, r_j)` to bound `r_j` directly via a
-  Clopper–Pearson upper bound `rbar_j = U+(K_j, A_j; delta/J)`. Full simplex:
-  `Ubar = max_j rbar_j` (deploy iff `<= alpha`). Bounded `Lambda` (Thm 1′): also
-  bound `a_j in [alow_j, ahigh_j]` and solve the robust linear-fractional program
-  `sup (sum lam a rbar) / (sum lam a)`.
+- **Theorem 1 (full simplex, fixed member).** For a selector fixed independently
+  of the certification fold, use `rbar_j = U+(K_j, A_j; delta_r)` and
+  `Ubar = max_j rbar_j`. The tail does **not** divide by the number of clients:
+  failure of the reported scalar maximum implies failure of the marginal bound
+  for a fixed true worst client. Minimum coverage uses the analogous
+  `min_j L-(A_j,n_j;delta_c)`. This is not a collection of simultaneous
+  clientwise intervals.
+- **Frozen selector family.** A simple simultaneous family of `M` proposal-frozen
+  members uses `delta_r/M` and `delta_c/M` per member, again with no additional
+  client-count division inside a full-simplex member. The public theorem-facing
+  functions are `full_simplex_fixed_member_certificate` and
+  `simple_simultaneous_family_certificate`. In the strict bounded-mixture family
+  branch, the corresponding tails are `delta_r/(3*S*M)` for each risk-side
+  endpoint and `delta_c/(S*M)` for the separate coverage endpoints.
+- **Holm/IUT scope.** The Holm route is restricted to a full-simplex,
+  fixed-`alpha` risk decision. It returns the familywise decision and adjusted
+  p-values plus a family-simultaneous coverage LCB; it does not report a
+  numerical risk UCB unless the test is explicitly inverted. The dataset-neutral
+  import path is `fedcore.certificate.holm.holm_family_certificate`.
+- **Theorem 2 (strict bounded mixture).** A proper mixture restriction needs
+  simultaneous risk and acceptance endpoints. The normalized-box implementation
+  spends `delta_r/(3J)` on each risk-side endpoint family and solves the robust
+  positive-denominator linear-fractional program by deterministic global
+  optimization. Numerically, the risk certificate is the validated bisection
+  bracket's outward-rounded **upper endpoint**, and the coverage certificate is
+  its outward-rounded **lower endpoint**. Feasible primal objectives are logged
+  only as witnesses. Nonconvergence, an invalid sign bracket, a non-positive
+  denominator, unsafe underflow/subnormal product arithmetic, or failed numerical
+  validation returns `risk_ucb=inf` and/or `coverage_lcb=0` and cannot certify.
+  The former random mixture sampling
+  approximation is no longer used by the certificate API.
 - **Non-reducibility.** Naive pooling of the federated accepted set into one
   binomial is invalid under heterogeneity (per-client `r_j` differ → the pooled
   accepted-error count is Poisson-binomial, not binomial). The certificate is not
   a corollary of centralized conformal prediction, nor of federated conformal
   coverage.
-- **Theorem 2 (feasibility).** Per-client observed accepted count
-  `A_j >= ln(J/delta) / (-ln(1-alpha))`.
-- **Proposition 3 (pooled, subordinate).** A tighter pooled bound holds only under
-  matched-mixture i.i.d. calibration; kept below Thm 1/1′.
-- **Privacy taxonomy.** Only the pooled certificate is sum-only secure-
-  aggregatable. The stratified certificate needs per-client `(A_j, K_j)`; a
-  grouped-stratified variant (public strata, ≥k clients each) secure-aggregates
-  within groups as a tunable compromise.
+- **Pooled CP (subordinate and narrow).** It is certifying only for a
+  matched-mixture i.i.d. audit, where the pooled accepted-error count is actually
+  binomial. The API requires an explicit `matched_mixture_iid=True`
+  acknowledgement. The former finite-search “Lemma L” claim for a heterogeneous
+  Poisson-binomial mean is withdrawn; its old module now exits non-zero.
+- **Privacy taxonomy.** The full-simplex stratified certificate requires one
+  `(A_j, K_j, n_j)` triple per declared stratum. These aggregates disclose less
+  than observation-level logits or labels, but they may still be sensitive.
+  Grouping clients into predeclared public strata can reduce granularity. The
+  repository does not claim that count release alone provides cryptographic or
+  differential-privacy protection.
 - **Calibration assumption (stated openly).** Certifying unknown rejection needs
   the certification fold to contain *labeled* unknown-class points.
   "Distribution-free" is w.r.t. the calibration distribution.
@@ -59,7 +90,7 @@ risk / coverage fields — **never** by accuracy or AUROC.
 
 ```
 fedcore/                       importable core package (pip install -e .)
-  certificate/    CP primitives; conditional cert (Thm 1/1'); pooled (Prop 3); feasibility (Thm 2)
+  certificate/    CP primitives; full-simplex and bounded-mixture certificates; pooled diagnostic
   certify.py config.py scores.py selector.py   numpy certification core + fixed metric schema
   grouping.py atomic_io.py                      grouped-certification + atomic/locked CSV writers
   data/          FedOSR split (open-set + Dirichlet non-IID + calibration folds), clients, noise
@@ -78,31 +109,40 @@ pyproject.toml requirements.lock Makefile
 ## Install
 
 ```bash
-# Editable install so `import fedcore` resolves with no sys.path hacks.
+# Certification core.
 pip install -e .
+
+# Source-only test and aggregation dependencies.
+pip install -e '.[test]'
 ```
 
-Pinned CPU deps are in `requirements.lock` (numpy / scipy / scikit-learn). GPU
+The core runtime dependencies are declared in `pyproject.toml`; the historical
+CPU capture pins are retained in `requirements.lock`. GPU
 training runs Docker-first in `pytorch/pytorch:2.3.0-cuda12.1-cudnn8-runtime`
 (the `scripts/docker_*.sh` wrappers add `pip install -e .` automatically).
 
 ## Quickstart (CPU, no torch, no data)
 
 ```bash
-python -m fedcore.experiments.exp_lemma_L       # Lemma-L numerical support
-python -m fedcore.experiments.exp_pooling_fail  # pooled-binomial invalidity under heterogeneity
-python -m fedcore.experiments.run_smoke         # end-to-end certification wiring on fake logits
+python tests/test_current_certificate.py         # theorem-facing, no data
+python -m fedcore.experiments.exp_pooling_fail  # invalid pooled diagnostic under shift
+python -m fedcore.experiments.run_smoke         # fake-logit wiring only
 ```
 
 Regression gate (deterministic outputs, bit-for-bit within 1e-9):
 
 ```bash
-make test        # python tests/golden_check.py   (the commit gate)
-make smoke       # the three CPU sanity scripts above
+make unit       # current theorem-facing source-only tests
+make test-core  # deterministic partial check; clearly reports missing artifacts
+make test       # strict gate; fails when required frozen NPZ artifacts are absent
+make smoke      # two CPU sanity scripts above
+make reproduce-v18  # strict count-to-decision and paper-source release gate
 ```
 
-`make test` verifies the certificate math, scores/selector, and split
-determinism against `tests/golden/`. It self-bootstraps and needs no install.
+`make test` verifies the certificate math, scores/selector, split determinism,
+and the frozen-logit path against `tests/golden/`. Public source checkouts do not
+contain the required frozen logits, so a strict run is expected to fail with the
+missing paths instead of printing a false full PASS. See [REPRODUCE.md](REPRODUCE.md).
 
 ## Real experiments (GPU)
 
@@ -128,15 +168,27 @@ bash scripts/docker_officehome.sh
 ```
 
 Training writes frozen logits to `runs/` and certificates to `results/`; both are
-gitignored. Certification then runs on the frozen `runs/*_logits.npz`.
+gitignored. Certification then runs on the frozen `runs/*_logits.npz`. The
+versioned v18 package under `paper/v18/` contains benchmark count and numerical
+source artifacts, not raw datasets, checkpoints, or per-example logits. Fake-logit
+smoke output must not be cited as manuscript evidence.
 
 ## Canonical metric schema (do not rename)
 
+Numerical-UCB and fixed-alpha Holm/IUT rows share the common identity, count,
+coverage, and decision fields. `risk_output_type` determines the risk payload:
+
+```text
+common: certified, risk_output_type, risk_pass, cert_coverage_lcb, cert_n,
+        cert_k, prop_coverage, prop_risk, test_coverage, test_risk, score_name,
+        gamma, alpha, delta, delta_r, delta_c, Lambda, family_procedure,
+        dirichlet_alpha, n_clients
+numerical_ucb: cert_risk_ucb
+fixed_alpha_decision: iut_raw_pvalue, holm_adjusted_pvalue, holm_rank
 ```
-certified, cert_risk_ucb, cert_coverage_lcb, cert_n, cert_k, prop_coverage,
-prop_risk, test_coverage, test_risk, score_name, gamma, alpha, delta, Lambda,
-dirichlet_alpha, n_clients
-```
+
+For `fixed_alpha_decision`, `cert_risk_ucb` is null because Holm/IUT tests the
+predeclared risk level rather than constructing a numerical upper bound.
 
 Split hygiene is enforced: the proposal / certification / test folds are disjoint;
 the selector is chosen on the proposal fold only (never on certification labels).
@@ -165,4 +217,6 @@ baselines.
 
 ## License
 
-MIT — see [LICENSE](LICENSE).
+Fed-CORE source: MIT — see [LICENSE](LICENSE). Optional dependencies, datasets,
+and external baselines retain their own licenses; see
+[THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).

@@ -24,7 +24,7 @@ from typing import Dict, Optional
 
 import numpy as np
 
-from fedcore.certificate import conditional_risk_certificate, pooled_cp
+from fedcore.certificate import conditional_risk_certificate, pooled_cp_diagnostic
 from fedcore.data.clients import ClientPopulation, draw_counts
 
 DELTA = 0.10
@@ -50,7 +50,7 @@ def price_of_federation() -> None:
         up, us = [], []
         for _ in range(N_TRIALS):
             A, K = draw_counts(pop, n, rng)
-            up.append(pooled_cp(A, K, DELTA))
+            up.append(pooled_cp_diagnostic(A, K, DELTA))
             us.append(conditional_risk_certificate(A, K, n, DELTA, Lambda="simplex").U)
         mp, ms = np.median(up), np.median(us)
         print(f"{spread:>9.2f} {mp:>8.3f} {ms:>8.3f} {ms - mp:>8.3f}")

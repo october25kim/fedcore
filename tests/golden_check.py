@@ -1,8 +1,8 @@
 """Golden regression check for the structure-only refactor.
 
-Re-runs tests/golden_capture.py into a temp dir and verifies the deterministic outputs match
-tests/golden/ bit-for-bit (floats: abs diff <= TOL; ints/strings: exact). Also re-runs the
-three CPU scripts and the two aggregations and compares their snapshot stdout. Exit 0 = PASS.
+Re-runs tests/golden_capture.py into a temp dir and verifies the deterministic
+outputs (floats: abs diff <= TOL; ints/strings: exact), plus the shipped
+pooling-counterexample stdout. Frozen-artifact coverage is strict by default.
 
 Run BEFORE every refactor commit:  python tests/golden_check.py
 (Container-equivalent: bash scripts/docker_test.sh once it wraps this.)
@@ -77,7 +77,27 @@ def main():
             FAILS.append(f"{name}: golden missing"); continue
         _cmp(name, json.load(open(g)), json.load(open(n)))
 
+    pooling = subprocess.run(
+        [sys.executable, "-m", "fedcore.experiments.exp_pooling_fail"],
+        cwd=ROOT,
+        capture_output=True,
+        text=True,
+    )
+    pooling_golden = os.path.join(GOLD, "exp_pooling_fail.stdout.txt")
+    if pooling.returncode != 0:
+        FAILS.append(
+            "exp_pooling_fail failed: " + (pooling.stderr.strip() or pooling.stdout.strip())
+        )
+    elif not os.path.exists(pooling_golden):
+        FAILS.append("exp_pooling_fail.stdout.txt: golden missing")
+    else:
+        with open(pooling_golden, encoding="utf-8") as handle:
+            expected_stdout = handle.read()
+        if pooling.stdout != expected_stdout:
+            FAILS.append("exp_pooling_fail.stdout.txt: deterministic stdout differs")
+
     frozen_present = all(os.path.exists(os.path.join(ROOT, p)) for p in FROZEN_LOGITS)
+    allow_missing = os.environ.get("FEDCORE_ALLOW_MISSING_ARTIFACTS") == "1"
     if frozen_present:
         name = "certify_frozen.json"
         g, n = os.path.join(GOLD, name), os.path.join(tmp, name)
@@ -86,15 +106,22 @@ def main():
         else:
             _cmp(name, json.load(open(g)), json.load(open(n)))
     else:
-        print("GOLDEN CHECK: SKIP certify_frozen.json (runs/*_logits.npz absent)")
+        missing = [p for p in FROZEN_LOGITS if not os.path.exists(os.path.join(ROOT, p))]
+        message = "required frozen artifacts absent: " + ", ".join(missing)
+        if allow_missing:
+            print("GOLDEN CHECK: PARTIAL (" + message + ")")
+        else:
+            FAILS.append(message)
 
     n_fail = len(FAILS)
     if n_fail:
         print(f"GOLDEN CHECK: FAIL ({n_fail} diffs)")
         for f in FAILS[:40]:
             print("  ", f)
+    elif not frozen_present:
+        print(f"GOLDEN CHECK: PARTIAL PASS (artifact-free outputs match within {TOL})")
     else:
-        print(f"GOLDEN CHECK: PASS (all deterministic outputs match within {TOL})")
+        print(f"GOLDEN CHECK: PASS (all deterministic and frozen-artifact outputs match within {TOL})")
     sys.exit(1 if n_fail else 0)
 
 

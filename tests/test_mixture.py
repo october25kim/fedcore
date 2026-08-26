@@ -284,9 +284,7 @@ def test_solver_validation_and_nonconvergence_are_loud():
         box,
         tolerance=0.0,
     )
-    _assert_raises(
-        RuntimeError,
-        solve_robust_ratio,
+    nonconverged = solve_robust_ratio(
         [0.1, 0.2],
         [0.2, 0.2],
         [0.8, 0.8],
@@ -294,6 +292,10 @@ def test_solver_validation_and_nonconvergence_are_loud():
         tolerance=1e-15,
         max_iterations=1,
     )
+    assert not nonconverged.feasible
+    assert not nonconverged.certificate_valid
+    assert nonconverged.status == "nonconverged"
+    assert math.isinf(nonconverged.value)
 
 
 def test_coverage_infimum_matches_vertex_enumeration():
@@ -304,10 +306,20 @@ def test_coverage_infimum_matches_vertex_enumeration():
         float(np.dot(weights, acceptance_lower))
         for weights in _bounded_simplex_vertices(lower, upper)
     )
-    result = solve_coverage_infimum(acceptance_lower, BoundedSimplex(lower, upper))
-    np.testing.assert_allclose(result.value, expected, atol=2e-14)
+    result = solve_coverage_infimum(
+        acceptance_lower, BoundedSimplex(lower, upper), tolerance=1e-13
+    )
+    assert result.certificate_valid
+    assert result.value <= expected
+    assert result.value <= result.raw_value
+    assert result.residual_lower >= 0.0 and result.residual_upper <= 0.0
+    np.testing.assert_allclose(result.value, expected, atol=2e-13)
     np.testing.assert_allclose(
-        coverage_infimum(acceptance_lower, lower, upper), expected, atol=2e-14
+        coverage_infimum(
+            acceptance_lower, lower, upper, tolerance=1e-13
+        ),
+        expected,
+        atol=2e-13,
     )
 
 

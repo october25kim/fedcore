@@ -17,6 +17,7 @@ from __future__ import annotations
 
 import csv
 import json
+from pathlib import Path
 
 import pytest
 
@@ -231,6 +232,10 @@ def test_audit_pool_never_contains_a_flamby_train_image(tmp_path):
             assert all(side[i] == "test" for i in images)
 
 
+@pytest.mark.skipif(
+    not Path("results/preregistration.yaml").is_file(),
+    reason="sealed preregistration artifact absent",
+)
 def test_preflight_roster_matches_the_sealed_preregistration():
     """``split_roster.drawn`` is final; the preflight's mirror must not drift."""
     import yaml

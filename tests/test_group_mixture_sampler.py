@@ -82,15 +82,36 @@ KW = dict(
     Lambda="box", box=0.15, seed=0,
 )
 
+_HAVE_GROUP_ARTIFACTS = all(
+    path.is_file()
+    for path in (
+        GM.COUNTS_PATH,
+        GM.STAMP_PATH,
+        GM.DECLARATION_PATH,
+        ROOT / "results" / "source_data" / "fed_isic2019_metadata.csv",
+        ROOT / "results" / "preregistration.yaml",
+    )
+)
+needs_group_artifacts = pytest.mark.skipif(
+    not _HAVE_GROUP_ARTIFACTS,
+    reason="frozen Fed-ISIC grouped-design artifacts are not distributed",
+)
+needs_campaign_runner = pytest.mark.skipif(
+    not (ROOT / "run_all.py").is_file(),
+    reason="optional sealed-campaign runner run_all.py is not distributed",
+)
+
 
 # --------------------------------------------------------------------------- #
 # 1. The ordering guarantee: pi is a pure function of the STAMPED artifact
 # --------------------------------------------------------------------------- #
+@needs_group_artifacts
 def test_pi_derives_only_from_the_stamped_frozen_counts():
     assert GM.COUNTS_PATH.is_file() and GM.STAMP_PATH.is_file()
     assert GM._sha256(GM.COUNTS_PATH) == GM.frozen_counts_sha256()
 
 
+@needs_group_artifacts
 def test_pi_refuses_if_the_frozen_counts_were_mutated(tmp_path, monkeypatch):
     """If the counts drift after stamping, pi is no longer predeclared. Refuse."""
     tampered = tmp_path / "frozen_audit_pool_counts.csv"
@@ -102,6 +123,7 @@ def test_pi_refuses_if_the_frozen_counts_were_mutated(tmp_path, monkeypatch):
     GM.load_frozen_counts.cache_clear()
 
 
+@needs_group_artifacts
 def test_declaration_is_ratified_and_its_provenance_asymmetry_is_carried():
     """RATIFIED (af7f4e74) + ACTIVATED (02d5f821). The asymmetry it discloses is PERMANENT.
 
@@ -155,6 +177,7 @@ def test_pi_semantics_is_never_the_full_flamby_test_population():
     assert "NOT the complete unfiltered FLamby" in GM.PI_SEMANTICS
 
 
+@needs_group_artifacts
 def test_pi_basis_re_derives_from_raw_metadata():
     """The frozen basis must be reproducible arithmetic, not asserted numbers."""
     import pandas as pd
@@ -165,6 +188,7 @@ def test_pi_basis_re_derives_from_raw_metadata():
         assert int(mine[int(r.center_index)]) == int(r.N_basis)
 
 
+@needs_group_artifacts
 def test_pi_is_task_independent_and_no_center_is_zero_weighted():
     """pi takes NO task argument -- that is what stops a starved center being zeroed."""
     import inspect
@@ -175,6 +199,7 @@ def test_pi_is_task_independent_and_no_center_is_zero_weighted():
         assert np.isclose(sum(weights.values()), 1.0, rtol=0.0, atol=1e-12)
 
 
+@needs_group_artifacts
 def test_fail_closed_when_a_positive_pi_center_has_no_support():
     """A positive-pi center with an EMPTY reservoir must FAIL CLOSED, never renormalize.
 
@@ -193,6 +218,7 @@ def test_fail_closed_when_a_positive_pi_center_has_no_support():
         assert status["unsupported_centers"]
 
 
+@needs_group_artifacts
 def test_support_is_satisfiability_only_not_count_feasibility():
     """A supported center can be nowhere near count-feasible. Never conflate them."""
     support = GM.center_support(0, TSEED)
@@ -204,6 +230,7 @@ def test_support_is_satisfiability_only_not_count_feasibility():
     assert "SAMPLER SATISFIABILITY ONLY" in GM.SUPPORT_RULE
 
 
+@needs_group_artifacts
 def test_frozen_counts_are_metadata_only_and_declare_nothing():
     """Freezing counts is safe and is NOT a design declaration -- it is arithmetic."""
     counts = GM.load_frozen_counts()
@@ -215,6 +242,7 @@ def test_frozen_counts_are_metadata_only_and_declare_nothing():
     assert not (set(counts.columns) & forbidden)
 
 
+@needs_group_artifacts
 def test_frozen_counts_are_seed_independent():
     """Whatever pi the owner declares from these counts, it cannot move with train_seed."""
     counts = GM.load_frozen_counts()
@@ -226,6 +254,7 @@ def test_frozen_counts_are_seed_independent():
 # --------------------------------------------------------------------------- #
 # 2. Lambda_G is a DERIVATION from sealed values, not a new choice
 # --------------------------------------------------------------------------- #
+@needs_group_artifacts
 def test_lambda_G_is_the_sealed_rho_box_over_two_group_coordinates():
     from fedcore.certificate.lambda_sets import uniform_box
 
@@ -238,6 +267,7 @@ def test_lambda_G_is_the_sealed_rho_box_over_two_group_coordinates():
 # --------------------------------------------------------------------------- #
 # 3. THE CENTRAL TEST: the sampler is actually invoked in the production path
 # --------------------------------------------------------------------------- #
+@needs_group_artifacts
 def test_PRODUCTION_ENTRY_POINT_reaches_the_declared_sampler(views, monkeypatch):
     """THE decisive test: the real production entry point drives the declared sampler.
 
@@ -288,6 +318,7 @@ def test_PRODUCTION_ENTRY_POINT_reaches_the_declared_sampler(views, monkeypatch)
     assert "WEAKER provenance" in row["provenance_note"]
 
 
+@needs_group_artifacts
 def test_production_entry_point_fails_closed_and_never_renormalizes(views):
     """The mandated fail-closed test, at the PRODUCTION entry point."""
     from fedcore.medical import certify_grouped
@@ -463,6 +494,7 @@ def test_pi_and_n_g_apis_accept_no_outcome_argument():
         assert params <= {"split_id", "train_seed"}
 
 
+@needs_campaign_runner
 def test_sampler_seed_masks_alpha_and_certificate_variant():
     """The sealed 'audit' scope masks alpha/variant, so competing analyses share ONE draw.
 
@@ -540,6 +572,7 @@ def test_partition_must_cover_every_client_exactly_once():
         group_map_from_partition([[0, 1], [1, 2]])
 
 
+@needs_group_artifacts
 def test_spec_matches_the_sealed_partition(spec):
     """The production spec's grouping must equal the SEALED declaration."""
     import yaml

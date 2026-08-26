@@ -412,9 +412,10 @@ def _print_roster(counts: pd.DataFrame, **kwargs) -> None:
             f"{str(cert_unk):<28} {verdict:<18}"
         )
     print(f"\n  Theorem-2 floor: n_cert must be >= {int(np.ceil(floor))} at EVERY center")
+    viable_labels = [f"{split_id}:{'+'.join(pair)}" for split_id, pair in viable]
     print(
         f"  VIABLE AT ALL 6 CENTERS: {len(viable)} of {len(PREREG_ROSTER)} "
-        f"-> {[f'{s}:{"+".join(p)}' for s, p in viable] if viable else 'NONE'}"
+        f"-> {viable_labels if viable else 'NONE'}"
     )
     print(
         "  The other splits are pre-registered A3 feasibility FINDINGS for the J=6 "
@@ -479,9 +480,10 @@ def _print_grouped(counts: pd.DataFrame, **kwargs) -> None:
             viable.append((split_id, pair))
         print(f"{split_id:>5} {'+'.join(pair):<10} {str(n_cert):<20} {str(cert_unk):<14} {verdict:<12}")
     print(f"\n  Theorem-2 floor at G=2: n_cert >= {int(np.ceil(floor))} per GROUP")
+    viable_labels = [f"{split_id}:{'+'.join(pair)}" for split_id, pair in viable]
     print(
         f"  VIABLE AT BOTH GROUPS: {len(viable)} of {len(PREREG_ROSTER)} "
-        f"-> {[f'{s}:{"+".join(p)}' for s, p in viable] if viable else 'NONE'}"
+        f"-> {viable_labels if viable else 'NONE'}"
     )
     print(
         "  Per the prereg, the simplex-vs-grouped comparison on Fed-ISIC IS a "

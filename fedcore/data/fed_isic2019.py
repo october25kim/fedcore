@@ -176,7 +176,11 @@ def assign_center_names(
     if len(merged) != len(metadata):
         raise ValueError("HAM merge changed the row count; duplicate image ids?")
 
-    names = merged["_prefix"] + merged["dataset"].astype(str)
+    # pandas 3 preserves a missing scalar through string arithmetic instead of
+    # producing the historical literal ``"nan"``.  Spell out the FLamby-era
+    # conversion so the center map is stable across supported pandas versions.
+    ham_site = merged["dataset"].fillna("nan").astype(str)
+    names = merged["_prefix"].astype(str) + ham_site
     names.index = metadata.index
     return names.rename("center_name")
 

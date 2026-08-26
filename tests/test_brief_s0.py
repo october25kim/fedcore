@@ -66,21 +66,21 @@ def test_cp_conventions() -> None:
 
 
 # --------------------------------------------------------------------------- #
-# 2. Theorem 3 zero-error floors
+# 2. Historical uniform-allocation zero-error floors
 # --------------------------------------------------------------------------- #
-def test_theorem3_floor_J5() -> None:
+def test_legacy_uniform_floor_J5() -> None:
     """J=5 at alpha=0.10: delta_r=0.10 -> 38; delta_r=0.05 -> 44."""
     assert zero_error_floor(0.10 / 5, 0.10) == 38
     assert zero_error_floor(0.05 / 5, 0.10) == 44
 
 
 @pytest.mark.parametrize("G,expected", [(5, 44), (3, 39), (2, 36), (1, 29)])
-def test_theorem3_floor_group_ladder(G: int, expected: int) -> None:
+def test_legacy_uniform_floor_group_ladder(G: int, expected: int) -> None:
     """G in {5,3,2,1} at delta_r=0.05, alpha=0.10 -> {44, 39, 36, 29}."""
     assert zero_error_floor(0.05 / G, 0.10) == expected
 
 
-def test_theorem3_floor_matches_uniform_certificate() -> None:
+def test_legacy_uniform_floor_matches_allocated_certificate() -> None:
     """The floor is exactly the count at which the uniform certificate deploys."""
     J, delta_r, alpha = 5, 0.10, 0.10
     floor = zero_error_floor(delta_r / J, alpha)
@@ -208,8 +208,8 @@ def test_corollary2_frontier_is_exactly_the_feasibility_boundary() -> None:
                 )
 
 
-def test_corollary2_strictly_weaker_than_theorem3_under_heterogeneity() -> None:
-    """The frontier certifies cells the uniform Theorem-3 floor refuses."""
+def test_frontier_strictly_weaker_than_legacy_uniform_floor() -> None:
+    """The frontier certifies cells the archived uniform floor refuses."""
     alpha, delta_r, J = 0.10, 0.10, 5
     A = np.array([200, 36, 36, 36, 36])
     assert zero_error_frontier(A, alpha) <= delta_r  # frontier: feasible
@@ -391,8 +391,8 @@ def test_theorem4_zero_accepted_client_is_not_dropped() -> None:
     assert cert.U == 1.0
 
 
-def test_theorem4_uniform_reproduces_theorem1() -> None:
-    """Uniform allocation is exactly the Theorem 1 simplex certificate."""
+def test_historical_allocated_uniform_reproduces_legacy_union_bound() -> None:
+    """Uniform allocation reproduces the archived clientwise union bound."""
     A = np.array([300, 250, 400, 180, 220])
     K = np.array([9, 8, 10, 7, 30])
     delta_r, J = 0.10, 5

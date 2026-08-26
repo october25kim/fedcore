@@ -3,9 +3,10 @@
 This is a POST-HOC analysis over the 50 FROZEN Office-Home training-logit
 artifacts (``runs/oneshot/officehome/logits/*_logits.npz``).  It trains nothing,
 launches nothing, and modifies no frozen artifact.  Every number is computed
-from the canonical artifacts using the exact fedcore certificate core
+from the canonical artifacts using the Fed-CORE certificate core
 (``fedcore.certificate.joint``, ``fedcore.certificate.cp``); no CP is
-reimplemented and no favourable seed/alpha/score is selected.
+reimplemented, strict-mixture numerics use conservative validated endpoints, and
+no favourable seed/alpha/score is selected.
 
 Design (owner-fixed, immutable -- see docs/agent/officehome_experiment_plan.md):
 
@@ -516,9 +517,21 @@ def traffic_rows(cell: Cell, cell_results: Dict[Tuple[float, int], CellAlphaResu
                 t_cert = bool(cert.certified)
                 # matched-budget full simplex (same rbar as the box) isolates the set effect
                 matched = float(np.max(cert.rbar))
-                worst = cert.lambda_upper.tolist()
+                # A coordinate upper envelope is generally not a feasible
+                # mixture and is never an optimizer.  Export only the attained
+                # feasible witness retained by the validated solver.
+                worst = (
+                    cert.lambda_star.tolist()
+                    if cert.solver_certificate_valid and cert.lambda_star is not None
+                    else None
+                )
+                solver_diag = cert.solver_diagnostics
             else:
                 t_ucb = float("inf"); t_cov = 0.0; t_cert = False; matched = float("inf")
+                solver_diag = {
+                    "solver_status": "not_run_proposal_infeasible",
+                    "solver_certificate_valid": False,
+                }
             rows.append({
                 "cell": cell.name, "pipeline": cell.pipeline, "split_id": cell.split_id,
                 "train_rep": cell.train_rep, "alpha": alpha, "m": m,
@@ -536,7 +549,41 @@ def traffic_rows(cell: Cell, cell_results: Dict[Tuple[float, int], CellAlphaResu
                 "full_simplex_primary_ucb": fs_ucb,
                 "full_simplex_primary_certified": fs_cert,
                 "deploy_gain_vs_full_simplex": bool(t_cert and not fs_cert),
-                "worst_case_mixture_upper": worst,
+                "worst_case_mixture_witness": worst,
+                "worst_case_mixture_semantics": (
+                    "attained_feasible_solver_witness_not_confidence_bound"
+                    if worst is not None else "unavailable_solver_failed_closed"
+                ),
+                "solver_status": solver_diag.get("solver_status", "unknown"),
+                "solver_certificate_valid": solver_diag.get(
+                    "solver_certificate_valid", False
+                ),
+                "risk_solver_tolerance": solver_diag.get("risk_solver_tolerance", float("nan")),
+                "risk_solver_iterations": solver_diag.get("risk_solver_iterations", 0),
+                "risk_solver_bracket_lower": solver_diag.get("risk_solver_bracket_lower", float("nan")),
+                "risk_solver_bracket_upper": solver_diag.get("risk_solver_bracket_upper", float("nan")),
+                "risk_solver_residual_lower": solver_diag.get("risk_solver_residual_lower", float("nan")),
+                "risk_solver_residual_upper": solver_diag.get("risk_solver_residual_upper", float("nan")),
+                "coverage_solver_tolerance": solver_diag.get("coverage_solver_tolerance", float("nan")),
+                "coverage_solver_iterations": solver_diag.get("coverage_solver_iterations", 0),
+                "coverage_solver_bracket_lower": solver_diag.get(
+                    "coverage_solver_bracket_lower", float("nan")
+                ),
+                "coverage_solver_bracket_upper": solver_diag.get(
+                    "coverage_solver_bracket_upper", float("nan")
+                ),
+                "coverage_solver_residual_lower": solver_diag.get(
+                    "coverage_solver_residual_lower", float("nan")
+                ),
+                "coverage_solver_residual_upper": solver_diag.get(
+                    "coverage_solver_residual_upper", float("nan")
+                ),
+                "coverage_solver_feasibility_residual": solver_diag.get(
+                    "coverage_solver_feasibility_residual", float("nan")
+                ),
+                "coverage_solver_objective_residual": solver_diag.get(
+                    "coverage_solver_objective_residual", float("nan")
+                ),
             })
     return rows
 
@@ -555,8 +602,15 @@ def rho_rows(cell: Cell, cell_results: Dict[Tuple[float, int], CellAlphaResult])
                 cert = certify_box(dc, alpha, rbudget, box.lower, box.upper)
                 ucb = float(cert.risk_ucb); cov = float(cert.coverage_lcb)
                 certd = bool(cert.certified)
+                solver_diag = cert.solver_diagnostics
             else:
                 ucb = float("inf"); cov = 0.0; certd = False
+                solver_diag = {
+                    "solver_status": "not_run_proposal_infeasible",
+                    "solver_certificate_valid": False,
+                    "risk_solver_status": "not_run_proposal_infeasible",
+                    "coverage_solver_status": "not_run_proposal_infeasible",
+                }
             rows.append({
                 "cell": cell.name, "pipeline": cell.pipeline, "split_id": cell.split_id,
                 "train_rep": cell.train_rep, "alpha": alpha, "rho": rho,
@@ -566,6 +620,24 @@ def rho_rows(cell: Cell, cell_results: Dict[Tuple[float, int], CellAlphaResult])
                 "rho_risk_ucb": ucb, "rho_coverage_lcb": cov, "rho_certified": certd,
                 "full_simplex_primary_ucb": float(res.cert.risk_ucb),
                 "full_simplex_primary_certified": bool(res.nonvacuous),
+                "solver_status": solver_diag.get("solver_status", "unknown"),
+                "solver_certificate_valid": solver_diag.get(
+                    "solver_certificate_valid", False
+                ),
+                "risk_solver_status": solver_diag.get("risk_solver_status", "unknown"),
+                "risk_solver_tolerance": solver_diag.get("risk_solver_tolerance", float("nan")),
+                "risk_solver_iterations": solver_diag.get("risk_solver_iterations", 0),
+                "risk_solver_bracket_lower": solver_diag.get("risk_solver_bracket_lower", float("nan")),
+                "risk_solver_bracket_upper": solver_diag.get("risk_solver_bracket_upper", float("nan")),
+                "risk_solver_residual_lower": solver_diag.get("risk_solver_residual_lower", float("nan")),
+                "risk_solver_residual_upper": solver_diag.get("risk_solver_residual_upper", float("nan")),
+                "coverage_solver_status": solver_diag.get("coverage_solver_status", "unknown"),
+                "coverage_solver_tolerance": solver_diag.get("coverage_solver_tolerance", float("nan")),
+                "coverage_solver_iterations": solver_diag.get("coverage_solver_iterations", 0),
+                "coverage_solver_bracket_lower": solver_diag.get("coverage_solver_bracket_lower", float("nan")),
+                "coverage_solver_bracket_upper": solver_diag.get("coverage_solver_bracket_upper", float("nan")),
+                "coverage_solver_residual_lower": solver_diag.get("coverage_solver_residual_lower", float("nan")),
+                "coverage_solver_residual_upper": solver_diag.get("coverage_solver_residual_upper", float("nan")),
             })
     return rows
 
@@ -854,11 +926,21 @@ def main() -> None:
         "box_total_width", "proposal_support", "traffic_risk_ucb", "traffic_coverage_lcb",
         "traffic_certified", "simplex_matched_ucb", "gain_from_set_ucb",
         "full_simplex_primary_ucb", "full_simplex_primary_certified",
-        "deploy_gain_vs_full_simplex", "worst_case_mixture_upper",
+        "deploy_gain_vs_full_simplex", "worst_case_mixture_witness",
+        "worst_case_mixture_semantics",
+        "solver_status", "solver_certificate_valid",
+        "risk_solver_tolerance", "risk_solver_iterations",
+        "risk_solver_bracket_lower", "risk_solver_bracket_upper",
+        "risk_solver_residual_lower", "risk_solver_residual_upper",
+        "coverage_solver_tolerance", "coverage_solver_iterations",
+        "coverage_solver_bracket_lower", "coverage_solver_bracket_upper",
+        "coverage_solver_residual_lower", "coverage_solver_residual_upper",
+        "coverage_solver_feasibility_residual",
+        "coverage_solver_objective_residual",
     ]
     # json-encode list columns
     for row in tr_rows:
-        for key in ("traffic_counts", "box_lower", "box_upper", "raw_lower", "raw_upper", "worst_case_mixture_upper"):
+        for key in ("traffic_counts", "box_lower", "box_upper", "raw_lower", "raw_upper", "worst_case_mixture_witness"):
             row[key] = _j(row[key])
     write_csv(os.path.join(OUTDIR, "data_derived_lambda_summary.csv"), tr_rows, tr_fields)
 
@@ -874,6 +956,14 @@ def main() -> None:
         "box_lower", "box_upper", "proposal_support",
         "rho_risk_ucb", "rho_coverage_lcb", "rho_certified",
         "full_simplex_primary_ucb", "full_simplex_primary_certified",
+        "solver_status", "solver_certificate_valid",
+        "risk_solver_status", "risk_solver_tolerance", "risk_solver_iterations",
+        "risk_solver_bracket_lower", "risk_solver_bracket_upper",
+        "risk_solver_residual_lower", "risk_solver_residual_upper",
+        "coverage_solver_status", "coverage_solver_tolerance",
+        "coverage_solver_iterations", "coverage_solver_bracket_lower",
+        "coverage_solver_bracket_upper", "coverage_solver_residual_lower",
+        "coverage_solver_residual_upper",
     ]
     write_csv(os.path.join(OUTDIR, "rho_sensitivity.csv"), rr_rows, rr_fields)
 

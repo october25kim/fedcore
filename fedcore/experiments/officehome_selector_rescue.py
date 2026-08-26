@@ -28,9 +28,10 @@ Phases (see docs/agent/officehome_selector_rescue_plan.md):
       SEPARATE lower acceptance bound.  delta_total 0.10 / delta_lambda 0.02 /
       delta_r 0.04 / delta_c 0.04.  Verifies the 0/50 secondary conclusion.
 
-Every certificate reuses the exact fedcore CP core (``cp_upper`` / ``cp_lower``
-via ``fedcore.officehome_rescue`` and ``fedcore.certificate.joint``); no CP is
-reimplemented, and no favourable seed/alpha/score/cell is selected.
+Every certificate reuses the Fed-CORE CP core (``cp_upper`` / ``cp_lower`` via
+``fedcore.officehome_rescue`` and ``fedcore.certificate.joint``); strict-mixture
+numerics use conservative validated endpoints. No CP is reimplemented, and no
+favourable seed/alpha/score/cell is selected.
 
 Entry point: ``python -m fedcore.experiments.officehome_selector_rescue``.
 """
@@ -69,7 +70,7 @@ from fedcore.officehome_rescue import (
     simultaneous_family_certificate,
 )
 
-# Reuse the EXACT primary loading / draw / certificate machinery so S1 shares the
+# Reuse the same primary loading / draw / certificate machinery so S1 shares the
 # primary's certification draw and full-simplex certificate byte-for-byte.
 from fedcore.experiments.officehome_final_analysis import (
     ALPHAS,
@@ -202,6 +203,78 @@ def single_selector_full_simplex(
 # Canonical Theorem-2 box certificate (Phase S3): risk eps = delta_r/(3J) over
 # {rbar, alow, ahigh}; coverage eps = delta_c/J on a SEPARATE lower bound.
 # --------------------------------------------------------------------------- #
+_SOLVER_AUDIT_KEYS = (
+    "solver_status",
+    "solver_certificate_valid",
+    "risk_solver_status",
+    "risk_solver_certificate_valid",
+    "risk_solver_tolerance",
+    "risk_solver_iterations",
+    "risk_solver_bracket_lower",
+    "risk_solver_bracket_upper",
+    "risk_solver_residual_lower",
+    "risk_solver_residual_upper",
+    "coverage_solver_status",
+    "coverage_solver_certificate_valid",
+    "coverage_solver_tolerance",
+    "coverage_solver_iterations",
+    "coverage_solver_bracket_lower",
+    "coverage_solver_bracket_upper",
+    "coverage_solver_residual_lower",
+    "coverage_solver_residual_upper",
+)
+
+
+def _not_run_diagnostics() -> Dict[str, object]:
+    diagnostics: Dict[str, object] = {}
+    for key in _SOLVER_AUDIT_KEYS:
+        if key.endswith("certificate_valid"):
+            diagnostics[key] = False
+        elif key.endswith("status"):
+            diagnostics[key] = "not_run_proposal_infeasible"
+        elif key.endswith("iterations"):
+            diagnostics[key] = 0
+        else:
+            diagnostics[key] = float("nan")
+    return diagnostics
+
+
+def _prefixed_solver_diagnostics(
+    prefix: str, diagnostics: Dict[str, object]
+) -> Dict[str, object]:
+    defaults = _not_run_diagnostics()
+    return {
+        f"{prefix}_{key}": diagnostics.get(key, defaults[key])
+        for key in _SOLVER_AUDIT_KEYS
+    }
+
+
+@dataclass(frozen=True)
+class BoxCertificateSummary:
+    risk_ucb: float
+    coverage_lcb: float
+    certified: bool
+    feasible: bool
+    solver_diagnostics: Dict[str, object]
+
+    def __iter__(self):
+        """Preserve the historical four-value unpacking compatibility."""
+        yield self.risk_ucb
+        yield self.coverage_lcb
+        yield self.certified
+        yield self.feasible
+
+
+def _not_run_box_summary() -> BoxCertificateSummary:
+    return BoxCertificateSummary(
+        risk_ucb=float("inf"),
+        coverage_lcb=0.0,
+        certified=False,
+        feasible=False,
+        solver_diagnostics=_not_run_diagnostics(),
+    )
+
+
 def certify_box_canonical(
     dc: DrawnCounts,
     alpha: float,
@@ -211,7 +284,9 @@ def certify_box_canonical(
     delta_r: float,
     delta_c: float,
 ):
-    """Return (risk_ucb, coverage_lcb, certified, feasible). Reuses the exact core
+    """Return a four-value-compatible summary plus complete solver diagnostics.
+
+    Reuses the deterministic core
     twice: once for the risk ratio (denominator alow at delta_r/(3J)) and once for
     the separately-budgeted coverage LCB (alow at delta_c/J)."""
     risk_eps = np.full(J, delta_r / (3.0 * J))
@@ -233,9 +308,40 @@ def certify_box_canonical(
     )
     risk_ucb = float(cert_risk.risk_ucb)
     coverage_lcb = float(cert_cov.coverage_lcb)
-    feasible = bool(cert_risk.feasible)
+    risk_diagnostics = {
+        key: value
+        for key, value in cert_risk.solver_diagnostics.items()
+        if key.startswith("risk_solver_")
+    }
+    coverage_diagnostics = {
+        key: value
+        for key, value in cert_cov.solver_diagnostics.items()
+        if key.startswith("coverage_solver_")
+    }
+    risk_valid = bool(
+        risk_diagnostics.get("risk_solver_certificate_valid", False)
+    )
+    coverage_valid = bool(
+        coverage_diagnostics.get("coverage_solver_certificate_valid", False)
+    )
+    solver_valid = bool(risk_valid and coverage_valid)
+    diagnostics = {
+        **risk_diagnostics,
+        **coverage_diagnostics,
+        "solver_status": (
+            f"risk:{risk_diagnostics.get('risk_solver_status', 'unknown')};"
+            f"coverage:{coverage_diagnostics.get('coverage_solver_status', 'unknown')}"
+        ),
+        "solver_certificate_valid": solver_valid,
+    }
+    # The canonical output combines two independently budgeted certificate
+    # objects. Both selected numerical bounds must be valid before the summary
+    # can be called feasible.
+    feasible = bool(cert_risk.feasible and solver_valid)
     certified = bool(feasible and math.isfinite(risk_ucb) and risk_ucb <= alpha and coverage_lcb > 0.0)
-    return risk_ucb, coverage_lcb, certified, feasible
+    return BoxCertificateSummary(
+        risk_ucb, coverage_lcb, certified, feasible, diagnostics
+    )
 
 
 # --------------------------------------------------------------------------- #
@@ -260,7 +366,14 @@ def certify_box_original(
         acceptance_upper_eps=upper_eps,
         lambda_lower=lam_lower, lambda_upper=lam_upper,
     )
-    return float(cert.risk_ucb), float(cert.coverage_lcb), bool(cert.certified), bool(cert.feasible)
+    solver_valid = bool(cert.solver_certificate_valid)
+    return BoxCertificateSummary(
+        float(cert.risk_ucb),
+        float(cert.coverage_lcb),
+        bool(cert.certified and solver_valid),
+        bool(cert.feasible and solver_valid),
+        cert.solver_diagnostics,
+    )
 
 
 # --------------------------------------------------------------------------- #
@@ -441,6 +554,17 @@ def run_s1(cells: List[Cell]) -> Dict[str, List[dict]]:
             hsel_score = fc.scores[holm_idx] if holm_idx is not None else ""
             hsel_gamma = fc.gammas[holm_idx] if holm_idx is not None else float("nan")
             hsel_C = float(holm.C[holm_idx]) if holm_idx is not None else float("nan")
+            hsel_raw_p = (
+                float(holm.pvalues[holm_idx]) if holm_idx is not None else float("nan")
+            )
+            hsel_adjusted_p = (
+                float(holm.adjusted_pvalues[holm_idx])
+                if holm_idx is not None
+                else float("nan")
+            )
+            hsel_rank = (
+                int(holm.holm_rank[holm_idx]) if holm_idx is not None else float("nan")
+            )
             holm_rows.append({
                 "cell": cell.name, "pipeline": cell.pipeline, "split_id": cell.split_id,
                 "train_rep": cell.train_rep, "alpha": alpha, "n_j": NJ_PRIMARY,
@@ -449,11 +573,23 @@ def run_s1(cells: List[Cell]) -> Dict[str, List[dict]]:
                 "n_candidates_holm_reject": int(holm.holm_reject.sum()),
                 "n_candidates_certified": int(holm.certified.sum()),
                 "holm_certified": holm_certified,
+                "risk_output_type": "fixed_alpha_decision",
+                "family_procedure": "holm_iut",
+                "risk_pass": bool(holm_certified),
+                "cert_risk_ucb": float("nan"),
+                "selected_candidate_index": holm_idx,
+                "iut_raw_pvalue": hsel_raw_p,
+                "holm_adjusted_pvalue": hsel_adjusted_p,
+                "holm_rank": hsel_rank,
                 "selected_score": hsel_score, "selected_gamma": hsel_gamma,
                 "selected_coverage_lcb": hsel_C,
                 "EffectiveCertCov": hsel_C if holm_certified else 0.0,
                 "primary_certified": prim.certified,
                 "cand_pvalues": _j([float(x) for x in holm.pvalues]),
+                "cand_adjusted_pvalues": _j(
+                    [float(x) for x in holm.adjusted_pvalues]
+                ),
+                "cand_holm_rank": _j([int(x) for x in holm.holm_rank]),
                 "cand_holm_reject": _j([bool(x) for x in holm.holm_reject]),
                 "cand_C": _j([float(x) for x in holm.C]),
                 "cand_certified": _j([bool(x) for x in holm.certified]),
@@ -631,15 +767,15 @@ def run_s3(cells: List[Cell]) -> Dict[str, List[dict]]:
                 tl = build_traffic_lambda(counts, delta_lambda=T_DELTA_LAMBDA)
                 lo = tl.box.mixture.lower; hi = tl.box.mixture.upper
                 if support:
-                    can_u, can_c, can_cert, can_feas = certify_box_canonical(
+                    canonical = certify_box_canonical(
                         dc, alpha, lo, hi, delta_r=T_DELTA_R, delta_c=T_DELTA_C
                     )
-                    orig_u, orig_c, orig_cert, _ = certify_box_original(
+                    original = certify_box_original(
                         dc, alpha, lo, hi, delta_r=T_DELTA_R, delta_c=T_DELTA_C
                     )
                 else:
-                    can_u = orig_u = float("inf"); can_c = orig_c = 0.0
-                    can_cert = orig_cert = False; can_feas = False
+                    canonical = _not_run_box_summary()
+                    original = _not_run_box_summary()
                 lambda_rows.append({
                     "cell": cell.name, "pipeline": cell.pipeline, "split_id": cell.split_id,
                     "train_rep": cell.train_rep, "alpha": alpha, "m": m,
@@ -647,42 +783,68 @@ def run_s3(cells: List[Cell]) -> Dict[str, List[dict]]:
                     "convention": "canonical_theorem2",
                     "delta_lambda": T_DELTA_LAMBDA, "delta_r": T_DELTA_R, "delta_c": T_DELTA_C,
                     "eps_r_per_client": T_DELTA_R / (3.0 * J), "eps_c_per_client": T_DELTA_C / J,
-                    "canonical_risk_ucb": can_u, "canonical_coverage_lcb": can_c,
-                    "canonical_certified": can_cert, "canonical_feasible": can_feas,
-                    "original_risk_ucb": orig_u, "original_coverage_lcb": orig_c,
-                    "original_certified": orig_cert,
+                    "canonical_risk_ucb": canonical.risk_ucb,
+                    "canonical_coverage_lcb": canonical.coverage_lcb,
+                    "canonical_certified": canonical.certified,
+                    "canonical_feasible": canonical.feasible,
+                    "original_risk_ucb": original.risk_ucb,
+                    "original_coverage_lcb": original.coverage_lcb,
+                    "original_certified": original.certified,
+                    "original_feasible": original.feasible,
+                    **_prefixed_solver_diagnostics(
+                        "canonical", canonical.solver_diagnostics
+                    ),
+                    **_prefixed_solver_diagnostics(
+                        "original", original.solver_diagnostics
+                    ),
                 })
                 if m == M_PRIMARY:
-                    diff_rows.append(_diff_row(cell, alpha, "traffic", None, m,
-                                               can_u, can_c, can_cert, orig_u, orig_c, orig_cert))
+                    diff_rows.append(
+                        _diff_row(
+                            cell, alpha, "traffic", None, m, canonical, original
+                        )
+                    )
 
             # ---- fixed-rho ----
             center = np.full(J, 1.0 / J)
             for rho in RHO_GRID:
                 box = rho_mixture_box(center, rho)
                 if support:
-                    can_u, can_c, can_cert, can_feas = certify_box_canonical(
+                    canonical = certify_box_canonical(
                         dc, alpha, box.lower, box.upper, delta_r=T_DELTA_R, delta_c=T_DELTA_C
                     )
-                    orig_u, orig_c, orig_cert, _ = certify_box_original(
+                    original = certify_box_original(
                         dc, alpha, box.lower, box.upper, delta_r=T_DELTA_R, delta_c=T_DELTA_C
                     )
                 else:
-                    can_u = orig_u = float("inf"); can_c = orig_c = 0.0
-                    can_cert = orig_cert = False; can_feas = False
+                    canonical = _not_run_box_summary()
+                    original = _not_run_box_summary()
                 rho_rows.append({
                     "cell": cell.name, "pipeline": cell.pipeline, "split_id": cell.split_id,
                     "train_rep": cell.train_rep, "alpha": alpha, "rho": rho,
                     "proposal_support": support, "convention": "canonical_theorem2",
                     "delta_r": T_DELTA_R, "delta_c": T_DELTA_C,
                     "eps_r_per_client": T_DELTA_R / (3.0 * J), "eps_c_per_client": T_DELTA_C / J,
-                    "canonical_risk_ucb": can_u, "canonical_coverage_lcb": can_c,
-                    "canonical_certified": can_cert, "canonical_feasible": can_feas,
-                    "original_risk_ucb": orig_u, "original_coverage_lcb": orig_c,
-                    "original_certified": orig_cert,
+                    "canonical_risk_ucb": canonical.risk_ucb,
+                    "canonical_coverage_lcb": canonical.coverage_lcb,
+                    "canonical_certified": canonical.certified,
+                    "canonical_feasible": canonical.feasible,
+                    "original_risk_ucb": original.risk_ucb,
+                    "original_coverage_lcb": original.coverage_lcb,
+                    "original_certified": original.certified,
+                    "original_feasible": original.feasible,
+                    **_prefixed_solver_diagnostics(
+                        "canonical", canonical.solver_diagnostics
+                    ),
+                    **_prefixed_solver_diagnostics(
+                        "original", original.solver_diagnostics
+                    ),
                 })
-                diff_rows.append(_diff_row(cell, alpha, "rho", rho, None,
-                                           can_u, can_c, can_cert, orig_u, orig_c, orig_cert))
+                diff_rows.append(
+                    _diff_row(
+                        cell, alpha, "rho", rho, None, canonical, original
+                    )
+                )
 
     return {
         "canonical_budget_lambda_results.csv": lambda_rows,
@@ -691,17 +853,42 @@ def run_s3(cells: List[Cell]) -> Dict[str, List[dict]]:
     }
 
 
-def _diff_row(cell, alpha, kind, rho, m, cu, cc, ccert, ou, oc, ocert):
-    du = (cu - ou) if math.isfinite(cu) and math.isfinite(ou) else float("nan")
+def _diff_row(
+    cell, alpha, kind, rho, m,
+    canonical: BoxCertificateSummary,
+    original: BoxCertificateSummary,
+):
+    du = (
+        canonical.risk_ucb - original.risk_ucb
+        if math.isfinite(canonical.risk_ucb)
+        and math.isfinite(original.risk_ucb)
+        else float("nan")
+    )
     return {
         "cell": cell.name, "pipeline": cell.pipeline, "split_id": cell.split_id,
         "train_rep": cell.train_rep, "alpha": alpha, "kind": kind,
         "rho": rho if rho is not None else float("nan"),
         "m": m if m is not None else -1,
-        "canonical_risk_ucb": cu, "original_risk_ucb": ou, "risk_ucb_diff_canonical_minus_original": du,
-        "canonical_coverage_lcb": cc, "original_coverage_lcb": oc,
-        "canonical_certified": ccert, "original_certified": ocert,
-        "certified_changed": bool(ccert != ocert),
+        "canonical_risk_ucb": canonical.risk_ucb,
+        "original_risk_ucb": original.risk_ucb,
+        "risk_ucb_diff_canonical_minus_original": du,
+        "canonical_coverage_lcb": canonical.coverage_lcb,
+        "original_coverage_lcb": original.coverage_lcb,
+        "canonical_certified": canonical.certified,
+        "original_certified": original.certified,
+        "canonical_solver_status": canonical.solver_diagnostics.get(
+            "solver_status", "unknown"
+        ),
+        "canonical_solver_certificate_valid": canonical.solver_diagnostics.get(
+            "solver_certificate_valid", False
+        ),
+        "original_solver_status": original.solver_diagnostics.get(
+            "solver_status", "unknown"
+        ),
+        "original_solver_certificate_valid": original.solver_diagnostics.get(
+            "solver_certificate_valid", False
+        ),
+        "certified_changed": bool(canonical.certified != original.certified),
     }
 
 
@@ -825,10 +1012,11 @@ def main() -> None:
         "M_candidates": M_CANDIDATES, "J": J,
         "alphas": list(ALPHAS), "alpha_primary": ALPHA_PRIMARY,
         "s1_budget": {"delta_r": DELTA_R, "delta_c": DELTA_C,
-                      "eps_r": DELTA_R / (M_CANDIDATES * J), "eps_c": DELTA_C / (M_CANDIDATES * J),
-                      "note": "simultaneous union bound over M*J events"},
+                      "eps_r": DELTA_R / M_CANDIDATES, "eps_c": DELTA_C / M_CANDIDATES,
+                      "note": "full-simplex scalar extrema; family multiplicity M only"},
         "holm_budget": {"fwer_delta_r": DELTA_R, "coverage_delta_c": DELTA_C,
-                        "coverage_eps": DELTA_C / (M_CANDIDATES * J)},
+                        "coverage_eps": DELTA_C / M_CANDIDATES,
+                        "risk_output": "fixed-alpha decision and adjusted p-value; no numerical UCB"},
         "s2_budget": {"delta_r": DELTA_R, "delta_c": DELTA_C, "gamma": 0.3,
                       "seed_rule": "blake2b8(officehome-fresh-draw-v1|cell_name) mod 2**32",
                       "note": "single pre-frozen policy; no multiplicity"},

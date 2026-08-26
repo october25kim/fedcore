@@ -22,6 +22,9 @@ Emits the canonical metric schema per cell:
   certified, cert_risk_ucb, cert_coverage_lcb, cert_n, cert_k, prop_coverage,
   prop_risk, test_coverage, test_risk, score_name, gamma, alpha, delta, Lambda,
   dirichlet_alpha, n_clients  (+ arm, dataset, split_id, train_rep, semantic_id).
+For Holm/IUT, ``cert_risk_ucb`` remains NaN because the procedure returns a
+fixed-alpha decision. The row instead records the raw IUT p-value, monotone
+Holm-adjusted p-value, one-based Holm rank, and the risk-decision indicator.
 """
 from __future__ import annotations
 
@@ -32,7 +35,6 @@ import os
 
 import numpy as np
 
-from fedcore.certificate.cp import cp_upper
 from fedcore.experiments.confirmatory_400r_common_schema import load_fold_counts_inputs
 from fedcore.officehome_rescue import (
     FAMILY_GAMMAS, FAMILY_SCORES, family_keys, holm_family_certificate,
@@ -109,28 +111,27 @@ def certify_cell(npz_path):
 
 def _row(cell, res):
     keys = res["keys"]; fc = res["fc"]; i = res["sel_idx"]
-    M, J = res["A"].shape
-    eps_r = DELTA_R / (M * J)
     if i is None:
         certified = False
-        cert_risk_ucb = float("nan")       # Holm-certified bound (only defined if certified)
-        sim_risk_ucb = float("nan")        # descriptive Bonferroni simultaneous UCB
+        cert_risk_ucb = float("nan")       # Holm is a decision, not a numerical UCB
+        sim_risk_ucb = float("nan")        # retained column; not reported for Holm
         cov_lcb = 0.0
         sname = ""; gamma = ""
         cert_n = 0; cert_k = 0
         pc = pr = tc = tr = float("nan")
-        pval = float("nan")
+        pval = adjusted_pval = holm_rank = float("nan")
+        holm_risk_decision = False
     else:
         certified = True
         cov_lcb = float(fc.C[i])
-        # PRIMARY (Holm/IUT): the certified guarantee is selective-risk <= alpha at
-        # FWER delta_r -> the certified risk upper bound is alpha itself.
-        cert_risk_ucb = float(ALPHA)
-        # descriptive worst-client Bonferroni simultaneous CP UCB (may exceed alpha
-        # even when Holm certifies, since Holm is uniformly more powerful).
-        sim_risk_ucb = float(max(cp_upper(int(res["K"][i, j]), int(res["A"][i, j]), eps_r)
-                                 for j in range(J)))
+        # PRIMARY (Holm/IUT): a fixed-alpha decision at FWER delta_r. It does not
+        # assign a numerical risk UCB unless the test is explicitly inverted.
+        cert_risk_ucb = float("nan")
+        sim_risk_ucb = float("nan")
         pval = float(fc.pvalues[i])
+        adjusted_pval = float(fc.adjusted_pvalues[i])
+        holm_rank = int(fc.holm_rank[i])
+        holm_risk_decision = bool(fc.holm_reject[i])
         sname = keys[i].score_name; gamma = keys[i].gamma
         cert_n = int(res["n"].sum()); cert_k = int(res["K"][i].sum())
         pc = float(res["prop_cov"][i]); pr = float(res["prop_risk"][i])
@@ -141,11 +142,17 @@ def _row(cell, res):
         "semantic_id": cell["semantic_id"], "arm": cell["arm"], "dataset": cell["dataset"],
         "split_id": cell["split_id"], "train_rep": cell["train_rep"], "d": cell["d"],
         "certified": int(certified), "cert_risk_ucb": cert_risk_ucb,
-        "sim_worst_client_risk_ucb": sim_risk_ucb, "holm_iu_pvalue": pval,
+        "risk_output_type": "fixed_alpha_decision", "risk_pass": holm_risk_decision,
+        "family_procedure": "holm_iut", "selected_candidate_index": i,
+        "risk_decision_alpha": ALPHA, "holm_risk_decision": holm_risk_decision,
+        "sim_worst_client_risk_ucb": sim_risk_ucb, "iut_raw_pvalue": pval,
+        "holm_iu_pvalue": pval,
+        "holm_adjusted_pvalue": adjusted_pval, "holm_rank": holm_rank,
         "cert_coverage_lcb": coverage_at_alpha,
         "cert_n": cert_n, "cert_k": cert_k,
         "prop_coverage": pc, "prop_risk": pr, "test_coverage": tc, "test_risk": tr,
-        "score_name": sname, "gamma": gamma, "alpha": ALPHA, "delta": DELTA_R,
+        "score_name": sname, "gamma": gamma, "alpha": ALPHA,
+        "delta": DELTA_R + DELTA_C, "delta_r": DELTA_R, "delta_c": DELTA_C,
         "Lambda": "client_full_simplex", "dirichlet_alpha": cell["d"], "n_clients": N_CLIENTS,
         "certificate": "holm_iut_full_simplex_common_family",
     }

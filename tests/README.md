@@ -1,18 +1,30 @@
 # Golden regression suite (structure-only refactor gate)
 
-Pins the DETERMINISTIC outputs that must stay bit-for-bit identical (abs diff <= 1e-9) across the
-structure-only refactor. Run before every commit; must be GREEN.
+Pins deterministic outputs (abs diff <= 1e-9). The suite distinguishes an
+artifact-free partial check from the strict frozen-artifact gate; it never labels
+an absent-artifact run as a full pass.
 
-## Fast check (host or `bash scripts/docker_test.sh`)
+## Strict check (host or `bash scripts/docker_test.sh`)
 `python tests/golden_check.py` re-runs `golden_capture.py` into a temp dir and diffs against
 `tests/golden/`:
-- `certificate_math.json` — cp UCB/LCB, Thm1 simplex, Thm1' box, Thm3 pooled, Thm2 floor (fixed inputs)
+- `certificate_math.json` — CP UCB/LCB, current simplex, conservative-endpoint normalized-box,
+  matched-i.i.d. pooled, and historical floor calculations (fixed inputs)
 - `scores_selector.json` — 4 scores + selector threshold/mask on a fixed logit fixture
 - `split_determinism.json` — calibration fold sizes/index sums; prop/cert/test disjoint
 - `certify_frozen.json` — full canonical schema on frozen cifar10_d5_resnet18_seed0 + cifar100_d5 npz
 
+The strict command fails when either frozen NPZ is absent. For source-only CI,
+run `make test-core`; it prints `PARTIAL PASS` and tests only the shipped inputs.
+
 ## CPU sanity (`bash scripts/docker_smoke.sh`)
-`exp_lemma_L.py`, `exp_pooling_fail.py`, `run_smoke.py` — stdout pinned in `tests/golden/*.stdout.txt`.
+`exp_pooling_fail.py` and `run_smoke.py`. The former `exp_lemma_L.py` claim is
+withdrawn; its compatibility shim exits non-zero by design.
+
+`test_conservative_solver_contract.py` is the strict-mixture numerical gate. It
+checks one-sided risk/coverage validity against exact small-dimensional vertex
+enumeration, includes fixed floating-point boundary-flip and subnormal-underflow
+regressions, and requires every nonconvergence/infeasibility/residual failure to
+fail closed.
 
 ## Aggregator references (for the 4-into-1 consolidation)
 Static golden CSVs (diffed when the aggregators are consolidated into one `aggregate.py`):

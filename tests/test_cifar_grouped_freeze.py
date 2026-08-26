@@ -27,6 +27,12 @@ import pytest
 REPO_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO_ROOT))
 
+if not (REPO_ROOT / "run_all.py").is_file():
+    pytest.skip(
+        "optional sealed-campaign runner run_all.py is not distributed in the public source snapshot",
+        allow_module_level=True,
+    )
+
 import run_all  # noqa: E402
 from fedcore import cifar_group_mixture as CGM  # noqa: E402
 

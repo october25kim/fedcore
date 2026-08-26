@@ -25,7 +25,7 @@ import numpy as np
 
 from fedcore.certificate import (
     conditional_risk_certificate,
-    pooled_cp,
+    pooled_cp_diagnostic,
     stratified_certificate,
     true_selective_risk,
 )
@@ -67,7 +67,7 @@ def main() -> None:
         cov_p = cov_s = cov_b = 0
         for t in range(N_TRIALS):
             A, K = draw_counts(pop, n, rng)
-            up = pooled_cp(A, K, DELTA)
+            up = pooled_cp_diagnostic(A, K, DELTA)
             us = conditional_risk_certificate(A, K, n, DELTA, Lambda="simplex").U
             ub = conditional_risk_certificate(
                 A, K, n, DELTA, Lambda="box", box=BOX_RADIUS,

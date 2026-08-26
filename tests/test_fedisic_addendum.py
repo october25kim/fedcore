@@ -23,6 +23,12 @@ import pytest
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
+if not (ROOT / "run_all.py").is_file():
+    pytest.skip(
+        "optional sealed-campaign runner run_all.py is not distributed in the public source snapshot",
+        allow_module_level=True,
+    )
+
 import run_all as R  # noqa: E402
 
 

@@ -137,6 +137,7 @@ def _successful_record(
     *,
     omit_last_grid_row: bool = False,
     bad_accounting: bool = False,
+    metric_overrides: dict | None = None,
 ) -> dict:
     artifact = os.path.join(root, "runs", f"{cell.experiment_id}.npz")
     Path(artifact).parent.mkdir(parents=True, exist_ok=True)
@@ -206,6 +207,7 @@ def _successful_record(
             "certificate_feasible": True,
             "certificate_reason": "ok",
         }
+        row.update(metric_overrides or {})
         rows.append(row)
     if omit_last_grid_row:
         rows.pop()
@@ -296,6 +298,7 @@ def _fixture(
     nonterminal: bool = False,
     omit_last_grid_row: bool = False,
     bad_accounting: bool = False,
+    metric_overrides: dict | None = None,
 ):
     plan = _plan()
     plan_path = os.path.join(root, "plan.json")
@@ -309,6 +312,7 @@ def _fixture(
             cells[0],
             omit_last_grid_row=omit_last_grid_row,
             bad_accounting=bad_accounting,
+            metric_overrides=metric_overrides,
         )
     if nonterminal:
         records[1] = {
@@ -346,6 +350,11 @@ def test_allow_blocked_emits_only_observed_negative_rows_with_checksums():
         result = finalize_campaign(plan, records, out, "allow-blocked")
         assert len(result.rows) == 4
         assert all(row["certified"] is False for row in result.rows)
+        assert all(row["risk_output_type"] == "numerical_ucb" for row in result.rows)
+        assert all(row["risk_pass"] is False for row in result.rows)
+        assert all(row["family_procedure"] == "single_selector" for row in result.rows)
+        assert all(row["delta_r"] == 0.05 for row in result.rows)
+        assert all(row["delta_c"] == 0.05 for row in result.rows)
         assert result.report["manuscript_ready"] is False
         assert result.report["terminal_unsuccessful_training_record_count"] == 68
         assert Path(out, "all_runs.csv").is_file()
@@ -395,8 +404,66 @@ def test_missing_and_nonterminal_records_need_explicit_incomplete_policy():
         empty = pq.read_table(os.path.join(root, "final", "all_runs.parquet"))
         assert empty.num_rows == 0
         assert empty.schema.field("certified").type == pa.bool_()
+        assert empty.schema.field("risk_pass").type == pa.bool_()
         assert empty.schema.field("cert_n").type == pa.int64()
+        assert empty.schema.field("holm_rank").type == pa.int64()
         assert empty.schema.field("cert_risk_ucb").type == pa.float64()
+        assert empty.schema.field("iut_raw_pvalue").type == pa.float64()
+
+
+def test_fixed_alpha_decision_uses_decision_and_positive_coverage_not_a_ucb():
+    fixed_alpha = {
+        "certified": True,
+        "cert_risk_ucb": None,
+        "cert_coverage_lcb": 0.2,
+        "delta_r": 0.05,
+        "delta_c": 0.05,
+        "family_procedure": "holm_iut",
+        "risk_output_type": "fixed_alpha_decision",
+        "risk_pass": True,
+        "iut_raw_pvalue": 0.01,
+        "holm_adjusted_pvalue": 0.02,
+        "holm_rank": 1,
+    }
+    with tempfile.TemporaryDirectory() as root:
+        plan, records = _fixture(root, metric_overrides=fixed_alpha)
+        result = collect_campaign(plan, records, "allow-blocked")
+        assert len(result.rows) == 4
+        assert all(row["certified"] is True for row in result.rows)
+        assert all(row["cert_risk_ucb"] is None for row in result.rows)
+
+    invalid_cases = (
+        {**fixed_alpha, "cert_risk_ucb": 0.05},
+        {**fixed_alpha, "risk_pass": False},
+        {**fixed_alpha, "cert_coverage_lcb": 0.0},
+        {**fixed_alpha, "family_procedure": "simple_simultaneous"},
+        {**fixed_alpha, "holm_adjusted_pvalue": None},
+        {**fixed_alpha, "holm_adjusted_pvalue": 0.005},
+    )
+    for overrides in invalid_cases:
+        with tempfile.TemporaryDirectory() as root:
+            plan, records = _fixture(root, metric_overrides=overrides)
+            _expect_validation_error(
+                lambda plan=plan, records=records: collect_campaign(
+                    plan, records, "allow-blocked"
+                )
+            )
+
+    refused_without_selected_member = {
+        **fixed_alpha,
+        "certified": False,
+        "risk_pass": False,
+        "cert_coverage_lcb": 0.0,
+        "iut_raw_pvalue": None,
+        "holm_adjusted_pvalue": None,
+        "holm_rank": None,
+    }
+    with tempfile.TemporaryDirectory() as root:
+        plan, records = _fixture(
+            root, metric_overrides=refused_without_selected_member
+        )
+        result = collect_campaign(plan, records, "allow-blocked")
+        assert all(row["certified"] is False for row in result.rows)
 
 
 def test_partial_posthoc_grid_is_reported_without_fabricating_the_missing_row():
@@ -501,6 +568,7 @@ def test_unplanned_blocked_state_emits_typed_zero_rows_and_never_manuscript_read
 def main():
     test_allow_blocked_emits_only_observed_negative_rows_with_checksums()
     test_missing_and_nonterminal_records_need_explicit_incomplete_policy()
+    test_fixed_alpha_decision_uses_decision_and_positive_coverage_not_a_ucb()
     test_partial_posthoc_grid_is_reported_without_fabricating_the_missing_row()
     test_accounting_corruption_is_fatal_even_in_incomplete_mode()
     test_checksum_and_fold_identity_corruption_are_always_fatal()

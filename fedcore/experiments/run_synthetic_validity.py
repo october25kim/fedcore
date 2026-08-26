@@ -247,12 +247,20 @@ def evaluate_plan(plan: Mapping[str, Any]) -> list[dict[str, Any]]:
         risk = np.asarray(sampling["conditional_risk"], dtype=float)
         mixture = _mixture(analysis, len(acceptance))
         true_ratio = solve_robust_ratio(risk, acceptance, acceptance, mixture)
-        if not true_ratio.feasible:
+        if not (true_ratio.feasible and true_ratio.certificate_valid):
             raise ValueError(
-                "generative sampling cell has a vanishing robust denominator"
+                "generative sampling cell has an invalid robust-risk solve: "
+                f"{true_ratio.status}:{true_ratio.reason or ''}"
             )
         true_risk = float(true_ratio.value)
-        true_coverage = float(solve_coverage_infimum(acceptance, mixture).value)
+        true_coverage_result = solve_coverage_infimum(acceptance, mixture)
+        if not true_coverage_result.certificate_valid:
+            raise ValueError(
+                "generative sampling cell has an invalid coverage solve: "
+                f"{true_coverage_result.status}:"
+                f"{true_coverage_result.reason or ''}"
+            )
+        true_coverage = float(true_coverage_result.value)
         bounded = analysis["Lambda"] == "bounded"
         budget = make_failure_budget(
             float(analysis["total_delta"]),

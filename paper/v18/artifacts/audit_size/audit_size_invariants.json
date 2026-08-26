@@ -1,0 +1,7 @@
+{
+  "A_K_n_invariant": true,
+  "count_elements_checked": 14400000,
+  "expected_replicate_rows": 240000,
+  "nested_prefixes": true,
+  "observed_replicate_rows": 240000
+}

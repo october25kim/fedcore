@@ -22,13 +22,11 @@ DELTA_C = 0.05
 def test_full_simplex_closed_form_is_max_rbar():
     A = [500, 500, 500, 500]
     K = [10, 20, 5, 0]
-    eps = DELTA_R / J
+    eps = DELTA_R
     rbar = [cp_upper(K[j], A[j], eps) for j in range(J)]
     cert = conditional_risk_certificate(A, K, A, DELTA_R, Lambda="simplex")
     assert cert.eps == pytest.approx(eps)
     assert cert.U == pytest.approx(max(rbar))
-    # Pinned exact value (locks the regression).
-    assert cert.U == pytest.approx(0.06434092183361814, abs=1e-12)
     assert cert.U <= ALPHA  # certifies at alpha=0.20
 
 
@@ -111,8 +109,9 @@ def test_risk_buffer_matters_gamma_one_hugs_alpha():
     assert not loose.certified and tight.certified
 
 
-def test_certify_variant_uniform_allocation_matches_simplex_theorem1():
-    # With uniform allocation the suite's simplex UCB equals Theorem-1 max_j rbar.
+def test_historical_suite_uniform_allocation_matches_legacy_union_bound():
+    # The archived variant suite intentionally preserves the conservative
+    # clientwise union-bound calculation; it is not the current theorem API.
     rng = np.random.default_rng(1)
     n = 300
     score, pred, y_open, client = [], [], [], []

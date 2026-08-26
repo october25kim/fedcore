@@ -21,7 +21,7 @@ import numpy as np
 
 from fedcore.certificate import (
     conditional_risk_certificate,
-    pooled_cp,
+    pooled_cp_diagnostic,
     stratified_certificate,
 )
 from fedcore.data.clients import ClientPopulation, draw_counts
@@ -49,7 +49,7 @@ def main() -> None:
         up, ub, us, um = [], [], [], []
         for t in range(N_TRIALS):
             A, K = draw_counts(pop, n, rng)
-            up.append(pooled_cp(A, K, DELTA))
+            up.append(pooled_cp_diagnostic(A, K, DELTA))
             ub.append(conditional_risk_certificate(
                 A, K, n, DELTA, Lambda="box", box=BOX_RADIUS,
                 n_lam_samples=BOX_SAMPLES, seed=t).U)

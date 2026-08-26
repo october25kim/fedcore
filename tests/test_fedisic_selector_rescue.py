@@ -9,8 +9,10 @@ byte-value guard.
 from __future__ import annotations
 
 import csv
+from pathlib import Path
 
 import numpy as np
+import pytest
 
 from fedcore.experiments.fedisic_f3a_rescue import fresh_seed, cand_hash
 from fedcore.officehome_rescue import candidate_null_pvalue
@@ -72,6 +74,10 @@ def test_counts_per_client_accept_error_semantics():
     assert list(K) == [1, 0]                    # client0: unit1 accepted unknown = error
 
 
+@pytest.mark.skipif(
+    not Path("results/final/fedisic_eligible_32_risk_decomposition.csv").is_file(),
+    reason="frozen Fed-ISIC decomposition CSV absent",
+)
 def test_canonical_risk_decomposition_unchanged():
     """Guard: the canonical Fed-ISIC eligible decomposition must stay byte-value stable."""
     rows = list(csv.DictReader(open("results/final/fedisic_eligible_32_risk_decomposition.csv")))
