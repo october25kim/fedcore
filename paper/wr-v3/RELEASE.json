@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "release_id": "fedcore-wr-v3",
+  "contract_id": "fedcore-headline-wr-v3",
+  "status": "versioned-release",
+  "created_utc": "2026-08-30",
+  "source_binding": {
+    "tag": "v0.3.0",
+    "resolution": "git rev-list -n 1 v0.3.0"
+  },
+  "supersedes_for_manuscript_numbers": "paper/v18 at tag v0.2.0",
+  "scope": {
+    "included": [
+      "sealed WR-v3 primary contract",
+      "one clientwise with-replacement audit draw per frozen empirical reservoir",
+      "full selector-indexed A, K, and n count tensor",
+      "independent count-to-decision recomputation of H, S, and B",
+      "full alpha sweep, primary headline, matched effects, and bootstrap records",
+      "source-ID-disjoint post-certification evaluation of frozen H-selected policies"
+    ],
+    "excluded": [
+      "model retraining",
+      "raw datasets, checkpoints, images, logits, and record-level labels",
+      "raw audit index vectors",
+      "future deployment-population validity",
+      "a componentwise certificate for the descriptive post-certification evaluation"
+    ]
+  },
+  "headline": {
+    "target": "clientwise frozen certification-fold empirical-reservoir conditional",
+    "sampling_law": "one iid uniform with-replacement draw within each client reservoir",
+    "alpha": 0.2,
+    "delta_r": 0.05,
+    "delta_c": 0.05,
+    "family_size": 12,
+    "cells": 450,
+    "count_rows": 154800,
+    "certified_cells": {
+      "H": 177,
+      "S": 177,
+      "B": 130
+    },
+    "effective_certified_acceptance": {
+      "H": 0.08342402472238086,
+      "S": 0.0816592568534411,
+      "B": 0.06018240780185294
+    }
+  },
+  "post_certification_evaluation": {
+    "selected_policies_frozen_before_evaluation": true,
+    "certified_H_policies_evaluated": 177,
+    "total_accepted": 130574,
+    "total_accepted_errors": 12978,
+    "known_class_misclassifications": 1598,
+    "unknown_false_acceptances": 11380,
+    "unknown_share_of_accepted_errors": 0.8768685467714594,
+    "pooled_risk_above_alpha_cells": 0,
+    "worst_client_risk_above_alpha_cells": 3,
+    "interpretation": "descriptive and not a certificate"
+  },
+  "verification": {
+    "command": "make reproduce-wr-v3",
+    "script": "paper/wr-v3/scripts/verify_release.py",
+    "hash_manifest": "paper/wr-v3/SHA256SUMS",
+    "policy": "fail closed with no skipped headline checks"
+  }
+}

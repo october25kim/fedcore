@@ -1,7 +1,7 @@
 # Fed-CORE run manifest (paper artifact -> exact command -> golden oracle).
 # Deterministic CPU targets diff their output against tests/golden/ (must be identical).
 # See REPRODUCE.md for the full table and the GPU training targets.
-.PHONY: help install unit test test-core smoke agg-main agg-covtype agg-t8 agg-selftrain figs repro-check reproduce-v18
+.PHONY: help install unit test test-core smoke agg-main agg-covtype agg-t8 agg-selftrain figs repro-check reproduce-wr-v3 reproduce-v18
 PY ?= python
 # All targets run from the project root and invoke the installed package with `python -m`
 # (no path shims). Modules use a CWD-relative base so runs/ and experiments/fedcore/figs/
@@ -10,7 +10,7 @@ PY ?= python
 # Prereq: `make install` (editable install) once after checkout so `import fedcore` resolves
 # from the project-root fedcore/ package. The golden gate self-bootstraps and needs no install.
 help:
-	@echo "targets: install unit test-core test smoke agg-main agg-covtype agg-t8 agg-selftrain figs repro-check reproduce-v18"
+	@echo "targets: install unit test-core test smoke agg-main agg-covtype agg-t8 agg-selftrain figs repro-check reproduce-wr-v3 reproduce-v18"
 	@echo "  install        editable install so 'import fedcore' resolves (run once after checkout)"
 	@echo "  unit           artifact-free current-theorem unit tests"
 	@echo "  test-core      deterministic golden check; allows absent frozen run artifacts"
@@ -19,7 +19,8 @@ help:
 	@echo "  agg-*          re-run an aggregator and diff its output vs tests/golden"
 	@echo "  figs           regenerate the figure family"
 	@echo "  repro-check    test + all fast agg diffs"
-	@echo "  reproduce-v18  verify the frozen v0.2.0 count-to-decision release"
+	@echo "  reproduce-wr-v3 verify the current WR-v3 manuscript count-to-decision release"
+	@echo "  reproduce-v18  verify the historical v0.2.0 count-to-decision release"
 
 install:
 	$(PY) -m pip install -e .
@@ -80,3 +81,6 @@ repro-check: test agg-covtype agg-t8 agg-selftrain
 reproduce-v18:
 	$(PY) paper/v18/scripts/verify_code_contract.py
 	$(PY) paper/v18/scripts/verify_release.py
+
+reproduce-wr-v3:
+	$(PY) paper/wr-v3/scripts/verify_release.py

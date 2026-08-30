@@ -69,12 +69,16 @@ cert = full_simplex_fixed_member_certificate(
 
 The old campaign's `delta/(MJ)` coverage values are valid conservative legacy
 calculations, but they are not the theorem-aligned headline procedure. The
-complete candidate-level count tensor and its frozen family hashes are released
-under `paper/v18/`. Run the strict no-GPU gate with:
+current manuscript count tensor and its frozen selector bindings are released
+under `paper/wr-v3/`. Run the strict no-GPU gate with:
 
 ```bash
-make reproduce-v18
+make reproduce-wr-v3
 ```
+
+The historical v0.2.0 package remains under `paper/v18/` and can still be
+verified with `make reproduce-v18`. Its numerical headline is not the current
+manuscript headline.
 
 This command recomputes the H, S, and legacy B decisions from all candidate
 counts. Do not re-rank candidates or rescue failed cells from a selected-member
@@ -110,7 +114,7 @@ audit with `matched_mixture_iid=True`.
 
 ## 5. Training-to-logits binding checklist
 
-The v18 package closes count-to-decision reproduction. A stronger claim that
+The WR-v3 package closes count-to-decision reproduction. A stronger claim that
 reproduces model training and logits additionally requires all of the following:
 
 - clean repository commit and version tag;
@@ -121,6 +125,6 @@ reproduces model training and logits additionally requires all of the following:
 - all candidate-level `(A, K, n)` tensors plus uniqueness accounting;
 - command, seed, exit code, output SHA-256, and table/figure source mapping.
 
-Those raw-data and training inputs are outside the v18 public numerical release.
-The repository therefore makes the narrower, testable claim documented in
-`paper/v18/README.md`.
+Those raw-data and training inputs are outside the current public numerical
+release. The repository therefore makes the narrower, testable claim documented
+in `paper/wr-v3/README.md`.

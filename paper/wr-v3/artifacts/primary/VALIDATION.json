@@ -1,0 +1,29 @@
+{
+  "B_certified_not_S": [],
+  "alphas": [
+    0.05,
+    0.1,
+    0.15,
+    0.2,
+    0.25,
+    0.3
+  ],
+  "archive_count_checks": 154800,
+  "archive_reproduction_mismatches": 0,
+  "cells": 450,
+  "contract_id": "fedcore-headline-wr-v3",
+  "numpy_version": "1.26.4",
+  "primary_alpha": 0.2,
+  "procedures": [
+    "H",
+    "S",
+    "B"
+  ],
+  "raw_input_pin_checks": 450,
+  "rng_contract": "numpy-PCG64-SeedSequence([frozen_primary_audit_seed, client_id, 0])",
+  "scipy_version": "1.13.1",
+  "shared_HSB_tensor_failures": [],
+  "status": "PASS",
+  "terminal_sidecar_pin_checks": 450,
+  "test_or_evaluation_fold_accessed": false
+}

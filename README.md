@@ -136,7 +136,8 @@ make unit       # current theorem-facing source-only tests
 make test-core  # deterministic partial check; clearly reports missing artifacts
 make test       # strict gate; fails when required frozen NPZ artifacts are absent
 make smoke      # two CPU sanity scripts above
-make reproduce-v18  # strict count-to-decision and paper-source release gate
+make reproduce-wr-v3 # current manuscript WR-v3 count-to-decision release gate
+make reproduce-v18   # historical v0.2.0 release gate
 ```
 
 `make test` verifies the certificate math, scores/selector, split determinism,
@@ -169,9 +170,11 @@ bash scripts/docker_officehome.sh
 
 Training writes frozen logits to `runs/` and certificates to `results/`; both are
 gitignored. Certification then runs on the frozen `runs/*_logits.npz`. The
-versioned v18 package under `paper/v18/` contains benchmark count and numerical
-source artifacts, not raw datasets, checkpoints, or per-example logits. Fake-logit
-smoke output must not be cited as manuscript evidence.
+versioned manuscript package under `paper/wr-v3/` contains the WR-v3 benchmark
+count tensor and numerical source artifacts, not raw datasets, checkpoints, or
+per-example logits. It supersedes `paper/v18/` for current manuscript numbers.
+The v18 directory remains available as a historical release. Fake-logit smoke
+output must not be cited as manuscript evidence.
 
 ## Canonical metric schema (do not rename)
 

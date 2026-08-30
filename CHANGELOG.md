@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.3.0
+
+- Added the sealed WR-v3 count-to-decision release used by the current
+  manuscript under `paper/wr-v3/`.
+- Reproduced the 450-cell H/S/B headline of 177/177/130 from one prespecified
+  with-replacement audit realization per client reservoir.
+- Added source-ID-disjoint post-certification evaluation records for the 177
+  frozen H-selected policies and an independent fail-closed verifier.
+- Retained v0.2.0 and `paper/v18/` as a historical numerical release.
+
 ## 0.2.0
 
 This release aligns the public certification implementation with the statistical

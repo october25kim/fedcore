@@ -1,0 +1,16 @@
+dataset,procedure_1,procedure_2,N_cells,both,procedure_1_only,procedure_2_only,neither
+cifar10,H,S,150,63,0,0,87
+cifar10,H,B,150,53,10,0,87
+cifar10,S,B,150,53,10,0,87
+cifar100,H,S,150,9,0,0,141
+cifar100,H,B,150,3,6,0,141
+cifar100,S,B,150,3,6,0,141
+officehome,H,S,100,79,0,0,21
+officehome,H,B,100,55,24,0,21
+officehome,S,B,100,55,24,0,21
+pathmnist,H,S,50,26,0,0,24
+pathmnist,H,B,50,19,7,0,24
+pathmnist,S,B,50,19,7,0,24
+ALL,H,S,450,177,0,0,273
+ALL,H,B,450,130,47,0,273
+ALL,S,B,450,130,47,0,273

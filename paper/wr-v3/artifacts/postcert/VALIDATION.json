@@ -1,0 +1,11 @@
+{
+  "certificate_or_selection_modified": false,
+  "contract_id": "fedcore-wr-v3-postcert-evaluation-v1",
+  "evaluation_is_a_certificate": false,
+  "fold_overlap_failures": 0,
+  "primary_H_cells": 450,
+  "primary_H_certified_evaluated": 177,
+  "raw_npz_pin_checks": 177,
+  "status": "PASS",
+  "terminal_sidecar_pin_checks": 177
+}

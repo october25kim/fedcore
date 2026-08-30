@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "contract_id": "fedcore-wr-v3-postcert-evaluation-v1",
+  "sealed_date": "2026-08-29",
+  "state": "SEALED_AFTER_PRIMARY_CERTIFICATION_AND_BEFORE_EVALUATION",
+  "objective": "Apply only the 177 already certified WR-v3 H selectors to source-ID-disjoint diagnostic folds.",
+  "interpretation": {
+    "role": "post-certification descriptive diagnostic",
+    "is_a_certificate": false,
+    "modifies_selector_or_threshold": false,
+    "modifies_primary_certificate": false,
+    "claims_untouched_status": false
+  },
+  "frozen_inputs": {
+    "primary_per_cell_procedures_sha256": "e5e8c370222b2c52fedb25e00a562f65ea2db384809ce77006e6474028f1ea66",
+    "raw_input_pins_sha256": "80f9e4bd85c92192fbaf3de44f89de17d9fd533871ca19a294a7ba5bf172c808",
+    "analysis_input_manifest_sha256": "7651e6f16ab43839c2d57f914b68cc188158ce5b1dd9f048f780c54d6375209c",
+    "evaluation_script_sha256": "bd8dac878d9115c53d79647256358249da1d9ab916aead445cb2b7ef1a9c4947"
+  },
+  "fail_closed_checks": [
+    "the input table must contain exactly 450 unique H rows at alpha 0.20",
+    "exactly the frozen 177 H-certified selectors are evaluated",
+    "every raw NPZ and terminal sidecar must match its WR-v3 byte pin",
+    "proposal, certification, and evaluation source IDs must be disjoint within every evaluated cell",
+    "accepted errors must equal known-class accepted errors plus accepted unknown observations",
+    "no evaluation quantity may alter selection or certification"
+  ]
+}
+
