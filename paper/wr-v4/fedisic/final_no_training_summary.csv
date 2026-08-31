@@ -1,0 +1,10 @@
+metric,value,denominator,note
+sampler_satisfiable,35,50,"canonical, unchanged"
+certification_a3_valid,32,35->32,"canonical, unchanged"
+eligible (sampler ∩ a3),32,50,"canonical, unchanged"
+canonical_grouped_nonvacuous,0,32,canonical
+F1_IUT_certified,0,32,fixed-target IUT removes multiplicity penalty; NO rescue
+F1_IUT_certified_end_to_end,0,50,18 structurally unsupported never entered
+failure_class:empirical_risk_dominated,8,32,among eligible
+failure_class:undefined,15,32,among eligible
+failure_class:sample_size_dominated,9,32,among eligible

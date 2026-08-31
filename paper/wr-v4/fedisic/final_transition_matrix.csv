@@ -1,0 +1,3 @@
+from_state,to_state,n,basis
+canonical_grouped_uncertified,F1_IUT_certified,0,"no cell flips: barrier is empirical-risk/acceptance-starvation, not multiplicity"
+canonical_grouped_certified,F1_IUT_uncertified,0,none certified to begin with
