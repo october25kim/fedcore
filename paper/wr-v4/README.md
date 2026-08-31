@@ -1,4 +1,4 @@
-# wr-v4 — agent-computed manuscript artifacts (staging for v0.4.0)
+# wr-v4 — agent-computed manuscript artifacts (v0.4.1: corrected bounded allocation + rejectall denominator)
 
 Status: STAGING. Computed from the sealed wr-v3 primary release artifacts
 (theorem_aligned_wr_450_v3, contract fedcore-headline-wr-v3) and from the
@@ -7,12 +7,15 @@ through the sealed pipeline before tagging v0.4.0.
 
 ## artifacts/ (manuscript ver18 mapping)
 - delta_sensitivity.csv        -> Table 4 (confidence sensitivity, H/S/B x {0.90,0.95,0.98,0.99})
-- bounded_lambda_cells.csv     -> Table 7 (bounded-mixture sensitivity, per-cell, m in {250,500,1000,2000})
+- bounded_lambda_fixed_summary.csv -> Table 7 (bounded-mixture sensitivity; theorem-aligned
+                                  allocation eps_r = dr/(3JM) per risk-side endpoint,
+                                  eps_c = dc/(JM) for the acceptance LCB; per-alpha frozen families)
 - officehome_traffic.csv       -> traffic-fold draws behind the confidence box (delta_lambda = 0.02)
 - auroc_vs_cert.csv            -> Figure 5 + Section 5.5 statistics
                                   (Spearman 0.66, Pearson 0.57, 7/45 top-decile refused,
                                    13/225 at-or-below-median certified, quartile panels)
-- rejectall_validity.csv       -> Section 5.3 reject-all / positive-subset validity sentence
+- rejectall_validity_fixed.csv -> Section 5.3 reject-all / positive-subset validity sentence
+                                  (per-client acceptance denominator corrected; positive-subset min 0.958)
 
 ## fedisic/ (Section 5.9, ratified terminal artifacts, copied verbatim)
 - fedisic_terminal_cells.csv                   (50-cell roster, three independent statuses)

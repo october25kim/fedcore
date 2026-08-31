@@ -78,7 +78,7 @@ for sid,cl_ in sorted(cands.items()):
         for j in range(J):
             m=clC==j; nres[j]=m.sum()
             aj=accC&m
-            a[j]=aj.mean() if m.any() else 0
+            a[j]=accC[m].mean() if m.any() else 0
             r[j]=errC[aj].mean() if aj.any() else 0.0
         posmask=a>0
         target=float(r[posmask].max()) if posmask.any() else 0.0
@@ -100,5 +100,5 @@ def stats(v):
 print("ALL      min/p5/median:",stats(va))
 print("POSITIVE min/p5/median:",stats(vp))
 print("positive cells below 0.95:", int((np.array(vp)<0.95).sum()))
-with open(root+"/results/agent_extract/rejectall_validity.csv","w",newline="") as f:
+with open(root+"/results/agent_extract/rejectall_validity_fixed.csv","w",newline="") as f:
     w=csv.DictWriter(f,fieldnames=["sid","rejectall","validity","target"]); w.writeheader(); w.writerows(out)
