@@ -1,0 +1,76 @@
+{
+ "tag": "v0.4.1",
+ "checks": {
+  "headline_H_cells": {
+   "expected": 177,
+   "got": 177,
+   "pass": true
+  },
+  "headline_S_cells": {
+   "expected": 177,
+   "got": 177,
+   "pass": true
+  },
+  "headline_B_cells": {
+   "expected": 130,
+   "got": 130,
+   "pass": true
+  },
+  "bounded_m1000_a020_cells": {
+   "expected": 92,
+   "got": 92,
+   "pass": true
+  },
+  "bounded_m1000_a020_eca": {
+   "expected": 0.193,
+   "got": 0.193,
+   "pass": true
+  },
+  "fedisic_sampler_satisfiable": {
+   "expected": 35,
+   "got": 35,
+   "pass": true
+  },
+  "fedisic_eligible": {
+   "expected": 32,
+   "got": 32,
+   "pass": true
+  },
+  "fedisic_grouped_nonvacuous": {
+   "expected": 0,
+   "got": 0,
+   "pass": true
+  },
+  "fedisic_class_risk": {
+   "expected": 8,
+   "got": 8,
+   "pass": true
+  },
+  "fedisic_class_zero": {
+   "expected": 15,
+   "got": 15,
+   "pass": true
+  },
+  "fedisic_class_sample": {
+   "expected": 9,
+   "got": 9,
+   "pass": true
+  },
+  "unknown_fa_share": {
+   "expected": 0.877,
+   "got": 0.877,
+   "pass": true
+  },
+  "delta_090_H_cells": {
+   "expected": 177,
+   "got": 177,
+   "pass": true
+  }
+ },
+ "all_pass": true,
+ "count_only_replay": {
+  "decisions_compared": 1350,
+  "mismatches": 0,
+  "note": "agent_verify run 2026-08-31; scripts in paper/wr-v4/scripts"
+ }
+}
