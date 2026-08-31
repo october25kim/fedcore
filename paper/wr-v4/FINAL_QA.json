@@ -1,5 +1,5 @@
 {
- "tag": "v0.4.1",
+ "tag": "v0.4.2",
  "checks": {
   "headline_H_cells": {
    "expected": 177,
@@ -72,5 +72,6 @@
   "decisions_compared": 1350,
   "mismatches": 0,
   "note": "agent_verify run 2026-08-31; scripts in paper/wr-v4/scripts"
- }
+ },
+ "note": "checks executed against clean checkout of v0.4.1 content; wr-v4 additions since (familywise_validity.csv, final README) verified in working tree"
 }

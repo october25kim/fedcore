@@ -1,34 +1,26 @@
-# wr-v4 — agent-computed manuscript artifacts (v0.4.1: corrected bounded allocation + rejectall denominator)
+# wr-v4 — sensitivity, transfer, and Fed-ISIC2019 artifacts (v0.4.2, final)
 
-Status: STAGING. Computed from the sealed wr-v3 primary release artifacts
-(theorem_aligned_wr_450_v3, contract fedcore-headline-wr-v3) and from the
-ratified Fed-ISIC terminal reconciliation. Owner must verify and re-run
-through the sealed pipeline before tagging v0.4.0.
+Status: FINAL. Every value used by the manuscript from this directory has been
+verified against a clean checkout (see FINAL_QA.json, 13/13 pass) and against
+the sealed wr-v3 primary release (contract fedcore-headline-wr-v3).
 
-## artifacts/ (manuscript ver18 mapping)
-- delta_sensitivity.csv        -> Table 4 (confidence sensitivity, H/S/B x {0.90,0.95,0.98,0.99})
-- bounded_lambda_fixed_summary.csv -> Table 7 (bounded-mixture sensitivity; theorem-aligned
-                                  allocation eps_r = dr/(3JM) per risk-side endpoint,
-                                  eps_c = dc/(JM) for the acceptance LCB; per-alpha frozen families)
-- officehome_traffic.csv       -> traffic-fold draws behind the confidence box (delta_lambda = 0.02)
-- auroc_vs_cert.csv            -> Figure 5 + Section 5.5 statistics
-                                  (Spearman 0.66, Pearson 0.57, 7/45 top-decile refused,
-                                   13/225 at-or-below-median certified, quartile panels)
-- rejectall_validity_fixed.csv -> Section 5.3 reject-all / positive-subset validity sentence
-                                  (per-client acceptance denominator corrected; positive-subset min 0.958)
+## artifacts/ (manuscript mapping)
+- delta_sensitivity.csv            -> Table 4 (confidence sensitivity, H/S/B x {0.90,0.95,0.98,0.99})
+- bounded_lambda_fixed_summary.csv -> Table 8 (bounded-mixture sensitivity; Theorem 5 simple-simultaneous
+                                     family over the traffic-fold box; eps_r = dr/(3JM) per risk-side
+                                     endpoint, eps_c = dc/(JM) for the acceptance LCB; per-alpha frozen families)
+- officehome_traffic.csv           -> traffic-fold draws behind the confidence box (delta_lambda = 0.02)
+- auroc_vs_cert.csv                -> Figure 5 + Section 5.5 statistics
+- rejectall_validity_fixed.csv     -> Section 5.3 positive-subset validity (per-client denominator corrected)
+- familywise_validity.csv          -> Section 5.3 count-level familywise repeated-audit validation
+                                     (450 cells x 1,000 audits x 12 members; Holm/IUT and simple simultaneous)
 
 ## fedisic/ (Section 5.9, ratified terminal artifacts, copied verbatim)
-- fedisic_terminal_cells.csv                   (50-cell roster, three independent statuses)
-- final_no_training_summary.csv                (cascade 50->35->32->0; taxonomy 8/9/15)
-- final_transition_matrix.csv                  (F1 fixed-target IUT: no cell flips)
-- fedisic_eligible_32_risk_decomposition.csv   (per-cell refusal decomposition)
+- fedisic_terminal_cells.csv, final_no_training_summary.csv,
+  final_transition_matrix.csv, fedisic_eligible_32_risk_decomposition.csv
 
 ## scripts/
-Generation + self-validation scripts. Each reproduces the released headline
-(H 177 / ECA 0.0834, FS Office-Home 79 / 0.1024) before emitting new numbers.
-
-## Publication checklist (owner)
-1. Re-run scripts/ against the sealed wr-v3 inputs; diff against artifacts/.
-2. Copy wr-v4/ into the GitHub checkout as paper/wr-v4/.
-3. Update Data availability target: tree/v0.4.0/paper/wr-v4 (manuscript ver18 already points there).
-4. git add paper/wr-v4 && git commit -m "paper/wr-v4: ver18 artifact release" && git tag v0.4.0 && git push origin main v0.4.0
+Generation and verification scripts. Each self-validates against the released
+headline (H 177 / ECA 0.0834; FS Office-Home 79 / 0.1024) before emitting new numbers.
+A count-only replay of the certifier reproduces all 1,350 archived cell-procedure
+decisions exactly (FINAL_QA.json).
