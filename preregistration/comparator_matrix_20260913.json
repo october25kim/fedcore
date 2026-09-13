@@ -1,0 +1,21 @@
+{
+  "id": "FC-COMPARATOR-MATRIX-20260913",
+  "question": "Holding the predictor, the proposal-frozen family, the realized audit counts, the family procedure and the total confidence budget fixed, how much does the per-client risk test change the certification outcome?",
+  "inputs": "results/theorem_aligned_wr_450_v3/primary_run/primary_candidate_counts.csv.gz (450 cells, 154800 count rows)",
+  "arms": ["exact-cp", "wilson", "hoeffding", "emp-bernstein", "betting", "betting-oracle"],
+  "invalid_arms": {
+    "wilson": "asymptotic score test; not finite-sample valid",
+    "betting-oracle": "max over the stake grid; anti-conservative, reported only as an upper envelope on any fixed-stake prior"
+  },
+  "held_fixed": ["predictor", "proposal-frozen family (M=12)", "realized per-client counts",
+                 "Holm over member-level max-p IUT", "Clopper-Pearson acceptance LCB at delta_c/M",
+                 "delta_r = delta_c = 0.05"],
+  "decision_thresholds_stated_before_execution": {
+    "GO": "no alternative arm gains >= 15 certifications or >= 1.0 pp ECA over exact-cp",
+    "CONDITIONAL": "some arm gains 15-40 certifications or 1.0-3.0 pp ECA",
+    "KILL": "some arm gains >= 40 certifications or >= 3.0 pp ECA"
+  },
+  "provenance_caveat": "These thresholds were stated in the analysis plan before the run was executed, but there is no external notarization of that ordering. Treat this as a recorded analysis contract, not a sealed pre-registration.",
+  "reproduce": "make comparator-matrix",
+  "no_new_evidence": "No training, no model inference, no new audit draws. Archived count triples only."
+}

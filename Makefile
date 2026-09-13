@@ -84,3 +84,9 @@ reproduce-v18:
 
 reproduce-wr-v3:
 	$(PY) paper/wr-v3/scripts/verify_release.py
+
+comparator-matrix:
+	$(PY) -m fedcore.analysis.comparator_matrix \
+	  --counts paper/wr-v3/artifacts/primary/primary_candidate_counts.csv.gz \
+	  --out results/comparator_matrix \
+	  --arms exact-cp wilson hoeffding emp-bernstein betting betting-oracle
