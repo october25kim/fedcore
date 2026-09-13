@@ -41,6 +41,29 @@ class SimpleCNN(nn.Module):
         return self.classifier(x)
 
 
+class LeafFemnistCNN(nn.Module):
+    """LEAF-standard FEMNIST CNN (faithful torch port of leaf/models/femnist/cnn.py).
+
+    conv5x5x32(same)-ReLU-maxpool2 -> conv5x5x64(same)-ReLU-maxpool2 ->
+    fc2048-ReLU -> fc n_known. Input 1x28x28; no normalization layers, matching
+    the TF reference (which also uses plain SGD -- see the FEMNIST local train fn).
+    """
+
+    def __init__(self, n_known: int, in_channels: int = 1):
+        super().__init__()
+        self.conv1 = nn.Conv2d(in_channels, 32, kernel_size=5, padding=2)
+        self.conv2 = nn.Conv2d(32, 64, kernel_size=5, padding=2)
+        self.fc1 = nn.Linear(7 * 7 * 64, 2048)
+        self.fc2 = nn.Linear(2048, n_known)
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        x = F.max_pool2d(F.relu(self.conv1(x)), 2)
+        x = F.max_pool2d(F.relu(self.conv2(x)), 2)
+        x = x.flatten(1)
+        x = F.relu(self.fc1(x))
+        return self.fc2(x)
+
+
 def _norm(norm: str, c: int) -> nn.Module:
     """Normalization layer: BatchNorm (bn) or GroupNorm-32 (gn, FL-appropriate)."""
     if norm == "gn":
@@ -341,6 +364,8 @@ def make_model(n_known: int, backbone: str = "simplecnn",
     """
     if backbone == "simplecnn":
         return SimpleCNN(n_known=n_known, **kwargs)
+    if backbone == "femnist_cnn":
+        return LeafFemnistCNN(n_known=n_known, **kwargs)
     if backbone == "resnet18":
         if pretrained:
             import torchvision
