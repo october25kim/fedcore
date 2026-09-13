@@ -90,3 +90,6 @@ comparator-matrix:
 	  --counts paper/wr-v3/artifacts/primary/primary_candidate_counts.csv.gz \
 	  --out results/comparator_matrix \
 	  --arms exact-cp wilson hoeffding emp-bernstein betting betting-oracle
+
+gate-release:
+	./scripts/gate_release.sh $(REF)
