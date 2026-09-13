@@ -9,7 +9,14 @@ PyYAML, Matplotlib, Pillow, PyTorch, torchvision, MedMNIST, FLamby, and dataset
 provider assets. Consult the license metadata of the exact installed versions
 and the applicable dataset terms before redistribution.
 
-FedPD, FedOSS, and FOOGD are not vendored. Runners under `fedcore/experiments/`
+FedPD, FedOSS, and FOOGD are not vendored, and as of v0.5.0 no runner that
+embeds their source is distributed here. Six files that documented themselves as
+containing verbatim upstream code were removed: two FedPD-derived PROSER runners
+(FedPD is GPL-3.0, relocated to a separate GPL-3.0 component) and four
+FedOSS/FOOGD-derived runners (no upstream license is published, so no
+redistribution right is established). Tags v0.2.0 through v0.4.2 contained those
+files under an MIT-only LICENSE and have been withdrawn; v0.5.0 is the first tag
+intended for citation. Runners under `fedcore/experiments/`
 expect separately obtained upstream checkouts. Preserve every upstream LICENSE
 and NOTICE file; in particular, do not copy FedPD source into an MIT-only
 distribution. Absence of `third_party/` means those optional runners are not a

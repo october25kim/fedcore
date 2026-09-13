@@ -1,5 +1,29 @@
 # Changelog
 
+## v0.5.0 - 2026-09-13
+
+### Removed (licensing correction)
+- `fedcore/experiments/run_fedpd_cifar.py`, `run_selftrain_fedpd.py` - contained code
+  the files themselves document as lifted verbatim from FedPD `tools/proser_federated.py`.
+  FedPD is GPL-3.0 and this repository is MIT, so the MIT grant was not the author's to
+  give. Relocated to a separate GPL-3.0 component; not redistributed here.
+- `fedcore/experiments/run_fedoss_cifar.py`, `run_foogd_cifar.py`,
+  `run_foogd_full_cifar.py`, `fedcore/experiments/foogd_score.py` - contained code
+  documented as taken verbatim from FedOSS and FOOGD, neither of which publishes a
+  license file. Absent a license, no redistribution right is established, so these are
+  removed and not relocated.
+
+### Withdrawn
+Tags v0.2.0 through v0.4.2 shipped the files above under an MIT-only LICENSE. This was
+inconsistent with the upstream terms and with this repository's own THIRD_PARTY_NOTICES.md,
+which already stated that FedPD source must not be copied into an MIT-only distribution.
+Those tags are withdrawn and should not be cited.
+
+### Unaffected
+No removed file participates in the count-to-decision path. The certification core, the
+archived per-client count triples, and every certification number reported in the
+manuscript are unchanged.
+
 ## 0.3.0
 
 - Added the sealed WR-v3 count-to-decision release used by the current

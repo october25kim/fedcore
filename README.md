@@ -209,14 +209,22 @@ gitignored. The data loaders expect the standard public sources:
 ## Baselines (external)
 
 The federated open-set baselines (**FedPD**, **FedOSS**, **FOOGD**) are **not
-vendored** here. The runners that invoke them
-(`fedcore/experiments/run_fedpd_cifar.py`, `run_fedoss_cifar.py`,
-`run_foogd_cifar.py`, `foogd_score.py`, and the `scripts/docker_fedpd.sh` /
-`docker_foogd.sh` / `docker_fedoss.sh` wrappers) expect the corresponding upstream
-repositories to be placed under a local `third_party/` directory. Fetch them from
-their original sources and mind their licenses (FedPD's released code is GPLv3).
-The Fed-CORE certification core and its primary experiments run **without** these
-baselines.
+vendored** here, and the runners that embedded upstream source have been removed
+from this distribution. FedPD's released code is GPL-3.0; FedOSS and FOOGD publish
+no license file, so no redistribution right is established for code derived from
+them. Earlier tags of this repository (v0.2.0-v0.4.2) shipped six such runners
+under an MIT-only `LICENSE`; that was inconsistent with the upstream terms and
+with this repository's own `THIRD_PARTY_NOTICES.md`, and it has been corrected.
+The FedPD-derived PROSER runners now live in a separate GPL-3.0 component; the
+FedOSS- and FOOGD-derived runners are not redistributed at all.
+
+What remains here is sufficient to replay every certification decision reported in
+the paper: the count-to-decision core and the archived per-client count triples.
+The external-predictor appendix is reproducible from those counts without the
+upstream training code. To regenerate the counts, obtain the upstream repositories
+from their original sources, place them under a local `third_party/` directory,
+and mind their licenses. The Fed-CORE certification core and its primary
+experiments run **without** these baselines.
 
 ## License
 
