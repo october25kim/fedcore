@@ -1,0 +1,29 @@
+{
+  "contract_id": "fedcore-t3-corrected-exploratory",
+  "datasets_below_kill_pp": 0,
+  "datasets_meeting_go_pp": 1,
+  "legacy_threshold_only": true,
+  "per_dataset_delta_cells": {
+    "cifar10": 20,
+    "cifar100": 21,
+    "officehome": 41,
+    "pathmnist": 10
+  },
+  "per_dataset_delta_pp": {
+    "cifar10": 2.22,
+    "cifar100": 2.33,
+    "officehome": 6.83,
+    "pathmnist": 3.33
+  },
+  "prospective_confirmation": false,
+  "status": "CORRECTED_EXPLORATORY_REPLAY",
+  "thresholds": {
+    "GO_MIN_CELLS": 25,
+    "GO_MIN_DATASETS": 2,
+    "GO_MIN_PP": 5.0,
+    "KILL_MAX_PP": 1.0,
+    "KILL_MIN_DATASETS": 3
+  },
+  "total_delta_cells": 92,
+  "verdict": "CONDITIONAL"
+}

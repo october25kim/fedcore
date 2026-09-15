@@ -1,0 +1,58 @@
+{
+  "alpha_grid": [
+    0.05,
+    0.1,
+    0.15,
+    0.2,
+    0.25,
+    0.3
+  ],
+  "budgets": {
+    "bounded": {
+      "delta_c": 0.04,
+      "delta_c_split": "0.02 lower / 0.02 upper",
+      "delta_lambda": 0.02,
+      "delta_r": 0.04,
+      "total": 0.1
+    },
+    "budget_matched": true,
+    "family_bonferroni": "delta/M with M=12, identical in both arms",
+    "simplex": {
+      "delta_c": 0.05,
+      "delta_r": 0.05,
+      "total": 0.1
+    }
+  },
+  "contract_id": "fedcore-t3-bounded-lambda",
+  "created_utc": "2026-09-13",
+  "decision_rule": {
+    "CONDITIONAL": "+1 to +5 pp, or gains concentrated in a single dataset",
+    "GO": ">= +25 conditions AND >= +5.0 pp in at least 2 of 4 datasets",
+    "KILL": "< +1.0 pp in at least 3 datasets -> pivot to a pure feasibility paper",
+    "metric": "Delta = certified(bounded) - certified(simplex), per dataset and per alpha; pp = percentage-point change in certified rate"
+  },
+  "inputs": {
+    "cells": 450,
+    "counts": "results/theorem_aligned_wr_450_v3/primary_run/primary_candidate_counts.csv.gz",
+    "counts_sha256": "898ddf057a3a0ed6e00323cc57e97c7bb68dbc0a3de204fac7c6f9760a83b9b4",
+    "datasets": [
+      "cifar10",
+      "cifar100",
+      "pathmnist",
+      "officehome"
+    ]
+  },
+  "mixture_observation": {
+    "declared_mixture": "uniform over clients",
+    "label_free": "client identities only; no label, score or logit from any fold is read, and the diagnostic fold is untouched",
+    "m": 1000,
+    "seed_law": "PCG64(SeedSequence([20260913, sha256(sid+':traffic')[:4]]))",
+    "set": "simultaneous multinomial confidence box at delta_lambda"
+  },
+  "motivation": "The bounded-Lambda arm was previously measured only on the 100 Office-Home cells and only as an exploratory sweep, while the test axis covers all 450 conditions.",
+  "question": "Does the bounded-mixture certificate (Theorem 1') certify materially more conditions than the full simplex, at MATCHED total failure budget, across all wr-v3 datasets?",
+  "reporting": {
+    "every_cell": true,
+    "primary_alpha_for_headline": 0.2
+  }
+}

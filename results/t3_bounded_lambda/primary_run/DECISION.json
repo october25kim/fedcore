@@ -1,0 +1,26 @@
+{
+  "contract_id": "fedcore-t3-bounded-lambda",
+  "datasets_below_kill_pp": 0,
+  "datasets_meeting_go_pp": 4,
+  "per_dataset_delta_cells": {
+    "cifar10": 86,
+    "cifar100": 100,
+    "officehome": 72,
+    "pathmnist": 32
+  },
+  "per_dataset_delta_pp": {
+    "cifar10": 9.56,
+    "cifar100": 11.11,
+    "officehome": 12.0,
+    "pathmnist": 10.67
+  },
+  "thresholds": {
+    "GO_MIN_CELLS": 25,
+    "GO_MIN_DATASETS": 2,
+    "GO_MIN_PP": 5.0,
+    "KILL_MAX_PP": 1.0,
+    "KILL_MIN_DATASETS": 3
+  },
+  "total_delta_cells": 290,
+  "verdict": "GO"
+}

@@ -1,5 +1,39 @@
 # Changelog
 
+## v0.5.1 - 2026-09-15
+
+First tag in which the Table 5 (T3 bounded-Lambda) result is reproducible from the
+released tree. v0.5.0 contained no T3 artifact of any kind; the T3 module was committed
+after that tag and its result files never reached git at all (see below).
+
+### Added
+- `results/fk_t3_uncertainty_e6/t3_corrected_fixed_traffic.py` - the **corrected** T3
+  bounded-Lambda replay, which allocates `delta_r / (J * M)` and `delta_c / (2 * J * M)`.
+  This is the implementation behind the 199-of-450 certification at alpha = 0.20 reported
+  in the manuscript. It had never been distributed.
+- `results/fk_t3_uncertainty_e6/imported_corrected/` - that replay's run outputs.
+- `results/fk_t3_uncertainty_e6/reproduce_corrected_t3.py` - a runner that loads the
+  replay with four asserted path substitutions, resolves the count tensor and the archived
+  traffic realisation wherever they sit in this tree, and checks all six risk targets
+  against their published values. Run it from the repository root in the project image; it
+  exits non-zero on any mismatch.
+- `results/t3_bounded_lambda/` - the superseded run and its pre-registration, which the
+  previous commit intended to ship but did not (below), now carrying a `WITHDRAWN.md`
+  marker. It is retained rather than deleted because its recorded traffic realisation is
+  the pinned input the correction consumes.
+
+### Fixed (release process)
+- `.gitignore` excludes `/results/`, and `scripts/sync_dist.sh` copies allow-listed
+  additions into the distribution working tree without `git add -f`. Every `results/`
+  path on the allowlist was therefore copied and then silently ignored, so none of them
+  has ever been committed or tagged. The commit "ship the T3 bounded-Lambda arm and its
+  pre-registration" shipped the module and none of the artifacts. All allow-listed
+  `results/` paths are force-added in this release.
+
+### Unchanged
+- No library code changed. `fedcore/` is byte-identical to the previous commit.
+- The superseded run is not deleted and its numbers are not edited.
+
 ## v0.5.0 - 2026-09-13
 
 ### Removed (licensing correction)
