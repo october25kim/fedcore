@@ -1,0 +1,18 @@
+{
+  "release": "FedCORE-IJAR-v28-release-candidate",
+  "date": "2026-09-27",
+  "status": "THEOREM_ALIGNED_BRANCH_CANDIDATE",
+  "manuscript_sha256": "32a7d3a834bcafbece2ae7a740ea34292d11adf1a22a85d5d709358669997f70",
+  "public_repository": "https://github.com/october25kim/fedcore",
+  "public_base_commit": "e8bd32d",
+  "scope": "count-to-decision and claim-to-artifact alignment",
+  "verification": {
+    "full_test_suite": "310 passed, 66 skipped",
+    "unit": "96 passed, 8 skipped",
+    "golden_check": "PARTIAL PASS; artifact-free outputs matched within 1e-09",
+    "missing_frozen_artifacts": [
+      "runs/cifar10_d5_resnet18_seed0_logits.npz",
+      "runs/cifar100_d5_none0.0_seed0_logits.npz"
+    ]
+  }
+}

@@ -19,7 +19,7 @@ from __future__ import annotations
 
 import numpy as np
 
-from fedcore.certificate import conditional_risk_certificate, pooled_cp, true_selective_risk
+from fedcore.certificate import conditional_risk_certificate, pooled_cp_diagnostic, true_selective_risk
 from fedcore.data.clients import ClientPopulation, draw_counts
 
 ALPHA = 0.05
@@ -58,7 +58,7 @@ def main() -> None:
             tot_A, tot_K = int(A.sum()), int(K.sum())
             emp = tot_K / tot_A if tot_A > 0 else 0.0
             dep_naive += emp <= ALPHA
-            dep_pooled += pooled_cp(A, K, DELTA) <= ALPHA
+            dep_pooled += pooled_cp_diagnostic(A, K, DELTA) <= ALPHA
             U = conditional_risk_certificate(
                 A, K, n, DELTA, Lambda="known", lam=lam_matched
             ).U

@@ -1,13 +1,13 @@
-"""Exact joint risk/coverage certificate with frozen per-stratum budgets.
+"""Conservative joint risk/coverage certificate with frozen stratum budgets.
 
 This is the one-shot campaign API. The legacy APIs remain available for golden
 reproduction, while this path accounts for every simultaneous confidence event
-and uses exact bounded-simplex optimization.
+and uses deterministic bounded-simplex optimization with one-sided endpoints.
 """
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Optional, Sequence
 
 import numpy as np
@@ -54,6 +54,11 @@ class JointCertificate:
     lambda_lower: np.ndarray
     lambda_upper: np.ndarray
     min_denominator: float
+    lambda_star: Optional[np.ndarray]
+    acceptance_star: Optional[np.ndarray]
+    solver_status: str
+    solver_certificate_valid: bool
+    solver_diagnostics: dict[str, object] = field(default_factory=dict)
 
 
 def joint_conditional_certificate(
@@ -100,6 +105,16 @@ def joint_conditional_certificate(
         min_denominator = float(np.min(alow))
         risk_feasible = min_denominator > 0.0
         reason = "ok" if risk_feasible else "vanishing_denominator"
+        lambda_star = None
+        acceptance_star = None
+        risk_status = "closed_form_full_simplex"
+        risk_valid = True
+        risk_diagnostics: dict[str, object] = {
+            "risk_solver_status": risk_status,
+            "risk_solver_certificate_valid": True,
+            "risk_solver_tolerance": 0.0,
+            "risk_solver_iterations": 0,
+        }
     else:
         if acceptance_upper_eps is None:
             raise ValueError("bounded mixture requires acceptance_upper_eps")
@@ -110,14 +125,71 @@ def joint_conditional_certificate(
                 for j in range(J)
             ]
         )
-        mixture = BoundedSimplex(lambda_lower, lambda_upper).tightened()
+        try:
+            mixture = BoundedSimplex(lambda_lower, lambda_upper).tightened()
+        except (ValueError, RuntimeError) as exc:
+            lower_raw = np.asarray(lambda_lower, dtype=float)
+            upper_raw = np.asarray(lambda_upper, dtype=float)
+            status = "infeasible_mixture_set"
+            diagnostics = {
+                "solver_status": f"risk:{status};coverage:not_run",
+                "solver_certificate_valid": False,
+                "risk_solver_status": status,
+                "risk_solver_certificate_valid": False,
+                "risk_solver_reason": f"{type(exc).__name__}:{exc}",
+                "coverage_solver_status": "not_run",
+                "coverage_solver_certificate_valid": False,
+            }
+            return JointCertificate(
+                risk_ucb=float("inf"),
+                coverage_lcb=0.0,
+                certified=False,
+                feasible=False,
+                reason=status,
+                rbar=rbar,
+                alow=alow,
+                ahigh=ahigh,
+                risk_eps=eps_risk,
+                acceptance_lower_eps=eps_lower,
+                acceptance_upper_eps=eps_upper,
+                lambda_lower=lower_raw,
+                lambda_upper=upper_raw,
+                min_denominator=0.0,
+                lambda_star=None,
+                acceptance_star=None,
+                solver_status=diagnostics["solver_status"],
+                solver_certificate_valid=False,
+                solver_diagnostics=diagnostics,
+            )
         ratio = solve_robust_ratio(rbar, alow, ahigh, mixture)
         risk_ucb = float(ratio.value)
         min_denominator = float(ratio.min_denominator)
-        risk_feasible = bool(ratio.feasible)
+        risk_valid = bool(ratio.certificate_valid)
+        risk_feasible = bool(ratio.feasible and risk_valid)
         reason = ratio.reason or "ok"
+        lambda_star = ratio.lambda_star
+        acceptance_star = ratio.acceptance_star
+        risk_status = ratio.status
+        risk_diagnostics = ratio.diagnostics("risk_solver")
 
-    coverage_lcb = float(solve_coverage_infimum(alow, mixture).value)
+    coverage = solve_coverage_infimum(alow, mixture)
+    coverage_lcb = float(coverage.value)
+    coverage_valid = bool(coverage.certificate_valid)
+    solver_valid = bool(risk_valid and coverage_valid)
+    solver_status = f"risk:{risk_status};coverage:{coverage.status}"
+    solver_diagnostics = {
+        **risk_diagnostics,
+        **coverage.diagnostics("coverage_solver"),
+        "solver_status": solver_status,
+        "solver_certificate_valid": solver_valid,
+    }
+    if not solver_valid:
+        risk_feasible = False
+        reason = (
+            ratio.reason
+            if not full_simplex and not ratio.certificate_valid and ratio.reason
+            else coverage.reason or "solver_validation_failed"
+        )
     if not np.any(accepted):
         risk_feasible = False
         reason = "zero_accepted_coverage"
@@ -140,4 +212,9 @@ def joint_conditional_certificate(
         lambda_lower=mixture.lower,
         lambda_upper=mixture.upper,
         min_denominator=min_denominator,
+        lambda_star=lambda_star,
+        acceptance_star=acceptance_star,
+        solver_status=solver_status,
+        solver_certificate_valid=solver_valid,
+        solver_diagnostics=solver_diagnostics,
     )

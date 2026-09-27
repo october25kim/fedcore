@@ -148,6 +148,8 @@ def evaluate_four_policies(
                     "proposal_feasible": proposal_feasible,
                     "certificate_feasible": cert.feasible,
                     "certificate_reason": cert.reason,
+                    "solver_status": cert.solver_status,
+                    "solver_certificate_valid": cert.solver_certificate_valid,
                     "thresholds_json": json.dumps(
                         threshold.thresholds.tolist(), separators=(",", ":")
                     ),
@@ -172,6 +174,7 @@ def evaluate_four_policies(
                         cert.lambda_upper.tolist(), separators=(",", ":")
                     ),
                     "cert_sample_ids_sha256": common_digest,
+                    **cert.solver_diagnostics,
                     **budget.as_dict(),
                 }
             )

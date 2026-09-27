@@ -200,7 +200,7 @@ def fig_F7():
 
 def fig_F2():
     """Necessity: deploy rate vs true selective risk, naive vs pooled vs Fed-CORE."""
-    from fedcore.certificate import conditional_risk_certificate, pooled_cp, true_selective_risk
+    from fedcore.certificate import conditional_risk_certificate, pooled_cp_diagnostic, true_selective_risk
     from fedcore.data.clients import ClientPopulation, draw_counts
     alpha = 0.05
     n = np.array([300, 300, 300, 300, 400]); lam = n / n.sum()
@@ -214,7 +214,7 @@ def fig_F2():
             A, K = draw_counts(pop, n, rng)
             tA, tK = int(A.sum()), int(K.sum())
             cn += (tK / tA if tA else 0) <= alpha
-            cp += pooled_cp(A, K, DELTA) <= alpha
+            cp += pooled_cp_diagnostic(A, K, DELTA) <= alpha
             cf += conditional_risk_certificate(A, K, n, DELTA, Lambda="known", lam=lam).U <= alpha
         dn.append(cn / N); dp.append(cp / N); df.append(cf / N)
     fig, ax = plt.subplots(figsize=(6, 4))

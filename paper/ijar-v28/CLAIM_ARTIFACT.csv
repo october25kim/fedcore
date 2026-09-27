@@ -1,0 +1,7 @@
+ClaimID,ManuscriptClaim,SourceArtifact,EstimatorOrCheck,EvidenceLevel,Boundary
+C01,Joint minus Bottleneck = 11.87 pp,central_finding_source.csv,Paired export means,VERIFIED_DESCRIPTIVE,Nine archived exports
+C02,"Joint minus deficit = 0.52 pp; 95% t interval [-0.13, 1.17]",central_finding_source.csv,Paired t interval over nine export deltas,VERIFIED_DESCRIPTIVE,Not equivalence; reused exports
+C03,CIFAR-10.1 full-simplex arms all zero,central_finding_source.csv,Three fixed checkpoints; ten paired audits,VERIFIED_NEGATIVE,Target infeasible; cannot rank policies
+C04,FedCORE target-matched empirical validity,../wr-v3/artifacts/primary/VALIDATION.json;../wr-v3/artifacts/primary/primary_candidate_counts.csv.gz,450-condition replay,VERIFIED_REPLAY,Empirical-reservoir target only
+C05,Adaptive finite-frame post-selection validity,NOT_APPLICABLE_THEOREM_PROOF_IN_MAIN_TEXT,Hypergeometric inversion plus union bound,PROVED,Frozen finite frame only
+C06,Tiny-ImageNet N3 nonmonotone observed ECA,tinyimagenet_n3_s050_summary.csv;tinyimagenet_n3_s075_summary.csv,Fixed completed arms,VERIFIED_DESCRIPTIVE,Stored aggregate verification only; no causal audit-size attribution
