@@ -1,4 +1,4 @@
-# FedCORE IJAR v28 release candidate
+# FedCORE IJAR v28 public release
 
 This directory binds the IJAR manuscript claims to versioned count-level artifacts.
 It contains no raw datasets, licensed images, checkpoints, or record-level logits.
@@ -38,3 +38,7 @@ FEDCORE_ALLOW_MISSING_ARTIFACTS=1 python tests/golden_check.py
 
 The last command is an artifact-free partial gate when the licensed or large
 frozen run files are not present. It does not claim to reproduce model training.
+
+The versioned public release is tagged `v0.6.0`. Its theorem-facing APIs,
+fail-closed numerical solver, procedure ledger, and aggregate result sources
+were merged through pull request 5 after Python 3.10 and 3.12 CI passed.
