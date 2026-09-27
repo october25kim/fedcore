@@ -177,11 +177,13 @@ Training writes frozen logits to `runs/` and certificates to `results/`; both ar
 gitignored. Certification then runs on the frozen `runs/*_logits.npz`. The
 versioned count package under `paper/wr-v3/` contains the benchmark count tensor
 and numerical source artifacts, not raw datasets, checkpoints, or per-example
-logits. `paper/wr-v4/` retains later corrected analyses. The IJAR claim and
-procedure alignment package is under `paper/ijar-v28/`; it links manuscript
-claims to those released artifacts and explicitly labels theorem-aligned,
-off-Algorithm, and exploratory procedures. The v18 directory remains available
-as a historical release. Fake-logit smoke output must not be cited as manuscript
+logits. `paper/wr-v4/` retains later corrected analyses. The current IJAR v31
+claim and procedure alignment package is under `paper/ijar-v31/`. It binds the
+manuscript hash, eight standalone Figures, ten numbered Tables, and two Abstract
+headline claims to their governing artifacts. The previous `paper/ijar-v28/`
+and `paper/v18/` directories remain available as historical releases. A stale
+PathMNIST CSV in v18 is explicitly marked `SUPERSEDED_NOT_GOVERNING` and must
+not be used for v31. Fake-logit smoke output must not be cited as manuscript
 evidence.
 
 ## Canonical metric schema (do not rename)

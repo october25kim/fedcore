@@ -1,0 +1,20 @@
+{
+  "release": "FedCORE-IJAR-v31-public-release",
+  "date": "2026-09-27",
+  "status": "VERSIONED_RELEASE",
+  "manuscript_sha256": "e36c9cf9bfe30f4feb887ffb3ba2f6165d628404a99619ab2cf53f3ceafffdcb",
+  "rendered_pdf_sha256": "7fe828ce760e9df1058267e66795a142e911d7e9d07d482010197654bd368897",
+  "public_repository": "https://github.com/october25kim/fedcore",
+  "baseline_commit": "a33939b5be274e4ca1a3cb224d48198a1fd018dd",
+  "release_tag": "v0.6.1",
+  "release_commit_resolution": "Resolve the annotated tag with: git rev-list -n 1 v0.6.1",
+  "scope": "v31 manuscript object to governing aggregate/count artifact alignment",
+  "ledger_entries": 20,
+  "historical_release": "paper/ijar-v28 remains available and is not the v31 binding",
+  "verification": {
+    "release_integrity": "PASS: 48 checksums, 20 ledger entries, and 8 arithmetic parity gates",
+    "unit": "96 passed, 8 skipped",
+    "wr_v3_numerical_release": "PASS: 450 cells, 154800 count rows, H/S/B=177/177/130",
+    "verification_environment": "Local release checkout on 2026-09-27"
+  }
+}
