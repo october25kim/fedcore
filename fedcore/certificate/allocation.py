@@ -1,4 +1,16 @@
-"""Proposal-allocated certification: Theorem 4, Corollary 2, and rules R1-R3.
+"""Archived proposal-allocated extension with module-local theorem labels.
+
+IJAR MANUSCRIPT SCOPE: this module is not Theorem 1, Theorem 2, or an
+Algorithm 1 branch of the IJAR manuscript. The current theorem-facing
+full-simplex API is :func:`full_simplex_fixed_member_certificate`, which uses a
+complete member-level tail without client-count division. The allocation below
+instead constructs simultaneous clientwise bounds with proposal-frozen
+``eps_j`` values whose sum is at most ``delta_r``. It is retained as an
+explicitly labeled research extension, not as the manuscript's headline
+certificate.
+
+Proposal-allocated certification: module-local Theorem 4, Corollary 2, and
+rules R1-R3.
 
 This module implements the *allocated* branch of the Fed-CORE certificate, in which
 the per-client error budgets ``eps_j`` are chosen on the PROPOSAL fold only and
@@ -117,7 +129,10 @@ def _validate_budget(delta_r: float, J: int) -> None:
 
 
 def uniform_allocation(J: int, delta_r: float) -> np.ndarray:
-    """Theorem 1's uniform allocation ``eps_j = delta_r / J``."""
+    """Uniform simultaneous-client allocation ``eps_j = delta_r / J``.
+
+    This is a module-local baseline and not IJAR Theorem 1.
+    """
     _validate_budget(delta_r, J)
     return np.full(J, delta_r / J, dtype=float)
 

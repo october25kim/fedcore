@@ -85,6 +85,11 @@ risk / coverage fields — **never** by accuracy or AUROC.
 - **Calibration assumption (stated openly).** Certifying unknown rejection needs
   the certification fold to contain *labeled* unknown-class points.
   "Distribution-free" is w.r.t. the calibration distribution.
+- **Paper-scope boundary.** `fedcore.certificate.allocation` retains an
+  exploratory proposal-dependent allocation of simultaneous clientwise tails.
+  It is not Theorem 1, Theorem 2, or an Algorithm 1 branch of the IJAR
+  manuscript. Its module-local theorem labels belong to an archived extension
+  and must not be used to describe the no-client-division full-simplex API.
 
 ## Repository layout
 
@@ -170,11 +175,14 @@ bash scripts/docker_officehome.sh
 
 Training writes frozen logits to `runs/` and certificates to `results/`; both are
 gitignored. Certification then runs on the frozen `runs/*_logits.npz`. The
-versioned manuscript package under `paper/wr-v3/` contains the WR-v3 benchmark
-count tensor and numerical source artifacts, not raw datasets, checkpoints, or
-per-example logits. It supersedes `paper/v18/` for current manuscript numbers.
-The v18 directory remains available as a historical release. Fake-logit smoke
-output must not be cited as manuscript evidence.
+versioned count package under `paper/wr-v3/` contains the benchmark count tensor
+and numerical source artifacts, not raw datasets, checkpoints, or per-example
+logits. `paper/wr-v4/` retains later corrected analyses. The IJAR claim and
+procedure alignment package is under `paper/ijar-v28/`; it links manuscript
+claims to those released artifacts and explicitly labels theorem-aligned,
+off-Algorithm, and exploratory procedures. The v18 directory remains available
+as a historical release. Fake-logit smoke output must not be cited as manuscript
+evidence.
 
 ## Canonical metric schema (do not rename)
 

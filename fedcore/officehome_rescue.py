@@ -21,16 +21,17 @@ proposal fold and fixed before any certification outcome is read.  That is
 exactly the condition under which the two theorems below are valid.
 
 Theorem S1 (simultaneous selector-family certificate).
-    Fix the family before the certification fold.  Union-bound over all
-    ``M * J`` per-candidate/per-client risk events at ``delta_r / (M J)`` each
-    and all ``M * J`` coverage events at ``delta_c / (M J)`` each.  Then
-    *simultaneously for every candidate* ``m``,
+    Fix the family before the certification fold. Apply the full-simplex
+    scalar-extremum theorem to every member and union-bound over the ``M``
+    members. Then, simultaneously for every candidate ``m``,
 
-        rbar_jm = U+(K_jm, A_jm; delta_r / (M J)),   U_m   = max_j rbar_jm
-        alow_jm = U-(A_jm, n_j;  delta_c / (M J)),    C_m   = min_j alow_jm
+        rbar_jm = U+(K_jm, A_jm; delta_r / M),   U_m = max_j rbar_jm
+        alow_jm = L-(A_jm, n_j; delta_c / M),    C_m = min_j alow_jm
 
-    are valid full-simplex risk-UCB / coverage-LCB.  Because the bounds hold
-    simultaneously, a certification-data-dependent choice
+    are valid full-simplex risk-UCB / coverage-LCB targets. These are scalar
+    extrema, not simultaneous clientwise confidence intervals, so no additional
+    ``J`` factor is required. Because the member-level bounds hold jointly, a
+    certification-data-dependent choice
     ``m_hat in argmax{ C_m : U_m <= alpha, C_m > 0 }`` still yields a valid
     ``(1 - delta_r - delta_c)`` certificate for the selected candidate.  The
     price is the multiplicity factor ``M`` inside every ``eps``.
@@ -148,8 +149,8 @@ class FamilyCertificate:
     risk_ok: np.ndarray         # (M,) U_m <= alpha
     cov_ok: np.ndarray          # (M,) C_m > 0
     certified: np.ndarray       # (M,) risk_ok & cov_ok
-    eps_r: float                # delta_r / (M J)
-    eps_c: float                # delta_c / (M J)
+    eps_r: float                # delta_r / M
+    eps_c: float                # delta_c / M
     M: int
     J: int
 
@@ -165,8 +166,11 @@ def simultaneous_family_certificate(
 ) -> FamilyCertificate:
     """Theorem S1. ``A``/``K`` are ``(M, J)``; ``n`` is ``(J,)``.
 
-    Uses the exact fedcore CP core (``cp_upper`` / ``cp_lower``) with the
-    multiplicity-corrected budgets ``delta_r / (M J)`` and ``delta_c / (M J)``.
+    Uses the full-simplex scalar-extremum theorem for each proposal-frozen
+    member. The family correction is across the ``M`` members only. There is no
+    additional division by the number of clients because the reported targets
+    are the maximum client risk and minimum client coverage, not a simultaneous
+    collection of clientwise intervals.
     """
     A_arr = np.asarray(A, dtype=int)
     K_arr = np.asarray(K, dtype=int)
@@ -183,8 +187,8 @@ def simultaneous_family_certificate(
     if delta_r <= 0.0 or delta_c <= 0.0:
         raise ValueError("delta_r and delta_c must be positive")
 
-    eps_r = float(delta_r) / (M * J)
-    eps_c = float(delta_c) / (M * J)
+    eps_r = float(delta_r) / M
+    eps_c = float(delta_c) / M
     rbar = np.empty((M, J), dtype=float)
     alow = np.empty((M, J), dtype=float)
     for m in range(M):
@@ -264,11 +268,36 @@ def holm_step_down_reject(pvalues: Sequence[float], fwer: float) -> np.ndarray:
     return reject
 
 
+def holm_adjusted_pvalues(
+    pvalues: Sequence[float],
+) -> Tuple[np.ndarray, np.ndarray]:
+    """Return Holm-adjusted p-values and one-based ranks in original order."""
+    p = np.asarray(pvalues, dtype=float)
+    if p.ndim != 1 or p.size == 0:
+        raise ValueError("pvalues must be a non-empty one-dimensional sequence")
+    if np.any(~np.isfinite(p)) or np.any((p < 0.0) | (p > 1.0)):
+        raise ValueError("pvalues must be finite and lie in [0, 1]")
+    M = p.size
+    order = np.argsort(p, kind="stable")
+    ranked_raw = np.array(
+        [(M - rank) * p[index] for rank, index in enumerate(order)], dtype=float
+    )
+    ranked_adjusted = np.minimum(1.0, np.maximum.accumulate(ranked_raw))
+    adjusted = np.empty(M, dtype=float)
+    ranks = np.empty(M, dtype=int)
+    for rank, index in enumerate(order):
+        adjusted[index] = ranked_adjusted[rank]
+        ranks[index] = rank + 1
+    return adjusted, ranks
+
+
 @dataclass(frozen=True)
 class HolmFamilyCertificate:
     """Holm risk-only + simultaneous-coverage certificate over the M-family."""
 
     pvalues: np.ndarray         # (M,) IU candidate-null p-values
+    adjusted_pvalues: np.ndarray  # (M,) Holm-adjusted p-values
+    holm_rank: np.ndarray       # (M,) one-based Holm rank
     holm_reject: np.ndarray     # (M,) risk rejection (r-certified)
     alow: np.ndarray            # (M, J) coverage LCB (simultaneous at delta_c)
     C: np.ndarray               # (M,) worst-client coverage LCB
@@ -276,6 +305,8 @@ class HolmFamilyCertificate:
     certified: np.ndarray       # (M,) holm_reject & cov_ok
     eps_c: float
     fwer: float
+    risk_decision_alpha: float
+    risk_ucb: Optional[np.ndarray]
     M: int
     J: int
 
@@ -288,8 +319,16 @@ def holm_family_certificate(
     alpha: float,
     delta_r: float,
     delta_c: float,
+    mixture_target: str = "simplex",
 ) -> HolmFamilyCertificate:
-    """Theorem S1'. Holm FWER on risk at ``delta_r``; coverage union bound at ``delta_c``."""
+    """Holm/IUT risk decision with family-simultaneous coverage.
+
+    This branch is valid only for the full-simplex maximum-client risk target.
+    It is a fixed-alpha decision and deliberately does not report a numerical
+    risk UCB.
+    """
+    if mixture_target != "simplex":
+        raise ValueError("Holm/IUT is restricted to the full-simplex target")
     A_arr = np.asarray(A, dtype=int)
     K_arr = np.asarray(K, dtype=int)
     n_arr = np.asarray(n, dtype=int)
@@ -300,13 +339,18 @@ def holm_family_certificate(
         raise ValueError("n must be a length-J vector")
     if np.any(K_arr < 0) or np.any(K_arr > A_arr) or np.any(A_arr > n_arr[None, :]):
         raise ValueError("counts must satisfy 0 <= K <= A <= n")
+    if not 0.0 < alpha < 1.0:
+        raise ValueError("alpha must lie in (0, 1)")
+    if not (0.0 < delta_r < 1.0 and 0.0 < delta_c < 1.0):
+        raise ValueError("delta_r and delta_c must lie in (0, 1)")
 
     pvalues = np.array(
         [candidate_null_pvalue(A_arr[m], K_arr[m], alpha) for m in range(M)]
     )
-    reject = holm_step_down_reject(pvalues, delta_r)
+    adjusted, ranks = holm_adjusted_pvalues(pvalues)
+    reject = adjusted <= float(delta_r)
 
-    eps_c = float(delta_c) / (M * J)
+    eps_c = float(delta_c) / M
     alow = np.empty((M, J), dtype=float)
     for m in range(M):
         for j in range(J):
@@ -315,8 +359,20 @@ def holm_family_certificate(
     cov_ok = C > 0.0
     certified = reject & cov_ok
     return HolmFamilyCertificate(
-        pvalues=pvalues, holm_reject=reject, alow=alow, C=C, cov_ok=cov_ok,
-        certified=certified, eps_c=eps_c, fwer=float(delta_r), M=M, J=J,
+        pvalues=pvalues,
+        adjusted_pvalues=adjusted,
+        holm_rank=ranks,
+        holm_reject=reject,
+        alow=alow,
+        C=C,
+        cov_ok=cov_ok,
+        certified=certified,
+        eps_c=eps_c,
+        fwer=float(delta_r),
+        risk_decision_alpha=float(alpha),
+        risk_ucb=None,
+        M=M,
+        J=J,
     )
 
 
@@ -351,6 +407,7 @@ __all__ = [
     "family_keys",
     "fresh_draw_seed",
     "holm_family_certificate",
+    "holm_adjusted_pvalues",
     "holm_step_down_reject",
     "select_family_candidate",
     "selector_definition_hash",

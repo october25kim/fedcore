@@ -1,5 +1,22 @@
 # Changelog
 
+## Unreleased - IJAR v28 alignment
+
+### Added
+- `paper/ijar-v28/` binds the IJAR manuscript's central paired result to its
+  plot source, sampling contracts, claim-artifact ledger, procedure-theorem
+  ledger, and checksums.
+
+### Clarified
+- The no-client-division fixed-member full-simplex certificate remains the
+  IJAR Theorem 1 implementation.
+- `fedcore.certificate.allocation` is an archived proposal-dependent extension
+  with module-local theorem labels, not an Algorithm 1 branch of the IJAR
+  manuscript.
+- Strict-mixture CP-IUT-Holm, the corrected T3 custom budget, and ALPHA-ST are
+  labeled respectively as an off-Algorithm conservative comparator, a custom
+  union-bound replay, and an exploratory non-certifying adaptation.
+
 ## v0.5.1 - 2026-09-15
 
 First tag in which the Table 5 (T3 bounded-Lambda) result is reproducible from the

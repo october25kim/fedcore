@@ -4,8 +4,8 @@ The certification path is IDENTICAL for the synthetic smoke and real CIFAR runs:
 
 1. choose the selector threshold on the PROPOSAL fold (risk buffer ``gamma*alpha``);
 2. compute per-client counts on the CERTIFICATION fold;
-3. certify the selective risk with the **conditional** certificate (Theorem 1/1',
-   PRIMARY) and derive a coverage lower confidence bound;
+3. split ``delta`` equally into predeclared risk/coverage tails, certify the
+   selective risk, and derive a positive coverage lower confidence bound;
 4. evaluate empirically on the held-out TEST fold.
 
 Metric schema keys (do not rename) -- see ``CLAUDE.md`` section 3.
@@ -18,9 +18,13 @@ from typing import Dict, List, Optional, Sequence
 import numpy as np
 
 from fedcore.certificate import (
-    _sample_lambdas,
     conditional_risk_certificate,
     cp_lower,
+)
+from fedcore.certificate.lambda_sets import (
+    NormalizedBox,
+    solve_normalized_box_coverage,
+    uniform_box,
 )
 from fedcore.selector import (
     choose_threshold,
@@ -38,27 +42,64 @@ def _coverage_lcb(
     lam: Optional[Sequence[float]],
     box: float,
     seed: int,
-) -> float:
+) -> tuple[float, Dict[str, object]]:
     """Worst-case-over-Lambda coverage lower confidence bound.
 
-    Uses ``alow_j = U-(A_j, n_j; delta/(2J))`` and minimizes the achievable
-    accepted coverage over the deployment mixture set.
+    For the full simplex, Corollary 1 uses the complete member-level tail at
+    every stratum and takes their minimum (no stratum-count penalty).  A strict
+    mixture restriction needs simultaneous acceptance endpoints and therefore
+    divides its coverage tail across strata.
     """
     J = len(A)
-    eps = delta / (2.0 * J)
+    eps = delta if Lambda == "simplex" else delta / J
     alow = np.array(
         [cp_lower(int(A[j]), int(n[j]), eps) for j in range(J)], dtype=float
     )
     if Lambda == "simplex":
-        return float(np.min(alow))
+        return float(np.min(alow)), {
+            "coverage_solver_status": "closed_form_full_simplex",
+            "coverage_solver_certificate_valid": True,
+            "coverage_solver_tolerance": 0.0,
+            "coverage_solver_iterations": 0,
+        }
     if Lambda == "known":
         lam_arr = np.asarray(lam if lam is not None else np.full(J, 1.0 / J))
-        return float(np.sum(lam_arr * alow))
+        if lam_arr.shape != (J,) or np.any(lam_arr < 0.0) or lam_arr.sum() <= 0.0:
+            raise ValueError("lam must be a non-negative length-J vector with positive sum")
+        lam_arr = lam_arr / lam_arr.sum()
+        result = solve_normalized_box_coverage(
+            alow, NormalizedBox(lam_arr, lam_arr)
+        )
+        return float(result.value), result.diagnostics("coverage_solver")
     if Lambda == "box":
-        rng = np.random.default_rng(seed)
-        lams = _sample_lambdas(J, box, 256, rng)
-        return float(min(np.sum(l * alow) for l in lams))
+        result = solve_normalized_box_coverage(alow, uniform_box(J, box))
+        return float(result.value), result.diagnostics("coverage_solver")
     raise ValueError(f"unknown Lambda={Lambda!r}")
+
+
+def _solver_metadata(cert, coverage_meta: Dict[str, object]) -> Dict[str, object]:
+    risk_valid = bool(cert.solver_certificate_valid)
+    coverage_valid = bool(
+        coverage_meta.get("coverage_solver_certificate_valid", False)
+    )
+    return {
+        "risk_solver_status": cert.solver_status,
+        "risk_solver_certificate_valid": risk_valid,
+        "risk_solver_tolerance": float(cert.solver_tolerance),
+        "risk_solver_iterations": int(cert.solver_iterations),
+        "risk_solver_bracket_lower": float(cert.solver_bracket_lower),
+        "risk_solver_bracket_upper": float(cert.solver_bracket_upper),
+        "risk_solver_residual_lower": float(cert.solver_residual_lower),
+        "risk_solver_residual_upper": float(cert.solver_residual_upper),
+        "risk_solver_witness_value": float(cert.solver_witness_value),
+        "risk_solver_reason": cert.solver_reason,
+        **coverage_meta,
+        "solver_status": (
+            f"risk:{cert.solver_status};coverage:"
+            f"{coverage_meta.get('coverage_solver_status', 'unknown')}"
+        ),
+        "solver_certificate_valid": bool(risk_valid and coverage_valid),
+    }
 
 
 def certify_for_score(
@@ -77,7 +118,15 @@ def certify_for_score(
     box: float = 0.15,
     seed: int = 0,
 ) -> Dict[str, object]:
-    """Run the full proposal -> certify -> test path for one (score, gamma, Lambda)."""
+    """Run the full proposal -> certify -> test path for one cell.
+
+    ``delta`` is the total declared failure budget.  This compact legacy-facing
+    entry point uses the predeclared equal split ``delta_r = delta_c = delta/2``.
+    """
+    if not 0.0 < delta < 1.0:
+        raise ValueError("delta must lie in (0, 1)")
+    delta_r = delta / 2.0
+    delta_c = delta / 2.0
     # (1) selector on the PROPOSAL fold only
     sel = choose_threshold(
         prop_view["score"], prop_view["pred"], prop_view["y_open"], gamma, alpha
@@ -93,11 +142,14 @@ def certify_for_score(
         cert_view["client"], sel, n_clients,
     )
 
-    # (3) PRIMARY: conditional selective-risk certificate (Theorem 1/1')
+    # (3) Current full-simplex / conservative-endpoint strict-mixture certificate.
     cert = conditional_risk_certificate(
-        A, K, n, delta, Lambda=Lambda, lam=lam, box=box, seed=seed
+        A, K, n, delta_r, Lambda=Lambda, lam=lam, box=box, seed=seed
     )
-    cert_coverage_lcb = _coverage_lcb(A, n, delta, Lambda, lam, box, seed)
+    cert_coverage_lcb, coverage_meta = _coverage_lcb(
+        A, n, delta_c, Lambda, lam, box, seed
+    )
+    solver_meta = _solver_metadata(cert, coverage_meta)
 
     # (4) empirical evaluation on the held-out TEST fold
     test_err = open_set_error(test_view["pred"], test_view["y_open"])
@@ -105,13 +157,20 @@ def certify_for_score(
         test_view["score"], test_err, sel.threshold
     )
 
-    certified = bool(cert.feasible and cert.U <= alpha)
+    certified = bool(
+        cert.feasible
+        and solver_meta["solver_certificate_valid"]
+        and cert.U <= alpha
+        and cert_coverage_lcb > 0.0
+    )
 
     return {
         "score_name": score_name,
         "gamma": gamma,
         "alpha": alpha,
         "delta": delta,
+        "delta_r": delta_r,
+        "delta_c": delta_c,
         "Lambda": Lambda,
         "dirichlet_alpha": dirichlet_alpha,
         "n_clients": n_clients,
@@ -124,6 +183,7 @@ def certify_for_score(
         "prop_risk": float(prop_risk),
         "test_coverage": float(test_cov),
         "test_risk": float(test_risk),
+        **solver_meta,
     }
 
 
@@ -158,6 +218,10 @@ def certify_best_gamma(
     ``alpha - margin`` makes the chosen operating point less likely to fail on the
     certification fold (fixes alpha-frontier non-monotonicity from proxy optimism).
     """
+    if not 0.0 < delta < 1.0:
+        raise ValueError("delta must lie in (0, 1)")
+    delta_r = delta / 2.0
+    delta_c = delta / 2.0
     prop_err = open_set_error(prop_view["pred"], prop_view["y_open"])
 
     # (1)+(2) per-gamma proposal-side selector + proxy certificate
@@ -174,7 +238,7 @@ def certify_best_gamma(
             prop_view["client"], sel, n_clients,
         )
         u_proxy = conditional_risk_certificate(
-            Ap, Kp, np_, delta, Lambda=Lambda, lam=lam, box=box, seed=seed
+            Ap, Kp, np_, delta_r, Lambda=Lambda, lam=lam, box=box, seed=seed
         ).U
         cands.append({"gamma": gamma, "sel": sel, "cov_p": cov_p, "u_proxy": u_proxy})
 
@@ -196,21 +260,31 @@ def certify_best_gamma(
         cert_view["client"], sel, n_clients,
     )
     cert = conditional_risk_certificate(
-        A, K, n, delta, Lambda=Lambda, lam=lam, box=box, seed=seed
+        A, K, n, delta_r, Lambda=Lambda, lam=lam, box=box, seed=seed
     )
-    cert_coverage_lcb = _coverage_lcb(A, n, delta, Lambda, lam, box, seed)
+    cert_coverage_lcb, coverage_meta = _coverage_lcb(
+        A, n, delta_c, Lambda, lam, box, seed
+    )
+    solver_meta = _solver_metadata(cert, coverage_meta)
 
     test_err = open_set_error(test_view["pred"], test_view["y_open"])
     test_cov, test_risk = empirical_risk_coverage(
         test_view["score"], test_err, sel.threshold
     )
-    certified = bool(cert.feasible and cert.U <= alpha)
+    certified = bool(
+        cert.feasible
+        and solver_meta["solver_certificate_valid"]
+        and cert.U <= alpha
+        and cert_coverage_lcb > 0.0
+    )
 
     return {
         "score_name": score_name,
         "gamma": gamma_star,
         "alpha": alpha,
         "delta": delta,
+        "delta_r": delta_r,
+        "delta_c": delta_c,
         "Lambda": Lambda,
         "dirichlet_alpha": dirichlet_alpha,
         "n_clients": n_clients,
@@ -225,6 +299,7 @@ def certify_best_gamma(
         "test_risk": float(test_risk),
         "gamma_star": gamma_star,
         "u_proxy": float(chosen["u_proxy"]),
+        **solver_meta,
     }
 
 

@@ -1,4 +1,4 @@
-r"""Exact optimization over coordinate-bounded deployment mixtures.
+r"""Conservative numerical optimization over coordinate-bounded mixtures.
 
 This module contains the deterministic optimization primitives used by the
 bounded-mixture version of the Fed-CORE certificate.  A deployment-mixture set
@@ -11,9 +11,9 @@ has the form
 
 There is no random sampling in this module.  Linear objectives are solved by a
 greedy fill, and the robust linear-fractional objective is solved by monotone
-parametric bisection.  The latter is exact up to the requested numerical
-tolerance: every bisection subproblem is itself solved exactly by the greedy
-linear solver.
+parametric bisection. Every subproblem has a deterministic global greedy solve;
+the reported risk/coverage certificates use only validated one-sided bracket
+endpoints. Raw feasible objectives remain diagnostic witnesses.
 
 Traffic-derived mixture boxes deliberately accept client counts only.  They do
 not accept outcomes, correctness indicators, labels, scores, or predictions.
@@ -83,11 +83,32 @@ def _fsum(values: np.ndarray) -> float:
     return float(math.fsum(float(value) for value in values))
 
 
+def _safe_multiply(left, right, *, context: str) -> np.ndarray:
+    """Reject non-zero products lost to zero or subnormal arithmetic.
+
+    A primal witness and a residual bracket can share the same underflow and
+    falsely agree.  Certification therefore does not support arithmetic where
+    a non-zero multiplicative contribution is subnormal; callers receive a
+    fail-closed solver result instead.
+    """
+    left_array = np.asarray(left, dtype=float)
+    right_array = np.asarray(right, dtype=float)
+    with np.errstate(over="raise", invalid="raise", under="ignore"):
+        product = np.multiply(left_array, right_array)
+    nonzero_operands = (left_array != 0.0) & (right_array != 0.0)
+    unsafe = nonzero_operands & (
+        (product == 0.0)
+        | ((np.abs(product) < np.finfo(float).tiny) & (product != 0.0))
+    )
+    if np.any(unsafe):
+        raise FloatingPointError(f"unsafe_subnormal_product:{context}")
+    return np.asarray(product, dtype=float)
+
+
 def _dot(left: np.ndarray, right: np.ndarray) -> float:
     """Accurately and deterministically compute a one-dimensional dot product."""
-    return float(
-        math.fsum(float(x) * float(y) for x, y in zip(left, right, strict=True))
-    )
+    products = _safe_multiply(left, right, context="dot")
+    return _fsum(products)
 
 
 @dataclass(frozen=True)
@@ -200,6 +221,22 @@ class BoundedSimplex:
                     weights[index] = candidate
                     break
 
+        # The greedy construction is used inside a certificate solver.  Never
+        # return an approximately feasible point without checking it: doing so
+        # can corrupt the sign of a later bisection residual.  The tolerance is
+        # only a floating-point validation allowance, not an optimization gap.
+        validation_limit = 128.0 * np.finfo(float).eps * max(
+            1.0, float(self.dimension)
+        )
+        simplex_residual = abs(_fsum(weights) - 1.0)
+        lower_violation = float(np.max(np.maximum(self.lower - weights, 0.0)))
+        upper_violation = float(np.max(np.maximum(weights - self.upper, 0.0)))
+        if not all(
+            math.isfinite(value)
+            for value in (simplex_residual, lower_violation, upper_violation)
+        ) or max(simplex_residual, lower_violation, upper_violation) > validation_limit:
+            raise RuntimeError("greedy bounded-simplex solution failed validation")
+
         weights.setflags(write=False)
         return LinearExtremum(
             value=_dot(coefficients_array, weights),
@@ -282,6 +319,14 @@ class RobustRatioResult:
     acceptance_star: Optional[np.ndarray]
     iterations: int
     tolerance: float
+    max_iterations: int
+    certificate_valid: bool
+    status: str
+    bracket_lower: float
+    bracket_upper: float
+    residual_lower: float
+    residual_upper: float
+    validation_tolerance: float
     reason: Optional[str] = None
 
     def __post_init__(self) -> None:
@@ -295,9 +340,101 @@ class RobustRatioResult:
     @property
     def optimality_gap(self) -> float:
         """Certified numerical gap between upper and attained values."""
-        if not self.feasible:
+        if not self.feasible or not self.certificate_valid:
             return math.inf
         return max(0.0, float(self.value - self.attained_value))
+
+    @property
+    def bracket_width(self) -> float:
+        if not (
+            math.isfinite(self.bracket_lower)
+            and math.isfinite(self.bracket_upper)
+        ):
+            return math.inf
+        return max(0.0, float(self.bracket_upper - self.bracket_lower))
+
+    def diagnostics(self, prefix: str = "risk_solver") -> dict[str, object]:
+        return {
+            f"{prefix}_status": self.status,
+            f"{prefix}_certificate_valid": bool(self.certificate_valid),
+            f"{prefix}_tolerance": float(self.tolerance),
+            f"{prefix}_iterations": int(self.iterations),
+            f"{prefix}_max_iterations": int(self.max_iterations),
+            f"{prefix}_bracket_lower": float(self.bracket_lower),
+            f"{prefix}_bracket_upper": float(self.bracket_upper),
+            f"{prefix}_bracket_width": float(self.bracket_width),
+            f"{prefix}_residual_lower": float(self.residual_lower),
+            f"{prefix}_residual_upper": float(self.residual_upper),
+            f"{prefix}_validation_tolerance": float(self.validation_tolerance),
+            f"{prefix}_attained_witness": float(self.attained_value),
+            f"{prefix}_reason": self.reason or "",
+        }
+
+
+@dataclass(frozen=True)
+class CoverageInfimumResult:
+    """Fail-closed numerical certificate for a coverage infimum.
+
+    ``raw_value`` is the objective at a feasible greedy witness and is retained
+    only for diagnostics.  ``value`` is the lower endpoint of a validated
+    bisection bracket, rounded outward.  Solver failure therefore cannot turn a
+    primal witness (an upper bound on an infimum) into a coverage LCB.
+    """
+
+    value: float
+    raw_value: float
+    weights: Optional[np.ndarray]
+    certificate_valid: bool
+    status: str
+    tolerance: float
+    iterations: int
+    max_iterations: int
+    bracket_lower: float
+    bracket_upper: float
+    residual_lower: float
+    residual_upper: float
+    validation_tolerance: float
+    feasibility_residual: float
+    objective_residual: float
+    reason: Optional[str] = None
+
+    def __post_init__(self) -> None:
+        if self.weights is not None:
+            weights = np.array(self.weights, dtype=float, copy=True)
+            weights.setflags(write=False)
+            object.__setattr__(self, "weights", weights)
+
+    @property
+    def sense(self) -> str:
+        return "min"
+
+    @property
+    def bracket_width(self) -> float:
+        if not (
+            math.isfinite(self.bracket_lower)
+            and math.isfinite(self.bracket_upper)
+        ):
+            return math.inf
+        return max(0.0, float(self.bracket_upper - self.bracket_lower))
+
+    def diagnostics(self, prefix: str = "coverage_solver") -> dict[str, object]:
+        return {
+            f"{prefix}_status": self.status,
+            f"{prefix}_certificate_valid": bool(self.certificate_valid),
+            f"{prefix}_tolerance": float(self.tolerance),
+            f"{prefix}_iterations": int(self.iterations),
+            f"{prefix}_max_iterations": int(self.max_iterations),
+            f"{prefix}_bracket_lower": float(self.bracket_lower),
+            f"{prefix}_bracket_upper": float(self.bracket_upper),
+            f"{prefix}_bracket_width": float(self.bracket_width),
+            f"{prefix}_residual_lower": float(self.residual_lower),
+            f"{prefix}_residual_upper": float(self.residual_upper),
+            f"{prefix}_validation_tolerance": float(self.validation_tolerance),
+            f"{prefix}_feasibility_residual": float(self.feasibility_residual),
+            f"{prefix}_objective_residual": float(self.objective_residual),
+            f"{prefix}_raw_value": float(self.raw_value),
+            f"{prefix}_reason": self.reason or "",
+        }
 
 
 def _validate_acceptance_box(
@@ -364,20 +501,59 @@ def solve_robust_ratio(
     max_iterations = int(max_iterations)
     if max_iterations <= 0:
         raise ValueError("max_iterations must be a positive integer")
+    validation_tolerance = max(
+        tolerance,
+        128.0 * np.finfo(float).eps * max(1.0, float(mixture.dimension)),
+    )
 
-    denominator_minimum = mixture.minimize(alow)
-    min_denominator = max(0.0, float(denominator_minimum.value))
-    if min_denominator <= 0.0:
+    def failure(
+        status: str,
+        reason: str,
+        *,
+        min_denominator: float,
+        iterations: int = 0,
+        attained_value: float = math.nan,
+        weights: Optional[np.ndarray] = None,
+        acceptance: Optional[np.ndarray] = None,
+        low: float = math.nan,
+        high: float = math.nan,
+        residual_low: float = math.nan,
+        residual_high: float = math.nan,
+    ) -> RobustRatioResult:
         return RobustRatioResult(
             value=math.inf,
-            attained_value=math.nan,
+            attained_value=attained_value,
             feasible=False,
             min_denominator=min_denominator,
-            lambda_star=None,
-            acceptance_star=None,
-            iterations=0,
+            lambda_star=weights,
+            acceptance_star=acceptance,
+            iterations=iterations,
             tolerance=tolerance,
-            reason="vanishing_denominator",
+            max_iterations=max_iterations,
+            certificate_valid=False,
+            status=status,
+            bracket_lower=low,
+            bracket_upper=high,
+            residual_lower=residual_low,
+            residual_upper=residual_high,
+            validation_tolerance=validation_tolerance,
+            reason=reason,
+        )
+
+    try:
+        denominator_minimum = mixture.minimize(alow)
+        min_denominator = max(0.0, float(denominator_minimum.value))
+    except (ArithmeticError, RuntimeError) as exc:
+        return failure(
+            "numerical_failure",
+            f"minimum_denominator_error:{type(exc).__name__}:{exc}",
+            min_denominator=0.0,
+        )
+    if min_denominator <= 0.0:
+        return failure(
+            "infeasible_vanishing_denominator",
+            "vanishing_denominator",
+            min_denominator=min_denominator,
         )
 
     def maximize_residual(
@@ -385,19 +561,50 @@ def solve_robust_ratio(
     ) -> tuple[float, float, np.ndarray, np.ndarray]:
         centered = risk - trial
         acceptance = np.where(centered >= 0.0, ahigh, alow)
-        coefficients = acceptance * centered
+        coefficients = _safe_multiply(
+            acceptance, centered, context="risk_residual_coefficients"
+        )
         linear = mixture.maximize(coefficients)
         weights = linear.weights
         denominator = _dot(weights, acceptance)
-        numerator = _dot(weights * acceptance, risk)
+        if not math.isfinite(denominator) or denominator <= 0.0:
+            raise FloatingPointError("nonpositive residual-optimizer denominator")
+        weighted_acceptance = _safe_multiply(
+            weights, acceptance, context="risk_witness_weight_acceptance"
+        )
+        numerator = _dot(weighted_acceptance, risk)
         ratio = numerator / denominator
         residual = _dot(weights, coefficients)
+        if not all(math.isfinite(value) for value in (numerator, ratio, residual)):
+            raise FloatingPointError("nonfinite residual evaluation")
         return residual, ratio, weights, acceptance
 
     low = float(np.min(risk))
     high = float(np.max(risk))
-    initial_residual, best_ratio, best_weights, best_acceptance = maximize_residual(low)
-    del initial_residual
+    try:
+        residual_low, best_ratio, best_weights, best_acceptance = maximize_residual(low)
+        residual_high, _, _, _ = maximize_residual(high)
+    except ArithmeticError as exc:
+        return failure(
+            "numerical_failure",
+            f"endpoint_residual_error:{type(exc).__name__}",
+            min_denominator=min_denominator,
+            low=low,
+            high=high,
+        )
+    if residual_low < 0.0 or residual_high > 0.0:
+        return failure(
+            "invalid_bracket",
+            "endpoint_residual_sign_failure",
+            min_denominator=min_denominator,
+            attained_value=best_ratio,
+            weights=best_weights,
+            acceptance=best_acceptance,
+            low=low,
+            high=high,
+            residual_low=residual_low,
+            residual_high=residual_high,
+        )
 
     if high == low:
         return RobustRatioResult(
@@ -409,6 +616,14 @@ def solve_robust_ratio(
             acceptance_star=best_acceptance,
             iterations=0,
             tolerance=tolerance,
+            max_iterations=max_iterations,
+            certificate_valid=True,
+            status="exact_constant",
+            bracket_lower=low,
+            bracket_upper=high,
+            residual_lower=residual_low,
+            residual_upper=residual_high,
+            validation_tolerance=validation_tolerance,
         )
 
     iterations = 0
@@ -417,7 +632,22 @@ def solve_robust_ratio(
         if high - low <= tolerance * scale:
             break
         trial = low + (high - low) / 2.0
-        residual, ratio, weights, acceptance = maximize_residual(trial)
+        try:
+            residual, ratio, weights, acceptance = maximize_residual(trial)
+        except ArithmeticError as exc:
+            return failure(
+                "numerical_failure",
+                f"midpoint_residual_error:{type(exc).__name__}",
+                min_denominator=min_denominator,
+                iterations=iterations,
+                attained_value=best_ratio,
+                weights=best_weights,
+                acceptance=best_acceptance,
+                low=low,
+                high=high,
+                residual_low=residual_low,
+                residual_high=residual_high,
+            )
         iterations += 1
         if ratio > best_ratio:
             best_ratio = ratio
@@ -425,21 +655,74 @@ def solve_robust_ratio(
             best_acceptance = acceptance
         if residual > 0.0:
             low = trial
+            residual_low = residual
         else:
             high = trial
+            residual_high = residual
 
     scale = max(1.0, abs(low), abs(high))
     if high - low > tolerance * scale:
-        raise RuntimeError(
-            "robust ratio bisection did not converge within max_iterations"
+        return failure(
+            "nonconverged",
+            "maximum_iterations_exhausted",
+            min_denominator=min_denominator,
+            iterations=iterations,
+            attained_value=best_ratio,
+            weights=best_weights,
+            acceptance=best_acceptance,
+            low=low,
+            high=high,
+            residual_low=residual_low,
+            residual_high=residual_high,
         )
 
-    # The attained optimizer is also a valid lower bracket and guards against a
-    # final bracket that is one ulp below it through cancellation.
-    low = max(low, best_ratio)
-    high = max(high, low)
+    try:
+        check_low, _, _, _ = maximize_residual(low)
+        check_high, _, _, _ = maximize_residual(high)
+    except ArithmeticError as exc:
+        return failure(
+            "numerical_failure",
+            f"final_residual_error:{type(exc).__name__}",
+            min_denominator=min_denominator,
+            iterations=iterations,
+            attained_value=best_ratio,
+            weights=best_weights,
+            acceptance=best_acceptance,
+            low=low,
+            high=high,
+        )
+    if check_low < 0.0 or check_high > 0.0:
+        return failure(
+            "numerical_residual_failure",
+            "final_residual_sign_failure",
+            min_denominator=min_denominator,
+            iterations=iterations,
+            attained_value=best_ratio,
+            weights=best_weights,
+            acceptance=best_acceptance,
+            low=low,
+            high=high,
+            residual_low=check_low,
+            residual_high=check_high,
+        )
+
+    conservative_upper = min(1.0, math.nextafter(high, math.inf))
+    if not math.isfinite(best_ratio) or best_ratio > conservative_upper:
+        return failure(
+            "numerical_residual_failure",
+            "primal_witness_exceeds_upper_bracket",
+            min_denominator=min_denominator,
+            iterations=iterations,
+            attained_value=best_ratio,
+            weights=best_weights,
+            acceptance=best_acceptance,
+            low=low,
+            high=high,
+            residual_low=check_low,
+            residual_high=check_high,
+        )
     return RobustRatioResult(
-        value=high,
+        value=conservative_upper,
         attained_value=best_ratio,
         feasible=True,
         min_denominator=min_denominator,
@@ -447,6 +730,14 @@ def solve_robust_ratio(
         acceptance_star=best_acceptance,
         iterations=iterations,
         tolerance=tolerance,
+        max_iterations=max_iterations,
+        certificate_valid=True,
+        status="converged",
+        bracket_lower=low,
+        bracket_upper=high,
+        residual_lower=check_low,
+        residual_upper=check_high,
+        validation_tolerance=validation_tolerance,
     )
 
 
@@ -473,9 +764,21 @@ def robust_ratio_supremum(
 
 
 def solve_coverage_infimum(
-    acceptance_lower: Sequence[float], mixture: BoundedSimplex
-) -> LinearExtremum:
-    """Exactly minimize certified accepted coverage over a mixture set."""
+    acceptance_lower: Sequence[float],
+    mixture: BoundedSimplex,
+    *,
+    tolerance: float = _DEFAULT_TOLERANCE,
+    max_iterations: int = 256,
+) -> CoverageInfimumResult:
+    """Return a validated bisection lower endpoint for the coverage LCB.
+
+    The deterministic greedy minimum supplies a feasible primal witness only.
+    A monotone residual ``min_lambda <lambda, L - t>`` brackets the true linear
+    infimum, and the returned certificate uses the bracket's lower endpoint --
+    never the raw primal objective.  Any nonconvergence, invalid sign bracket,
+    non-finite arithmetic, or witness/feasibility failure returns the fail-closed
+    LCB ``0``.
+    """
     if not isinstance(mixture, BoundedSimplex):
         raise TypeError("mixture must be a BoundedSimplex")
     lower = _readonly_vector(acceptance_lower, "acceptance_lower")
@@ -483,18 +786,298 @@ def solve_coverage_infimum(
         raise ValueError("acceptance_lower must match the mixture dimension")
     if np.any(lower < 0.0) or np.any(lower > 1.0):
         raise ValueError("acceptance_lower must lie in [0, 1]")
-    return mixture.minimize(lower)
+    tolerance = float(tolerance)
+    if not math.isfinite(tolerance) or tolerance <= 0.0:
+        raise ValueError("tolerance must be a positive finite number")
+    if isinstance(max_iterations, bool) or int(max_iterations) != max_iterations:
+        raise ValueError("max_iterations must be a positive integer")
+    max_iterations = int(max_iterations)
+    if max_iterations <= 0:
+        raise ValueError("max_iterations must be a positive integer")
+    validation_limit = max(
+        tolerance,
+        128.0 * np.finfo(float).eps * max(1.0, float(mixture.dimension)),
+    )
+
+    def failure(
+        status: str,
+        reason: str,
+        *,
+        raw_value: float = math.nan,
+        weights: Optional[np.ndarray] = None,
+        iterations: int = 0,
+        low: float = math.nan,
+        high: float = math.nan,
+        residual_low: float = math.nan,
+        residual_high: float = math.nan,
+        feasibility_residual: float = math.inf,
+        objective_residual: float = math.inf,
+    ) -> CoverageInfimumResult:
+        return CoverageInfimumResult(
+            value=0.0,
+            raw_value=raw_value,
+            weights=weights,
+            certificate_valid=False,
+            status=status,
+            tolerance=tolerance,
+            iterations=iterations,
+            max_iterations=max_iterations,
+            bracket_lower=low,
+            bracket_upper=high,
+            residual_lower=residual_low,
+            residual_upper=residual_high,
+            validation_tolerance=validation_limit,
+            feasibility_residual=feasibility_residual,
+            objective_residual=objective_residual,
+            reason=reason,
+        )
+
+    try:
+        linear = mixture.minimize(lower)
+        weights = np.asarray(linear.weights, dtype=float)
+        raw_value = float(linear.value)
+        recomputed = _dot(weights, lower)
+        simplex_residual = abs(_fsum(weights) - 1.0)
+        lower_violation = float(np.max(np.maximum(mixture.lower - weights, 0.0)))
+        upper_violation = float(np.max(np.maximum(weights - mixture.upper, 0.0)))
+        feasibility_residual = max(
+            simplex_residual, lower_violation, upper_violation
+        )
+        objective_residual = abs(raw_value - recomputed)
+    except (ArithmeticError, RuntimeError) as exc:
+        return failure(
+            "numerical_failure",
+            f"greedy_validation_error:{type(exc).__name__}",
+        )
+
+    if not all(
+        math.isfinite(value)
+        for value in (
+            raw_value,
+            recomputed,
+            feasibility_residual,
+            objective_residual,
+        )
+    ):
+        return failure(
+            "numerical_failure",
+            "nonfinite_validation_quantity",
+            raw_value=raw_value,
+            weights=weights,
+            feasibility_residual=feasibility_residual,
+            objective_residual=objective_residual,
+        )
+    if feasibility_residual > validation_limit or objective_residual > validation_limit:
+        return failure(
+            "numerical_residual_failure",
+            "greedy_solution_validation_failed",
+            raw_value=raw_value,
+            weights=weights,
+            feasibility_residual=feasibility_residual,
+            objective_residual=objective_residual,
+        )
+
+    def residual(trial: float) -> float:
+        # Because every feasible mixture sums to one, this is exactly
+        # inf_lambda <lambda, L> - trial in real arithmetic.  Re-solving and
+        # re-validating each subproblem prevents an unchecked cached primal
+        # objective from being promoted to a certificate.
+        return float(mixture.minimize(lower - trial).value)
+
+    low = float(np.min(lower))
+    high = float(np.max(lower))
+    try:
+        residual_low = residual(low)
+        residual_high = residual(high)
+    except (ArithmeticError, RuntimeError) as exc:
+        return failure(
+            "numerical_failure",
+            f"endpoint_residual_error:{type(exc).__name__}",
+            raw_value=raw_value,
+            weights=weights,
+            low=low,
+            high=high,
+            feasibility_residual=feasibility_residual,
+            objective_residual=objective_residual,
+        )
+    if not (math.isfinite(residual_low) and math.isfinite(residual_high)):
+        return failure(
+            "numerical_failure",
+            "nonfinite_endpoint_residual",
+            raw_value=raw_value,
+            weights=weights,
+            low=low,
+            high=high,
+            residual_low=residual_low,
+            residual_high=residual_high,
+            feasibility_residual=feasibility_residual,
+            objective_residual=objective_residual,
+        )
+    if residual_low < 0.0 or residual_high > 0.0:
+        return failure(
+            "invalid_bracket",
+            "endpoint_residual_sign_failure",
+            raw_value=raw_value,
+            weights=weights,
+            low=low,
+            high=high,
+            residual_low=residual_low,
+            residual_high=residual_high,
+            feasibility_residual=feasibility_residual,
+            objective_residual=objective_residual,
+        )
+
+    iterations = 0
+    while iterations < max_iterations:
+        scale = max(1.0, abs(low), abs(high))
+        if high - low <= tolerance * scale:
+            break
+        trial = low + (high - low) / 2.0
+        try:
+            trial_residual = residual(trial)
+        except (ArithmeticError, RuntimeError) as exc:
+            return failure(
+                "numerical_failure",
+                f"midpoint_residual_error:{type(exc).__name__}",
+                raw_value=raw_value,
+                weights=weights,
+                iterations=iterations,
+                low=low,
+                high=high,
+                residual_low=residual_low,
+                residual_high=residual_high,
+                feasibility_residual=feasibility_residual,
+                objective_residual=objective_residual,
+            )
+        if not math.isfinite(trial_residual):
+            return failure(
+                "numerical_failure",
+                "nonfinite_midpoint_residual",
+                raw_value=raw_value,
+                weights=weights,
+                iterations=iterations,
+                low=low,
+                high=high,
+                residual_low=residual_low,
+                residual_high=residual_high,
+                feasibility_residual=feasibility_residual,
+                objective_residual=objective_residual,
+            )
+        iterations += 1
+        if trial_residual >= 0.0:
+            low, residual_low = trial, trial_residual
+        else:
+            high, residual_high = trial, trial_residual
+
+    scale = max(1.0, abs(low), abs(high))
+    if high - low > tolerance * scale:
+        return failure(
+            "nonconverged",
+            "maximum_iterations_exhausted",
+            raw_value=raw_value,
+            weights=weights,
+            iterations=iterations,
+            low=low,
+            high=high,
+            residual_low=residual_low,
+            residual_high=residual_high,
+            feasibility_residual=feasibility_residual,
+            objective_residual=objective_residual,
+        )
+
+    try:
+        check_low = residual(low)
+        check_high = residual(high)
+    except (ArithmeticError, RuntimeError) as exc:
+        return failure(
+            "numerical_failure",
+            f"final_residual_error:{type(exc).__name__}",
+            raw_value=raw_value,
+            weights=weights,
+            iterations=iterations,
+            low=low,
+            high=high,
+            feasibility_residual=feasibility_residual,
+            objective_residual=objective_residual,
+        )
+    if not (math.isfinite(check_low) and math.isfinite(check_high)):
+        return failure(
+            "numerical_failure",
+            "nonfinite_final_residual",
+            raw_value=raw_value,
+            weights=weights,
+            iterations=iterations,
+            low=low,
+            high=high,
+            residual_low=check_low,
+            residual_high=check_high,
+            feasibility_residual=feasibility_residual,
+            objective_residual=objective_residual,
+        )
+    if check_low < 0.0 or check_high > 0.0:
+        return failure(
+            "numerical_residual_failure",
+            "final_residual_sign_failure",
+            raw_value=raw_value,
+            weights=weights,
+            iterations=iterations,
+            low=low,
+            high=high,
+            residual_low=check_low,
+            residual_high=check_high,
+            feasibility_residual=feasibility_residual,
+            objective_residual=objective_residual,
+        )
+
+    conservative_value = max(0.0, math.nextafter(low, -math.inf))
+    if not math.isfinite(raw_value) or conservative_value > raw_value:
+        return failure(
+            "numerical_residual_failure",
+            "lower_bracket_exceeds_primal_witness",
+            raw_value=raw_value,
+            weights=weights,
+            iterations=iterations,
+            low=low,
+            high=high,
+            residual_low=check_low,
+            residual_high=check_high,
+            feasibility_residual=feasibility_residual,
+            objective_residual=objective_residual,
+        )
+    return CoverageInfimumResult(
+        value=conservative_value,
+        raw_value=raw_value,
+        weights=weights,
+        certificate_valid=True,
+        status=("exact_constant" if high == low else "converged"),
+        tolerance=tolerance,
+        iterations=iterations,
+        max_iterations=max_iterations,
+        bracket_lower=low,
+        bracket_upper=high,
+        residual_lower=check_low,
+        residual_upper=check_high,
+        validation_tolerance=validation_limit,
+        feasibility_residual=feasibility_residual,
+        objective_residual=objective_residual,
+    )
 
 
 def coverage_infimum(
     acceptance_lower: Sequence[float],
     lambda_lower: Sequence[float],
     lambda_upper: Sequence[float],
+    *,
+    tolerance: float = _DEFAULT_TOLERANCE,
+    max_iterations: int = 256,
 ) -> float:
-    """Return ``inf_lambda sum(lambda[j] * acceptance_lower[j])`` exactly."""
+    """Return a conservative LCB for the bounded-simplex coverage infimum."""
     return float(
         solve_coverage_infimum(
-            acceptance_lower, BoundedSimplex(lambda_lower, lambda_upper)
+            acceptance_lower,
+            BoundedSimplex(lambda_lower, lambda_upper),
+            tolerance=tolerance,
+            max_iterations=max_iterations,
         ).value
     )
 
@@ -621,6 +1204,7 @@ def multinomial_mixture_confidence_box(
 
 __all__ = [
     "BoundedSimplex",
+    "CoverageInfimumResult",
     "LinearExtremum",
     "RobustRatioResult",
     "TrafficMixtureConfidenceBox",
