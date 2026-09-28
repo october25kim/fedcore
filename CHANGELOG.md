@@ -1,5 +1,18 @@
 # Changelog
 
+## v0.6.4 - IJAR v34 theory-and-evidence binding
+
+- Added `paper/ijar-v34/` with the exact final v34 manuscript and rendered-PDF
+  SHA-256 values.
+- Added the fixed-pooling reducibility contract and made the valid same-target
+  H/S/B comparison the primary empirical attribution.
+- Bound seven Figures, seven numbered Tables, two Abstract evidence statements,
+  and eight retained quantitative prose claims to 24 ledger entries.
+- Restricted pooled calculations to non-certifying mechanism diagnostics when
+  the audit sampling law does not match the protected deployment target.
+- Added a fail-closed v34 verifier while preserving v33 and earlier releases as
+  immutable historical bindings.
+
 ## v0.6.3 - IJAR v33 evidence-contract binding
 
 - Added `paper/ijar-v33/` with the exact v33 manuscript and rendered-PDF

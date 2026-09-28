@@ -1,0 +1,55 @@
+{
+  "status": "PASS",
+  "new_rows": 2000,
+  "retained_rows": 2000,
+  "unique_upstream_source_ids": 2000,
+  "exact_reference_overlaps": 0,
+  "within_new_pixel_duplicates": 0,
+  "reference_rows": 60000,
+  "reference_files": [
+    {
+      "file": "/data/workspace/sanghoon/fedcore2/data/cifar-10-batches-py/data_batch_1",
+      "sha256": "54636561a3ce25bd3e19253c6b0d8538147b0ae398331ac4a2d86c6d987368cd",
+      "rows": 10000
+    },
+    {
+      "file": "/data/workspace/sanghoon/fedcore2/data/cifar-10-batches-py/data_batch_2",
+      "sha256": "766b2cef9fbc745cf056b3152224f7cf77163b330ea9a15f9392beb8b89bc5a8",
+      "rows": 10000
+    },
+    {
+      "file": "/data/workspace/sanghoon/fedcore2/data/cifar-10-batches-py/data_batch_3",
+      "sha256": "0f00d98ebfb30b3ec0ad19f9756dc2630b89003e10525f5e148445e82aa6a1f9",
+      "rows": 10000
+    },
+    {
+      "file": "/data/workspace/sanghoon/fedcore2/data/cifar-10-batches-py/data_batch_4",
+      "sha256": "3f7bb240661948b8f4d53e36ec720d8306f5668bd0071dcb4e6c947f78e9682b",
+      "rows": 10000
+    },
+    {
+      "file": "/data/workspace/sanghoon/fedcore2/data/cifar-10-batches-py/data_batch_5",
+      "sha256": "d91802434d8376bbaeeadf58a737e3a1b12ac839077e931237e0dcd43adcb154",
+      "rows": 10000
+    },
+    {
+      "file": "/data/workspace/sanghoon/fedcore2/data/cifar-10-batches-py/test_batch",
+      "sha256": "f53d8d457504f7cff4ea9e021afcf0e0ad8e24a91f3fc42091b8adef61157831",
+      "rows": 10000
+    }
+  ],
+  "new_images_sha256": "2997188e5816f5bd545dc77771b6227828c28146049fcecf3fa10775474cacc6",
+  "upstream_ids_sha256": "fbeb5a03e68a787faad8cd6e9b06aab37e7cb45ce07c133bb7a035e41034d3e1",
+  "source_ledger_sha256": "d51e759cea1c37a0c87fb7add04244d4df8bdafed52d7c97c2e073394cde0eae",
+  "public_frame_sha256": "6cca3a0cf40238cb8404335b4265a0f0d78bb24e052d02aaae223d7f4952cb55",
+  "client_sizes": [
+    400,
+    400,
+    400,
+    400,
+    400
+  ],
+  "fresh_label_array_loaded": false,
+  "model_outputs_loaded": false,
+  "scope": "Unique upstream Tiny Images IDs and exact decoded-pixel hashes. This check alone does not rule out nonidentical near-duplicates; upstream dataset construction also performed near-duplicate filtering."
+}

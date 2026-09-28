@@ -1,0 +1,28 @@
+{
+  "release": "FedCORE-IJAR-v34-public-release",
+  "date": "2026-09-29",
+  "status": "VERSIONED_RELEASE",
+  "manuscript_sha256": "3fe147f9670c1958da928cd6a45d8b03506098d83f613160c30f57b2e3964ded",
+  "rendered_pdf_sha256": "745552f6927743a100b8ed66e8e28c79e8da276b431a5cac65ab1efe7d1b0ba5",
+  "public_repository": "https://github.com/october25kim/fedcore",
+  "baseline_commit": "528e83bc360834427f0e77d16f1b42feefa55d15",
+  "release_tag": "v0.6.4",
+  "release_asset": "FedCORE_IJAR_v34_evidence_release.zip",
+  "release_directory": "paper/ijar-v34",
+  "scope": "v34 manuscript object to governing theory and aggregate/count evidence alignment",
+  "ledger_entries": 24,
+  "ledger_composition": {
+    "figures": 7,
+    "tables": 7,
+    "abstract_claims": 2,
+    "prose_claims": 8
+  },
+  "historical_release": "paper/ijar-v33 remains available and is not the v34 binding",
+  "scientific_delta": "No new empirical observations; v34 adds the fixed-pooling reducibility result, valid same-target H/S/B attribution, and mechanism-only pooled framing.",
+  "verification": {
+    "release_integrity": "Run python paper/ijar-v34/verify_release.py from the tagged checkout",
+    "unit": "Run make unit from the tagged checkout",
+    "wr_v3_numerical_release": "Run python paper/wr-v3/scripts/verify_release.py from the tagged checkout",
+    "verification_environment": "Public tagged checkout"
+  }
+}
