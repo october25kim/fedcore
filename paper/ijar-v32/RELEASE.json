@@ -1,0 +1,20 @@
+{
+  "release": "FedCORE-IJAR-v32-public-release",
+  "date": "2026-09-28",
+  "status": "VERSIONED_RELEASE",
+  "manuscript_sha256": "d8087bd4b3d422d52a9d8475c374dfc973be8bd053ce4bf52a2bbf87cd9824c8",
+  "rendered_pdf_sha256": "11628ff72104e44f894d4cdb412ed93eb673628b40f861fbf641ba00de23aad5",
+  "public_repository": "https://github.com/october25kim/fedcore",
+  "baseline_commit": "5e4606b73377a104fa56478a470ced1ee285d3ec",
+  "release_tag": "v0.6.2",
+  "release_commit_resolution": "Resolve the annotated tag with: git rev-list -n 1 v0.6.2",
+  "scope": "v32 manuscript object to governing aggregate/count artifact alignment",
+  "ledger_entries": 19,
+  "historical_release": "paper/ijar-v31 remains available and is not the v32 binding",
+  "verification": {
+    "release_integrity": "Run paper/ijar-v32/verify_release.py from the tagged checkout",
+    "unit": "Run make unit from the tagged checkout",
+    "wr_v3_numerical_release": "Run python paper/wr-v3/scripts/verify_release.py from the tagged checkout",
+    "verification_environment": "Public tagged checkout"
+  }
+}

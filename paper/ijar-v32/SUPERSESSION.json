@@ -1,0 +1,21 @@
+{
+  "status": "SUPERSEDED_NOT_GOVERNING",
+  "historical_artifact": "../v18/artifacts/pathmnist/Figure7_PathMNIST_Data.csv",
+  "historical_sha256": "e00fc0367c58c966bc37250438866ba6ffc8a7bb33f48f2def5daa90b1cae175",
+  "historical_alpha_0_20": {
+    "d_0_5": "16/25",
+    "d_5_0": "17/25",
+    "total": "33/50"
+  },
+  "reason": "The historical file predates theorem-aligned reconstruction and conflicts with the v32 governing result.",
+  "v32_alpha_0_20": {
+    "d_0_5": "14/25",
+    "d_5_0": "12/25",
+    "total": "26/50"
+  },
+  "governing_artifacts": [
+    "artifacts/figures/pathmnist_split_primary.csv",
+    "artifacts/figures/pathmnist_alpha_frontier.csv",
+    "artifacts/tables/full_sweep_summary.csv"
+  ]
+}

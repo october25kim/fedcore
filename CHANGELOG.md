@@ -1,5 +1,15 @@
 # Changelog
 
+## v0.6.2 - IJAR v32 manuscript binding
+
+- Added `paper/ijar-v32/` with the exact v32 manuscript and rendered-PDF
+  SHA-256 values.
+- Rebuilt the claim-to-artifact ledger for seven Figures, seven numbered
+  Tables, three Abstract evidence statements, and two retained quantitative
+  prose claims.
+- Added a fail-closed v32 verifier and preserved all earlier release packages
+  as historical bindings.
+
 ## Unreleased - IJAR v28 alignment
 
 ### Added
