@@ -1,0 +1,30 @@
+{
+  "sha": "d9982abb0bfc4846b8d13a11e66b887d946205d0",
+  "html_url": "https://github.com/modestyachts/CIFAR-10.1/commit/d9982abb0bfc4846b8d13a11e66b887d946205d0",
+  "commit": {
+    "author": {
+      "name": "Becca Roelofs",
+      "email": "rebecca.roelofs@gmail.com",
+      "date": "2020-04-16T01:00:56Z"
+    },
+    "committer": {
+      "name": "Becca Roelofs",
+      "email": "rebecca.roelofs@gmail.com",
+      "date": "2020-04-16T01:00:56Z"
+    },
+    "message": "Update to numpy format version 2.0",
+    "tree": {
+      "sha": "231b121a02e248316f7d97bd228c10579f8f7026",
+      "url": "https://api.github.com/repos/modestyachts/CIFAR-10.1/git/trees/231b121a02e248316f7d97bd228c10579f8f7026"
+    },
+    "url": "https://api.github.com/repos/modestyachts/CIFAR-10.1/git/commits/d9982abb0bfc4846b8d13a11e66b887d946205d0",
+    "comment_count": 0,
+    "verification": {
+      "verified": false,
+      "reason": "unsigned",
+      "signature": null,
+      "payload": null,
+      "verified_at": null
+    }
+  }
+}

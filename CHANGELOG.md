@@ -1,5 +1,19 @@
 # Changelog
 
+## v0.6.3 - IJAR v33 evidence-contract binding
+
+- Added `paper/ijar-v33/` with the exact v33 manuscript and rendered-PDF
+  SHA-256 values.
+- Corrected the validity denominator to 443 proposal-feasible conditions while
+  retaining seven reject-all placeholders in the 450-condition utility roster.
+- Expanded the claim-to-artifact ledger to cover seven Figures, seven numbered
+  Tables, three Abstract evidence statements, and seven retained quantitative
+  prose claims.
+- Added the AUROC diagnostic, hierarchical-bootstrap records, audit-planning
+  frontier, matched Office-Home comparator audit, and CIFAR-10.1 source audit.
+- Added a fail-closed v33 verifier while preserving v32 and earlier releases as
+  immutable historical bindings.
+
 ## v0.6.2 - IJAR v32 manuscript binding
 
 - Added `paper/ijar-v32/` with the exact v32 manuscript and rendered-PDF

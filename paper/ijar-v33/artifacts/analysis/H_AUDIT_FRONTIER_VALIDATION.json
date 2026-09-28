@@ -1,0 +1,32 @@
+{
+  "M": 12,
+  "alpha": 0.2,
+  "analysis": "H rate-preserving deterministic plug-in frontier",
+  "analytic_kl_cap_checks_passed": 222,
+  "counterfactual": "A_b=bA, K_b=bK, n_b=bn for integer b>=1",
+  "delta_c": 0.05,
+  "delta_r": 0.05,
+  "finite_frontier_cells": 222,
+  "minimum_frontier_checks_passed": 222,
+  "new_sampling_performed": false,
+  "output_files": {
+    "h_evidence_margin_audit_frontier_buckets.csv": "2560005b556903f4e04195aa9d8493ad73456663709e70f06e69865ab8453eac",
+    "h_evidence_margin_audit_frontier_by_dataset.csv": "56ad7822683d7b6d573d798cf502919392f96c13c6c82eb67c452edc2dbf8935",
+    "h_evidence_margin_audit_frontier_cumulative.csv": "f4c9222da13c97dba9fa2cd360eecc3c9247aba3729ed91e879da2ff2061f87b",
+    "h_evidence_margin_audit_frontier_per_cell.csv": "3c641d271b4861fb205bb2006428e47d8792a488f6fa7fb224b8f3ef66133d1c",
+    "h_evidence_margin_audit_frontier_report.md": "b71bff3e0340d0fa1207aa86daec1fc5e4e4777da58537d8e89cc4db6bb88047"
+  },
+  "prospective_sample_size_identified": false,
+  "reconstructed_h_decision_mismatches": 0,
+  "source_files": {
+    "artifacts/primary/VALIDATION.json": "6cc7b3f9f4fb4389fad954ec3cb4f0f65ba0931c2667134aae03948d888305f0",
+    "artifacts/primary/primary_candidate_counts.csv.gz": "898ddf057a3a0ed6e00323cc57e97c7bb68dbc0a3de204fac7c6f9760a83b9b4",
+    "artifacts/primary/primary_per_cell_procedures.csv": "e5e8c370222b2c52fedb25e00a562f65ea2db384809ce77006e6474028f1ea66",
+    "governing/family_manifest.csv.gz": "8771ded5334910dec3be688861df161a80cf19dfd4868053f661ec26fa2a5470"
+  },
+  "status": "PASS",
+  "structural_infinity_cells": 1,
+  "target_cells": 223,
+  "test_or_evaluation_fold_accessed": false,
+  "unique_label_requirement_identified": false
+}

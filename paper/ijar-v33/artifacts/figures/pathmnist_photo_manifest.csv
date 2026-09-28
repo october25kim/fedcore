@@ -1,0 +1,10 @@
+display_order,class_index,class_name,sampling_rule
+0,0,adipose,first official test occurrence of each class; visual context only
+1,1,background,first official test occurrence of each class; visual context only
+2,2,debris,first official test occurrence of each class; visual context only
+3,3,lymphocytes,first official test occurrence of each class; visual context only
+4,4,mucus,first official test occurrence of each class; visual context only
+5,5,smooth muscle,first official test occurrence of each class; visual context only
+6,6,normal mucosa,first official test occurrence of each class; visual context only
+7,7,cancer stroma,first official test occurrence of each class; visual context only
+8,8,tumor epithelium,first official test occurrence of each class; visual context only

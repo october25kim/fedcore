@@ -1,0 +1,6 @@
+method_family,primary_protected_object,client_mixture_uncertainty,client_dependent_acceptance,selection_contract,evidence_scope
+Federated conformal prediction,Prediction-set coverage,Method-specific distribution contract,Not the stated target,Method-specific,Literature synthesis in manuscript Table 1
+Learn then Test and selective-risk control,Loss or risk of frozen candidates,Not explicit in the cited formulation,Possible only if encoded in the loss,Frozen finite family,Literature synthesis in manuscript Table 1
+Worst-group or distributionally robust learning,Worst-case loss or trained predictor,Explicit ambiguity or groups,Usually not an accepted-error ratio,Training or fixed decision rule,Literature synthesis in manuscript Table 1
+Adaptive risk auditing,Risk-control evidence,Depends on the formulation,Depends on the target,Adaptive under its own audit contract,Literature synthesis in manuscript Table 1
+FedCORE,Accepted-error ratio,Credal client mixture,Explicit reweighting with a positive denominator,Proposal-frozen family with finite-sample decision,FedCORE manuscript formulation

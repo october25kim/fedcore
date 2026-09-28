@@ -1,0 +1,16 @@
+{
+  "old_ids": [
+    1,
+    2
+  ],
+  "new_id": 1,
+  "question": "How do frozen evidence and a predeclared protection set determine a valid deployment decision?",
+  "central_claim": "The same count evidence supports different established procedures under distinct protection contracts.",
+  "source": "v20 Sections 3 and 4; conceptual, no empirical data",
+  "scope": "Arrows are logical dependencies, not causal or performance claims. Independent audit and branch-specific valid allocations remain required.",
+  "files": {
+    "deployment_contract_overview.pdf": "6c2cb0e6d69edfc26dc9827e25cfd8974d96285a2f3153f2c263816e7bfdd4cf",
+    "deployment_contract_overview.png": "7a33a958c0c2c40e7e12bb029796b5f76d737990ca3d8920957b6c0fffc43b0e",
+    "deployment_contract_overview.svg": "0157e22e4c88bcb198c8f62beb6019b421326d14f40e03aae224c71273907814"
+  }
+}

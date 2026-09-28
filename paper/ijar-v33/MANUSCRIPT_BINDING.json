@@ -1,0 +1,11 @@
+{
+  "manuscript_version": "v33",
+  "manuscript_filename": "01_FedCORE_IJAR_Manuscript_v33.docx",
+  "manuscript_sha256": "2f6afdb7b22a78ed0ba38a9920789c84482cd140a272c7ea0ce47402a5094617",
+  "rendered_pdf_sha256": "345a869ddf8e99992c347dfa7c733593961bc8124601d2d30bf60b29857654af",
+  "release_tag": "v0.6.3",
+  "baseline_commit": "18f8121fdc3c2ecdb112baf10babc4dcbd4fda92",
+  "scope": "count-to-decision, aggregate, and evidence-contract claim-to-artifact reproduction for 24 v33 manuscript elements",
+  "manuscript_included": false,
+  "commit_binding": "The annotated Git tag records the immutable Git object; no self-referential commit hash is stored in this tracked JSON."
+}
