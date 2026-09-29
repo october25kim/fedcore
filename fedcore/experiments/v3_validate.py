@@ -215,27 +215,45 @@ def validate_mount_scope(
 
     def normalize(row: Mapping[str, Any]) -> tuple[str, str, str, bool]:
         mount_type = str(row["type"])
+        if mount_type not in ("bind", "tmpfs"):
+            raise ContractError(f"INVALID_MOUNT_SCOPE unsupported mount type {mount_type!r}")
         source = "" if mount_type == "tmpfs" else str(Path(str(row["source"])).resolve())
         destination = str(Path(str(row["destination"])).resolve())
-        read_only = bool(row["read_only"])
+        read_only = _bool(row["read_only"])
         return mount_type, source, destination, read_only
 
-    observed_set = {normalize(row) for row in observed}
-    expected_set = {normalize(row) for row in expected}
+    observed_rows = [normalize(row) for row in observed]
+    expected_rows = [normalize(row) for row in expected]
+    if len(observed_rows) != len(set(observed_rows)):
+        raise ContractError("INVALID_MOUNT_SCOPE duplicate observed mount")
+    if len(expected_rows) != len(set(expected_rows)):
+        raise ContractError("INVALID_MOUNT_SCOPE duplicate expected mount")
+    observed_destinations = [row[2] for row in observed_rows]
+    expected_destinations = [row[2] for row in expected_rows]
+    if len(observed_destinations) != len(set(observed_destinations)):
+        raise ContractError("INVALID_MOUNT_SCOPE duplicate observed destination")
+    if len(expected_destinations) != len(set(expected_destinations)):
+        raise ContractError("INVALID_MOUNT_SCOPE duplicate expected destination")
+    observed_sources = [row[1] for row in observed_rows if row[0] != "tmpfs"]
+    expected_sources = [row[1] for row in expected_rows if row[0] != "tmpfs"]
+    if len(observed_sources) != len(set(observed_sources)):
+        raise ContractError("INVALID_MOUNT_SCOPE duplicate observed source")
+    if len(expected_sources) != len(set(expected_sources)):
+        raise ContractError("INVALID_MOUNT_SCOPE duplicate expected source")
+    observed_set = set(observed_rows)
+    expected_set = set(expected_rows)
     if observed_set != expected_set:
         extra = sorted(observed_set - expected_set)
         missing = sorted(expected_set - observed_set)
         raise ContractError(f"INVALID_MOUNT_SCOPE extra={extra!r} missing={missing!r}")
     forbidden = [Path(path).resolve() for path in forbidden_roots]
-    exact_sources = {Path(source).resolve() for kind, source, _, _ in expected_set if kind != "tmpfs"}
     for kind, source, _, _ in observed_set:
         if kind == "tmpfs":
             continue
         path = Path(source).resolve()
         for root in forbidden:
             if path == root or root in path.parents:
-                if path not in exact_sources:
-                    raise ContractError(f"INVALID_MOUNT_SCOPE forbidden source {path}")
+                raise ContractError(f"INVALID_MOUNT_SCOPE forbidden source {path}")
 
 
 def require_scientific_execution_authorization(execution_gate: Path) -> dict[str, Any]:
