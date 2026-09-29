@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "protocol_id": "FEDCORE-IJAR-V34-PACS-FRESH-SEED-REPLICATION-HSB-v3",
+  "superseded_protocol_id": "FEDCORE-IJAR-V34-PACS-PROSPECTIVE-HSB-v2",
+  "superseded_release": "https://github.com/october25kim/fedcore/releases/tag/pacs-prospective-hsb-v2",
+  "superseded_status": "INVALID_PRESEAL_PROVENANCE / DO NOT EXECUTE",
+  "tag_and_files_preserved": true,
+  "tag_object": "ff3a5ff349bbc0394d1fa5d494b2491cf5f5255e",
+  "tagged_commit": "93418ed352e4212fef88e201a7d1e1d61972ff16",
+  "protocol_sha256": "7f5d976cf2bd0dfa0bd8ee51b8b6f833a5e611b33de2c8fd94e95d81b3444c68",
+  "canonical_bundle_root_sha256": "36ff18ddae661715eae22c5b92f5ecb1888e301e524d75ade4bedf38d1f7a3e2",
+  "seal_sha256": "5f5f92bba4267a843d145448514cd312d788a964cb8ea86c3e64e55ff72250e5",
+  "training_authorized_by_v2": false,
+  "submission_authorized_by_v2": false
+}

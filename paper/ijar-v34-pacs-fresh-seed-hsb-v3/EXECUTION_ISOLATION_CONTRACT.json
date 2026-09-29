@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "protocol_id": "FEDCORE-IJAR-V34-PACS-FRESH-SEED-REPLICATION-HSB-v3",
+  "execution_host_alias": "ubuntu-4070",
+  "observed_hostname": "ubuntu",
+  "execution_root": "/home/sanghoon/Desktop/Workspace/Fedcore_HSB_v3_exec",
+  "directory_layout": [
+    "repo",
+    "protocol",
+    "inputs",
+    "synthetic",
+    "runs/synthetic",
+    "runs/capacity",
+    "runs/scientific",
+    "seals",
+    "logs"
+  ],
+  "legacy_workspace": "/home/sanghoon/Desktop/Workspace/Fedcore",
+  "legacy_workspace_must_not_be_mounted": true,
+  "forbidden_paths": [
+    "/home/sanghoon/Desktop/Workspace/Fedcore/outputs",
+    "/home/sanghoon/Desktop/Workspace/Fedcore/work",
+    "/home/sanghoon/Desktop/Workspace/Fedcore/outputs/fedcore_v1_run",
+    "/home/sanghoon/Desktop/Workspace/Fedcore/outputs/fedcore_v1_full_run",
+    "/home/sanghoon/Desktop/Workspace/Fedcore/outputs/fedcore_s1v2_run_20260925"
+  ],
+  "runtime_conditions": {
+    "network": "none",
+    "root_filesystem": "read-only",
+    "temporary_filesystem": "tmpfs /tmp",
+    "inputs": "file-level read-only mounts only",
+    "scientific_output": "one dedicated read-write run directory",
+    "unexpected_mount_status": "INVALID_MOUNT_SCOPE"
+  },
+  "scientific_run_directory_must_be_empty_at_execution_seal": true,
+  "status": "NOT_YET_IMPLEMENTED"
+}

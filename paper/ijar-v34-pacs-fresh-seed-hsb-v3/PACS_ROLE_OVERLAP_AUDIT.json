@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "protocol_id": "FEDCORE-IJAR-V34-PACS-FRESH-SEED-REPLICATION-HSB-v3",
+  "decoded_image_identity": "SHA-256 of uint32 big-endian width and height followed by EXIF-transposed RGB bytes",
+  "pacs_images": 9991,
+  "pacs_unique_identities": 9991,
+  "within_pacs_duplicate_rows_removed": 0,
+  "conflicting_class_labels": 0,
+  "train_proposal_audit_identity_intersection": 0,
+  "role_consistency_across_class_splits": true,
+  "available_prior_sources": {
+    "OfficeHome": {
+      "files_scanned": 15588,
+      "exact_overlap": 0
+    },
+    "CIFAR10": {
+      "records_dimension_checked": 60000,
+      "exact_overlap_excluded_by_dimensions": true
+    },
+    "CIFAR100": {
+      "records_dimension_checked": 60000,
+      "exact_overlap_excluded_by_dimensions": true
+    },
+    "PathMNIST": {
+      "records_dimension_checked": 107180,
+      "exact_overlap_excluded_by_dimensions": true
+    }
+  },
+  "available_source_check_status": "PASS_AVAILABLE_RAW_ROOTS",
+  "archived_prior_audit_membership_binding": "SAME_HASHED_PACS_FRAME_AS_V1; not source-disjoint from the prior PACS study",
+  "execution_requirement": "Do not claim PACS source-disjointness from V1. Retain only the verified separation from the listed non-PACS raw roots and the within-PACS role disjointness.",
+  "near_duplicate_or_pretraining_overlap_claimed": false
+}

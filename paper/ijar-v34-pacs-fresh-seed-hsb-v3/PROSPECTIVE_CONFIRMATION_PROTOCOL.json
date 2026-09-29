@@ -1,0 +1,548 @@
+{
+  "schema_version": 2,
+  "protocol_id": "FEDCORE-IJAR-V34-PACS-FRESH-SEED-REPLICATION-HSB-v3",
+  "sealed_at_utc": "2026-09-29T08:15:00Z",
+  "state": "SEALED_CORRECTIVE_SCIENTIFIC_PROTOCOL_NOT_EXECUTED",
+  "gpu_training_started": false,
+  "pacs_training_started": false,
+  "pacs_inference_started": false,
+  "submission_authorized": false,
+  "objective": "This protocol prospectively registers a fresh-seed replication of the FedCORE H/S/B comparison on the previously studied, fixed PACS empirical frame. It evaluates 30 newly trained checkpoints under frozen selectors, audit streams, estimands, denominators, and decision rules. It does not constitute an untouched-dataset confirmation, an independent source-population replication, or evidence of prospective population transport.",
+  "supersession": {
+    "invalidated_protocol_id": "FEDCORE-IJAR-V34-PACS-PROSPECTIVE-HSB-v2",
+    "invalidated_public_tag": "pacs-prospective-hsb-v2",
+    "invalidated_release": "https://github.com/october25kim/fedcore/releases/tag/pacs-prospective-hsb-v2",
+    "invalidated_protocol_sha256": "7f5d976cf2bd0dfa0bd8ee51b8b6f833a5e611b33de2c8fd94e95d81b3444c68",
+    "invalidated_tag_object": "ff3a5ff349bbc0394d1fa5d494b2491cf5f5255e",
+    "invalidated_tagged_commit": "93418ed352e4212fef88e201a7d1e1d61972ff16",
+    "v2_status": "INVALID_PRESEAL_PROVENANCE / DO NOT EXECUTE",
+    "relationship": "Version 3 supersedes the v2 scientific record because v2 incorrectly stated that no PACS training, inference, or scientific outcome existed before its seal. The v2 tag remains immutable as an audit record. Version 3 preserves the v2 H/S/B scientific contract and corrects its chronology, evidentiary label, execution host, and isolation requirements.",
+    "outcome_driven_change": "cannot be excluded and is not claimed absent"
+  },
+  "manuscript_binding": {
+    "manuscript_version": "IJAR v34",
+    "manuscript_docx_sha256": "3fe147f9670c1958da928cd6a45d8b03506098d83f613160c30f57b2e3964ded",
+    "rendered_pdf_sha256": "745552f6927743a100b8ed66e8e28c79e8da276b431a5cac65ab1efe7d1b0ba5",
+    "public_repository": "https://github.com/october25kim/fedcore",
+    "evidence_release_tag": "v0.6.4",
+    "evidence_release_commit": "cbb23f3a82798db23eecb59f1f5684c61982cb23"
+  },
+  "scope": {
+    "confirmation_type": "prospectively registered fresh-seed replication on a previously studied fixed PACS empirical frame",
+    "new_dataset_relative_to_v34_headline": false,
+    "freshly_trained_checkpoints": 30,
+    "population_transport_claimed": false,
+    "pacs_population_safety_claimed": false,
+    "independence_qualification": "The v3 checkpoints and random streams are fresh relative to the earlier PACS run. The source images, empirical frame, domain structure, class-split family, architectures, and ImageNet initialization families were previously studied. The 30 checkpoints are training-randomness replications conditional on this fixed frame, not independent datasets or source-population replicates.",
+    "primary_target_population": "uniform distribution over each fixed client-domain audit reservoir, conditional on the exact hashed PACS frame",
+    "adverse_outcomes_must_be_reported": true,
+    "untouched_dataset_confirmation": false,
+    "independent_source_population_replication": false,
+    "external_validation_claimed": false
+  },
+  "dataset": {
+    "name": "PACS",
+    "clients": [
+      "art_painting",
+      "cartoon",
+      "photo",
+      "sketch"
+    ],
+    "J": 4,
+    "classes": [
+      "dog",
+      "elephant",
+      "giraffe",
+      "guitar",
+      "horse",
+      "house",
+      "person"
+    ],
+    "class_splits": [
+      {
+        "split": 0,
+        "known": [
+          "dog",
+          "elephant",
+          "giraffe",
+          "guitar"
+        ],
+        "unknown": [
+          "horse",
+          "house",
+          "person"
+        ]
+      },
+      {
+        "split": 1,
+        "known": [
+          "dog",
+          "elephant",
+          "house",
+          "person"
+        ],
+        "unknown": [
+          "giraffe",
+          "guitar",
+          "horse"
+        ]
+      },
+      {
+        "split": 2,
+        "known": [
+          "elephant",
+          "giraffe",
+          "horse",
+          "person"
+        ],
+        "unknown": [
+          "dog",
+          "guitar",
+          "house"
+        ]
+      },
+      {
+        "split": 3,
+        "known": [
+          "dog",
+          "guitar",
+          "horse",
+          "house"
+        ],
+        "unknown": [
+          "elephant",
+          "giraffe",
+          "person"
+        ]
+      },
+      {
+        "split": 4,
+        "known": [
+          "dog",
+          "elephant",
+          "guitar",
+          "house"
+        ],
+        "unknown": [
+          "giraffe",
+          "horse",
+          "person"
+        ]
+      }
+    ],
+    "roles": {
+      "train_fraction": 0.6,
+      "proposal_fraction": 0.2,
+      "audit_fraction": 0.2,
+      "assignment": "global decoded-image-identity SHA-256 rule frozen by the parent protocol",
+      "unknown_train_records": "unused and never reallocated",
+      "required_pairwise_source_id_intersection": 0
+    },
+    "exact_frame": {
+      "archive_path_on_execution_host": "/home/sanghoon/Desktop/Workspace/Fedcore/data/v1_pacs/PACS_mirror.zip",
+      "archive_source": "https://huggingface.co/datasets/Azeez577/PACS/resolve/main/PACS.zip",
+      "archive_sha256": "42bf567f1ed8a01d522e47e4a677e2a3149577bbd6fcbb38bedfdd73cb59e147",
+      "archive_bytes": 184417365,
+      "archive_adoption": "The exact mirror bytes are the governing dataset object. Equivalence to an author-hosted archive is not claimed.",
+      "decoded_image_identities": 9991,
+      "image_manifest_sha256": "283d47bd8cfb7017d6e7fde6d65e07ff6479ab25127afcba135da3a06775afae",
+      "fold_manifest_sha256": "fe5b64d237f47f503b8895aa5e566727bc818e05ee597f84c440df70e91e5344",
+      "cross_role_identity_leakage": 0,
+      "label_conflicts": 0,
+      "available_raw_source_overlap_count": 0,
+      "available_overlap_scope": "Exact decoded RGB identity against available Office-Home, CIFAR-10, CIFAR-100, and PathMNIST roots.",
+      "archived_prior_audit_membership_overlap": "SAME_HASHED_PACS_FRAME_AS_V1; source-disjointness from the V1 PACS study is not claimed"
+    }
+  },
+  "training": {
+    "architectures": [
+      "resnet18",
+      "convnext_tiny"
+    ],
+    "class_splits": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "nominal_seeds": [
+      0,
+      1,
+      2
+    ],
+    "planned_models": 30,
+    "matrix_formula": "5 class splits x 3 nominal seeds x 2 architectures",
+    "fresh_run_requirements": [
+      "No checkpoint, optimizer state, logit array, or threshold from an earlier experiment may be reused.",
+      "Each model cell starts from its frozen ImageNet initialization file with a fresh four-class head, optimizer, and protocol-derived RNG stream.",
+      "Only the final round-30 checkpoint is evaluated; no audit-dependent checkpoint choice is permitted.",
+      "No model cell may be replaced by a new seed because its scientific outcome is unfavorable."
+    ],
+    "weights": {
+      "resnet18": {
+        "name": "ResNet18_Weights.IMAGENET1K_V1",
+        "sha256": "f37072fd47e89c5e827621c5baffa7500819f7896bbacec160b1a16c560e07ec"
+      },
+      "convnext_tiny": {
+        "name": "ConvNeXt_Tiny_Weights.IMAGENET1K_V1",
+        "sha256": "983f1562536e84ff750a1576fb08e54de751dbf2e17c0d8a4a13704341fdcd3d"
+      }
+    },
+    "known_class_head": "fresh four-class linear head in alphabetical known-class order",
+    "trainable_parameters": "all backbone and head parameters",
+    "loss": "mean cross-entropy without label smoothing or class weighting",
+    "federated_rounds": 30,
+    "local_epochs_per_round": 1,
+    "clients_per_round": 4,
+    "batch_size": 32,
+    "drop_last": false,
+    "client_iteration_order": [
+      "art_painting",
+      "cartoon",
+      "photo",
+      "sketch"
+    ],
+    "run_order": "class split ascending, nominal seed ascending, then resnet18 before convnext_tiny",
+    "train_transform": "EXIF transpose, RGB conversion, RandomResizedCrop(224, scale=(0.08,1.0), ratio=(0.75,4/3), interpolation=bilinear, antialias=True), RandomHorizontalFlip(p=0.5), ToTensor, ImageNet mean/std normalization",
+    "inference_transform": "EXIF transpose, RGB conversion, Resize shorter side to 256 with bilinear interpolation and antialias=True, CenterCrop(224), ToTensor, ImageNet mean/std normalization",
+    "optimizer": {
+      "name": "AdamW",
+      "base_learning_rate": 0.0001,
+      "weight_decay": 0.05,
+      "betas": [
+        0.9,
+        0.999
+      ],
+      "eps": 1e-08,
+      "amsgrad": false,
+      "foreach": false,
+      "fused": false,
+      "warmup_rounds": 2,
+      "schedule": "rounds 0 and 1 use base_lr*(round+1)/2; rounds 2 through 29 use base_lr*0.5*(1+cos(pi*(round-2)/28))",
+      "reset_each_client_round": true
+    },
+    "aggregation": "known-training-sample-count-weighted FedAvg; floating tensors accumulated in float64 and cast back; integer buffers copied from the largest client with lexical domain tie break",
+    "precision": "FP32 only; no AMP, TF32, compile, or nondeterministic algorithm",
+    "checkpoint_selection": "final checkpoint only",
+    "hyperparameter_search": false,
+    "seed_derivation": "big-endian integer from the first eight SHA-256 bytes of seed_namespace_id|label|compact_json(parts); seed_namespace_id is the frozen unexecuted v2 namespace",
+    "model_init_seed_parts": "[architecture,split,nominal_seed]",
+    "local_training_seed_parts": "[architecture,split,nominal_seed,round,domain]",
+    "torch_seed_mapping": "uint64 modulo 2^63",
+    "numpy_rng": "PCG64 with the full registered uint64 seed",
+    "data_loader_workers": 0,
+    "seed_namespace": {
+      "seed_namespace_id": "FEDCORE-IJAR-V34-PACS-PROSPECTIVE-HSB-v2",
+      "seed_namespace_reason": "Preserve the exact unexecuted v2 training and audit streams while correcting provenance only.",
+      "seed_manifest_change_from_v2": false,
+      "v2_training_seed_manifest_sha256": "7c55b885e6c245b749ca8ba9d9462e077c85e60fa7a6b9f7cbe2ee0dc1e08bfc",
+      "v2_audit_seed_manifest_sha256": "747b5416b2b5f09d0fbcdb2a94cbbc39825a1d44e2f80677ac8b0a859f290029",
+      "v2_model_matrix_sha256": "ac91ffbf2ccebb1a35ffcd648051fc4c25db1fd7df6cc45c607d652e0e385104"
+    }
+  },
+  "stage_isolation": {
+    "stage_1_training": "Read train-role images and labels only. Write final checkpoint and immutable checkpoint hash.",
+    "stage_2_proposal": "After checkpoint hash is fixed, read proposal-role images and labels only and write a proposal-family manifest plus PROPOSAL_SEAL.json.",
+    "stage_3_primary_audit": "After proposal seal, reveal only the registered primary audit indices and labels needed for count construction. Write primary H/S/B decisions before any full-frame truth computation.",
+    "stage_4_post_decision_truth": "After primary decisions are hashed, evaluate exact full audit-frame risk and acceptance for validity diagnostics.",
+    "stage_5_secondary": "Only after the primary artifacts are immutable, compute all registered (budget,replicate) pairs other than the primary pair (512,0).",
+    "prohibited": "No later stage may alter an earlier checkpoint, family member, threshold, ordering, budget, or primary outcome."
+  },
+  "selector_family": {
+    "M": 12,
+    "score_order": [
+      "msp",
+      "energy_lse",
+      "margin"
+    ],
+    "score_orientation": "larger is more acceptable",
+    "gamma_order": [
+      0.3,
+      0.5,
+      0.7,
+      1.0
+    ],
+    "threshold_grid": "unique NumPy linear quantiles at 300 equally spaced probabilities for each proposal score",
+    "proposal_constraint": "accepted empirical proposal risk <= gamma * alpha",
+    "proposal_objective": "maximum accepted count subject to the proposal constraint",
+    "minimum_proposal_accepted_count": 1,
+    "proposal_pooling": "pool all proposal domains by record with no domain reweighting",
+    "proposal_error": "an accepted unknown-class record or an accepted incorrectly classified known-class record is an error",
+    "proposal_comparison_arithmetic": "compare integer K and A by exact cross multiplication against the registered rational gamma*alpha; do not use a tolerance",
+    "acceptance_rule": "accept iff the oriented score is greater than or equal to the frozen threshold",
+    "prediction_rule": "argmax of the four known-class logits in alphabetical class order; an exact tie uses the first index",
+    "infeasible_member": "retain deterministic reject-all placeholder in the 12-member family",
+    "family_order": "score order, then gamma order",
+    "selected_member_tie_break": "larger coverage LCB, then smaller gamma, lexical score alias, then candidate index",
+    "certification_or_truth_used_to_define_family": false
+  },
+  "primary_contract": {
+    "alpha": 0.2,
+    "delta_r": 0.05,
+    "delta_c": 0.05,
+    "joint_confidence_lower_bound": 0.9,
+    "joint_confidence_scope": "The 0.90 union lower bound applies to one model cell and one separately reported procedure after within-family selection. It is not simultaneous across 30 models or H/S/B, is not a confidence interval for theta_H, and does not imply source-population transport.",
+    "mixture_set": "full simplex Delta^3 over the four PACS domain clients",
+    "audit_budget_total": 512,
+    "audit_draws_per_client": 128,
+    "sampling": "NumPy PCG64 independent uniform integer draws with replacement from each source-identity-sorted fixed client audit reservoir",
+    "audit_replicate_id": 0,
+    "common_random_numbers": "For a fixed class split, client, and replicate, the same registered audit index stream is shared by all six architecture-by-training-seed models; H, S, and B also use the identical count tensor within each model cell. Budget 64/128/256 draws uses nested prefixes.",
+    "models_in_primary_denominator": 30,
+    "primary_procedure_rows": 90,
+    "primary_is_single_audit_per_model": true
+  },
+  "secondary_contract": {
+    "registered_audit_budgets_total": [
+      256,
+      512,
+      1024
+    ],
+    "registered_audit_draws_per_client": [
+      64,
+      128,
+      256
+    ],
+    "registered_audit_replicate_ids": "integers 0 through 99",
+    "primary_pair_excluded": "budget_total=512, replicate_id=0",
+    "secondary_audit_configurations_per_model": 299,
+    "secondary_procedure_rows": 26910,
+    "secondary_candidate_rows": 322920,
+    "secondary_count_rows": 430560,
+    "nested_prefixes": true,
+    "role": "conditional stability and audit-budget frontier only",
+    "may_replace_primary": false,
+    "may_change_primary_verdict": false,
+    "audit_repetitions_are_model_replications": false
+  },
+  "procedures": {
+    "H": {
+      "role": "v34 headline full-simplex family procedure",
+      "risk": "For candidate m and client j, p_mj=1 if A_mj=0, else BinomCDF(K_mj; A_mj, alpha). Set p_m=max_j p_mj and apply Holm over the 12 p_m values at delta_r.",
+      "coverage": "C_m=min_j L_minus(A_mj, n_j; delta_c/M)",
+      "certify": "Holm rejects candidate m and C_m>0",
+      "numeric_risk_ucb_reported": false
+    },
+    "S": {
+      "role": "strongest matched full-simplex near-peer",
+      "risk": "U_m=max_j U_plus(K_mj, A_mj; delta_r/M)",
+      "coverage": "C_m=min_j L_minus(A_mj, n_j; delta_c/M)",
+      "certify": "U_m<=alpha and C_m>0",
+      "client_divisor": false
+    },
+    "B": {
+      "role": "valid conservative same-target client-divided reference",
+      "risk": "U_m=max_j U_plus(K_mj, A_mj; delta_r/(M*J))",
+      "coverage": "C_m=min_j L_minus(A_mj, n_j; delta_c/(M*J))",
+      "certify": "U_m<=alpha and C_m>0",
+      "client_divisor": true,
+      "tail_for_J4_M12": 0.0010416666666666667
+    }
+  },
+  "numerical_contract": {
+    "U_plus": "U_plus(k,n,eta)=1 if n=0 or k=n; otherwise BetaPPF(1-eta;k+1,n-k)",
+    "L_minus": "L_minus(x,n,eta)=0 if x=0; otherwise BetaPPF(eta;x,n-x+1)",
+    "BetaPPF": "inf{x in [0,1]:F_Beta(a,b)(x)>=u}",
+    "binomial_cdf": "inclusive lower tail P[X<=K]",
+    "holm": "Stable ascending (p_m,candidate_index); at rank r reject while p_(r)<=delta_r/(M-r+1), stop after first failure; adjusted p is min(1,max_{s<=r}(M-s+1)p_(s)) mapped back.",
+    "comparisons": "proposal K/A<=gamma*alpha and S/B U<=alpha are inclusive; coverage C>0 is strict; no numerical tolerance may flip a decision",
+    "replay_tolerance": {
+      "atol": 1e-12,
+      "rtol": 0.0
+    },
+    "H_S_tail": 0.004166666666666667,
+    "B_tail": 0.0010416666666666667
+  },
+  "estimands": {
+    "cell_ECA": "E_pc = 1{procedure p certifies model cell c} * selected coverage LCB",
+    "primary_H_ECA": "theta_H = mean of E_Hc over all 30 planned model cells; refusal and proposal infeasibility equal zero",
+    "H_certification_rate": "H-certified model cells divided by all 30 planned model cells",
+    "S_minus_B": "mean over 30 paired cell values E_Sc-E_Bc; isolates removal of client-count division",
+    "H_minus_S": "mean over 30 paired cell values E_Hc-E_Sc; describes the residual Holm-family decision effect",
+    "H_minus_B": "mean over 30 paired cell values E_Hc-E_Bc; headline total difference",
+    "conditional_certified_coverage": "mean selected coverage LCB among certified cells with its certified denominator",
+    "architecture_strata": "report every estimand separately for resnet18 and convnext_tiny",
+    "split_reporting": "report five class-split blocks and three nominal training seeds without selective exclusion",
+    "descriptive_uncertainty": "A fixed 20,000-replicate paired bootstrap may resample the three training seeds within each fixed architecture-by-split stratum. It is descriptive conditional training-RNG variation, not theorem confidence or source-population inference.",
+    "bootstrap_seed": 2026092901
+  },
+  "denominator_ledger": {
+    "planned_models": 30,
+    "architectures": 2,
+    "class_splits": 5,
+    "nominal_training_seeds_per_architecture_split": 3,
+    "primary_audits_per_model": 1,
+    "primary_procedures": 3,
+    "primary_procedure_rows": 90,
+    "primary_candidate_decision_rows": 1080,
+    "primary_count_rows": 1440,
+    "registered_audit_replicates": 100,
+    "registered_budget_levels": 3,
+    "registered_audit_configurations_per_model": 300,
+    "secondary_audit_configurations_per_model": 299,
+    "secondary_procedure_rows": 26910,
+    "secondary_candidate_decision_rows": 322920,
+    "secondary_count_rows": 430560,
+    "report_separately": [
+      "training_started",
+      "training_terminal",
+      "model_evaluable",
+      "proposal_feasible",
+      "certification_evaluable",
+      "H_certified",
+      "S_certified",
+      "B_certified",
+      "certified_condition_denominator"
+    ],
+    "incomplete_model_handling": "Never impute as refusal or drop silently; classify the study HOLD_INCOMPLETE until all registered cells are accounted for.",
+    "proposal_infeasible_handling": "Retain in the 30-model primary denominator with ECA zero."
+  },
+  "invalid_invariants": {
+    "evidence": "H, S, and B use identical (n,A,K) arrays and the same count-tensor hash for every model and audit configuration.",
+    "candidate_level": [
+      "C_H equals C_S within replay tolerance",
+      "U_S is no greater than U_B within replay tolerance",
+      "C_S is no less than C_B within replay tolerance",
+      "B candidate certification implies S candidate certification implies H candidate certification"
+    ],
+    "cell_level": [
+      "B certification implies S certification implies H certification",
+      "E_H is no less than E_S and E_S is no less than E_B within replay tolerance",
+      "candidate certification implies proposal feasibility, procedure-specific risk pass, and positive coverage",
+      "selected implies candidate certification, with exactly one selected candidate iff at least one candidate certifies",
+      "certified equals selected_candidate>=0 and ECA equals certified times selected coverage LCB",
+      "candidate decisions aggregate exactly to the primary summary",
+      "the selected candidate exactly follows the frozen objective and tie break"
+    ],
+    "violation": "INVALID; do not reinterpret as PASS_CORE_ONLY or VALID_NEGATIVE"
+  },
+  "outcome_gates": {
+    "precedence": [
+      "INVALID",
+      "HOLD_INCOMPLETE",
+      "PASS_FRESH_SEED_REPLICATION",
+      "PASS_CORE_ONLY",
+      "VALID_NEGATIVE"
+    ],
+    "absolute_utility_gate": {
+      "all_30_cells_accounted": true,
+      "minimum_H_certified_models": 6,
+      "H_certification_required_in_each_architecture": true,
+      "minimum_class_splits_with_H_certification": 3,
+      "minimum_mean_H_ECA": 0.05
+    },
+    "client_division_gain_gate": {
+      "minimum_mean_S_minus_B": 0.01,
+      "S_minus_B_nonnegative_in_each_architecture": true,
+      "at_least_one_strict_S_minus_B_cell_in_each_architecture": true
+    },
+    "PASS_CORE_ONLY": "All integrity and absolute utility gates pass, but at least one client-division gain gate fails.",
+    "VALID_NEGATIVE": "All integrity checks and complete accounting pass, but at least one absolute utility gate fails.",
+    "HOLD_INCOMPLETE": "At least one registered cell lacks final accounting or the execution/replay verifier is unfinished.",
+    "INVALID": "A protocol breach, leakage, hash mismatch, outcome-adaptive change, count inconsistency, unequal H/S/B evidence, or prohibited replacement occurs. Scientific outcome gates are not computed.",
+    "PASS_FRESH_SEED_REPLICATION": "All integrity checks, absolute utility gates, and client-division gain gates pass."
+  },
+  "validity_diagnostics": {
+    "truth_access": "Exact full audit-frame truth is computed only after primary decisions are written and hashed.",
+    "failure_event": "A selected certified candidate has true full-frame worst-client selective risk above alpha, or its reported minimum-client coverage LCB exceeds true full-frame minimum-client acceptance.",
+    "interpretation": "These diagnostics test for contradiction on the fixed empirical frame. Their absence does not prove unseen-population validity.",
+    "gate": "Any deterministic implementation mismatch is INVALID. Statistical excess-failure diagnostics are reported separately and cannot be hidden by pooling across models."
+  },
+  "stopping_and_restart": {
+    "maximum_registered_model_cells": 30,
+    "outcome_based_early_stopping": false,
+    "outcome_based_seed_extension": false,
+    "audit_based_checkpoint_selection": false,
+    "primary_audit_repeated": false,
+    "hardware_or_io_failure": "A same-cell same-seed restart is allowed only before proposal or audit outcome access; preserve every failed log and restart receipt.",
+    "nan_or_divergence_from_frozen_training": "record as a complete-accounting scientific model failure, assign ECA zero for H/S/B, leave unavailable checkpoint/proposal/count hashes explicitly empty, and do not replace with a new seed",
+    "defect_found_before_any_primary_outcome": "increment protocol version, disclose the amendment, reseal, and restart before training",
+    "defect_found_after_any_primary_outcome": "preserve this study as INVALID and use a new protocol ID for any rerun"
+  },
+  "resource_contract": {
+    "execution_host_alias": "ubuntu-4070",
+    "observed_hostname": "ubuntu",
+    "isolated_execution_root": "/home/sanghoon/Desktop/Workspace/Fedcore_HSB_v3_exec",
+    "permitted_gpu_index": 0,
+    "permitted_gpu_uuid": "GPU-ee5a0082-32e6-ede4-27d5-441bee0ca7c6",
+    "permitted_gpu_name": "NVIDIA GeForce RTX 4070 Ti SUPER",
+    "gpu_memory_mib": 16376,
+    "gpu_hour_cap_total": 48,
+    "capacity_stage_gpu_hours_included": 2,
+    "cpu_core_hour_cap": 24,
+    "cap_exhaustion_before_complete_accounting": "HOLD_INCOMPLETE; do not extend the cap after observing a v3 scientific outcome",
+    "gpu_assignment": "the execution-binding seal must freeze physical GPU 0, its UUID, and single-process concurrency before PACS training"
+  },
+  "negative_result_policy": [
+    "Keep every unfavorable model cell and every refusal in the registered denominator.",
+    "Do not replace a failed primary budget-512 outcome with budget 1024 or another audit replicate.",
+    "Do not average away an adverse backbone or class split.",
+    "If H-S is nonpositive, do not claim superiority over the strongest matched near-peer.",
+    "If S-B is negligible, state that the practical value of removing client-count division did not reproduce on PACS.",
+    "A valid all-refusal result is a negative confirmation and must be released, not called a performance success.",
+    "A VALID_NEGATIVE is retained as the result of this fresh-seed replication and requires a new submission-readiness assessment."
+  ],
+  "preexecution_requirements": [
+    "Preserve the v2 tag and publish its INVALID_PRESEAL_PROVENANCE / DO NOT EXECUTE notice.",
+    "Publicly bind this corrected v3 protocol and its ordered SHA-256 manifest before any v3 PACS training or inference.",
+    "Create and hash the isolated Ubuntu execution snapshot without mounting the legacy workspace or prior outputs.",
+    "Freeze and verify the end-to-end 30-model orchestrator, resume logic, resource cap, output schema, H/S/B implementation, and independent replay implementation.",
+    "Pin the exact container, dependencies, pretrained weights, CUDA runtime path, all execution-source hashes, and the permitted mount list.",
+    "Pass PACS-free synthetic end-to-end, resume, failure-ledger, resource-cap, output-schema, H/S/B parity, and independent-replay tests.",
+    "Publish a v3 execution-binding seal with PASS_EXECUTION_READY and obtain explicit user authorization to start PACS training."
+  ],
+  "output_policy": {
+    "isolated_remote_directory": "/home/sanghoon/Desktop/Workspace/Fedcore_HSB_v3_exec/runs/scientific/FEDCORE-IJAR-V34-PACS-FRESH-SEED-REPLICATION-HSB-v3",
+    "overwrite_existing_artifacts": false,
+    "full_primary_counts_released": true,
+    "full_primary_candidate_decisions_released": true,
+    "full_secondary_counts_and_candidate_decisions_released": true,
+    "primary_summary_hashed_before_post_decision_truth": true,
+    "primary_candidate_decisions_hashed_before_post_decision_truth": true,
+    "all_model_logs_and_terminal_receipts_retained": true,
+    "all_checkpoint_and_output_files_hashed": true,
+    "primary_before_secondary": true,
+    "public_negative_result_release_required": true,
+    "ready_submission_package_created_only_after": "complete experiment, independent replay, manuscript update, release rebinding, and final package QA"
+  },
+  "prior_outcome_disclosure": {
+    "prior_pacs_outcomes_exist": true,
+    "prior_outcome_available_before_v3_seal": true,
+    "prior_v1_protocol_id": "FEDCORE-V1-PACS-20260916-v1",
+    "prior_v1_protocol_sha256": "a8c944d57246d2fc46b175982cdada76f1c797da30090a35fbb344bad0cb7c50",
+    "prior_v1_decision": "HOLD",
+    "prior_v1_decision_utc": "2026-09-17T12:51:21.891927+00:00",
+    "prior_v1_decision_sha256": "027b18bceb69188531d1e423b64b61c981964f3515563ddd5a1264f86ce2312a",
+    "prior_v1_models": 30,
+    "prior_v1_rows_total": 162000,
+    "prior_transfer_protocol_id": "FEDCORE-S1-DOMAINNET6-PACSCLS-20260925-v2",
+    "prior_transfer_protocol_sha256": "06dd7e1a22f3d504dc76dd115b3f1803754ffe022a9d436e7dcef8a20c7c142b",
+    "prior_transfer_decision": "KILL",
+    "prior_transfer_label": "NOT_TRANSFER",
+    "prior_transfer_decision_utc": "2026-09-25T12:48:57.641032+00:00",
+    "prior_transfer_decision_sha256": "47c67e85854f81f67dfb2a3882e49d9de66aaea67d5ba24be19479fe8e3d1edd",
+    "v3_specific_training_or_inference_seen": false,
+    "v3_specific_primary_outcome_seen": false,
+    "design_independence_from_prior_pacs_outcomes": "not claimed",
+    "qualification": "The H/S/B design was sealed after PACS outcomes from an earlier study were available. Outcome influence on the revised design cannot be excluded. Validity claims are limited to a prospectively registered fresh-seed replication after the v3 seal."
+  },
+  "runtime_isolation": {
+    "legacy_workspace_read_only_reference": "/home/sanghoon/Desktop/Workspace/Fedcore",
+    "isolated_execution_root": "/home/sanghoon/Desktop/Workspace/Fedcore_HSB_v3_exec",
+    "forbidden_runtime_mounts": [
+      "/home/sanghoon/Desktop/Workspace/Fedcore",
+      "/home/sanghoon/Desktop/Workspace/Fedcore/outputs",
+      "/home/sanghoon/Desktop/Workspace/Fedcore/work"
+    ],
+    "permitted_read_only_input_types": [
+      "PACS archive",
+      "IMAGE_MANIFEST.csv",
+      "FOLD_MANIFEST.csv",
+      "ResNet-18 pretrained weight",
+      "ConvNeXt-Tiny pretrained weight"
+    ],
+    "network_disabled_for_scientific_runtime": true,
+    "prior_checkpoints_logits_counts_and_decisions_inaccessible": "required before PASS_EXECUTION_READY"
+  }
+}

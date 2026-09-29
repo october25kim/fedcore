@@ -1,0 +1,47 @@
+{
+  "schema_version": 2,
+  "protocol_id": "FEDCORE-IJAR-V34-PACS-FRESH-SEED-REPLICATION-HSB-v3",
+  "dataset": {
+    "PACS_mirror.zip": {
+      "path": "/home/sanghoon/Desktop/Workspace/Fedcore/data/v1_pacs/PACS_mirror.zip",
+      "sha256": "42bf567f1ed8a01d522e47e4a677e2a3149577bbd6fcbb38bedfdd73cb59e147",
+      "bytes": 184417365,
+      "role": "governing source archive on the previously studied fixed frame"
+    },
+    "IMAGE_MANIFEST.csv": {
+      "path": "/home/sanghoon/Desktop/Workspace/Fedcore/outputs/fedcore_v1_ubuntu/IMAGE_MANIFEST.csv",
+      "sha256": "283d47bd8cfb7017d6e7fde6d65e07ff6479ab25127afcba135da3a06775afae",
+      "records": 9991,
+      "runtime_mount": "file-only read-only"
+    },
+    "FOLD_MANIFEST.csv": {
+      "path": "/home/sanghoon/Desktop/Workspace/Fedcore/outputs/fedcore_v1_ubuntu/FOLD_MANIFEST.csv",
+      "sha256": "fe5b64d237f47f503b8895aa5e566727bc818e05ee597f84c440df70e91e5344",
+      "runtime_mount": "file-only read-only"
+    }
+  },
+  "pretrained_weights": {
+    "resnet18-f37072fd.pth": "f37072fd47e89c5e827621c5baffa7500819f7896bbacec160b1a16c560e07ec",
+    "convnext_tiny-983f1562.pth": "983f1562536e84ff750a1576fb08e54de751dbf2e17c0d8a4a13704341fdcd3d"
+  },
+  "prior_outcome_references_not_runtime_inputs": {
+    "V1_PROTOCOL.json": "a8c944d57246d2fc46b175982cdada76f1c797da30090a35fbb344bad0cb7c50",
+    "V1_DECISION.json": "027b18bceb69188531d1e423b64b61c981964f3515563ddd5a1264f86ce2312a",
+    "DOMAINNET_TRANSFER_DECISION.json": "47c67e85854f81f67dfb2a3882e49d9de66aaea67d5ba24be19479fe8e3d1edd"
+  },
+  "seed_carry_forward": {
+    "namespace": "FEDCORE-IJAR-V34-PACS-PROSPECTIVE-HSB-v2",
+    "training_manifest_sha256": "7c55b885e6c245b749ca8ba9d9462e077c85e60fa7a6b9f7cbe2ee0dc1e08bfc",
+    "audit_manifest_sha256": "747b5416b2b5f09d0fbcdb2a94cbbc39825a1d44e2f80677ac8b0a859f290029",
+    "model_matrix_sha256": "ac91ffbf2ccebb1a35ffcd648051fc4c25db1fd7df6cc45c607d652e0e385104"
+  },
+  "environment": {
+    "candidate_container_image_id": "sha256:f0f2b57a630805081d8a345fb11980b230556e5360223a3658cd40aceff61bb2",
+    "candidate_only_not_execution_bound": true,
+    "execution_environment_fully_bound": false
+  },
+  "availability": {
+    "full_dataset_and_manifests_publicly_redistributed_here": false,
+    "hash_only_is_not_end_to_end_reproduction": true
+  }
+}

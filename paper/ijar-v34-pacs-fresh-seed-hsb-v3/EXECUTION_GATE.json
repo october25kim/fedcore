@@ -1,0 +1,29 @@
+{
+  "schema_version": 2,
+  "protocol_id": "FEDCORE-IJAR-V34-PACS-FRESH-SEED-REPLICATION-HSB-v3",
+  "status": "HOLD_IMPLEMENTATION_BINDING",
+  "scientific_protocol_sealed": true,
+  "provenance_correction_complete": true,
+  "training_authorized": false,
+  "gpu_training_started": false,
+  "pacs_inference_started": false,
+  "submission_authorized": false,
+  "reason": "The corrected scientific contract is frozen, but no clean v3 source commit, dedicated runtime image, exact mount proof, or PACS-free synthetic end-to-end implementation binding exists yet.",
+  "required_before_PASS_EXECUTION_READY": [
+    "Create the isolated Ubuntu directory and a clean v3 Git repository.",
+    "Freeze every runner, H/S/B implementation, test, config, dependency, container, input hash, mount, and seed manifest.",
+    "Prove that prior outputs, checkpoints, logits, counts, thresholds, and decisions are inaccessible from the runtime.",
+    "Pass PACS-free synthetic end-to-end, resume, failure, cap, ordering, schema, monotonicity, and independent-replay tests.",
+    "Publish a separate v3 execution-binding seal.",
+    "Obtain explicit user authorization after PASS_EXECUTION_READY."
+  ],
+  "forbidden_now": [
+    "PACS model training",
+    "PACS model inference",
+    "proposal threshold construction from PACS logits",
+    "PACS audit count generation",
+    "v3 PACS performance inspection"
+  ],
+  "next_state": "PASS_EXECUTION_READY",
+  "ready_submission_package_state": "NOT_APPLICABLE_UNTIL_EXPERIMENT_COMPLETES"
+}

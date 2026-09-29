@@ -1,0 +1,17 @@
+{
+  "canonical_bundle_root_sha256": "f81345a8e0ca70a7f64b76b3f01375bebff0a471e249710663e8bcbc82475feb",
+  "canonical_file_count": 23,
+  "execution_gate": "HOLD_IMPLEMENTATION_BINDING",
+  "gpu_training_started": false,
+  "note": "The public Git tag timestamps the outcome-disclosed corrective scientific contract. A separate v3 execution-binding seal is required before training.",
+  "pacs_inference_started": false,
+  "pacs_training_started": false,
+  "preregistration_sha256": "d7fba4c748d449994b11912acd6004dfd690e5053825169e482eb7f64b2ee728",
+  "protocol_id": "FEDCORE-IJAR-V34-PACS-FRESH-SEED-REPLICATION-HSB-v3",
+  "public_tag_planned": "pacs-fresh-seed-hsb-v3",
+  "schema_version": 1,
+  "sealed_at_utc": "2026-09-29T08:15:00Z",
+  "state": "SEALED_CORRECTIVE_SCIENTIFIC_PROTOCOL_NOT_EXECUTED",
+  "submission_authorized": false,
+  "training_authorized": false
+}

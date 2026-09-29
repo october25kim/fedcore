@@ -1,0 +1,32 @@
+{
+  "schema_version": 2,
+  "protocol_id": "FEDCORE-IJAR-V34-PACS-FRESH-SEED-REPLICATION-HSB-v3",
+  "observation_host_alias": "ubuntu-4070",
+  "observed_hostname": "ubuntu",
+  "legacy_workspace": "/home/sanghoon/Desktop/Workspace/Fedcore",
+  "legacy_workspace_git_repository": false,
+  "isolated_execution_root": "/home/sanghoon/Desktop/Workspace/Fedcore_HSB_v3_exec",
+  "isolated_execution_root_created": false,
+  "repository_binding": "PENDING_CLEAN_V3_GIT_SNAPSHOT",
+  "candidate_container_image_id": "sha256:f0f2b57a630805081d8a345fb11980b230556e5360223a3658cd40aceff61bb2",
+  "candidate_environment": {
+    "python": "3.10.14",
+    "torch": "2.3.0",
+    "torchvision": "0.18.0",
+    "numpy": "1.26.4",
+    "scipy": "1.15.3",
+    "Pillow": "10.2.0",
+    "cuda": "12.1",
+    "cudnn": 8902
+  },
+  "gpu": {
+    "index": 0,
+    "name": "NVIDIA GeForce RTX 4070 Ti SUPER",
+    "uuid": "GPU-ee5a0082-32e6-ede4-27d5-441bee0ca7c6",
+    "memory_mib": 16376,
+    "observed_idle_during_inventory": true
+  },
+  "free_disk_gb_observed": 338,
+  "execution_binding_status": "NOT_YET_FROZEN",
+  "warning": "The candidate environment is an inventory record only. A clean source commit, dedicated image, exact mount allowlist, and synthetic integration must be sealed before PACS training."
+}

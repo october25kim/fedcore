@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "protocol_id": "FEDCORE-IJAR-V34-PACS-FRESH-SEED-REPLICATION-HSB-v3",
+  "v2_protocol_id": "FEDCORE-IJAR-V34-PACS-PROSPECTIVE-HSB-v2",
+  "purpose": "prove that provenance correction did not silently alter the H/S/B numerical contract or registered RNG streams",
+  "files": {
+    "TRAINING_SEED_MANIFEST.csv": {
+      "v2_sha256": "7c55b885e6c245b749ca8ba9d9462e077c85e60fa7a6b9f7cbe2ee0dc1e08bfc",
+      "v3_sha256": "7c55b885e6c245b749ca8ba9d9462e077c85e60fa7a6b9f7cbe2ee0dc1e08bfc",
+      "byte_identical": true
+    },
+    "AUDIT_SEED_MANIFEST.csv": {
+      "v2_sha256": "747b5416b2b5f09d0fbcdb2a94cbbc39825a1d44e2f80677ac8b0a859f290029",
+      "v3_sha256": "747b5416b2b5f09d0fbcdb2a94cbbc39825a1d44e2f80677ac8b0a859f290029",
+      "byte_identical": true
+    },
+    "PACS_MODEL_MATRIX.csv": {
+      "v2_sha256": "ac91ffbf2ccebb1a35ffcd648051fc4c25db1fd7df6cc45c607d652e0e385104",
+      "v3_sha256": "ac91ffbf2ccebb1a35ffcd648051fc4c25db1fd7df6cc45c607d652e0e385104",
+      "byte_identical": true
+    },
+    "H_S_B_ANALYSIS_PLAN.json": {
+      "v2_sha256": "416e3bd5b1840041dc2848d4dbb03d276eea0d322416caf6b202370830dfbb5d",
+      "v3_sha256": "3d3b46e468b5b90f9a52e774caf38fbd2faa8287a8a21a782284e89c92109dd1",
+      "byte_identical": false,
+      "allowed_delta": "protocol_id and outcome-label rename only; numerical values and rules unchanged"
+    },
+    "SELECTOR_FAMILY_CONTRACT.json": {
+      "v2_sha256": "aa7ee4ea84003861e397440490f59d8aaa0c86a8be22b5ef8871377bf02a5e24",
+      "v3_sha256": "c8d470457bc270d6b3fa4bc715fd71db8b3d48a55c6a87e620b016281d056f79",
+      "byte_identical": false,
+      "allowed_delta": "protocol_id only"
+    },
+    "OUTCOME_SCHEMA.json": {
+      "v2_sha256": "261cce1272f0c29c2231716a7b272ed54d0f4517fce52627242ac3daf2294e5f",
+      "v3_sha256": "26691f27e73585193edcf9bfc0b4ce20a4749bec2ebf2d6ba2c77aa6332d75b1",
+      "byte_identical": false,
+      "allowed_delta": "protocol_id only"
+    }
+  }
+}

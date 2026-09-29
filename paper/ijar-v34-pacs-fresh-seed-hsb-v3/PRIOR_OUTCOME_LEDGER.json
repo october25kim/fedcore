@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "protocol_id": "FEDCORE-IJAR-V34-PACS-FRESH-SEED-REPLICATION-HSB-v3",
+  "records": [
+    {
+      "role": "prior PACS scientific study",
+      "protocol_id": "FEDCORE-V1-PACS-20260916-v1",
+      "protocol_sha256": "a8c944d57246d2fc46b175982cdada76f1c797da30090a35fbb344bad0cb7c50",
+      "decision": "HOLD",
+      "decision_utc": "2026-09-17T12:51:21.891927+00:00",
+      "decision_sha256": "027b18bceb69188531d1e423b64b61c981964f3515563ddd5a1264f86ce2312a",
+      "models": 30,
+      "primary_rows": 54000,
+      "rows_total": 162000,
+      "execution_host_path": "/home/sanghoon/Desktop/Workspace/Fedcore/outputs/fedcore_v1_full_run/run_outputs/DECISION.json"
+    },
+    {
+      "role": "subsequent transfer probe using frozen PACS predictors",
+      "protocol_id": "FEDCORE-S1-DOMAINNET6-PACSCLS-20260925-v2",
+      "protocol_sha256": "06dd7e1a22f3d504dc76dd115b3f1803754ffe022a9d436e7dcef8a20c7c142b",
+      "decision": "KILL",
+      "transfer_label": "NOT_TRANSFER",
+      "decision_utc": "2026-09-25T12:48:57.641032+00:00",
+      "decision_sha256": "47c67e85854f81f67dfb2a3882e49d9de66aaea67d5ba24be19479fe8e3d1edd",
+      "models": 30,
+      "primary_rows": 54000,
+      "rows_total": 162000,
+      "execution_host_path": "/home/sanghoon/Desktop/Workspace/Fedcore/outputs/fedcore_s1v2_run_20260925/DECISION.json"
+    }
+  ],
+  "v3_seal_after_all_listed_records": true,
+  "design_independence_from_listed_records": "not claimed"
+}

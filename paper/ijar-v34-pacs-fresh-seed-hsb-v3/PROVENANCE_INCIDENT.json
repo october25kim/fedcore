@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "protocol_id": "FEDCORE-IJAR-V34-PACS-FRESH-SEED-REPLICATION-HSB-v3",
+  "incident_id": "FEDCORE-PACS-PRESEAL-PROVENANCE-20260929",
+  "detected_at_utc": "2026-09-29T07:00:00Z",
+  "affected_release": "https://github.com/october25kim/fedcore/releases/tag/pacs-prospective-hsb-v2",
+  "affected_protocol_id": "FEDCORE-IJAR-V34-PACS-PROSPECTIVE-HSB-v2",
+  "classification": "INVALID_PRESEAL_PROVENANCE",
+  "summary": "The v2 seal asserted that no PACS training, inference, or scientific outcome existed, but a completed V1 PACS study and a later transfer probe predated that seal.",
+  "containment": [
+    "Preserve the immutable v2 tag and files.",
+    "Mark the public v2 release DO NOT EXECUTE.",
+    "Do not use v2 to support an untouched prospective-confirmation claim.",
+    "Create this outcome-disclosed corrective successor before new execution."
+  ],
+  "v2_specific_experiment_observed": false,
+  "scientific_consequence": "A new run may test a prospectively registered fresh-seed replication conditional on the previously studied frame, but not untouched-dataset confirmation."
+}

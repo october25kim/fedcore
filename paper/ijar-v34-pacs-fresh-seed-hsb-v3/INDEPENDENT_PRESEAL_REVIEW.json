@@ -1,0 +1,19 @@
+{
+  "schema_version": 2,
+  "protocol_id": "FEDCORE-IJAR-V34-PACS-FRESH-SEED-REPLICATION-HSB-v3",
+  "review_type": "read-only cross-host provenance and corrective-design review",
+  "reviewed_after_prior_pacs_outcome_disclosure": true,
+  "reviewed_before_any_v3_specific_training_or_inference": true,
+  "design_independence_from_prior_pacs_outcomes": "not claimed",
+  "review_findings": {
+    "chronology": "Prior PACS V1 and transfer outcomes predate this v3 seal and are fully disclosed.",
+    "scientific_alignment": "The alpha, confidence budgets, Lambda, M, primary budget, denominators, selectors, H/S/B tails, and decision gates are carried forward from v2.",
+    "seed_contract": "The exact unexecuted v2 training and audit seed manifests are carried forward byte-for-byte to avoid a provenance-driven scientific redesign.",
+    "independence_boundary": "Fresh RNG and checkpoints do not create an untouched dataset, an independent source population, or external validation.",
+    "implementation": "A clean Ubuntu source snapshot, dedicated image, mount isolation, and PACS-free synthetic integration are still required.",
+    "negative_result_rule": "Every adverse v3 cell remains in the registered denominator and must be released."
+  },
+  "verdict": "PASS_CORRECTIVE_SCIENTIFIC_PROTOCOL_HOLD_EXECUTION",
+  "training_authorized": false,
+  "submission_authorized": false
+}

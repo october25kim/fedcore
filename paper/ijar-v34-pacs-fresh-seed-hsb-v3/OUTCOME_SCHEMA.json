@@ -1,0 +1,240 @@
+{
+  "schema_version": 2,
+  "protocol_id": "FEDCORE-IJAR-V34-PACS-FRESH-SEED-REPLICATION-HSB-v3",
+  "primary_file": "PRIMARY_512_REP000.csv",
+  "primary_key": [
+    "model_id",
+    "procedure"
+  ],
+  "expected_primary_rows": 90,
+  "primary_file_is_immutable_before_truth": true,
+  "required_columns": {
+    "model_id": "string",
+    "architecture": "enum[resnet18,convnext_tiny]",
+    "split": "integer[0,4]",
+    "nominal_training_seed": "integer[0,2]",
+    "training_status": "enum[terminal_success,terminal_model_failure]",
+    "model_evaluable": "boolean",
+    "failure_stage": "enum[none,training]",
+    "checkpoint_sha256": "hex64_or_empty_if_terminal_model_failure",
+    "proposal_seal_sha256": "hex64_or_empty_if_terminal_model_failure",
+    "audit_sequence_sha256": "hex64_or_empty_if_terminal_model_failure",
+    "count_tensor_sha256": "hex64_or_empty_if_terminal_model_failure",
+    "candidate_decision_file_sha256": "hex64_or_empty_if_terminal_model_failure",
+    "procedure": "enum[H,S,B]",
+    "alpha": "float=0.2",
+    "delta_r": "float=0.05",
+    "delta_c": "float=0.05",
+    "mixture_set": "string=Delta^3",
+    "budget_total": "integer=512",
+    "replicate_id": "integer=0",
+    "proposal_feasible_members": "integer[0,12]_or_empty_if_terminal_model_failure",
+    "certified": "boolean",
+    "selected_candidate": "integer[-1,11]",
+    "selected_score": "string_or_empty",
+    "selected_gamma": "float_or_empty",
+    "selected_threshold": "float_or_empty",
+    "risk_decision": "boolean_or_empty_if_terminal_model_failure",
+    "risk_ucb": "float_or_empty; empty for H",
+    "raw_p_value": "float_or_empty; present only when H selects a candidate",
+    "holm_adjusted_p_value": "float_or_empty; present only when H selects a candidate",
+    "coverage_lcb": "float[0,1]; exactly zero for terminal_model_failure",
+    "ECA": "float[0,1]",
+    "refusal_reason": "enum[none,model_failure,proposal_family_all_infeasible,no_candidate_certified]",
+    "diagnostic_failure_subtype": "enum[not_applicable,no_risk_pass,nonpositive_coverage,mixed]"
+  },
+  "refusal_reason_precedence": [
+    "model_failure",
+    "proposal_family_all_infeasible",
+    "no_candidate_certified",
+    "none"
+  ],
+  "refusal_reason_rule": "The refusal label is a deterministic summary of the registered decision and never adds a decision gate. diagnostic_failure_subtype is computed only after certified=false and cannot change certified. no_candidate_certified covers both absence of a risk-passing candidate and nonpositive coverage among risk-passing candidates.",
+  "model_failure_rule": "A frozen-training NaN or divergence writes all three H/S/B primary rows with certified=false, selected_candidate=-1, coverage_lcb=0, ECA=0, refusal_reason=model_failure, and explicitly empty unavailable hashes. The seed is never replaced.",
+  "proposal_family_file": {
+    "name": "PROPOSAL_FAMILY_MANIFEST.csv.gz",
+    "primary_key": [
+      "model_id",
+      "candidate_index"
+    ],
+    "expected_rows": 360,
+    "failure_placeholder_rule": "A terminal model failure retains 12 ordered placeholder rows with proposal_feasible=false and empty score-derived quantities."
+  },
+  "count_file": {
+    "name": "PRIMARY_COUNTS.csv.gz",
+    "primary_key": [
+      "model_id",
+      "candidate_index",
+      "client"
+    ],
+    "expected_rows": 1440,
+    "required_columns": [
+      "model_id",
+      "candidate_index",
+      "client",
+      "status",
+      "n",
+      "A",
+      "K"
+    ],
+    "ordering_constraint": "Every model retains 48 candidate-client rows. For model-evaluable rows, 0 <= K <= A <= n and n=128. For terminal model failure, n/A/K are explicitly empty and status=model_failure.",
+    "same_tensor_for_H_S_B": true
+  },
+  "primary_candidate_decision_file": {
+    "name": "PRIMARY_CANDIDATE_DECISIONS.csv.gz",
+    "primary_key": [
+      "model_id",
+      "candidate_index",
+      "procedure"
+    ],
+    "expected_rows": 1080,
+    "required_columns": {
+      "model_id": "string",
+      "candidate_index": "integer[0,11]",
+      "procedure": "enum[H,S,B]",
+      "model_evaluable": "boolean",
+      "proposal_feasible": "boolean",
+      "checkpoint_sha256": "hex64_or_empty_if_terminal_model_failure",
+      "proposal_seal_sha256": "hex64_or_empty_if_terminal_model_failure",
+      "audit_sequence_sha256": "hex64_or_empty_if_terminal_model_failure",
+      "count_tensor_sha256": "hex64_or_empty_if_terminal_model_failure",
+      "budget_total": "integer=512",
+      "replicate_id": "integer=0",
+      "score": "enum[msp,energy_lse,margin]",
+      "gamma": "enum[0.3,0.5,0.7,1.0]",
+      "threshold": "float_or_empty_if_infeasible_or_model_failure",
+      "risk_tail": "float_or_empty_for_H",
+      "coverage_tail": "float_or_empty_if_terminal_model_failure",
+      "raw_max_client_p": "float_or_empty; populated for H model-evaluable candidates",
+      "holm_rank": "integer[1,12]_or_empty; populated for H model-evaluable candidates",
+      "holm_critical_value": "float_or_empty; populated for H model-evaluable candidates",
+      "holm_adjusted_p": "float_or_empty; populated for H model-evaluable candidates",
+      "risk_ucb": "float_or_empty; populated for S and B model-evaluable candidates",
+      "coverage_lcb": "float_or_empty_if_terminal_model_failure",
+      "risk_pass": "boolean_or_empty_if_terminal_model_failure",
+      "coverage_positive": "boolean_or_empty_if_terminal_model_failure",
+      "candidate_certified": "boolean",
+      "selected": "boolean"
+    },
+    "failure_placeholder_rule": "A terminal model failure retains 36 ordered placeholder rows, candidate_certified=false, selected=false, and empty inferential quantities.",
+    "mandatory_candidate_reporting": "All 12 H raw and Holm-adjusted p-values, all 12 S and B risk UCBs, and all procedure-specific coverage LCBs are retained regardless of selection."
+  },
+  "post_decision_truth_file": {
+    "name": "POST_DECISION_TRUTH.csv",
+    "primary_key": [
+      "model_id",
+      "procedure"
+    ],
+    "expected_rows": 90,
+    "required_columns": {
+      "model_id": "string",
+      "procedure": "enum[H,S,B]",
+      "primary_decision_file_sha256": "hex64",
+      "primary_candidate_decision_file_sha256": "hex64",
+      "truth_opened_after_primary_hash": "boolean=true for model-evaluable rows",
+      "selected_candidate": "integer[-1,11]",
+      "true_worst_client_risk": "float_or_empty",
+      "true_min_client_acceptance": "float_or_empty",
+      "validity_failure": "boolean_or_empty",
+      "truth_unavailable_reason": "enum[none,model_failure,proposal_infeasible,certificate_refusal]"
+    },
+    "may_modify_primary_file": false
+  },
+  "secondary_procedure_file": {
+    "name": "SECONDARY_AUDIT_REPLICATES.csv.gz",
+    "primary_key": [
+      "model_id",
+      "budget_total",
+      "replicate_id",
+      "procedure"
+    ],
+    "registered_grid": "budget_total in {256,512,1024}, replicate_id in {0,...,99}, excluding the primary pair (512,0)",
+    "audit_configurations_per_model": 299,
+    "expected_rows": 26910,
+    "inherits_schema_from": "PRIMARY_512_REP000.csv",
+    "additional_key_columns": [
+      "budget_total",
+      "replicate_id"
+    ],
+    "rule": "Secondary rows cannot alter primary outputs or verdict."
+  },
+  "secondary_count_file": {
+    "name": "SECONDARY_COUNTS.csv.gz",
+    "primary_key": [
+      "model_id",
+      "budget_total",
+      "replicate_id",
+      "candidate_index",
+      "client"
+    ],
+    "expected_rows": 430560,
+    "inherits_schema_from": "PRIMARY_COUNTS.csv.gz",
+    "additional_key_columns": [
+      "budget_total",
+      "replicate_id"
+    ],
+    "ordering_constraint": "30 models x 299 secondary audit configurations x 12 candidates x 4 clients; terminal model failures retain explicit placeholder rows."
+  },
+  "secondary_candidate_decision_file": {
+    "name": "SECONDARY_CANDIDATE_DECISIONS.csv.gz",
+    "primary_key": [
+      "model_id",
+      "budget_total",
+      "replicate_id",
+      "candidate_index",
+      "procedure"
+    ],
+    "expected_rows": 322920,
+    "inherits_schema_from": "PRIMARY_CANDIDATE_DECISIONS.csv.gz",
+    "additional_key_columns": [
+      "budget_total",
+      "replicate_id"
+    ],
+    "ordering_constraint": "30 models x 299 secondary audit configurations x 12 candidates x 3 procedures; terminal model failures retain explicit placeholder rows."
+  },
+  "conditional_certified_coverage_rule": "When the certified denominator is zero, CondCertCov is NA and its denominator is reported as zero; it is never encoded as numeric zero.",
+  "numeric_invariants": {
+    "replay_absolute_tolerance": 1e-12,
+    "replay_relative_tolerance": 0.0,
+    "decision_pass_flips_from_tolerance_are_forbidden": true,
+    "candidate_level": [
+      "U_S <= U_B",
+      "C_H = C_S",
+      "C_S >= C_B",
+      "S_risk_pass implies H_risk_pass",
+      "B_risk_pass implies S_risk_pass",
+      "B_candidate_certified implies S_candidate_certified implies H_candidate_certified",
+      "candidate_certified implies proposal_feasible and risk_pass and coverage_positive",
+      "selected implies candidate_certified"
+    ],
+    "cell_level": [
+      "B_certified implies S_certified implies H_certified",
+      "E_H >= E_S >= E_B",
+      "at most one selected candidate per model and procedure",
+      "selected_count equals one iff at least one candidate is certified, otherwise zero",
+      "certified equals (selected_candidate >= 0)",
+      "ECA equals certified multiplied by coverage_lcb",
+      "H, S, and B share the same count_tensor_sha256 for each model, budget, and replicate",
+      "the selected candidate is exactly the certified candidate maximizing the frozen tie-break tuple",
+      "the candidate table aggregates exactly to the 90-row primary summary"
+    ],
+    "violation_status": "INVALID"
+  },
+  "mandatory_ledgers": [
+    "MODEL_STATUS.csv",
+    "PROPOSAL_FAMILY_MANIFEST.csv.gz",
+    "PRIMARY_COUNTS.csv.gz",
+    "PRIMARY_CANDIDATE_DECISIONS.csv.gz",
+    "PRIMARY_512_REP000.csv",
+    "POST_DECISION_TRUTH.csv",
+    "DENOMINATOR_LEDGER.json",
+    "FAILURE_LEDGER.csv",
+    "SECONDARY_COUNTS.csv.gz",
+    "SECONDARY_CANDIDATE_DECISIONS.csv.gz",
+    "SECONDARY_AUDIT_REPLICATES.csv.gz",
+    "INDEPENDENT_REPLAY.json",
+    "FINAL_VALIDATION.json",
+    "NEGATIVE_RESULTS.md",
+    "SHA256SUMS.txt"
+  ]
+}

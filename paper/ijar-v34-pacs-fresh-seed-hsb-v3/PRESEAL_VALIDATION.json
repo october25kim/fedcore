@@ -1,0 +1,33 @@
+{
+  "schema_version": 2,
+  "protocol_id": "FEDCORE-IJAR-V34-PACS-FRESH-SEED-REPLICATION-HSB-v3",
+  "observed_at_utc": "2026-09-29T08:15:00Z",
+  "status": "PASS_CORRECTIVE_SCIENTIFIC_SEAL_HOLD_EXECUTION",
+  "checks": {
+    "prior_pacs_outcomes_disclosed": true,
+    "v2_public_release_marked_do_not_execute": true,
+    "v3_specific_checkpoint_files_found": 0,
+    "v3_specific_result_files_found": 0,
+    "v3_specific_training_started": false,
+    "v3_specific_inference_started": false,
+    "model_matrix_rows": 30,
+    "model_matrix_NOT_RUN_rows": 30,
+    "seed_manifests_byte_identical_to_v2": true,
+    "pacs_images": 9991,
+    "within_pacs_cross_role_identity_leakage": 0,
+    "exact_CP_Holm_boundaries_registered": true,
+    "primary_candidate_rows_registered": 1080,
+    "secondary_procedure_rows_registered": 26910,
+    "secondary_candidate_rows_registered": 322920,
+    "secondary_count_rows_registered": 430560,
+    "H_S_B_monotonicity_is_INVALID_invariant": true
+  },
+  "known_execution_blockers": [
+    "isolated Ubuntu execution root not yet created",
+    "clean v3 Git source commit and dedicated image not yet bound",
+    "no validated end-to-end 30-model H/S/B orchestrator",
+    "mount isolation not yet demonstrated",
+    "PACS-free synthetic integration and independent replay not yet passed"
+  ],
+  "conclusion": "The outcome-disclosed fresh-seed replication contract may be timestamped. No v3 PACS scientific execution is authorized until a separate execution-binding seal passes."
+}
