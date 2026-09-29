@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "protocol_id": "FEDCORE-IJAR-V34-PACS-PROSPECTIVE-HSB-v2",
+  "review_type": "read-only multi-reviewer design and feasibility cross-check",
+  "reviewed_before_any_pacs_training_or_inference": true,
+  "review_findings": {
+    "design": "Use the unexecuted 30-model PACS roster rather than another CIFAR replay, and replace the parent switching-policy objective with the manuscript-aligned full-simplex H/S/B confirmation under a new protocol ID.",
+    "scientific_alignment": "Primary alpha=0.20, delta_r=delta_c=0.05, Lambda=Delta^3, M=12, one budget-512 replicate per model, common H/S/B evidence, and complete 30-model denominators match the v34 core question.",
+    "v2_amendment_audit": "Before any PACS outcome existed, independent review required removal of the v1 one-percent proposal floor, separation of immutable decisions from truth, schema-valid model-failure placeholders, exact CP/Holm boundary conventions, candidate-level reporting, exact secondary denominators, and INVALID H/S/B monotonicity checks. Version 2 incorporates these changes and preserves v1 as superseded.",
+    "registered_denominators": "Primary: 90 summary, 1080 candidate, 1440 count, and 90 post-truth rows. Secondary: 299 audit configurations per model, 26910 summary, 322920 candidate, and 430560 count rows.",
+    "feasibility": "Synthetic GPU updates passed, but the dirty untracked remote source, missing end-to-end orchestrator, incomplete archived-overlap binding, and unmeasured PACS capacity require an execution HOLD.",
+    "independence_boundary": "Fresh training runs support independent-model confirmation conditional on fixed frames. They do not create 30 independent source datasets or justify population transport.",
+    "negative_result_rule": "A valid negative result is retained and publicly released; secondary budgets or audit repeats cannot replace the primary."
+  },
+  "verdict": "PASS_SCIENTIFIC_PROTOCOL_DESIGN_HOLD_EXECUTION",
+  "training_authorized": false,
+  "submission_authorized": false
+}

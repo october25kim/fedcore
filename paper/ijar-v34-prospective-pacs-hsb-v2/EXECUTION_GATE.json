@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "protocol_id": "FEDCORE-IJAR-V34-PACS-PROSPECTIVE-HSB-v2",
+  "status": "HOLD_IMPLEMENTATION_BINDING",
+  "scientific_protocol_sealed": true,
+  "training_authorized": false,
+  "gpu_training_started": false,
+  "submission_authorized": false,
+  "reason": "The scientific design is frozen, but the dirty remote repository is not an immutable execution environment and an end-to-end 30-model H/S/B runner has not yet passed synthetic integration, resume, resource-cap, output-schema, and independent-replay checks.",
+  "required_before_PASS_EXECUTION_READY": [
+    "Create a clean isolated execution snapshot without changing any scientific field in the sealed protocol.",
+    "Freeze every runner, H/S/B implementation, test, config, dependency, container, pretrained weight, seed manifest, and dataset-manifest hash.",
+    "Verify the archived-prior-audit identity overlap or explicitly narrow the source-disjoint claim.",
+    "Pass a synthetic end-to-end run that exercises training orchestration, proposal sealing, count construction, primary-before-truth ordering, H/S/B parity, resume, failure accounting, and independent replay without PACS training or PACS inference.",
+    "Measure the two-hour capacity stage and show that the 48 GPU-hour cap is operationally plausible without inspecting PACS scientific outcomes.",
+    "Publish a new pre-outcome execution-binding seal and obtain explicit user authorization to begin training."
+  ],
+  "forbidden_now": [
+    "PACS model training",
+    "PACS model inference",
+    "proposal threshold construction from PACS logits",
+    "PACS audit count generation",
+    "PACS performance inspection"
+  ],
+  "next_state": "PASS_EXECUTION_READY",
+  "ready_submission_package_state": "NOT_APPLICABLE_UNTIL_EXPERIMENT_COMPLETES"
+}

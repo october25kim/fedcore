@@ -1,0 +1,17 @@
+{
+  "canonical_bundle_root_sha256": "36ff18ddae661715eae22c5b92f5ecb1888e301e524d75ade4bedf38d1f7a3e2",
+  "canonical_file_count": 17,
+  "execution_gate": "HOLD_IMPLEMENTATION_BINDING",
+  "gpu_training_started": false,
+  "note": "The public Git tag timestamps this content seal. A separate pre-outcome execution-binding seal is required before training.",
+  "pacs_inference_started": false,
+  "pacs_training_started": false,
+  "preregistration_sha256": "7f5d976cf2bd0dfa0bd8ee51b8b6f833a5e611b33de2c8fd94e95d81b3444c68",
+  "protocol_id": "FEDCORE-IJAR-V34-PACS-PROSPECTIVE-HSB-v2",
+  "public_tag_planned": "pacs-prospective-hsb-v2",
+  "schema_version": 1,
+  "sealed_at_utc": "2026-09-29T02:50:00Z",
+  "state": "SEALED_SCIENTIFIC_PROTOCOL_NOT_EXECUTED",
+  "submission_authorized": false,
+  "training_authorized": false
+}

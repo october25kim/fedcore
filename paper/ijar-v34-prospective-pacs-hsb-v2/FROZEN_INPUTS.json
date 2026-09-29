@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "protocol_id": "FEDCORE-IJAR-V34-PACS-PROSPECTIVE-HSB-v2",
+  "dataset": {
+    "PACS_mirror.zip": {
+      "sha256": "42bf567f1ed8a01d522e47e4a677e2a3149577bbd6fcbb38bedfdd73cb59e147",
+      "bytes": 184417365,
+      "role": "governing source archive"
+    },
+    "IMAGE_MANIFEST.csv": {
+      "sha256": "283d47bd8cfb7017d6e7fde6d65e07ff6479ab25127afcba135da3a06775afae",
+      "records": 9991,
+      "role": "decoded-image identity and source path manifest"
+    },
+    "FOLD_MANIFEST.csv": {
+      "sha256": "fe5b64d237f47f503b8895aa5e566727bc818e05ee597f84c440df70e91e5344",
+      "role": "five-split train/proposal/audit assignment manifest"
+    }
+  },
+  "pretrained_weights": {
+    "resnet18-f37072fd.pth": "f37072fd47e89c5e827621c5baffa7500819f7896bbacec160b1a16c560e07ec",
+    "convnext_tiny-983f1562.pth": "983f1562536e84ff750a1576fb08e54de751dbf2e17c0d8a4a13704341fdcd3d"
+  },
+  "parent_preflight": {
+    "PROTOCOL.json": "a8c944d57246d2fc46b175982cdada76f1c797da30090a35fbb344bad0cb7c50",
+    "MODEL_MATRIX.csv": "53541e59650fe1f63c315a8433e80e88b7373a4371a8c7dd50fa89e10e87f6d4",
+    "v1_pacs_adapter.py": "ceff2d0e3138cd99f96262e0d7193af5b96895118cc55c820aed6b6d0ba7871e",
+    "v1_pacs_certifier.py": "e0e446452c0f9cbd7ceb75221a842083be10f12c33b809e12d302816dc64d954",
+    "v1_pacs_preflight.py": "9313123dd0278d32095e6f91e740a0b0cc3412c61549f5531fe2dcefb456b367",
+    "v1_pacs_gpu_check.py": "7abe4e1793a15d622a55cf3d2d30220f9093ff774cdc1e657077cdffcb24ffbd",
+    "DEPENDENCIES.txt": "d0bcdab27edfc5ea396d94340193b455ace0809140464dac64fc275ce21aad61"
+  },
+  "environment": {
+    "container_image_id": "sha256:bc05f69e2185beca23c473d731708ad8edcdca993c27ad96fadd6ed18edb61e0",
+    "execution_environment_fully_bound": false,
+    "note": "The new H/S/B runner is not included in the parent preflight. A separate execution-binding seal is required before training."
+  },
+  "availability": {
+    "full_dataset_and_manifests_publicly_redistributed_here": false,
+    "reason": "This scientific seal commits to the pre-existing bytes by SHA-256. Redistribution and the executable snapshot are handled by the later execution-binding release.",
+    "hash_only_is_not_end_to_end_reproduction": true
+  }
+}

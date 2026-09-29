@@ -1,0 +1,146 @@
+{
+  "schema_version": 2,
+  "protocol_id": "FEDCORE-IJAR-V34-PACS-PROSPECTIVE-HSB-v2",
+  "primary": {
+    "alpha": 0.2,
+    "delta_r": 0.05,
+    "delta_c": 0.05,
+    "J": 4,
+    "M": 12,
+    "mixture_set": "Delta^3",
+    "budget_total": 512,
+    "draws_per_client": 128,
+    "replicate_id": 0,
+    "model_denominator": 30,
+    "procedures": ["H", "S", "B"]
+  },
+  "numerical_contract": {
+    "beta_quantile_definition": "BetaPPF(u;a,b)=inf{x in [0,1]:F_Beta(a,b)(x)>=u}",
+    "U_plus": "U_plus(k,n,eta)=1 if n=0 or k=n; otherwise BetaPPF(1-eta;k+1,n-k)",
+    "L_minus": "L_minus(x,n,eta)=0 if x=0; otherwise BetaPPF(eta;x,n-x+1)",
+    "binomial_p_value": "p_mj=1 if A_mj=0; otherwise P[X<=K_mj] for X~Binomial(A_mj,alpha), inclusive of K_mj",
+    "candidate_p_value": "p_m=max_j p_mj",
+    "holm_order": "stable ascending order by (p_m,candidate_index)",
+    "holm_critical_value": "at rank r in {1,...,M}, delta_r/(M-r+1)",
+    "holm_rejection": "reject in order while p_(r)<=delta_r/(M-r+1), inclusive; the first failure stops rejection of all later candidates",
+    "holm_adjusted_p": "min(1,max_{s<=r}((M-s+1)*p_(s))) in sorted order, mapped back to candidate_index",
+    "proposal_comparison": "A>=1 and K/A<=gamma*alpha, inclusive",
+    "risk_comparison": "U<=alpha, inclusive",
+    "coverage_comparison": "C>0, strict",
+    "decision_precision": "pinned float64 and pinned SciPy implementation; no tolerance may change a pass or fail decision",
+    "replay_tolerance": {"atol": 1e-12, "rtol": 0.0},
+    "tails": {
+      "H_coverage": 0.004166666666666667,
+      "S_risk": 0.004166666666666667,
+      "S_coverage": 0.004166666666666667,
+      "B_risk": 0.0010416666666666667,
+      "B_coverage": 0.0010416666666666667
+    }
+  },
+  "formulae": {
+    "H_risk": "p_m=max_j BinomCDF(K_mj;A_mj,alpha), with p_mj=1 when A_mj=0; apply Holm across M=12 at delta_r",
+    "H_coverage": "min_j L_minus(A_mj,n_j;delta_c/M)",
+    "S_risk": "max_j U_plus(K_mj,A_mj;delta_r/M)",
+    "S_coverage": "min_j L_minus(A_mj,n_j;delta_c/M)",
+    "B_risk": "max_j U_plus(K_mj,A_mj;delta_r/(M*J))",
+    "B_coverage": "min_j L_minus(A_mj,n_j;delta_c/(M*J))"
+  },
+  "proposal_contract": {
+    "pooling": "all proposal-domain records pooled without domain reweighting",
+    "error": "accepted unknown-class records and accepted incorrectly classified known-class records",
+    "eligibility": "A>=1 and K/A<=gamma*alpha by exact integer cross multiplication",
+    "objective": "maximum accepted proposal count; smaller threshold breaks a tie",
+    "additional_coverage_floor": false
+  },
+  "selection": {
+    "eligible": "proposal-feasible candidates satisfying the procedure-specific risk decision and strictly positive coverage LCB",
+    "objective": "maximum procedure-specific coverage LCB",
+    "tie_break": "larger coverage LCB, then smaller gamma, then lexical score alias, then smaller candidate_index",
+    "refusal": "refuse exactly when no candidate is eligible"
+  },
+  "confidence_scope": {
+    "unit": "one model cell and one separately reported procedure after within-family selection",
+    "risk_confidence": 0.95,
+    "coverage_confidence": 0.95,
+    "joint_union_lower_bound": 0.9,
+    "not_simultaneous_across_30_models": true,
+    "not_simultaneous_across_H_S_B": true,
+    "not_a_confidence_interval_for_theta_H": true,
+    "not_source_population_transport": true
+  },
+  "metrics": {
+    "ECA": "certified indicator multiplied by selected coverage LCB; zero for refusal, proposal infeasibility, or terminal scientific model failure",
+    "certification_rate": "certified model cells divided by all 30 planned cells",
+    "CondCertCov": "mean selected coverage LCB among certified cells; NA with an explicitly reported zero denominator when no cell certifies",
+    "S_minus_B": "paired mean ECA difference; client-count division effect",
+    "H_minus_S": "paired mean ECA difference; Holm residual effect",
+    "H_minus_B": "paired mean ECA difference; total headline contrast"
+  },
+  "invalid_invariants": {
+    "evidence_equality": "H, S, and B use identical (n,A,K) arrays and the same count-tensor hash within every model and audit configuration",
+    "candidate_level": [
+      "C_H equals C_S within replay tolerance",
+      "U_S<=U_B within replay tolerance",
+      "C_S>=C_B within replay tolerance",
+      "S risk pass implies H risk pass",
+      "B risk pass implies S risk pass",
+      "B candidate certification implies S candidate certification implies H candidate certification"
+    ],
+    "cell_level": [
+      "B certification implies S certification implies H certification",
+      "E_H>=E_S>=E_B within replay tolerance",
+      "the selected member exactly follows the frozen objective and tie break",
+      "candidate-level rows aggregate exactly to the primary procedure summary"
+    ],
+    "interpretation": "Any violation is INVALID, not PASS_CORE_ONLY or a scientific negative. Equality is a scientifically possible outcome."
+  },
+  "decision_gates": {
+    "PASS_FULL_PROSPECTIVE_CONFIRMATION": [
+      "all 30 cells accounted",
+      "H certifies at least 6 of 30 models",
+      "H certification appears in both architectures",
+      "H certification appears in at least 3 of 5 class splits",
+      "mean H ECA is at least 0.05",
+      "mean S-minus-B ECA is at least 0.01",
+      "architecture-specific mean S-minus-B is nonnegative for both architectures",
+      "each architecture contains at least one strict positive S-minus-B cell",
+      "all integrity and independent-replay checks pass"
+    ],
+    "PASS_CORE_ONLY": "all absolute H utility gates pass but at least one nonnegative, integrity-valid S-minus-B gain gate fails",
+    "VALID_NEGATIVE": "complete valid experiment in which at least one absolute H utility gate fails",
+    "HOLD_INCOMPLETE": "any registered model or verifier outcome is missing",
+    "INVALID": "any protocol, leakage, hash, implementation, evidence-equality, count-ordering, or monotonicity breach"
+  },
+  "registered_audit_grid": {
+    "budgets_total": [256, 512, 1024],
+    "replicate_ids": "integers 0 through 99",
+    "configurations_per_model": 300,
+    "primary_pair": {"budget_total": 512, "replicate_id": 0},
+    "secondary_definition": "all registered pairs except the primary pair",
+    "secondary_configurations_per_model": 299,
+    "secondary_procedure_rows": 26910,
+    "secondary_candidate_rows": 322920,
+    "secondary_count_rows": 430560,
+    "role": "conditional stability and audit-budget frontier",
+    "cannot_replace_primary": true
+  },
+  "descriptive_bootstrap": {
+    "replicates": 20000,
+    "seed": 2026092901,
+    "resampling": "paired resampling of the three training seeds within each fixed architecture-by-split stratum",
+    "scope": "conditional training-RNG variation; not theorem confidence or source-population inference",
+    "used_in_success_gate": false
+  },
+  "mandatory_reporting": [
+    "all 30 model cells and all 90 primary procedure rows",
+    "architecture and class-split strata",
+    "proposal infeasibility and terminal scientific model failure",
+    "all refusals and deterministic refusal labels",
+    "complete H/S/B count-tensor hashes",
+    "all candidate raw and adjusted Holm p-values",
+    "all candidate S and B risk UCBs",
+    "all candidate coverage LCBs",
+    "primary and secondary results kept distinct",
+    "all negative and mixed outcomes"
+  ]
+}
