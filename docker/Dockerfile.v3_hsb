@@ -1,0 +1,20 @@
+FROM fedcore-v1:20260916
+
+ARG SOURCE_COMMIT=UNSET
+LABEL org.opencontainers.image.title="FedCORE PACS HSB v3 runtime"
+LABEL org.opencontainers.image.revision="${SOURCE_COMMIT}"
+LABEL org.opencontainers.image.description="Outcome-disclosed PACS fresh-seed replication runtime; training remains gate-controlled"
+
+ENV PYTHONPATH=/workspace \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
+
+WORKDIR /workspace
+
+COPY --chown=1000:1000 pyproject.toml /workspace/pyproject.toml
+COPY --chown=1000:1000 fedcore /workspace/fedcore
+COPY --chown=1000:1000 tests /workspace/tests
+COPY --chown=1000:1000 paper/ijar-v34-pacs-fresh-seed-hsb-v3 /workspace/paper/ijar-v34-pacs-fresh-seed-hsb-v3
+
+USER 1000:1000
+ENTRYPOINT ["python"]
