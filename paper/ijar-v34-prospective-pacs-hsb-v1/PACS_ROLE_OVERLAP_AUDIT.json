@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "protocol_id": "FEDCORE-IJAR-V34-PACS-PROSPECTIVE-HSB-v1",
+  "decoded_image_identity": "SHA-256 of uint32 big-endian width and height followed by EXIF-transposed RGB bytes",
+  "pacs_images": 9991,
+  "pacs_unique_identities": 9991,
+  "within_pacs_duplicate_rows_removed": 0,
+  "conflicting_class_labels": 0,
+  "train_proposal_audit_identity_intersection": 0,
+  "role_consistency_across_class_splits": true,
+  "available_prior_sources": {
+    "OfficeHome": {"files_scanned": 15588, "exact_overlap": 0},
+    "CIFAR10": {"records_dimension_checked": 60000, "exact_overlap_excluded_by_dimensions": true},
+    "CIFAR100": {"records_dimension_checked": 60000, "exact_overlap_excluded_by_dimensions": true},
+    "PathMNIST": {"records_dimension_checked": 107180, "exact_overlap_excluded_by_dimensions": true}
+  },
+  "available_source_check_status": "PASS_AVAILABLE_RAW_ROOTS",
+  "archived_prior_audit_membership_binding": "UNVERIFIED",
+  "execution_requirement": "Complete the archived prior-audit membership binding before claiming full source-disjointness; otherwise describe PACS only as a new dataset arm with verified separation from the available raw roots.",
+  "near_duplicate_or_pretraining_overlap_claimed": false
+}

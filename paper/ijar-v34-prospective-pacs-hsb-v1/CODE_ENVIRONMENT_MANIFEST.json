@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "protocol_id": "FEDCORE-IJAR-V34-PACS-PROSPECTIVE-HSB-v1",
+  "observation_host": "workstation4",
+  "repository_path": "/data/workspace/sanghoon/fedcore2",
+  "observed_head": "fcd01d4fde9d1f6836f40123098439c890c6819c",
+  "repository_clean": false,
+  "tracked_diff_sha256": "95f51f1b748dfe63e0d1b928536640afc26b5628513da5757024409b2c985edb",
+  "pacs_sources_tracked": false,
+  "source_hashes": {
+    "fedcore/experiments/v1_pacs_adapter.py": "ceff2d0e3138cd99f96262e0d7193af5b96895118cc55c820aed6b6d0ba7871e",
+    "fedcore/experiments/v1_pacs_certifier.py": "e0e446452c0f9cbd7ceb75221a842083be10f12c33b809e12d302816dc64d954",
+    "fedcore/experiments/v1_pacs_preflight.py": "9313123dd0278d32095e6f91e740a0b0cc3412c61549f5531fe2dcefb456b367",
+    "fedcore/experiments/v1_pacs_gpu_check.py": "7abe4e1793a15d622a55cf3d2d30220f9093ff774cdc1e657077cdffcb24ffbd"
+  },
+  "dependency_inventory_sha256": "d0bcdab27edfc5ea396d94340193b455ace0809140464dac64fc275ce21aad61",
+  "container_image_id": "sha256:bc05f69e2185beca23c473d731708ad8edcdca993c27ad96fadd6ed18edb61e0",
+  "observed_environment": {
+    "python": "3.10.14",
+    "torch": "2.3.0",
+    "torchvision": "0.18.0",
+    "numpy": "1.26.4",
+    "scipy": "1.15.3",
+    "Pillow": "10.2.0",
+    "cuda": "12.1",
+    "cudnn": 8902
+  },
+  "pretrained_weight_hashes": {
+    "resnet18-f37072fd.pth": "f37072fd47e89c5e827621c5baffa7500819f7896bbacec160b1a16c560e07ec",
+    "convnext_tiny-983f1562.pth": "983f1562536e84ff750a1576fb08e54de751dbf2e17c0d8a4a13704341fdcd3d"
+  },
+  "synthetic_gpu_smoke": {
+    "physical_gpus": [0, 2, 3],
+    "architectures_per_gpu": 2,
+    "successful_updates": 6,
+    "pacs_images_used": false,
+    "pacs_inference_used": false
+  },
+  "execution_binding_status": "NOT_YET_FROZEN",
+  "warning": "These observed source hashes document the parent preflight only. The actual end-to-end H/S/B execution bundle must receive a new complete immutable manifest and verifier before training."
+}

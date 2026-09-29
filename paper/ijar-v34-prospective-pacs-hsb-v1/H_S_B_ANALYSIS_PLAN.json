@@ -1,0 +1,74 @@
+{
+  "schema_version": 1,
+  "protocol_id": "FEDCORE-IJAR-V34-PACS-PROSPECTIVE-HSB-v1",
+  "primary": {
+    "alpha": 0.2,
+    "delta_r": 0.05,
+    "delta_c": 0.05,
+    "mixture_set": "Delta^3",
+    "budget_total": 512,
+    "draws_per_client": 128,
+    "replicate_id": 0,
+    "model_denominator": 30,
+    "procedures": ["H", "S", "B"]
+  },
+  "formulae": {
+    "H_risk": "p_m=max_j BinomCDF(K_mj;A_mj,alpha), with p_mj=1 when A_mj=0; apply Holm across M=12 at delta_r",
+    "H_coverage": "min_j L_minus(A_mj,n_j;delta_c/M)",
+    "S_risk": "max_j U_plus(K_mj,A_mj;delta_r/M)",
+    "S_coverage": "min_j L_minus(A_mj,n_j;delta_c/M)",
+    "B_risk": "max_j U_plus(K_mj,A_mj;delta_r/(M*J))",
+    "B_coverage": "min_j L_minus(A_mj,n_j;delta_c/(M*J))"
+  },
+  "selection": "For each procedure, select the passing proposal-feasible member with the greatest positive coverage LCB. Use the frozen tie rule. Refuse if none passes.",
+  "metrics": {
+    "ECA": "certified indicator multiplied by selected coverage LCB; zero for refusal or proposal infeasibility",
+    "certification_rate": "certified model cells divided by all 30 planned cells",
+    "CondCertCov": "mean selected coverage LCB among certified cells with the certified denominator",
+    "S_minus_B": "paired mean ECA difference; client-count division effect",
+    "H_minus_S": "paired mean ECA difference; Holm residual effect",
+    "H_minus_B": "paired mean ECA difference; total headline contrast"
+  },
+  "decision_gates": {
+    "PASS_FULL_PROSPECTIVE_CONFIRMATION": [
+      "all 30 cells accounted",
+      "H certifies at least 6 of 30 models",
+      "H certification appears in both architectures",
+      "H certification appears in at least 3 of 5 class splits",
+      "mean H ECA is at least 0.05",
+      "mean S-minus-B ECA is at least 0.01",
+      "architecture-specific mean S-minus-B is nonnegative for both architectures",
+      "each architecture contains at least one strict positive S-minus-B cell",
+      "all integrity and replay checks pass"
+    ],
+    "PASS_CORE_ONLY": "absolute H utility gates pass but at least one S-minus-B gain gate fails",
+    "VALID_NEGATIVE": "complete valid experiment in which at least one absolute H utility gate fails",
+    "HOLD_INCOMPLETE": "any registered model or verifier outcome is missing",
+    "INVALID": "any protocol, leakage, hash, implementation, evidence-equality, or count-ordering breach"
+  },
+  "secondary": {
+    "budgets_total": [256, 1024],
+    "replicate_ids": "1-99 plus replicate 0 at secondary budgets",
+    "role": "conditional stability and audit-budget frontier",
+    "cannot_replace_primary": true
+  },
+  "descriptive_bootstrap": {
+    "replicates": 20000,
+    "seed": 2026092901,
+    "resampling": "paired resampling of the three training seeds within each fixed architecture-by-split stratum",
+    "scope": "conditional training-RNG variation; not theorem confidence or source-population inference",
+    "used_in_success_gate": false
+  },
+  "mandatory_reporting": [
+    "all 30 model rows",
+    "architecture and split strata",
+    "proposal infeasibility",
+    "all refusals and refusal reasons",
+    "complete H/S/B count tensor hashes",
+    "raw and adjusted Holm p-values",
+    "S and B risk UCBs",
+    "all coverage LCBs",
+    "primary and secondary results kept distinct",
+    "negative results"
+  ]
+}
