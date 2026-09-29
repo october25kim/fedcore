@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "protocol_id": "FEDCORE-IJAR-V34-PACS-FRESH-SEED-REPLICATION-HSB-v3",
+  "status": "HOLD_END_TO_END_SCIENTIFIC_ORCHESTRATOR_AND_AUTHORIZATION",
+  "completed": [
+    "exact five source paths, byte sizes, and SHA-256 values",
+    "exact five staged regular nonsymlink files with mode 0444",
+    "fixed 30-cell ordering and an unauthorized static host launch plan",
+    "immutable container image ID bound to the public source commit",
+    "no-GPU runtime probe with five read-only inputs, one read-write output, a read-only root, and a restricted /tmp",
+    "CPU-only strict loading of both pretrained weights after all five input hashes were verified"
+  ],
+  "open_gaps": [
+    {
+      "id": "GAP-001",
+      "severity": "P0",
+      "description": "The public static runner does not yet invoke a complete training-to-proposal-to-primary-to-truth-to-secondary campaign writer and finalizer."
+    },
+    {
+      "id": "GAP-002",
+      "severity": "P0",
+      "description": "Artifact-level execution readiness and run authorization are not mounted and revalidated inside the scientific container. The training entrypoint therefore fails closed for every attempted scientific run."
+    },
+    {
+      "id": "GAP-003",
+      "severity": "P1",
+      "description": "The exact audit-index serialization and campaign-global post-training seal are not part of this public source snapshot."
+    },
+    {
+      "id": "GAP-004",
+      "severity": "P1",
+      "description": "GPU capacity and scientific model execution were intentionally not tested in this no-GPU binding stage."
+    }
+  ],
+  "execution_readiness_claimed": false,
+  "scientific_result_claimed": false
+}

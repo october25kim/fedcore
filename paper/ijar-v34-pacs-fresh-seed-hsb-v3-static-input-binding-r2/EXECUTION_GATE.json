@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "protocol_id": "FEDCORE-IJAR-V34-PACS-FRESH-SEED-REPLICATION-HSB-v3",
+  "status": "PASS_FIVE_INPUT_AND_STATIC_RUNTIME_BINDING_HOLD_END_TO_END_SCIENTIFIC_ORCHESTRATOR_AND_AUTHORIZATION",
+  "scientific_protocol_sealed": true,
+  "source_snapshot_bound": true,
+  "container_image_bound": true,
+  "exact_five_input_paths_bound": true,
+  "exact_five_input_sha256_bound": true,
+  "exact_five_staged_files_mode_0444": true,
+  "static_scientific_launch_plan_bound": true,
+  "exact_five_read_only_mount_probe_passed": true,
+  "cpu_pretrained_weight_binding_passed": true,
+  "end_to_end_scientific_runner_bound": false,
+  "artifact_bound_run_authorization_implemented": false,
+  "runs_scientific_empty": true,
+  "training_authorized": false,
+  "pacs_training_started": false,
+  "pacs_inference_started": false,
+  "submission_authorized": false,
+  "next_required_state": "HOLD_TO_END_TO_END_ARTIFACT_BOUND_RUNNER_AND_SEPARATE_USER_RUN_AUTHORIZATION",
+  "forbidden_now": [
+    "PACS model training",
+    "PACS model inference",
+    "proposal construction from PACS logits",
+    "PACS audit counts or decisions",
+    "RUN_AUTHORIZATION.json issuance",
+    "PASS_EXECUTION_READY issuance",
+    "interpretation of this binding as scientific evidence"
+  ]
+}

@@ -1,0 +1,334 @@
+[
+    {
+        "Id": "7bfcec15840820dd689f52a6d475c5badeb975936a684ba5350a4f63203ab32b",
+        "Created": "2026-09-29T10:12:49.355134191Z",
+        "Path": "python",
+        "Args": [
+            "-m",
+            "fedcore.experiments.v3_mount_probe"
+        ],
+        "State": {
+            "Status": "exited",
+            "Running": false,
+            "Paused": false,
+            "Restarting": false,
+            "OOMKilled": false,
+            "Dead": false,
+            "Pid": 0,
+            "ExitCode": 0,
+            "Error": "",
+            "StartedAt": "2026-09-29T10:12:49.389815868Z",
+            "FinishedAt": "2026-09-29T10:12:49.464477925Z"
+        },
+        "Image": "sha256:531dbabfccd8fb2d167cf420a81528b70cef1187d619aae20e039195842ec6fa",
+        "ResolvConfPath": "/var/lib/docker/containers/7bfcec15840820dd689f52a6d475c5badeb975936a684ba5350a4f63203ab32b/resolv.conf",
+        "HostnamePath": "/var/lib/docker/containers/7bfcec15840820dd689f52a6d475c5badeb975936a684ba5350a4f63203ab32b/hostname",
+        "HostsPath": "/var/lib/docker/containers/7bfcec15840820dd689f52a6d475c5badeb975936a684ba5350a4f63203ab32b/hosts",
+        "LogPath": "/var/lib/docker/containers/7bfcec15840820dd689f52a6d475c5badeb975936a684ba5350a4f63203ab32b/7bfcec15840820dd689f52a6d475c5badeb975936a684ba5350a4f63203ab32b-json.log",
+        "Name": "/fedcore-v3-mount-probe-r2",
+        "RestartCount": 0,
+        "Driver": "overlayfs",
+        "Platform": "linux",
+        "MountLabel": "",
+        "ProcessLabel": "",
+        "AppArmorProfile": "docker-default",
+        "ExecIDs": null,
+        "HostConfig": {
+            "Binds": null,
+            "ContainerIDFile": "",
+            "LogConfig": {
+                "Type": "json-file",
+                "Config": {}
+            },
+            "NetworkMode": "none",
+            "PortBindings": {},
+            "RestartPolicy": {
+                "Name": "no",
+                "MaximumRetryCount": 0
+            },
+            "AutoRemove": false,
+            "VolumeDriver": "",
+            "VolumesFrom": null,
+            "ConsoleSize": [
+                0,
+                0
+            ],
+            "CapAdd": null,
+            "CapDrop": [
+                "ALL"
+            ],
+            "CgroupnsMode": "private",
+            "Dns": null,
+            "DnsOptions": [],
+            "DnsSearch": [],
+            "ExtraHosts": null,
+            "GroupAdd": null,
+            "IpcMode": "private",
+            "Cgroup": "",
+            "Links": null,
+            "OomScoreAdj": 0,
+            "PidMode": "",
+            "Privileged": false,
+            "PublishAllPorts": false,
+            "ReadonlyRootfs": true,
+            "SecurityOpt": [
+                "no-new-privileges"
+            ],
+            "Tmpfs": {
+                "/tmp": "rw,noexec,nosuid,size=1g"
+            },
+            "UTSMode": "",
+            "UsernsMode": "",
+            "ShmSize": 67108864,
+            "Runtime": "runc",
+            "Isolation": "",
+            "CpuShares": 0,
+            "Memory": 0,
+            "NanoCpus": 0,
+            "CgroupParent": "",
+            "BlkioWeight": 0,
+            "BlkioWeightDevice": [],
+            "BlkioDeviceReadBps": [],
+            "BlkioDeviceWriteBps": [],
+            "BlkioDeviceReadIOps": [],
+            "BlkioDeviceWriteIOps": [],
+            "CpuPeriod": 0,
+            "CpuQuota": 0,
+            "CpuRealtimePeriod": 0,
+            "CpuRealtimeRuntime": 0,
+            "CpusetCpus": "",
+            "CpusetMems": "",
+            "Devices": [],
+            "DeviceCgroupRules": null,
+            "DeviceRequests": null,
+            "MemoryReservation": 0,
+            "MemorySwap": 0,
+            "MemorySwappiness": null,
+            "OomKillDisable": null,
+            "PidsLimit": null,
+            "Ulimits": [],
+            "CpuCount": 0,
+            "CpuPercent": 0,
+            "IOMaximumIOps": 0,
+            "IOMaximumBandwidth": 0,
+            "Mounts": [
+                {
+                    "Type": "bind",
+                    "Source": "/home/sanghoon/Desktop/Workspace/Fedcore_HSB_v3_exec/inputs/PACS_mirror.zip",
+                    "Target": "/inputs/PACS_mirror.zip",
+                    "ReadOnly": true
+                },
+                {
+                    "Type": "bind",
+                    "Source": "/home/sanghoon/Desktop/Workspace/Fedcore_HSB_v3_exec/inputs/IMAGE_MANIFEST.csv",
+                    "Target": "/inputs/IMAGE_MANIFEST.csv",
+                    "ReadOnly": true
+                },
+                {
+                    "Type": "bind",
+                    "Source": "/home/sanghoon/Desktop/Workspace/Fedcore_HSB_v3_exec/inputs/FOLD_MANIFEST.csv",
+                    "Target": "/inputs/FOLD_MANIFEST.csv",
+                    "ReadOnly": true
+                },
+                {
+                    "Type": "bind",
+                    "Source": "/home/sanghoon/Desktop/Workspace/Fedcore_HSB_v3_exec/inputs/resnet18-f37072fd.pth",
+                    "Target": "/inputs/resnet18-f37072fd.pth",
+                    "ReadOnly": true
+                },
+                {
+                    "Type": "bind",
+                    "Source": "/home/sanghoon/Desktop/Workspace/Fedcore_HSB_v3_exec/inputs/convnext_tiny-983f1562.pth",
+                    "Target": "/inputs/convnext_tiny-983f1562.pth",
+                    "ReadOnly": true
+                },
+                {
+                    "Type": "bind",
+                    "Source": "/home/sanghoon/Desktop/Workspace/Fedcore_HSB_v3_exec/runs/scientific/FEDCORE-IJAR-V34-PACS-FRESH-SEED-REPLICATION-HSB-v3",
+                    "Target": "/output"
+                }
+            ],
+            "MaskedPaths": [
+                "/proc/acpi",
+                "/proc/asound",
+                "/proc/interrupts",
+                "/proc/kcore",
+                "/proc/keys",
+                "/proc/latency_stats",
+                "/proc/sched_debug",
+                "/proc/scsi",
+                "/proc/timer_list",
+                "/proc/timer_stats",
+                "/sys/devices/virtual/powercap",
+                "/sys/firmware",
+                "/sys/devices/system/cpu/cpu0/thermal_throttle",
+                "/sys/devices/system/cpu/cpu1/thermal_throttle",
+                "/sys/devices/system/cpu/cpu2/thermal_throttle",
+                "/sys/devices/system/cpu/cpu3/thermal_throttle",
+                "/sys/devices/system/cpu/cpu4/thermal_throttle",
+                "/sys/devices/system/cpu/cpu5/thermal_throttle",
+                "/sys/devices/system/cpu/cpu6/thermal_throttle",
+                "/sys/devices/system/cpu/cpu7/thermal_throttle",
+                "/sys/devices/system/cpu/cpu8/thermal_throttle",
+                "/sys/devices/system/cpu/cpu9/thermal_throttle",
+                "/sys/devices/system/cpu/cpu10/thermal_throttle",
+                "/sys/devices/system/cpu/cpu11/thermal_throttle",
+                "/sys/devices/system/cpu/cpu12/thermal_throttle",
+                "/sys/devices/system/cpu/cpu13/thermal_throttle",
+                "/sys/devices/system/cpu/cpu14/thermal_throttle",
+                "/sys/devices/system/cpu/cpu15/thermal_throttle",
+                "/sys/devices/system/cpu/cpu16/thermal_throttle",
+                "/sys/devices/system/cpu/cpu17/thermal_throttle",
+                "/sys/devices/system/cpu/cpu18/thermal_throttle",
+                "/sys/devices/system/cpu/cpu19/thermal_throttle",
+                "/sys/devices/system/cpu/cpu20/thermal_throttle",
+                "/sys/devices/system/cpu/cpu21/thermal_throttle",
+                "/sys/devices/system/cpu/cpu22/thermal_throttle",
+                "/sys/devices/system/cpu/cpu23/thermal_throttle",
+                "/sys/devices/system/cpu/cpu24/thermal_throttle",
+                "/sys/devices/system/cpu/cpu25/thermal_throttle",
+                "/sys/devices/system/cpu/cpu26/thermal_throttle",
+                "/sys/devices/system/cpu/cpu27/thermal_throttle"
+            ],
+            "ReadonlyPaths": [
+                "/proc/bus",
+                "/proc/fs",
+                "/proc/irq",
+                "/proc/sys",
+                "/proc/sysrq-trigger"
+            ]
+        },
+        "Storage": {
+            "RootFS": {
+                "Snapshot": {
+                    "Name": "overlayfs"
+                }
+            }
+        },
+        "Mounts": [
+            {
+                "Type": "bind",
+                "Source": "/home/sanghoon/Desktop/Workspace/Fedcore_HSB_v3_exec/inputs/convnext_tiny-983f1562.pth",
+                "Destination": "/inputs/convnext_tiny-983f1562.pth",
+                "Mode": "",
+                "RW": false,
+                "Propagation": "rprivate"
+            },
+            {
+                "Type": "bind",
+                "Source": "/home/sanghoon/Desktop/Workspace/Fedcore_HSB_v3_exec/runs/scientific/FEDCORE-IJAR-V34-PACS-FRESH-SEED-REPLICATION-HSB-v3",
+                "Destination": "/output",
+                "Mode": "",
+                "RW": true,
+                "Propagation": "rprivate"
+            },
+            {
+                "Type": "bind",
+                "Source": "/home/sanghoon/Desktop/Workspace/Fedcore_HSB_v3_exec/inputs/PACS_mirror.zip",
+                "Destination": "/inputs/PACS_mirror.zip",
+                "Mode": "",
+                "RW": false,
+                "Propagation": "rprivate"
+            },
+            {
+                "Type": "bind",
+                "Source": "/home/sanghoon/Desktop/Workspace/Fedcore_HSB_v3_exec/inputs/IMAGE_MANIFEST.csv",
+                "Destination": "/inputs/IMAGE_MANIFEST.csv",
+                "Mode": "",
+                "RW": false,
+                "Propagation": "rprivate"
+            },
+            {
+                "Type": "bind",
+                "Source": "/home/sanghoon/Desktop/Workspace/Fedcore_HSB_v3_exec/inputs/FOLD_MANIFEST.csv",
+                "Destination": "/inputs/FOLD_MANIFEST.csv",
+                "Mode": "",
+                "RW": false,
+                "Propagation": "rprivate"
+            },
+            {
+                "Type": "bind",
+                "Source": "/home/sanghoon/Desktop/Workspace/Fedcore_HSB_v3_exec/inputs/resnet18-f37072fd.pth",
+                "Destination": "/inputs/resnet18-f37072fd.pth",
+                "Mode": "",
+                "RW": false,
+                "Propagation": "rprivate"
+            }
+        ],
+        "Config": {
+            "Hostname": "7bfcec158408",
+            "Domainname": "",
+            "User": "1000:1000",
+            "AttachStdin": false,
+            "AttachStdout": true,
+            "AttachStderr": true,
+            "Tty": false,
+            "OpenStdin": false,
+            "StdinOnce": false,
+            "Env": [
+                "NVIDIA_VISIBLE_DEVICES=void",
+                "PATH=/usr/local/nvidia/bin:/usr/local/cuda/bin:/opt/conda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+                "NVIDIA_DRIVER_CAPABILITIES=compute,utility",
+                "LD_LIBRARY_PATH=/usr/local/nvidia/lib:/usr/local/nvidia/lib64",
+                "PYTORCH_VERSION=2.3.0",
+                "PYTHONDONTWRITEBYTECODE=1",
+                "PYTHONPATH=/workspace",
+                "PYTHONUNBUFFERED=1",
+                "PYTHONHASHSEED=0",
+                "CUBLAS_WORKSPACE_CONFIG=:4096:8",
+                "TORCH_HOME=/nonexistent-torch-home"
+            ],
+            "Cmd": [
+                "-m",
+                "fedcore.experiments.v3_mount_probe"
+            ],
+            "Image": "sha256:531dbabfccd8fb2d167cf420a81528b70cef1187d619aae20e039195842ec6fa",
+            "Volumes": null,
+            "WorkingDir": "/workspace",
+            "Entrypoint": [
+                "python"
+            ],
+            "Labels": {
+                "com.nvidia.volumes.needed": "nvidia_driver",
+                "org.opencontainers.image.description": "Hash-bound PACS fresh-seed replication runtime; launch remains separately authorization-gated",
+                "org.opencontainers.image.ref.name": "ubuntu",
+                "org.opencontainers.image.revision": "1e1cdd5fca7a2b40900efc14de0045b2bc86eb7d",
+                "org.opencontainers.image.title": "FedCORE PACS HSB v3 scientific runtime",
+                "org.opencontainers.image.version": "22.04"
+            }
+        },
+        "NetworkSettings": {
+            "SandboxID": "",
+            "SandboxKey": "",
+            "Ports": {},
+            "Networks": {
+                "none": {
+                    "IPAMConfig": null,
+                    "Links": null,
+                    "Aliases": null,
+                    "DriverOpts": null,
+                    "GwPriority": 0,
+                    "NetworkID": "ef6b8a27ab1eb40777294d924a789eda961c5cfa4689e1211abbf8a2a3e21c98",
+                    "EndpointID": "",
+                    "Gateway": "",
+                    "IPAddress": "",
+                    "MacAddress": "",
+                    "IPPrefixLen": 0,
+                    "IPv6Gateway": "",
+                    "GlobalIPv6Address": "",
+                    "GlobalIPv6PrefixLen": 0,
+                    "DNSNames": null
+                }
+            }
+        },
+        "ImageManifestDescriptor": {
+            "mediaType": "application/vnd.oci.image.manifest.v1+json",
+            "digest": "sha256:2902cff3e8e726e0b70a04f63255a86116bd2025f576c9e2d14ad1a45c93d792",
+            "size": 2380,
+            "platform": {
+                "architecture": "amd64",
+                "os": "linux"
+            }
+        }
+    }
+]

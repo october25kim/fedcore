@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "protocol_id": "FEDCORE-IJAR-V34-PACS-FRESH-SEED-REPLICATION-HSB-v3",
+  "host_alias": "ubuntu-4070",
+  "hostname": "ubuntu",
+  "image_tag": "fedcore-v3-hsb:binding-r2",
+  "image_id": "sha256:531dbabfccd8fb2d167cf420a81528b70cef1187d619aae20e039195842ec6fa",
+  "base_image_id": "sha256:f0f2b57a630805081d8a345fb11980b230556e5360223a3658cd40aceff61bb2",
+  "source_revision_label": "1e1cdd5fca7a2b40900efc14de0045b2bc86eb7d",
+  "image_inspect_sha256": "a966813772752864d417cf3f7fd701aafce47e5189b15b6bdeffe98526dbdb54",
+  "user": "1000:1000",
+  "workdir": "/workspace",
+  "entrypoint": ["python"],
+  "build_network": "none",
+  "mount_probe": {
+    "container_id": "7bfcec15840820dd689f52a6d475c5badeb975936a684ba5350a4f63203ab32b",
+    "inspect_sha256": "1ce90a9c5161eac932814bb0a79d202110c1080ebbfa47c70175ac4389989125",
+    "stdout_sha256": "e0946a699992a752cfcb5a3b45b17e00d15732cd584c5b2b8e16ccc861f72fb1",
+    "receipt_sha256": "cc4bbbfc68faacfe4e9f6c6f6ebf52c26d44540afac82b84619b19a24b50ef8b",
+    "network": "none",
+    "device_requests": null,
+    "nvidia_visible_devices": "void",
+    "gpu_used": false
+  },
+  "scientific_execution_authorized": false
+}
