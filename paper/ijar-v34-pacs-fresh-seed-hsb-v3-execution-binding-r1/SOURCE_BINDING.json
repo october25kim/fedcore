@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "protocol_id": "FEDCORE-IJAR-V34-PACS-FRESH-SEED-REPLICATION-HSB-v3",
+  "repository": "https://github.com/october25kim/fedcore",
+  "branch": "codex/ijar-v34-binding",
+  "commit": "30f2a242a5fae6170d0de409c1820792ac24e5db",
+  "tree": "2a952498b1d1a44863f5bb4a15f7baf8e9f77c6e",
+  "ubuntu_checkout": "/home/sanghoon/Desktop/Workspace/Fedcore_HSB_v3_exec/repo",
+  "ubuntu_checkout_clean": true,
+  "scientific_protocol_sha256": "d7fba4c748d449994b11912acd6004dfd690e5053825169e482eb7f64b2ee728",
+  "scientific_bundle_root_sha256": "f81345a8e0ca70a7f64b76b3f01375bebff0a471e249710663e8bcbc82475feb",
+  "local_regression": {
+    "command": "python -m pytest -q",
+    "passed": 326,
+    "skipped": 62,
+    "failed": 0
+  }
+}

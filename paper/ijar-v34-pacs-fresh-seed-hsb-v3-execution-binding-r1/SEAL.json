@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "sealed_at_utc": "2026-09-29T08:42:27Z",
+  "protocol_id": "FEDCORE-IJAR-V34-PACS-FRESH-SEED-REPLICATION-HSB-v3",
+  "binding_id": "FEDCORE-IJAR-V34-PACS-HSB-v3-SYNTHETIC-BINDING-r1",
+  "status": "PASS_SYNTHETIC_IMPLEMENTATION_BINDING_HOLD_SCIENTIFIC_RUNNER_AND_INPUT_BINDING",
+  "bundle_root_definition": "SHA-256 of the '<sha256><two spaces><filename><newline>' records for the nine governing files listed in SHA256SUMS.txt, sorted by filename and excluding SEAL.json",
+  "bundle_root_sha256": "0e75c0001f6b593de8ce652bac617829f1a62b967079654ebec219ce0211b6fd",
+  "source_commit": "30f2a242a5fae6170d0de409c1820792ac24e5db",
+  "container_image_id": "sha256:6440aee5c29a9b4290ae5f0832ed6f07ed2836c9714a2d694f8d9799bbefd5de",
+  "synthetic_artifact_root_sha256": "08f81ea15211f8c751d3b69103bcf1fd0235184e23626ed1d0948acb2d8d176f",
+  "training_authorized": false,
+  "pacs_training_started": false,
+  "pacs_inference_started": false,
+  "submission_authorized": false,
+  "interpretation": "This seal confirms implementation wiring only. It is not an execution-ready scientific seal and contains no PACS outcome."
+}

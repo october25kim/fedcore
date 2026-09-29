@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "protocol_id": "FEDCORE-IJAR-V34-PACS-FRESH-SEED-REPLICATION-HSB-v3",
+  "status": "PASS_SYNTHETIC_BINDING_TESTS",
+  "synthetic": true,
+  "PACS_images_used": false,
+  "PACS_inference": false,
+  "GPU_used": false,
+  "output_root": "/home/sanghoon/Desktop/Workspace/Fedcore_HSB_v3_exec/runs/synthetic/dedicated_image_r1",
+  "row_counts": {
+    "proposal": 360,
+    "counts": 1440,
+    "candidates": 1080,
+    "primary": 90,
+    "truth": 90
+  },
+  "independent_replay": {
+    "status": "PASS_INDEPENDENT_REPLAY",
+    "candidate_rows_replayed": 1080,
+    "mismatch_count": 0,
+    "production_module_imported": false,
+    "atol": 1e-12,
+    "rtol": 0.0
+  },
+  "negative_controls": {
+    "strict_H_greater_S_greater_B_cells": 27,
+    "proposal_feasible_all_risk_fail_cells": 1,
+    "terminal_model_failure_cells": 1,
+    "proposal_family_all_infeasible_cells": 1
+  },
+  "fixture_only_certified_cells": {"H": 27, "S": 27, "B": 27},
+  "fixture_only_mean_ECA": {
+    "H": 0.8622776096169695,
+    "S": 0.6038421887274016,
+    "B": 0.3266940902925191
+  },
+  "artifact_root_sha256": "08f81ea15211f8c751d3b69103bcf1fd0235184e23626ed1d0948acb2d8d176f",
+  "run_state_sha256": "349d2c5ad34dccd058f037273211a8fb1fad4905dda202b1dd7b1613b845467b",
+  "final_validation_sha256": "f41834c970b5681905c178cdd45913aaaa0ce605d34b6a458fc86b04b24c9edf",
+  "independent_replay_sha256": "8d483dbfc710ea0b989ab0a81e6f63ab60c9a67fb37afe14a30aa26adb616fc3",
+  "sha256s_sha256": "0d60a9fc95fb07dec2704aa34de991ebfc50ba58c8c0609adbe7635ef274eb6e",
+  "resume_test": {
+    "forced_stop_after_cells": 7,
+    "partial_exit_code": 2,
+    "partial_status": "HOLD_INCOMPLETE_SYNTHETIC",
+    "resumed_status": "PASS_SYNTHETIC_BINDING_TESTS",
+    "uninterrupted_artifact_root_sha256": "08f81ea15211f8c751d3b69103bcf1fd0235184e23626ed1d0948acb2d8d176f",
+    "resumed_artifact_root_sha256": "08f81ea15211f8c751d3b69103bcf1fd0235184e23626ed1d0948acb2d8d176f",
+    "byte_stable_decisive_artifacts": true
+  },
+  "scientific_output_files_after_test": 0,
+  "isolated_input_files_after_test": 0,
+  "manuscript_evidence": false
+}

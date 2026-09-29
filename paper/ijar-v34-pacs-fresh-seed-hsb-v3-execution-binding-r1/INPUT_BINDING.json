@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "protocol_id": "FEDCORE-IJAR-V34-PACS-FRESH-SEED-REPLICATION-HSB-v3",
+  "isolated_input_directory": "/home/sanghoon/Desktop/Workspace/Fedcore_HSB_v3_exec/inputs",
+  "isolated_input_file_count": 0,
+  "scientific_inputs_copied": false,
+  "scientific_inputs_mounted_during_synthetic_test": false,
+  "legacy_outputs_accessed_by_runtime": false,
+  "reason": "The synthetic binding stage deliberately excludes PACS and pretrained weights. Exact five-file input copying and mount receipts remain a later gated step.",
+  "registered_future_inputs": [
+    "PACS_mirror.zip",
+    "IMAGE_MANIFEST.csv",
+    "FOLD_MANIFEST.csv",
+    "resnet18-f37072fd.pth",
+    "convnext_tiny-983f1562.pth"
+  ]
+}

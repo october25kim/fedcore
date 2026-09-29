@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "profile": "synthetic",
+  "image_id": "sha256:6440aee5c29a9b4290ae5f0832ed6f07ed2836c9714a2d694f8d9799bbefd5de",
+  "network_mode": "none",
+  "read_only_root_filesystem": true,
+  "tmpfs": {"/tmp": "rw,noexec,nosuid,size=1g"},
+  "cap_drop": ["ALL"],
+  "security_opt": ["no-new-privileges"],
+  "user": "1000:1000",
+  "device_requests": null,
+  "mounts": [
+    {
+      "type": "bind",
+      "source": "/home/sanghoon/Desktop/Workspace/Fedcore_HSB_v3_exec/runs/synthetic/dedicated_image_r1",
+      "destination": "/output",
+      "read_only": false
+    }
+  ],
+  "legacy_workspace_mounted": false,
+  "PACS_input_mounted": false,
+  "unexpected_mount_injection_test": "PASS_UNEXPECTED_MOUNT_REJECTED"
+}

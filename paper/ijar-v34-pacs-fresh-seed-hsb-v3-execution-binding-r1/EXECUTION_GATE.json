@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "protocol_id": "FEDCORE-IJAR-V34-PACS-FRESH-SEED-REPLICATION-HSB-v3",
+  "status": "PASS_SYNTHETIC_IMPLEMENTATION_BINDING_HOLD_SCIENTIFIC_RUNNER_AND_INPUT_BINDING",
+  "scientific_protocol_sealed": true,
+  "source_snapshot_bound": true,
+  "dedicated_container_bound": true,
+  "synthetic_integration_passed": true,
+  "independent_replay_passed": true,
+  "resume_equivalence_passed": true,
+  "mount_injection_rejected": true,
+  "scientific_runner_bound": false,
+  "scientific_inputs_bound": false,
+  "scientific_mount_receipt_bound": false,
+  "runs_scientific_empty": true,
+  "training_authorized": false,
+  "pacs_training_started": false,
+  "pacs_inference_started": false,
+  "submission_authorized": false,
+  "next_required_state": "HOLD_TO_SCIENTIFIC_RUNNER_AND_FIVE_INPUT_BINDING",
+  "forbidden_now": [
+    "PACS model training",
+    "PACS model inference",
+    "proposal construction from PACS logits",
+    "PACS audit counts",
+    "interpretation of synthetic fixture values as scientific evidence"
+  ]
+}

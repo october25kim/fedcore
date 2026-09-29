@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "protocol_id": "FEDCORE-IJAR-V34-PACS-FRESH-SEED-REPLICATION-HSB-v3",
+  "host_alias": "ubuntu-4070",
+  "hostname": "ubuntu",
+  "image_tag": "fedcore-v3-hsb:binding-r1",
+  "image_id": "sha256:6440aee5c29a9b4290ae5f0832ed6f07ed2836c9714a2d694f8d9799bbefd5de",
+  "base_image_id": "sha256:f0f2b57a630805081d8a345fb11980b230556e5360223a3658cd40aceff61bb2",
+  "source_revision_label": "30f2a242a5fae6170d0de409c1820792ac24e5db",
+  "user": "1000:1000",
+  "workdir": "/workspace",
+  "entrypoint": ["python"],
+  "environment": {
+    "python": "3.10.14",
+    "numpy": "1.26.4",
+    "scipy": "1.15.3",
+    "torch": "2.3.0",
+    "torchvision": "0.18.0",
+    "Pillow": "10.2.0",
+    "cuda": "12.1"
+  },
+  "build_network": "none",
+  "scientific_execution_authorized": false
+}
