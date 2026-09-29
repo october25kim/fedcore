@@ -32,24 +32,8 @@ FORBIDDEN_RUNTIME_ROOTS = (
     "/home/sanghoon/Desktop/Workspace/Fedcore/work",
 )
 
-MOUNT_PROBE_SCRIPT = """set -eu
-for path in \
-  /inputs/PACS_mirror.zip \
-  /inputs/IMAGE_MANIFEST.csv \
-  /inputs/FOLD_MANIFEST.csv \
-  /inputs/resnet18-f37072fd.pth \
-  /inputs/convnext_tiny-983f1562.pth
-do
-  test -r "$path"
-  if (printf x >> "$path") 2>/dev/null; then exit 21; fi
-done
-if (touch /workspace/.fedcore-v3-write-probe) 2>/dev/null; then exit 22; fi
-printf tmp > /tmp/.fedcore-v3-write-probe
-rm /tmp/.fedcore-v3-write-probe
-printf output > /output/.fedcore-v3-write-probe
-rm /output/.fedcore-v3-write-probe
-printf '%s\n' PASS_INPUTS_READ_ONLY PASS_ROOT_READ_ONLY PASS_TMP_RW PASS_OUTPUT_RW
-"""
+MOUNT_PROBE_ENTRYPOINT = ["python"]
+MOUNT_PROBE_COMMAND = ["-m", "fedcore.experiments.v3_mount_probe"]
 MOUNT_PROBE_LOG = (
     "PASS_INPUTS_READ_ONLY\n"
     "PASS_ROOT_READ_ONLY\n"
@@ -166,9 +150,9 @@ def validate_no_gpu_mount_probe(
     environment = {str(item) for item in (config.get("Env") or [])}
     if "NVIDIA_VISIBLE_DEVICES=void" not in environment:
         raise ContractError("probe must explicitly disable NVIDIA device visibility")
-    if config.get("Entrypoint") != ["/bin/sh"]:
+    if config.get("Entrypoint") != MOUNT_PROBE_ENTRYPOINT:
         raise ContractError("probe entrypoint drift")
-    if config.get("Cmd") != ["-c", MOUNT_PROBE_SCRIPT]:
+    if config.get("Cmd") != MOUNT_PROBE_COMMAND:
         raise ContractError("probe command drift")
     if state.get("Status") != "exited" or state.get("ExitCode") != 0:
         raise ContractError("mount probe did not exit successfully")
@@ -244,8 +228,9 @@ if __name__ == "__main__":
 
 __all__ = [
     "FORBIDDEN_RUNTIME_ROOTS",
+    "MOUNT_PROBE_COMMAND",
+    "MOUNT_PROBE_ENTRYPOINT",
     "MOUNT_PROBE_LOG",
-    "MOUNT_PROBE_SCRIPT",
     "main",
     "validate_no_gpu_mount_probe",
 ]

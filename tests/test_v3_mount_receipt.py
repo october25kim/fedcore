@@ -18,8 +18,9 @@ from fedcore.experiments.v3_input_binding import (
     bind_scientific_inputs,
 )
 from fedcore.experiments.v3_mount_receipt import (
+    MOUNT_PROBE_COMMAND,
+    MOUNT_PROBE_ENTRYPOINT,
     MOUNT_PROBE_LOG,
-    MOUNT_PROBE_SCRIPT,
     validate_no_gpu_mount_probe,
 )
 from fedcore.experiments.v3_scientific_runner import (
@@ -125,8 +126,8 @@ def _inspect(plan: dict[str, object]) -> list[dict[str, object]]:
             },
             "Config": {
                 "User": "1000:1000",
-                "Entrypoint": ["/bin/sh"],
-                "Cmd": ["-c", MOUNT_PROBE_SCRIPT],
+                "Entrypoint": MOUNT_PROBE_ENTRYPOINT,
+                "Cmd": MOUNT_PROBE_COMMAND,
                 "Env": ["NVIDIA_VISIBLE_DEVICES=void"],
             },
             "HostConfig": {
