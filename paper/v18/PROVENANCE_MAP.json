@@ -186,6 +186,13 @@
       "origin_sha256": "e00fc0367c58c966bc37250438866ba6ffc8a7bb33f48f2def5daa90b1cae175"
     },
     {
+      "release_path": "artifacts/pathmnist/SUPERSEDED_NOT_GOVERNING.md",
+      "kind": "PathMNIST supersession marker",
+      "source_stage": "v31 supersession attestation for historical v18 source",
+      "byte_relation": "verbatim copy",
+      "origin_sha256": "762ce1dba9835be3b7bd1f63da2f02bf7a9a2ae5da7bbcc3ae6b7e2ccb526b25"
+    },
+    {
       "release_path": "artifacts/registry/cifar_officehome_training_matrix.csv",
       "kind": "training and checkpoint registry",
       "source_stage": "v18 experimental registry",
