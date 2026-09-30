@@ -19,7 +19,7 @@ from fedcore.experiments.v3_pacs_data import (
     PACSZipDataset,
     archive_member_from_manifest_path,
     build_registered_transforms,
-    load_pacs_records,
+    load_pacs_train_records,
     records_by_use_and_domain,
 )
 from fedcore.experiments import v3_train as training
@@ -94,17 +94,17 @@ def _synthetic_manifests(tmp_path: Path):
     return image_path, fold_path, archive_path, folds
 
 
-def test_manifest_join_preserves_unknown_train_as_unused(tmp_path):
+def test_train_manifest_join_excludes_registered_unknown_unused_rows(tmp_path):
     image_path, fold_path, _, _ = _synthetic_manifests(tmp_path)
-    records = load_pacs_records(
+    records = load_pacs_train_records(
         image_path,
         fold_path,
         split=0,
         known_classes=("dog", "elephant", "giraffe", "guitar"),
         expected_image_count=16,
     )
-    assert len(records) == 16
-    assert sum(record.use == "unused" for record in records) == 4
+    assert len(records) == 4
+    assert all(record.use == "train" for record in records)
     grouped = records_by_use_and_domain(records, "train")
     assert tuple(grouped) == CLIENTS
     assert all(len(grouped[domain]) == 1 for domain in CLIENTS)
@@ -118,8 +118,8 @@ def test_manifest_rejects_unknown_reallocation(tmp_path):
             row["use"] = "train"
             break
     _write_csv(fold_path, FOLD_MANIFEST_COLUMNS, folds)
-    with pytest.raises(PACSDataError, match="reallocated"):
-        load_pacs_records(
+    with pytest.raises(PACSDataError, match="unknown label entered train stage"):
+        load_pacs_train_records(
             image_path,
             fold_path,
             split=0,
@@ -129,7 +129,7 @@ def test_manifest_rejects_unknown_reallocation(tmp_path):
 
 def test_zip_dataset_and_registered_transforms_are_pacs_free_fixture(tmp_path):
     image_path, fold_path, archive_path, _ = _synthetic_manifests(tmp_path)
-    records = load_pacs_records(
+    records = load_pacs_train_records(
         image_path,
         fold_path,
         split=0,

@@ -1,22 +1,39 @@
-FROM fedcore-v1:20260916
+FROM fedcore-v1@sha256:f0f2b57a630805081d8a345fb11980b230556e5360223a3658cd40aceff61bb2
 
 ARG SOURCE_COMMIT=UNSET
+ARG SOURCE_MANIFEST_SHA256=UNSET
+ARG RUNTIME_INVENTORY_SHA256=UNSET
+ARG BUILD_INVENTORY_SHA256=UNSET
+ARG DOCKERFILE_SHA256=UNSET
+ARG REQUIREMENTS_LOCK_SHA256=UNSET
 LABEL org.opencontainers.image.title="FedCORE PACS HSB v3 scientific runtime"
 LABEL org.opencontainers.image.revision="${SOURCE_COMMIT}"
 LABEL org.opencontainers.image.description="Hash-bound PACS fresh-seed replication runtime; launch remains separately authorization-gated"
+LABEL org.opencontainers.image.source-manifest-sha256="${SOURCE_MANIFEST_SHA256}"
+LABEL org.opencontainers.image.runtime-inventory-sha256="${RUNTIME_INVENTORY_SHA256}"
+LABEL org.opencontainers.image.build-inventory-sha256="${BUILD_INVENTORY_SHA256}"
+LABEL org.opencontainers.image.dockerfile-sha256="${DOCKERFILE_SHA256}"
+LABEL org.opencontainers.image.requirements-lock-sha256="${REQUIREMENTS_LOCK_SHA256}"
 
 ENV PYTHONPATH=/workspace \
+    FEDCORE_SOURCE_COMMIT=${SOURCE_COMMIT} \
     PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     PYTHONHASHSEED=0 \
     CUBLAS_WORKSPACE_CONFIG=:4096:8 \
     TORCH_HOME=/nonexistent-torch-home
 
+USER root
+RUN rm -rf /workspace \
+    && install -d -o 1000 -g 1000 /workspace
+
 WORKDIR /workspace
 
 COPY --chown=1000:1000 pyproject.toml /workspace/pyproject.toml
 COPY --chown=1000:1000 fedcore /workspace/fedcore
 COPY --chown=1000:1000 paper/ijar-v34-pacs-fresh-seed-hsb-v3 /workspace/paper/ijar-v34-pacs-fresh-seed-hsb-v3
+RUN find /workspace -type d \( -name __pycache__ -o -name .pytest_cache -o -name .mypy_cache -o -name .ruff_cache \) -prune -exec rm -rf '{}' + \
+    && find /workspace -type f \( -name '*.pyc' -o -name '*.pyo' -o -name .DS_Store \) -delete
 
 USER 1000:1000
 ENTRYPOINT ["python"]

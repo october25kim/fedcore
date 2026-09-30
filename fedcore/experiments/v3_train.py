@@ -616,11 +616,11 @@ def main(argv: Sequence[str] | None = None) -> int:
     from fedcore.experiments.v3_pacs_data import (
         PACSZipDataset,
         build_registered_transforms,
-        load_pacs_records,
+        load_pacs_train_records,
         records_by_use_and_domain,
     )
 
-    records = load_pacs_records(
+    records = load_pacs_train_records(
         Path(args.image_manifest),
         Path(args.fold_manifest),
         split=cell.split,
