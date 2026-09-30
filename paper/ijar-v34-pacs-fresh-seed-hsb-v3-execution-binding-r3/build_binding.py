@@ -267,15 +267,20 @@ def build_test_report(
         matches = [
             path
             for path in REQUIRED_EXECUTION_TEST_FILES
-            if file_attribute == path
-            or file_attribute.endswith("/" + path)
-            or Path(path).stem in classname.split(".")
+            if classname == Path(path).with_suffix("").as_posix().replace("/", ".")
+            or classname.startswith(
+                Path(path).with_suffix("").as_posix().replace("/", ".") + "."
+            )
         ]
         if len(matches) != 1:
             raise ContractError(
                 f"JUnit testcase cannot be assigned to one required file: {classname!r}"
             )
         path = matches[0]
+        if file_attribute not in {"", path, f"/testrepo/{path}"}:
+            raise ContractError(
+                f"JUnit testcase file differs from its exact test path: {file_attribute!r}"
+            )
         observed_files.add(path)
         name = str(case.get("name", "")).split("[", 1)[0]
         if not name:

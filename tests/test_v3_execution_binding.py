@@ -112,7 +112,7 @@ def _write_test_container_inspect(path: Path) -> None:
                         "PYTHONPATH=/workspace",
                         "PYTHONSAFEPATH=1",
                     ],
-                    "WorkingDir": "/testrepo",
+                    "WorkingDir": "/tmp",
                     "User": "1000:1000",
                 },
                 "HostConfig": {
@@ -629,6 +629,34 @@ def test_test_container_rejects_evidence_from_another_execution(chain, tmp_path)
     with pytest.raises(ContractError, match="exact raw-evidence directory"):
         binding.validate_test_container_inspect(
             inspect,
+            expected_image_id=IMAGE_ID,
+            expected_repository_root=REPOSITORY,
+            expected_evidence_root=chain["test_junit"].parent,
+        )
+
+
+def test_test_container_rejects_repo_workdir_or_relative_test_paths(chain):
+    baseline = json.loads(
+        chain["test_container_inspect"].read_text(encoding="utf-8")
+    )
+
+    repo_workdir = deepcopy(baseline)
+    repo_workdir[0]["Config"]["WorkingDir"] = "/testrepo"
+    with pytest.raises(ContractError, match="entrypoint/workdir/user mismatch"):
+        binding.validate_test_container_inspect(
+            repo_workdir,
+            expected_image_id=IMAGE_ID,
+            expected_repository_root=REPOSITORY,
+            expected_evidence_root=chain["test_junit"].parent,
+        )
+
+    relative_test = deepcopy(baseline)
+    absolute_test = binding.REQUIRED_EXECUTION_CONTAINER_TEST_FILES[0]
+    command = relative_test[0]["Config"]["Cmd"]
+    command[command.index(absolute_test)] = binding.REQUIRED_EXECUTION_TEST_FILES[0]
+    with pytest.raises(ContractError, match="pytest command/file order mismatch"):
+        binding.validate_test_container_inspect(
+            relative_test,
             expected_image_id=IMAGE_ID,
             expected_repository_root=REPOSITORY,
             expected_evidence_root=chain["test_junit"].parent,

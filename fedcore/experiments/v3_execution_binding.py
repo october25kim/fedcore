@@ -214,14 +214,19 @@ REQUIRED_EXECUTION_GATE_NODEIDS = {
         "test_only_selected_unique_primary_truth_is_decoded"
     ),
 }
+REQUIRED_EXECUTION_CONTAINER_TEST_FILES = tuple(
+    f"/testrepo/{path}" for path in REQUIRED_EXECUTION_TEST_FILES
+)
 REQUIRED_EXECUTION_PYTEST_ARGV = (
     "python",
-    "-P",
     "-m",
     "pytest",
+    "--rootdir=/testrepo",
+    "-c",
+    "/dev/null",
     "--import-mode=importlib",
     "-q",
-    *REQUIRED_EXECUTION_TEST_FILES,
+    *REQUIRED_EXECUTION_CONTAINER_TEST_FILES,
     "--junitxml=/evidence/TEST_JUNIT.xml",
 )
 EXPECTED_HOST_CONTROL_DIR = Path(
@@ -1310,7 +1315,7 @@ def validate_test_container_inspect(
         raise ContractError("test-container CUDA isolation is absent")
     if (
         config.get("Entrypoint") != ["python"]
-        or config.get("WorkingDir") != "/testrepo"
+        or config.get("WorkingDir") != "/tmp"
         or config.get("User") != "1000:1000"
     ):
         raise ContractError("test-container entrypoint/workdir/user mismatch")
