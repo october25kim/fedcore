@@ -109,7 +109,7 @@ def _write_test_container_inspect(path: Path) -> None:
                     "Cmd": list(binding.REQUIRED_EXECUTION_PYTEST_ARGV[1:]),
                     "Env": [
                         "CUDA_VISIBLE_DEVICES=",
-                        "PYTHONPATH=/workspace",
+                        f"PYTHONPATH=/workspace:{binding.TEST_RUNTIME_ROOT}",
                         "PYTHONSAFEPATH=1",
                     ],
                     "WorkingDir": "/tmp",
@@ -663,6 +663,24 @@ def test_test_container_rejects_repo_workdir_or_relative_test_paths(chain):
         )
 
 
+def test_registered_test_runtime_version():
+    assert pytest.__version__ == binding.TEST_RUNTIME_PYTEST_VERSION
+
+
+def test_registered_test_runtime_wheelhouse_is_exact():
+    binding._validate_test_runtime_wheelhouse(REPOSITORY)
+
+
+def test_test_runtime_wheelhouse_rejects_extra_unbound_file(tmp_path):
+    wheelhouse = tmp_path / "docker/pytest-wheelhouse"
+    wheelhouse.mkdir(parents=True)
+    for relative in binding.TEST_RUNTIME_WHEEL_FILES:
+        (tmp_path / relative).write_bytes(b"registered-wheel")
+    (wheelhouse / "unregistered-extra.whl").write_bytes(b"extra")
+    with pytest.raises(ContractError, match="wheelhouse file-set drift"):
+        binding._validate_test_runtime_wheelhouse(tmp_path)
+
+
 def test_raw_test_evidence_must_share_exact_registered_paths(chain, tmp_path):
     copied_stdout = tmp_path / "different-execution" / "TEST_STDOUT.log"
     copied_stdout.parent.mkdir()
@@ -865,6 +883,7 @@ def test_source_manifest_rejects_dirty_worktree_claimed_as_clean_commit(
 
     monkeypatch.setattr(binding, "SCIENTIFIC_RUNTIME_SINGLETONS", ("pyproject.toml",))
     monkeypatch.setattr(binding, "SCIENTIFIC_RUNTIME_ROOTS", ("fedcore",))
+    monkeypatch.setattr(binding, "_validate_test_runtime_wheelhouse", lambda *_: None)
     monkeypatch.setattr(
         binding,
         "SCIENTIFIC_BUILD_FILES",

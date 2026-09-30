@@ -112,9 +112,22 @@ SCIENTIFIC_RUNTIME_ROOTS = (
     "fedcore",
     "paper/ijar-v34-pacs-fresh-seed-hsb-v3",
 )
+TEST_RUNTIME_PYTEST_VERSION = "9.1.1"
+TEST_RUNTIME_ROOT = "/opt/fedcore-test-runtime"
+TEST_RUNTIME_WHEEL_FILES = (
+    "docker/pytest-wheelhouse/exceptiongroup-1.3.1-py3-none-any.whl",
+    "docker/pytest-wheelhouse/iniconfig-2.3.0-py3-none-any.whl",
+    "docker/pytest-wheelhouse/packaging-26.3-py3-none-any.whl",
+    "docker/pytest-wheelhouse/pluggy-1.6.0-py3-none-any.whl",
+    "docker/pytest-wheelhouse/pygments-2.21.0-py3-none-any.whl",
+    "docker/pytest-wheelhouse/pytest-9.1.1-py3-none-any.whl",
+    "docker/pytest-wheelhouse/tomli-2.4.1-py3-none-any.whl",
+    "docker/pytest-wheelhouse/typing_extensions-4.16.0-py3-none-any.whl",
+)
 SCIENTIFIC_BUILD_FILES = (
     "docker/Dockerfile.v3_hsb_scientific",
     "docker/Dockerfile.v3_hsb_scientific.dockerignore",
+    *TEST_RUNTIME_WHEEL_FILES,
     "requirements.lock",
 )
 REQUIRED_RUNTIME_SOURCE_FILES = (
@@ -165,6 +178,7 @@ REQUIRED_EXECUTION_TEST_GATES = (
     "independent_replay",
     "authorization_replay_rejection",
     "pacs_stage_isolation",
+    "test_runtime_provenance",
 )
 REQUIRED_EXECUTION_GATE_NODEIDS = {
     "campaign_runner_synthetic_e2e": (
@@ -212,6 +226,9 @@ REQUIRED_EXECUTION_GATE_NODEIDS = {
     "pacs_stage_isolation": (
         "tests/test_v3_pacs_stage_isolation.py::"
         "test_only_selected_unique_primary_truth_is_decoded"
+    ),
+    "test_runtime_provenance": (
+        "tests/test_v3_execution_binding.py::test_registered_test_runtime_version"
     ),
 }
 REQUIRED_EXECUTION_CONTAINER_TEST_FILES = tuple(
@@ -612,6 +629,36 @@ def _source_record(root: Path, relative: str, *, container_path: str | None) -> 
     }
 
 
+def _validate_test_runtime_wheelhouse(repository_root: Path) -> None:
+    """Require one exact, flat, nonsymlink test-runtime wheel set.
+
+    The Dockerfile names every wheel explicitly.  This independent directory
+    check prevents an unbound extra, nested directory, or symlink from entering
+    a future directory-level COPY or influencing an offline resolver.
+    """
+
+    repository = Path(repository_root).resolve()
+    wheelhouse = _require_real_directory(
+        repository / "docker/pytest-wheelhouse", "test-runtime wheelhouse"
+    )
+    observed: list[str] = []
+    for candidate in wheelhouse.iterdir():
+        metadata = candidate.lstat()
+        if stat.S_ISLNK(metadata.st_mode) or not stat.S_ISREG(metadata.st_mode):
+            raise ContractError(
+                f"test-runtime wheelhouse contains an unsafe entry: {candidate.name}"
+            )
+        observed.append(candidate.relative_to(repository).as_posix())
+    expected = tuple(sorted(TEST_RUNTIME_WHEEL_FILES))
+    actual = tuple(sorted(observed))
+    if actual != expected:
+        raise ContractError(
+            "test-runtime wheelhouse file-set drift: "
+            f"missing={sorted(set(expected) - set(actual))!r}, "
+            f"extra={sorted(set(actual) - set(expected))!r}"
+        )
+
+
 def build_scientific_source_manifest(
     repository_root: Path,
     *,
@@ -623,6 +670,7 @@ def build_scientific_source_manifest(
     source_commit = _require_hex(source_commit, 40, "source_commit")
     source_tree = _require_hex(source_tree, 40, "source_tree")
     repository = Path(repository_root).resolve()
+    _validate_test_runtime_wheelhouse(repository)
     runtime = [
         _source_record(
             repository,
@@ -744,6 +792,7 @@ def _validate_manifest_files(
     if include_runtime:
         expected_rows += runtime
     if include_build:
+        _validate_test_runtime_wheelhouse(Path(root))
         expected_rows += build
     for row in expected_rows:
         path = Path(root) / str(row["path"])
@@ -824,6 +873,7 @@ def _validate_manifest_against_git_commit(
 
     runtime, build = validate_scientific_source_manifest(value)
     repository = Path(repository_root).resolve()
+    _validate_test_runtime_wheelhouse(repository)
     source_commit = str(value["source_commit"])
     resolved_commit = _git_bytes(
         repository,
@@ -1309,7 +1359,7 @@ def validate_test_container_inspect(
     if (
         not isinstance(environment, list)
         or "CUDA_VISIBLE_DEVICES=" not in environment
-        or "PYTHONPATH=/workspace" not in environment
+        or f"PYTHONPATH=/workspace:{TEST_RUNTIME_ROOT}" not in environment
         or "PYTHONSAFEPATH=1" not in environment
     ):
         raise ContractError("test-container CUDA isolation is absent")
@@ -2562,6 +2612,9 @@ __all__ = [
     "SOURCE_MANIFEST_STATUS",
     "SOURCE_PROBE_STATUS",
     "TEST_REPORT_STATUS",
+    "TEST_RUNTIME_PYTEST_VERSION",
+    "TEST_RUNTIME_ROOT",
+    "TEST_RUNTIME_WHEEL_FILES",
     "STATIC_BINDING_ROOT_SHA256",
     "STATIC_INPUT_BINDING_FILE_SHA256",
     "STATIC_LAUNCH_PLAN_FILE_SHA256",

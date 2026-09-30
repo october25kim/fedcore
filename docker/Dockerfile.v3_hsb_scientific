@@ -27,6 +27,29 @@ USER root
 RUN rm -rf /workspace \
     && install -d -o 1000 -g 1000 /workspace
 
+# The scientific base image intentionally contains no test runner.  Keep the
+# execution-gate runtime isolated from the scientific Python path and install
+# it only from the exact, source-manifest-bound wheelhouse.
+COPY docker/pytest-wheelhouse/exceptiongroup-1.3.1-py3-none-any.whl \
+     docker/pytest-wheelhouse/iniconfig-2.3.0-py3-none-any.whl \
+     docker/pytest-wheelhouse/packaging-26.3-py3-none-any.whl \
+     docker/pytest-wheelhouse/pluggy-1.6.0-py3-none-any.whl \
+     docker/pytest-wheelhouse/pygments-2.21.0-py3-none-any.whl \
+     docker/pytest-wheelhouse/pytest-9.1.1-py3-none-any.whl \
+     docker/pytest-wheelhouse/tomli-2.4.1-py3-none-any.whl \
+     docker/pytest-wheelhouse/typing_extensions-4.16.0-py3-none-any.whl \
+     /opt/fedcore-test-wheelhouse/
+RUN python -m pip install \
+        --no-index \
+        --no-cache-dir \
+        --no-compile \
+        --target /opt/fedcore-test-runtime \
+        --find-links /opt/fedcore-test-wheelhouse \
+        pytest==9.1.1 \
+    && rm -rf /opt/fedcore-test-wheelhouse \
+    && find /opt/fedcore-test-runtime -type d -name __pycache__ -prune -exec rm -rf '{}' + \
+    && find /opt/fedcore-test-runtime -type f \( -name '*.pyc' -o -name '*.pyo' \) -delete
+
 WORKDIR /workspace
 
 COPY --chown=1000:1000 pyproject.toml /workspace/pyproject.toml
