@@ -6,7 +6,6 @@ from datetime import datetime, timedelta, timezone
 import json
 from pathlib import Path
 import shutil
-import subprocess
 
 import pytest
 
@@ -32,6 +31,42 @@ def _reseal(value: dict, field: str) -> dict:
         if key not in {field, f"{field}_definition"}
     }
     return binding._self_hashed(body, field)
+
+
+def _fake_git_object_reader(
+    *,
+    source_commit: str,
+    source_tree: str,
+    committed_blobs: dict[str, bytes],
+    runtime_paths: tuple[str, ...],
+):
+    """Return deterministic Git-object bytes without requiring a Git executable.
+
+    Production closure still invokes the real Git object database in
+    ``build_binding.py``.  These unit tests isolate the fail-closed comparison
+    so the same-image execution gate does not acquire an unregistered system
+    package dependency.
+    """
+
+    def reader(_repository: Path, arguments, _label: str) -> bytes:
+        argv = tuple(arguments)
+        if argv == ("rev-parse", "--verify", f"{source_commit}^{{commit}}"):
+            return f"{source_commit}\n".encode("ascii")
+        if argv == ("rev-parse", "--verify", f"{source_commit}^{{tree}}"):
+            return f"{source_tree}\n".encode("ascii")
+        if argv[:4] == ("ls-tree", "-r", "-z", source_commit):
+            object_id = "0" * 40
+            return b"".join(
+                f"100644 blob {object_id}\t{path}\0".encode("utf-8")
+                for path in sorted(runtime_paths)
+            )
+        if argv[:2] == ("cat-file", "blob") and len(argv) == 3:
+            prefix = f"{source_commit}:"
+            if argv[2].startswith(prefix):
+                return committed_blobs[argv[2][len(prefix) :]]
+        raise AssertionError(f"unexpected Git-object query: {argv!r}")
+
+    return reader
 
 
 def _build_source_manifest(path: Path) -> dict:
@@ -665,6 +700,11 @@ def test_test_container_rejects_repo_workdir_or_relative_test_paths(chain):
 
 def test_registered_test_runtime_version():
     assert pytest.__version__ == binding.TEST_RUNTIME_PYTEST_VERSION
+    plugin_index = binding.REQUIRED_EXECUTION_PYTEST_ARGV.index("-p")
+    assert binding.REQUIRED_EXECUTION_PYTEST_ARGV[plugin_index : plugin_index + 2] == (
+        "-p",
+        "no:cacheprovider",
+    )
 
 
 def test_registered_test_runtime_wheelhouse_is_exact():
@@ -854,31 +894,12 @@ def test_source_manifest_rejects_dirty_worktree_claimed_as_clean_commit(
     (repository / "pyproject.toml").write_text("[project]\nname='sealed'\n", encoding="utf-8")
     dockerfile.write_text("FROM scratch\n", encoding="utf-8")
     requirements.write_text("numpy==1.0\n", encoding="utf-8")
-    for arguments in (
-        ("init", "-q"),
-        ("config", "user.email", "test@example.invalid"),
-        ("config", "user.name", "Test"),
-        ("add", "."),
-        ("commit", "-qm", "sealed"),
-    ):
-        subprocess.run(
-            ["git", "-C", str(repository), *arguments],
-            check=True,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-        )
-    source_commit = subprocess.run(
-        ["git", "-C", str(repository), "rev-parse", "HEAD"],
-        check=True,
-        stdout=subprocess.PIPE,
-        text=True,
-    ).stdout.strip()
-    source_tree = subprocess.run(
-        ["git", "-C", str(repository), "rev-parse", "HEAD^{tree}"],
-        check=True,
-        stdout=subprocess.PIPE,
-        text=True,
-    ).stdout.strip()
+    source_commit = "1" * 40
+    source_tree = "2" * 40
+    committed_blobs = {
+        path.relative_to(repository).as_posix(): path.read_bytes()
+        for path in (runtime, repository / "pyproject.toml", dockerfile, requirements)
+    }
     runtime.write_text("SEALED = 2\n", encoding="utf-8")
 
     monkeypatch.setattr(binding, "SCIENTIFIC_RUNTIME_SINGLETONS", ("pyproject.toml",))
@@ -893,6 +914,16 @@ def test_source_manifest_rejects_dirty_worktree_claimed_as_clean_commit(
         binding,
         "REQUIRED_RUNTIME_SOURCE_FILES",
         ("fedcore/experiments/v3_train.py",),
+    )
+    monkeypatch.setattr(
+        binding,
+        "_git_bytes",
+        _fake_git_object_reader(
+            source_commit=source_commit,
+            source_tree=source_tree,
+            committed_blobs=committed_blobs,
+            runtime_paths=("fedcore/experiments/v3_train.py", "pyproject.toml"),
+        ),
     )
     manifest = binding.build_scientific_source_manifest(
         repository,
@@ -911,27 +942,20 @@ def test_test_report_rejects_dirty_test_claimed_as_committed(
     test_file = repository / test_path
     test_file.parent.mkdir(parents=True)
     test_file.write_text("def test_gate():\n    assert True\n", encoding="utf-8")
-    for arguments in (
-        ("init", "-q"),
-        ("config", "user.email", "test@example.invalid"),
-        ("config", "user.name", "Test"),
-        ("add", "."),
-        ("commit", "-qm", "sealed test"),
-    ):
-        subprocess.run(
-            ["git", "-C", str(repository), *arguments],
-            check=True,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-        )
-    source_commit = subprocess.run(
-        ["git", "-C", str(repository), "rev-parse", "HEAD"],
-        check=True,
-        stdout=subprocess.PIPE,
-        text=True,
-    ).stdout.strip()
+    source_commit = "3" * 40
+    committed_test = test_file.read_bytes()
     test_file.write_text("def test_gate():\n    assert False\n", encoding="utf-8")
     monkeypatch.setattr(binding, "REQUIRED_EXECUTION_TEST_FILES", (test_path,))
+    monkeypatch.setattr(
+        binding,
+        "_git_bytes",
+        _fake_git_object_reader(
+            source_commit=source_commit,
+            source_tree="4" * 40,
+            committed_blobs={test_path: committed_test},
+            runtime_paths=(),
+        ),
+    )
     report = {
         "source_commit": source_commit,
         "test_file_sha256": {

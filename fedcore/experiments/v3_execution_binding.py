@@ -242,6 +242,8 @@ REQUIRED_EXECUTION_PYTEST_ARGV = (
     "-c",
     "/dev/null",
     "--import-mode=importlib",
+    "-p",
+    "no:cacheprovider",
     "-q",
     *REQUIRED_EXECUTION_CONTAINER_TEST_FILES,
     "--junitxml=/evidence/TEST_JUNIT.xml",
