@@ -39,6 +39,7 @@ def _fake_git_object_reader(
     source_tree: str,
     committed_blobs: dict[str, bytes],
     runtime_paths: tuple[str, ...],
+    runtime_pathspecs: tuple[str, ...],
 ):
     """Return deterministic Git-object bytes without requiring a Git executable.
 
@@ -54,7 +55,14 @@ def _fake_git_object_reader(
             return f"{source_commit}\n".encode("ascii")
         if argv == ("rev-parse", "--verify", f"{source_commit}^{{tree}}"):
             return f"{source_tree}\n".encode("ascii")
-        if argv[:4] == ("ls-tree", "-r", "-z", source_commit):
+        if argv == (
+            "ls-tree",
+            "-r",
+            "-z",
+            source_commit,
+            "--",
+            *runtime_pathspecs,
+        ):
             object_id = "0" * 40
             return b"".join(
                 f"100644 blob {object_id}\t{path}\0".encode("utf-8")
@@ -923,6 +931,7 @@ def test_source_manifest_rejects_dirty_worktree_claimed_as_clean_commit(
             source_tree=source_tree,
             committed_blobs=committed_blobs,
             runtime_paths=("fedcore/experiments/v3_train.py", "pyproject.toml"),
+            runtime_pathspecs=("pyproject.toml", "fedcore"),
         ),
     )
     manifest = binding.build_scientific_source_manifest(
@@ -954,6 +963,7 @@ def test_test_report_rejects_dirty_test_claimed_as_committed(
             source_tree="4" * 40,
             committed_blobs={test_path: committed_test},
             runtime_paths=(),
+            runtime_pathspecs=(),
         ),
     )
     report = {
