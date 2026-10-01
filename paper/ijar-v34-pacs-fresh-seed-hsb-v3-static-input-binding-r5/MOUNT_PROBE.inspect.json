@@ -1,0 +1,318 @@
+[
+    {
+        "Id": "377577721bbbef9427af9f1367a68d226da5a741518a66786c08042931e0d335",
+        "Created": "2026-10-01T06:08:08.029105534Z",
+        "Path": "python",
+        "Args": [
+            "-m",
+            "fedcore.experiments.v3_mount_probe"
+        ],
+        "State": {
+            "Status": "exited",
+            "Running": false,
+            "Paused": false,
+            "Restarting": false,
+            "OOMKilled": false,
+            "Dead": false,
+            "Pid": 0,
+            "ExitCode": 0,
+            "Error": "",
+            "StartedAt": "2026-10-01T06:08:08.115439131Z",
+            "FinishedAt": "2026-10-01T06:08:08.382527881Z"
+        },
+        "Image": "sha256:a8acf9978db13896cbbd068d8f40e9dc758d0010d2becc5ca63f24acf611bde4",
+        "ResolvConfPath": "/var/lib/docker/containers/377577721bbbef9427af9f1367a68d226da5a741518a66786c08042931e0d335/resolv.conf",
+        "HostnamePath": "/var/lib/docker/containers/377577721bbbef9427af9f1367a68d226da5a741518a66786c08042931e0d335/hostname",
+        "HostsPath": "/var/lib/docker/containers/377577721bbbef9427af9f1367a68d226da5a741518a66786c08042931e0d335/hosts",
+        "LogPath": "/var/lib/docker/containers/377577721bbbef9427af9f1367a68d226da5a741518a66786c08042931e0d335/377577721bbbef9427af9f1367a68d226da5a741518a66786c08042931e0d335-json.log",
+        "Name": "/fedcore-v3-ws4-gpu3-mount-probe-a8acf9",
+        "RestartCount": 0,
+        "Driver": "overlay2",
+        "Platform": "linux",
+        "MountLabel": "",
+        "ProcessLabel": "",
+        "AppArmorProfile": "docker-default",
+        "ExecIDs": null,
+        "HostConfig": {
+            "Binds": null,
+            "ContainerIDFile": "",
+            "LogConfig": {
+                "Type": "json-file",
+                "Config": {}
+            },
+            "NetworkMode": "none",
+            "PortBindings": {},
+            "RestartPolicy": {
+                "Name": "no",
+                "MaximumRetryCount": 0
+            },
+            "AutoRemove": false,
+            "VolumeDriver": "",
+            "VolumesFrom": null,
+            "ConsoleSize": [
+                0,
+                0
+            ],
+            "CapAdd": null,
+            "CapDrop": [
+                "ALL"
+            ],
+            "CgroupnsMode": "private",
+            "Dns": [],
+            "DnsOptions": [],
+            "DnsSearch": [],
+            "ExtraHosts": null,
+            "GroupAdd": null,
+            "IpcMode": "private",
+            "Cgroup": "",
+            "Links": null,
+            "OomScoreAdj": 0,
+            "PidMode": "",
+            "Privileged": false,
+            "PublishAllPorts": false,
+            "ReadonlyRootfs": true,
+            "SecurityOpt": [
+                "no-new-privileges"
+            ],
+            "Tmpfs": {
+                "/tmp": "rw,noexec,nosuid,size=1g"
+            },
+            "UTSMode": "",
+            "UsernsMode": "",
+            "ShmSize": 67108864,
+            "Runtime": "runc",
+            "Isolation": "",
+            "CpuShares": 0,
+            "Memory": 0,
+            "NanoCpus": 0,
+            "CgroupParent": "",
+            "BlkioWeight": 0,
+            "BlkioWeightDevice": [],
+            "BlkioDeviceReadBps": [],
+            "BlkioDeviceWriteBps": [],
+            "BlkioDeviceReadIOps": [],
+            "BlkioDeviceWriteIOps": [],
+            "CpuPeriod": 0,
+            "CpuQuota": 0,
+            "CpuRealtimePeriod": 0,
+            "CpuRealtimeRuntime": 0,
+            "CpusetCpus": "",
+            "CpusetMems": "",
+            "Devices": [],
+            "DeviceCgroupRules": null,
+            "DeviceRequests": null,
+            "MemoryReservation": 0,
+            "MemorySwap": 0,
+            "MemorySwappiness": null,
+            "OomKillDisable": null,
+            "PidsLimit": null,
+            "Ulimits": [],
+            "CpuCount": 0,
+            "CpuPercent": 0,
+            "IOMaximumIOps": 0,
+            "IOMaximumBandwidth": 0,
+            "Mounts": [
+                {
+                    "Type": "bind",
+                    "Source": "/data/workspace/sanghoon/Fedcore_HSB_v3_exec_ws4/inputs/PACS_mirror.zip",
+                    "Target": "/inputs/PACS_mirror.zip",
+                    "ReadOnly": true
+                },
+                {
+                    "Type": "bind",
+                    "Source": "/data/workspace/sanghoon/Fedcore_HSB_v3_exec_ws4/inputs/IMAGE_MANIFEST.csv",
+                    "Target": "/inputs/IMAGE_MANIFEST.csv",
+                    "ReadOnly": true
+                },
+                {
+                    "Type": "bind",
+                    "Source": "/data/workspace/sanghoon/Fedcore_HSB_v3_exec_ws4/inputs/FOLD_MANIFEST.csv",
+                    "Target": "/inputs/FOLD_MANIFEST.csv",
+                    "ReadOnly": true
+                },
+                {
+                    "Type": "bind",
+                    "Source": "/data/workspace/sanghoon/Fedcore_HSB_v3_exec_ws4/inputs/resnet18-f37072fd.pth",
+                    "Target": "/inputs/resnet18-f37072fd.pth",
+                    "ReadOnly": true
+                },
+                {
+                    "Type": "bind",
+                    "Source": "/data/workspace/sanghoon/Fedcore_HSB_v3_exec_ws4/inputs/convnext_tiny-983f1562.pth",
+                    "Target": "/inputs/convnext_tiny-983f1562.pth",
+                    "ReadOnly": true
+                },
+                {
+                    "Type": "bind",
+                    "Source": "/data/workspace/sanghoon/Fedcore_HSB_v3_exec_ws4/runs/scientific/FEDCORE-IJAR-V34-PACS-FRESH-SEED-REPLICATION-HSB-v3",
+                    "Target": "/output"
+                }
+            ],
+            "MaskedPaths": [
+                "/proc/asound",
+                "/proc/acpi",
+                "/proc/kcore",
+                "/proc/keys",
+                "/proc/latency_stats",
+                "/proc/timer_list",
+                "/proc/timer_stats",
+                "/proc/sched_debug",
+                "/proc/scsi",
+                "/sys/firmware",
+                "/sys/devices/virtual/powercap"
+            ],
+            "ReadonlyPaths": [
+                "/proc/bus",
+                "/proc/fs",
+                "/proc/irq",
+                "/proc/sys",
+                "/proc/sysrq-trigger"
+            ]
+        },
+        "GraphDriver": {
+            "Data": {
+                "LowerDir": "/var/lib/docker/overlay2/4b7865415fa0bdcab1674699484f64b77d5f7c0dbddb29e9f744af6aa6bf6189-init/diff:/var/lib/docker/overlay2/pud0z1566cy9yvtu63stlszv1/diff:/var/lib/docker/overlay2/fxj5nkz6yvu77bd3hff9tle4t/diff:/var/lib/docker/overlay2/p9qlx8wiwwucbl8yg02o53auf/diff:/var/lib/docker/overlay2/39sddc5d3knh6wu2iu4127iuz/diff:/var/lib/docker/overlay2/thabw3zbwyfdgdxlqdruyrkof/diff:/var/lib/docker/overlay2/jjosk6hrrrtq2ms6s067k6nhg/diff:/var/lib/docker/overlay2/r8fw8wvt1hpbo10kyat023lcs/diff:/var/lib/docker/overlay2/1gzxmoxyd8csasmr5u61isx9z/diff:/var/lib/docker/overlay2/39994dfd220a9b5bbddd64f089754eacf0c5429c585845d000cd8d3c92cb3fb2/diff:/var/lib/docker/overlay2/737ef2d114ccc5eceeca1d0151b97c37a51c330e81167d1897bdfff1dc81a916/diff:/var/lib/docker/overlay2/787d0abb73898498484a0fff493d5076d4b09d4d8e932795c4342d526b642355/diff:/var/lib/docker/overlay2/090f1126eb95c5400863e68a042cf36ff0af2a0d2c4504637ee5af07d1c0024c/diff:/var/lib/docker/overlay2/ec78721adfc5c6de80e5ffc83d3bdc23975a3c92506d7431fe7bab7bc775b3f9/diff:/var/lib/docker/overlay2/cce3283a71e95bbe4000dd63f758d8f8ca150d9df7b65d98a337879d330ff887/diff:/var/lib/docker/overlay2/133560c2185e19373cffc1d9bfa1a37d910e0f8da0bddcf457c3e5aaf7590c99/diff:/var/lib/docker/overlay2/cc464cff1f3271cb1c0d011e7b41450c72943aba7e1c06fe592dd6472608bad3/diff:/var/lib/docker/overlay2/8cda24fcaf8db5ec8714a32f5df15fc79be57f1c653cde49298ec0a93c10a8ee/diff:/var/lib/docker/overlay2/5a3ff7907277f5f8a36a2ea0ee5b4cc6a8e98ac0c8bc78247b3414c10d6fdab0/diff:/var/lib/docker/overlay2/8ff2e8ca6099450d13b7d09e1aa98d4cf383fe76421bdb9a9cbed6287e9a039e/diff:/var/lib/docker/overlay2/f8f151af8ff6623c0236a8193f968044691a7e6a83538c4340ab77fe743b5dea/diff:/var/lib/docker/overlay2/63ecb410d82d44beacd69498b89f446f32e9cf60f8aabd6ab69751ca1ab06976/diff:/var/lib/docker/overlay2/4e0b37abd17429aa08844e787677ec71f36342610b0afe2b7833a59e2e901106/diff:/var/lib/docker/overlay2/f1d27db417afac2609a6ae768a1de9ae18ff543ae17127cc6106bdcd4144df41/diff",
+                "MergedDir": "/var/lib/docker/overlay2/4b7865415fa0bdcab1674699484f64b77d5f7c0dbddb29e9f744af6aa6bf6189/merged",
+                "UpperDir": "/var/lib/docker/overlay2/4b7865415fa0bdcab1674699484f64b77d5f7c0dbddb29e9f744af6aa6bf6189/diff",
+                "WorkDir": "/var/lib/docker/overlay2/4b7865415fa0bdcab1674699484f64b77d5f7c0dbddb29e9f744af6aa6bf6189/work"
+            },
+            "Name": "overlay2"
+        },
+        "Mounts": [
+            {
+                "Type": "bind",
+                "Source": "/data/workspace/sanghoon/Fedcore_HSB_v3_exec_ws4/inputs/FOLD_MANIFEST.csv",
+                "Destination": "/inputs/FOLD_MANIFEST.csv",
+                "Mode": "",
+                "RW": false,
+                "Propagation": "rprivate"
+            },
+            {
+                "Type": "bind",
+                "Source": "/data/workspace/sanghoon/Fedcore_HSB_v3_exec_ws4/inputs/resnet18-f37072fd.pth",
+                "Destination": "/inputs/resnet18-f37072fd.pth",
+                "Mode": "",
+                "RW": false,
+                "Propagation": "rprivate"
+            },
+            {
+                "Type": "bind",
+                "Source": "/data/workspace/sanghoon/Fedcore_HSB_v3_exec_ws4/inputs/convnext_tiny-983f1562.pth",
+                "Destination": "/inputs/convnext_tiny-983f1562.pth",
+                "Mode": "",
+                "RW": false,
+                "Propagation": "rprivate"
+            },
+            {
+                "Type": "bind",
+                "Source": "/data/workspace/sanghoon/Fedcore_HSB_v3_exec_ws4/runs/scientific/FEDCORE-IJAR-V34-PACS-FRESH-SEED-REPLICATION-HSB-v3",
+                "Destination": "/output",
+                "Mode": "",
+                "RW": true,
+                "Propagation": "rprivate"
+            },
+            {
+                "Type": "bind",
+                "Source": "/data/workspace/sanghoon/Fedcore_HSB_v3_exec_ws4/inputs/PACS_mirror.zip",
+                "Destination": "/inputs/PACS_mirror.zip",
+                "Mode": "",
+                "RW": false,
+                "Propagation": "rprivate"
+            },
+            {
+                "Type": "bind",
+                "Source": "/data/workspace/sanghoon/Fedcore_HSB_v3_exec_ws4/inputs/IMAGE_MANIFEST.csv",
+                "Destination": "/inputs/IMAGE_MANIFEST.csv",
+                "Mode": "",
+                "RW": false,
+                "Propagation": "rprivate"
+            }
+        ],
+        "Config": {
+            "Hostname": "377577721bbb",
+            "Domainname": "",
+            "User": "1000:1000",
+            "AttachStdin": false,
+            "AttachStdout": true,
+            "AttachStderr": true,
+            "Tty": false,
+            "OpenStdin": false,
+            "StdinOnce": false,
+            "Env": [
+                "NVIDIA_VISIBLE_DEVICES=void",
+                "PATH=/usr/local/nvidia/bin:/usr/local/cuda/bin:/opt/conda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+                "NVIDIA_DRIVER_CAPABILITIES=compute,utility",
+                "LD_LIBRARY_PATH=/usr/local/nvidia/lib:/usr/local/nvidia/lib64",
+                "PYTORCH_VERSION=2.3.0",
+                "PYTHONDONTWRITEBYTECODE=1",
+                "PYTHONPATH=/workspace",
+                "FEDCORE_SOURCE_COMMIT=056acff6088d7af18c28a82cebe4b4ccdd8cce7d",
+                "PYTHONUNBUFFERED=1",
+                "PYTHONHASHSEED=0",
+                "CUBLAS_WORKSPACE_CONFIG=:4096:8",
+                "TORCH_HOME=/nonexistent-torch-home"
+            ],
+            "Cmd": [
+                "-m",
+                "fedcore.experiments.v3_mount_probe"
+            ],
+            "Image": "sha256:a8acf9978db13896cbbd068d8f40e9dc758d0010d2becc5ca63f24acf611bde4",
+            "Volumes": null,
+            "WorkingDir": "/workspace",
+            "Entrypoint": [
+                "python"
+            ],
+            "OnBuild": null,
+            "Labels": {
+                "com.nvidia.volumes.needed": "nvidia_driver",
+                "org.opencontainers.image.build-inventory-sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+                "org.opencontainers.image.description": "Hash-bound PACS fresh-seed replication runtime; launch remains separately authorization-gated",
+                "org.opencontainers.image.dockerfile-sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+                "org.opencontainers.image.ref.name": "ubuntu",
+                "org.opencontainers.image.requirements-lock-sha256": "e39dc80bda8d8d1808238c5d4dbfbe580ade33cb38dbf6b3b497119c5d9e3579",
+                "org.opencontainers.image.revision": "056acff6088d7af18c28a82cebe4b4ccdd8cce7d",
+                "org.opencontainers.image.runtime-inventory-sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+                "org.opencontainers.image.source-manifest-sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+                "org.opencontainers.image.title": "FedCORE PACS HSB v3 scientific runtime",
+                "org.opencontainers.image.version": "22.04"
+            }
+        },
+        "NetworkSettings": {
+            "Bridge": "",
+            "SandboxID": "",
+            "SandboxKey": "",
+            "Ports": {},
+            "HairpinMode": false,
+            "LinkLocalIPv6Address": "",
+            "LinkLocalIPv6PrefixLen": 0,
+            "SecondaryIPAddresses": null,
+            "SecondaryIPv6Addresses": null,
+            "EndpointID": "",
+            "Gateway": "",
+            "GlobalIPv6Address": "",
+            "GlobalIPv6PrefixLen": 0,
+            "IPAddress": "",
+            "IPPrefixLen": 0,
+            "IPv6Gateway": "",
+            "MacAddress": "",
+            "Networks": {
+                "none": {
+                    "IPAMConfig": null,
+                    "Links": null,
+                    "Aliases": null,
+                    "MacAddress": "",
+                    "DriverOpts": null,
+                    "NetworkID": "65f30df5a18992fcc25891040c19a0596f4d8c293fa90ff7dda391961ac21036",
+                    "EndpointID": "",
+                    "Gateway": "",
+                    "IPAddress": "",
+                    "IPPrefixLen": 0,
+                    "IPv6Gateway": "",
+                    "GlobalIPv6Address": "",
+                    "GlobalIPv6PrefixLen": 0,
+                    "DNSNames": null
+                }
+            }
+        }
+    }
+]

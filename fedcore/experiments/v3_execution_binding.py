@@ -282,22 +282,22 @@ SCIENTIFIC_COMMAND = (
     "cuda:0",
 )
 
-# Public workstation4 r4 static-binding anchors.  These constants prevent a self-consistent
+# Public workstation4 GPU 3 r5 static-binding anchors.  These constants prevent a self-consistent
 # replacement of the preceding launch plan, input receipt, or mount receipt.
 STATIC_BINDING_ROOT_SHA256 = (
-    "719e86f7856998a62d77f1948d268d323cd3830f2f6d0c9ce3cf6bb804eafac5"
+    "c7e2f013644d6945d638a23010de14268ea8f77bacb7adb91f3ca2feb14129c8"
 )
 STATIC_LAUNCH_PLAN_FILE_SHA256 = (
-    "bb866eb69d4426aa3da0e3657fb07e04d96a9e9417854ccc0a4d359f913f3fd5"
+    "d2b3ada89a854d4d2c17623b337542e998405bb1c66488212a246e7a683c2b88"
 )
 STATIC_LAUNCH_PLAN_SHA256 = (
-    "9662c3d8c23682e5f23b4709a3046618a1720c54a5a5b0761eaca091a41490ed"
+    "762e64fa7fb2dfc4251ab2bba6e346d3765a62e4f52d35d4eab2eb0a27cb22f7"
 )
 STATIC_INPUT_BINDING_FILE_SHA256 = (
     "9ff85d7e7973e4740ef4002cfb3c91687e2b857f3b794ff018380f3bb80a89af"
 )
 STATIC_MOUNT_RECEIPT_FILE_SHA256 = (
-    "5e58dd6f09adbf8ebcc83f24abb69cb6e4efbbd27707cf26e6a9bcd7d973757c"
+    "0601ef1cb314c4918b6f7d3948dd2549e810a015f2bf73abeccd1fc5157eede3"
 )
 
 CONTROL_FILENAMES = (

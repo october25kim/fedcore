@@ -54,7 +54,7 @@ from fedcore.experiments.v3_orchestrator import write_json
 
 ROOT = Path(__file__).resolve().parents[2]
 BUNDLE = Path(__file__).resolve().parent
-STATIC = ROOT / "paper/ijar-v34-pacs-fresh-seed-hsb-v3-static-input-binding-r4"
+STATIC = ROOT / "paper/ijar-v34-pacs-fresh-seed-hsb-v3-static-input-binding-r5"
 PUBLIC_BUNDLE_FILES = (
     "build_binding.py",
     "SOURCE_MANIFEST.json",
