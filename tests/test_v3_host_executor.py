@@ -1,5 +1,6 @@
 import json
 import subprocess
+from copy import deepcopy
 
 import pytest
 
@@ -25,6 +26,33 @@ def _host_artifacts():
             ],
         },
     )
+
+
+def _comparison_inspect(container_id="d" * 64):
+    return [
+        {
+            "Id": container_id,
+            "Created": "2026-10-01T00:00:00Z",
+            "State": {"Status": "created"},
+            "Config": {"Env": ["FIRST=1", "SECOND=2"]},
+            "Mounts": [
+                {
+                    "Type": "bind",
+                    "Source": "/sealed/input",
+                    "Destination": "/input",
+                    "RW": False,
+                    "Mode": "ro",
+                },
+                {
+                    "Type": "bind",
+                    "Source": "/sealed/output",
+                    "Destination": "/output",
+                    "RW": True,
+                    "Mode": "rw",
+                },
+            ],
+        }
+    ]
 
 
 def test_attached_watchdog_streams_logs_and_seals_terminal_receipt(tmp_path):
@@ -328,26 +356,41 @@ def test_prepare_then_start_reinspects_exact_stopped_container(monkeypatch, tmp_
     output.mkdir()
     artifacts = _host_artifacts()
     container_id = "d" * 64
-    inspect_value = [{"Id": container_id, "State": {"Status": "created"}}]
+    inspect_value = _comparison_inspect(container_id)
     receipt = {
         "container_id": container_id,
         "runtime_receipt_sha256": "e" * 64,
     }
     commands = []
+    inspect_calls = 0
+    inspect_mount_orders = []
+    lease_calls = []
 
     def runner(argv, **kwargs):
+        nonlocal inspect_calls
         commands.append(list(argv))
         if argv[:2] == ["docker", "create"]:
             return subprocess.CompletedProcess(list(argv), 0, container_id + "\n", "")
         if argv[:2] == ["docker", "inspect"]:
+            inspect_calls += 1
+            rendered = deepcopy(inspect_value)
+            if inspect_calls == 2:
+                rendered[0]["Mounts"].reverse()
+            inspect_mount_orders.append(
+                [row["Destination"] for row in rendered[0]["Mounts"]]
+            )
             return subprocess.CompletedProcess(
-                list(argv), 0, json.dumps(inspect_value), ""
+                list(argv), 0, json.dumps(rendered), ""
             )
         raise AssertionError(argv)
 
     monkeypatch.setattr(host, "_load_host_artifacts", lambda *a, **k: artifacts)
     monkeypatch.setattr(host, "_require_directory", lambda *a, **k: output)
-    monkeypatch.setattr(host, "acquire_exclusive_lease", lambda *a, **k: None)
+    monkeypatch.setattr(
+        host,
+        "acquire_exclusive_lease",
+        lambda *args, **kwargs: lease_calls.append((args, kwargs)),
+    )
     monkeypatch.setattr(
         host, "build_runtime_receipt_from_inspect", lambda *a, **k: dict(receipt)
     )
@@ -367,8 +410,11 @@ def test_prepare_then_start_reinspects_exact_stopped_container(monkeypatch, tmp_
 
     monkeypatch.setattr(host, "validate_runtime_receipt", lambda *a, **k: None)
     attached = {}
+    attach_calls = 0
 
     def attach(*args, **kwargs):
+        nonlocal attach_calls
+        attach_calls += 1
         attached["argv"] = list(args[1])
         attached["container_id"] = kwargs["container_id"]
         return subprocess.CompletedProcess(list(args[1]), 0)
@@ -388,3 +434,62 @@ def test_prepare_then_start_reinspects_exact_stopped_container(monkeypatch, tmp_
         "argv": ["docker", "start", "--attach", container_id],
         "container_id": container_id,
     }
+    assert inspect_calls == 2
+    assert inspect_mount_orders == [["/input", "/output"], ["/output", "/input"]]
+    assert attach_calls == 1
+    assert len(lease_calls) == 2
+
+    inspect_value[0]["Created"] = "2026-10-01T00:00:01Z"
+    with pytest.raises(ContractError, match="stopped container drifted"):
+        host.start_scientific_container(
+            control_dir=control,
+            output_dir=output,
+            lease_path=tmp_path / "drift-start.lease",
+            log_dir=tmp_path / "drift-logs",
+            runner=runner,
+        )
+    assert inspect_calls == 3
+    assert attach_calls == 1
+    assert len(lease_calls) == 2
+
+
+def test_runtime_inspect_comparison_rejects_mount_content_drift():
+    prepared = _comparison_inspect()
+    fresh = deepcopy(prepared)
+    fresh[0]["Mounts"].reverse()
+    fresh[0]["Mounts"][0]["RW"] = False
+
+    with pytest.raises(ContractError, match="stopped container drifted"):
+        host._validate_stopped_container_unchanged(prepared, fresh)
+
+
+def test_runtime_inspect_comparison_rejects_non_mount_field_drift():
+    prepared = _comparison_inspect()
+    fresh = deepcopy(prepared)
+    fresh[0]["Mounts"].reverse()
+    fresh[0]["Created"] = "2026-10-01T00:00:01Z"
+
+    with pytest.raises(ContractError, match="stopped container drifted"):
+        host._validate_stopped_container_unchanged(prepared, fresh)
+
+
+def test_runtime_inspect_comparison_preserves_raw_rows_and_other_list_order():
+    prepared = _comparison_inspect()
+    fresh = deepcopy(prepared)
+    fresh[0]["Mounts"].reverse()
+    prepared_before = deepcopy(prepared)
+    fresh_before = deepcopy(fresh)
+
+    host._validate_stopped_container_unchanged(prepared, fresh)
+    assert prepared == prepared_before
+    assert fresh == fresh_before
+
+    mount_field_drift = deepcopy(fresh)
+    mount_field_drift[0]["Mounts"][0]["Mode"] = "delegated"
+    with pytest.raises(ContractError, match="stopped container drifted"):
+        host._validate_stopped_container_unchanged(prepared, mount_field_drift)
+
+    other_list_drift = deepcopy(fresh)
+    other_list_drift[0]["Config"]["Env"].reverse()
+    with pytest.raises(ContractError, match="stopped container drifted"):
+        host._validate_stopped_container_unchanged(prepared, other_list_drift)

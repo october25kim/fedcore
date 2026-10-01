@@ -42,6 +42,7 @@ from fedcore.experiments.v3_execution_binding import (
     TOTAL_GPU_HOUR_CAP,
     acquire_exclusive_lease,
     build_runtime_receipt_from_inspect,
+    canonical_runtime_inspect_comparison_bytes,
     validate_authorized_campaign_plan,
     validate_execution_readiness,
     validate_run_authorization,
@@ -572,15 +573,14 @@ def start_scientific_container(
         fresh_inspect = json.loads(fresh_inspect_result.stdout)
     except json.JSONDecodeError as exc:
         raise ContractError("fresh docker inspect did not return valid JSON") from exc
-    rebuilt = build_runtime_receipt_from_inspect(
+    build_runtime_receipt_from_inspect(
         fresh_inspect,
         readiness=artifacts.readiness,
         authorization=artifacts.authorization,
         authorized_plan=artifacts.authorized_plan,
         input_binding=artifacts.input_binding,
     )
-    if rebuilt != receipt:
-        raise ContractError("stopped container drifted after preparation")
+    _validate_stopped_container_unchanged(raw_inspect, fresh_inspect)
     lease = (
         control.parent / "HOST_START_LEASE.json" if lease_path is None else Path(lease_path)
     )
@@ -604,6 +604,17 @@ def start_scientific_container(
         container_id=container_id,
         log_dir=log_dir,
     )
+
+
+def _validate_stopped_container_unchanged(
+    prepared_inspect: Any, fresh_inspect: Any
+) -> None:
+    """Reject all post-prepare drift except top-level mount-row ordering."""
+
+    if canonical_runtime_inspect_comparison_bytes(
+        fresh_inspect
+    ) != canonical_runtime_inspect_comparison_bytes(prepared_inspect):
+        raise ContractError("stopped container drifted after preparation")
 
 
 def main(argv: Sequence[str] | None = None) -> int:

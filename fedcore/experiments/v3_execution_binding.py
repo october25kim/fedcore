@@ -15,6 +15,7 @@ file.
 
 from __future__ import annotations
 
+from copy import deepcopy
 from dataclasses import dataclass
 from datetime import datetime
 from datetime import timezone
@@ -30,6 +31,7 @@ from typing import Any, Mapping, Sequence
 from fedcore.experiments.v3_contract import (
     PROTOCOL_ID,
     ContractError,
+    canonical_json_bytes,
     canonical_json_sha256,
     sha256_file,
 )
@@ -2419,6 +2421,37 @@ def build_runtime_receipt_from_inspect(
     return _self_hashed(body, "runtime_receipt_sha256")
 
 
+def canonical_runtime_inspect_comparison_bytes(inspect_value: Any) -> bytes:
+    """Canonicalize only Docker's order-unstable top-level mount list.
+
+    The sealed raw inspect and its receipt retain their exact original bytes and
+    hash.  This representation is used only when comparing a later fresh
+    ``docker inspect`` with that sealed object.  Every field is retained, every
+    list other than ``Mounts`` remains order-sensitive, and duplicate mount rows
+    remain present.
+    """
+
+    if (
+        not isinstance(inspect_value, list)
+        or len(inspect_value) != 1
+        or not isinstance(inspect_value[0], Mapping)
+    ):
+        raise ContractError(
+            "scientific docker inspect must contain exactly one container"
+        )
+    mounts = inspect_value[0].get("Mounts")
+    if not isinstance(mounts, list) or any(
+        not isinstance(row, Mapping) for row in mounts
+    ):
+        raise ContractError("scientific container mount list is absent or malformed")
+
+    normalized = deepcopy(inspect_value)
+    normalized[0]["Mounts"] = sorted(
+        normalized[0]["Mounts"], key=canonical_json_bytes
+    )
+    return canonical_json_bytes(normalized)
+
+
 def validate_mounted_authorization_bundle(
     authorization_dir: Path = CONTAINER_AUTHORIZATION_DIR,
     *,
@@ -2628,6 +2661,7 @@ __all__ = [
     "build_execution_readiness",
     "build_run_authorization_template",
     "build_runtime_receipt_from_inspect",
+    "canonical_runtime_inspect_comparison_bytes",
     "build_scientific_source_manifest",
     "build_source_probe_receipt",
     "expected_scientific_mounts",
