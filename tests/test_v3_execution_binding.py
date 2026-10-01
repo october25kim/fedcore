@@ -15,7 +15,7 @@ from fedcore.experiments.v3_orchestrator import write_json
 
 
 REPOSITORY = Path(__file__).resolve().parents[1]
-STATIC = REPOSITORY / "paper" / "ijar-v34-pacs-fresh-seed-hsb-v3-static-input-binding-r2"
+STATIC = REPOSITORY / "paper" / "ijar-v34-pacs-fresh-seed-hsb-v3-static-input-binding-r4"
 SOURCE_COMMIT = "a" * 40
 SOURCE_TREE = "f" * 40
 IMAGE_ID = "sha256:" + "b" * 64
