@@ -1,0 +1,328 @@
+[
+    {
+        "Id": "8a7346452013f537e4ef43314d79c3789f163dfb127a8420101f03e097f66095",
+        "Created": "2026-10-01T02:09:58.479171169Z",
+        "Path": "python",
+        "Args": [
+            "-m",
+            "pytest",
+            "--rootdir=/testrepo",
+            "-c",
+            "/dev/null",
+            "--import-mode=importlib",
+            "-p",
+            "no:cacheprovider",
+            "-q",
+            "/testrepo/tests/test_v3_campaign_finalizer.py",
+            "/testrepo/tests/test_v3_campaign_runner.py",
+            "/testrepo/tests/test_v3_campaign_runner_safety.py",
+            "/testrepo/tests/test_v3_campaign_state.py",
+            "/testrepo/tests/test_v3_execution_binding.py",
+            "/testrepo/tests/test_v3_host_executor.py",
+            "/testrepo/tests/test_v3_hsb_binding.py",
+            "/testrepo/tests/test_v3_input_binding.py",
+            "/testrepo/tests/test_v3_mount_receipt.py",
+            "/testrepo/tests/test_v3_pacs_stage_isolation.py",
+            "/testrepo/tests/test_v3_posttrain.py",
+            "/testrepo/tests/test_v3_scientific_runner.py",
+            "/testrepo/tests/test_v3_training_primitives.py",
+            "--junitxml=/evidence/TEST_JUNIT.xml"
+        ],
+        "State": {
+            "Status": "exited",
+            "Running": false,
+            "Paused": false,
+            "Restarting": false,
+            "OOMKilled": false,
+            "Dead": false,
+            "Pid": 0,
+            "ExitCode": 0,
+            "Error": "",
+            "StartedAt": "2026-10-01T02:09:58.516965106Z",
+            "FinishedAt": "2026-10-01T02:10:18.136388163Z"
+        },
+        "Image": "sha256:d1eb09ca1cddbb3ca13b5fb2c888a1e61a9d1200ce28bd2e69339395a71674c8",
+        "ResolvConfPath": "/var/lib/docker/containers/8a7346452013f537e4ef43314d79c3789f163dfb127a8420101f03e097f66095/resolv.conf",
+        "HostnamePath": "/var/lib/docker/containers/8a7346452013f537e4ef43314d79c3789f163dfb127a8420101f03e097f66095/hostname",
+        "HostsPath": "/var/lib/docker/containers/8a7346452013f537e4ef43314d79c3789f163dfb127a8420101f03e097f66095/hosts",
+        "LogPath": "/var/lib/docker/containers/8a7346452013f537e4ef43314d79c3789f163dfb127a8420101f03e097f66095/8a7346452013f537e4ef43314d79c3789f163dfb127a8420101f03e097f66095-json.log",
+        "Name": "/fedcore-v3-test-execution-r3-80fd28a",
+        "RestartCount": 0,
+        "Driver": "overlayfs",
+        "Platform": "linux",
+        "MountLabel": "",
+        "ProcessLabel": "",
+        "AppArmorProfile": "docker-default",
+        "ExecIDs": null,
+        "HostConfig": {
+            "Binds": null,
+            "ContainerIDFile": "",
+            "LogConfig": {
+                "Type": "json-file",
+                "Config": {}
+            },
+            "NetworkMode": "none",
+            "PortBindings": {},
+            "RestartPolicy": {
+                "Name": "no",
+                "MaximumRetryCount": 0
+            },
+            "AutoRemove": false,
+            "VolumeDriver": "",
+            "VolumesFrom": null,
+            "ConsoleSize": [
+                0,
+                0
+            ],
+            "CapAdd": null,
+            "CapDrop": [
+                "ALL"
+            ],
+            "CgroupnsMode": "private",
+            "Dns": null,
+            "DnsOptions": [],
+            "DnsSearch": [],
+            "ExtraHosts": null,
+            "GroupAdd": null,
+            "IpcMode": "private",
+            "Cgroup": "",
+            "Links": null,
+            "OomScoreAdj": 0,
+            "PidMode": "",
+            "Privileged": false,
+            "PublishAllPorts": false,
+            "ReadonlyRootfs": true,
+            "SecurityOpt": [
+                "no-new-privileges"
+            ],
+            "Tmpfs": {
+                "/tmp": "rw,noexec,nosuid,size=1g"
+            },
+            "UTSMode": "",
+            "UsernsMode": "",
+            "ShmSize": 67108864,
+            "Runtime": "runc",
+            "Isolation": "",
+            "CpuShares": 0,
+            "Memory": 0,
+            "NanoCpus": 0,
+            "CgroupParent": "",
+            "BlkioWeight": 0,
+            "BlkioWeightDevice": [],
+            "BlkioDeviceReadBps": [],
+            "BlkioDeviceWriteBps": [],
+            "BlkioDeviceReadIOps": [],
+            "BlkioDeviceWriteIOps": [],
+            "CpuPeriod": 0,
+            "CpuQuota": 0,
+            "CpuRealtimePeriod": 0,
+            "CpuRealtimeRuntime": 0,
+            "CpusetCpus": "",
+            "CpusetMems": "",
+            "Devices": [],
+            "DeviceCgroupRules": null,
+            "DeviceRequests": null,
+            "MemoryReservation": 0,
+            "MemorySwap": 0,
+            "MemorySwappiness": null,
+            "OomKillDisable": null,
+            "PidsLimit": null,
+            "Ulimits": [],
+            "CpuCount": 0,
+            "CpuPercent": 0,
+            "IOMaximumIOps": 0,
+            "IOMaximumBandwidth": 0,
+            "Mounts": [
+                {
+                    "Type": "bind",
+                    "Source": "/home/sanghoon/Desktop/Workspace/Fedcore_HSB_v3_exec/repo",
+                    "Target": "/testrepo",
+                    "ReadOnly": true
+                },
+                {
+                    "Type": "bind",
+                    "Source": "/home/sanghoon/Desktop/Workspace/Fedcore_HSB_v3_exec/evidence/execution-r3",
+                    "Target": "/evidence"
+                }
+            ],
+            "MaskedPaths": [
+                "/proc/acpi",
+                "/proc/asound",
+                "/proc/interrupts",
+                "/proc/kcore",
+                "/proc/keys",
+                "/proc/latency_stats",
+                "/proc/sched_debug",
+                "/proc/scsi",
+                "/proc/timer_list",
+                "/proc/timer_stats",
+                "/sys/devices/virtual/powercap",
+                "/sys/firmware",
+                "/sys/devices/system/cpu/cpu0/thermal_throttle",
+                "/sys/devices/system/cpu/cpu1/thermal_throttle",
+                "/sys/devices/system/cpu/cpu2/thermal_throttle",
+                "/sys/devices/system/cpu/cpu3/thermal_throttle",
+                "/sys/devices/system/cpu/cpu4/thermal_throttle",
+                "/sys/devices/system/cpu/cpu5/thermal_throttle",
+                "/sys/devices/system/cpu/cpu6/thermal_throttle",
+                "/sys/devices/system/cpu/cpu7/thermal_throttle",
+                "/sys/devices/system/cpu/cpu8/thermal_throttle",
+                "/sys/devices/system/cpu/cpu9/thermal_throttle",
+                "/sys/devices/system/cpu/cpu10/thermal_throttle",
+                "/sys/devices/system/cpu/cpu11/thermal_throttle",
+                "/sys/devices/system/cpu/cpu12/thermal_throttle",
+                "/sys/devices/system/cpu/cpu13/thermal_throttle",
+                "/sys/devices/system/cpu/cpu14/thermal_throttle",
+                "/sys/devices/system/cpu/cpu15/thermal_throttle",
+                "/sys/devices/system/cpu/cpu16/thermal_throttle",
+                "/sys/devices/system/cpu/cpu17/thermal_throttle",
+                "/sys/devices/system/cpu/cpu18/thermal_throttle",
+                "/sys/devices/system/cpu/cpu19/thermal_throttle",
+                "/sys/devices/system/cpu/cpu20/thermal_throttle",
+                "/sys/devices/system/cpu/cpu21/thermal_throttle",
+                "/sys/devices/system/cpu/cpu22/thermal_throttle",
+                "/sys/devices/system/cpu/cpu23/thermal_throttle",
+                "/sys/devices/system/cpu/cpu24/thermal_throttle",
+                "/sys/devices/system/cpu/cpu25/thermal_throttle",
+                "/sys/devices/system/cpu/cpu26/thermal_throttle",
+                "/sys/devices/system/cpu/cpu27/thermal_throttle"
+            ],
+            "ReadonlyPaths": [
+                "/proc/bus",
+                "/proc/fs",
+                "/proc/irq",
+                "/proc/sys",
+                "/proc/sysrq-trigger"
+            ]
+        },
+        "Storage": {
+            "RootFS": {
+                "Snapshot": {
+                    "Name": "overlayfs"
+                }
+            }
+        },
+        "Mounts": [
+            {
+                "Type": "bind",
+                "Source": "/home/sanghoon/Desktop/Workspace/Fedcore_HSB_v3_exec/repo",
+                "Destination": "/testrepo",
+                "Mode": "",
+                "RW": false,
+                "Propagation": "rprivate"
+            },
+            {
+                "Type": "bind",
+                "Source": "/home/sanghoon/Desktop/Workspace/Fedcore_HSB_v3_exec/evidence/execution-r3",
+                "Destination": "/evidence",
+                "Mode": "",
+                "RW": true,
+                "Propagation": "rprivate"
+            }
+        ],
+        "Config": {
+            "Hostname": "8a7346452013",
+            "Domainname": "",
+            "User": "1000:1000",
+            "AttachStdin": false,
+            "AttachStdout": true,
+            "AttachStderr": true,
+            "Tty": false,
+            "OpenStdin": false,
+            "StdinOnce": false,
+            "Env": [
+                "CUDA_VISIBLE_DEVICES=",
+                "PYTHONPATH=/workspace:/opt/fedcore-test-runtime",
+                "PYTHONSAFEPATH=1",
+                "PATH=/usr/local/nvidia/bin:/usr/local/cuda/bin:/opt/conda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+                "NVIDIA_VISIBLE_DEVICES=all",
+                "NVIDIA_DRIVER_CAPABILITIES=compute,utility",
+                "LD_LIBRARY_PATH=/usr/local/nvidia/lib:/usr/local/nvidia/lib64",
+                "PYTORCH_VERSION=2.3.0",
+                "PYTHONDONTWRITEBYTECODE=1",
+                "FEDCORE_SOURCE_COMMIT=80fd28aadb00c1fb26d4e957c76b407eca9816ef",
+                "PYTHONUNBUFFERED=1",
+                "PYTHONHASHSEED=0",
+                "CUBLAS_WORKSPACE_CONFIG=:4096:8",
+                "TORCH_HOME=/nonexistent-torch-home"
+            ],
+            "Cmd": [
+                "-m",
+                "pytest",
+                "--rootdir=/testrepo",
+                "-c",
+                "/dev/null",
+                "--import-mode=importlib",
+                "-p",
+                "no:cacheprovider",
+                "-q",
+                "/testrepo/tests/test_v3_campaign_finalizer.py",
+                "/testrepo/tests/test_v3_campaign_runner.py",
+                "/testrepo/tests/test_v3_campaign_runner_safety.py",
+                "/testrepo/tests/test_v3_campaign_state.py",
+                "/testrepo/tests/test_v3_execution_binding.py",
+                "/testrepo/tests/test_v3_host_executor.py",
+                "/testrepo/tests/test_v3_hsb_binding.py",
+                "/testrepo/tests/test_v3_input_binding.py",
+                "/testrepo/tests/test_v3_mount_receipt.py",
+                "/testrepo/tests/test_v3_pacs_stage_isolation.py",
+                "/testrepo/tests/test_v3_posttrain.py",
+                "/testrepo/tests/test_v3_scientific_runner.py",
+                "/testrepo/tests/test_v3_training_primitives.py",
+                "--junitxml=/evidence/TEST_JUNIT.xml"
+            ],
+            "Image": "sha256:d1eb09ca1cddbb3ca13b5fb2c888a1e61a9d1200ce28bd2e69339395a71674c8",
+            "Volumes": null,
+            "WorkingDir": "/tmp",
+            "Entrypoint": [
+                "python"
+            ],
+            "Labels": {
+                "com.nvidia.volumes.needed": "nvidia_driver",
+                "org.opencontainers.image.build-inventory-sha256": "03936b1aa336ee69a16c67faf6d1dc4f9978eb6cde3d93a18779ca9a9ae8398a",
+                "org.opencontainers.image.description": "Hash-bound PACS fresh-seed replication runtime; launch remains separately authorization-gated",
+                "org.opencontainers.image.dockerfile-sha256": "8efcfac383199e28a4aee6af0b40ef67dacaab56e9a4662cbfdd3f5b4422a16f",
+                "org.opencontainers.image.ref.name": "ubuntu",
+                "org.opencontainers.image.requirements-lock-sha256": "e39dc80bda8d8d1808238c5d4dbfbe580ade33cb38dbf6b3b497119c5d9e3579",
+                "org.opencontainers.image.revision": "80fd28aadb00c1fb26d4e957c76b407eca9816ef",
+                "org.opencontainers.image.runtime-inventory-sha256": "11fd61cb6320e7c7c5997cc6bbe7d03c2698872e2ae161eeececda3a248c8daf",
+                "org.opencontainers.image.source-manifest-sha256": "eb141011fdc2cc6d7fe0c393dcd8212105b2fb114f4090a957b5f9cd0fc3d7da",
+                "org.opencontainers.image.title": "FedCORE PACS HSB v3 scientific runtime",
+                "org.opencontainers.image.version": "22.04"
+            }
+        },
+        "NetworkSettings": {
+            "SandboxID": "",
+            "SandboxKey": "",
+            "Ports": {},
+            "Networks": {
+                "none": {
+                    "IPAMConfig": null,
+                    "Links": null,
+                    "Aliases": null,
+                    "DriverOpts": null,
+                    "GwPriority": 0,
+                    "NetworkID": "ef6b8a27ab1eb40777294d924a789eda961c5cfa4689e1211abbf8a2a3e21c98",
+                    "EndpointID": "",
+                    "Gateway": "",
+                    "IPAddress": "",
+                    "MacAddress": "",
+                    "IPPrefixLen": 0,
+                    "IPv6Gateway": "",
+                    "GlobalIPv6Address": "",
+                    "GlobalIPv6PrefixLen": 0,
+                    "DNSNames": null
+                }
+            }
+        },
+        "ImageManifestDescriptor": {
+            "mediaType": "application/vnd.oci.image.manifest.v1+json",
+            "digest": "sha256:3d9d4292125ce6151a69a9bf4c5ffcdcccfaf48427e12461dd331f412e7e73ff",
+            "size": 3140,
+            "platform": {
+                "architecture": "amd64",
+                "os": "linux"
+            }
+        }
+    }
+]
