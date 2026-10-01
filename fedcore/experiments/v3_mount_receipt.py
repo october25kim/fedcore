@@ -27,9 +27,9 @@ from fedcore.experiments.v3_validate import validate_mount_scope
 
 
 FORBIDDEN_RUNTIME_ROOTS = (
-    "/home/sanghoon/Desktop/Workspace/Fedcore",
-    "/home/sanghoon/Desktop/Workspace/Fedcore/outputs",
-    "/home/sanghoon/Desktop/Workspace/Fedcore/work",
+    "/data/workspace/sanghoon/fedcore2",
+    "/data/workspace/sanghoon/fedcore2/outputs",
+    "/data/workspace/sanghoon/fedcore2/work",
 )
 
 MOUNT_PROBE_ENTRYPOINT = ["python"]

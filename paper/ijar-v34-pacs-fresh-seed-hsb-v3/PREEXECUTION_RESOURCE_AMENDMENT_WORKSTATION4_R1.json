@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "protocol_id": "FEDCORE-IJAR-V34-PACS-FRESH-SEED-REPLICATION-HSB-v3",
+  "amendment_id": "FEDCORE-PACS-v3-WORKSTATION4-PREEXECUTION-RESOURCE-AMENDMENT-r1",
+  "status": "PREEXECUTION_RESOURCE_AMENDMENT_NO_SCIENTIFIC_OUTCOME_OBSERVED",
+  "issued_at_utc": "2026-10-01T05:10:00Z",
+  "authorized_by": "Sanghoon Kim",
+  "reason": "The originally bound ubuntu-4070 GPU was occupied by another authorized campaign. The author explicitly removed the requirement to terminate PACS at the original 48-hour resource limit and selected idle workstation4 GPU 0 to avoid concurrent-GPU interference.",
+  "pre_amendment_state": {
+    "pacs_v3_training_started": false,
+    "pacs_v3_inference_started": false,
+    "pacs_v3_primary_outcome_seen": false,
+    "ubuntu_container_running": false,
+    "ubuntu_container_status": "created",
+    "ubuntu_output_file_count": 0,
+    "ubuntu_start_lease_present": false,
+    "ubuntu_wait_scheduler_stopped_before_rebinding": true
+  },
+  "scientific_contract_unchanged": {
+    "dataset_archive_sha256": "42bf567f1ed8a01d522e47e4a677e2a3149577bbd6fcbb38bedfdd73cb59e147",
+    "image_manifest_sha256": "283d47bd8cfb7017d6e7fde6d65e07ff6479ab25127afcba135da3a06775afae",
+    "fold_manifest_sha256": "fe5b64d237f47f503b8895aa5e566727bc818e05ee597f84c440df70e91e5344",
+    "model_matrix_sha256": "ac91ffbf2ccebb1a35ffcd648051fc4c25db1fd7df6cc45c607d652e0e385104",
+    "planned_cells": 30,
+    "architectures": [
+      "resnet18",
+      "convnext_tiny"
+    ],
+    "nominal_training_seeds": [
+      0,
+      1,
+      2
+    ],
+    "primary_alpha": 0.2,
+    "procedures": [
+      "H",
+      "S",
+      "B"
+    ],
+    "outcome_gates_unchanged": true,
+    "negative_result_policy_unchanged": true,
+    "registered_denominators_unchanged": true
+  },
+  "superseded_execution_terms": {
+    "execution_host_alias": "ubuntu-4070",
+    "gpu_uuid": "GPU-ee5a0082-32e6-ede4-27d5-441bee0ca7c6",
+    "gpu_hour_cap_total": 48,
+    "isolated_execution_root": "/home/sanghoon/Desktop/Workspace/Fedcore_HSB_v3_exec"
+  },
+  "replacement_execution_terms": {
+    "execution_host_alias": "workstation4",
+    "observed_hostname": "user",
+    "gpu_index": 0,
+    "gpu_name": "NVIDIA TITAN RTX",
+    "gpu_uuid": "GPU-d6e53d0c-b100-5dd4-30b2-0574b2b4dffb",
+    "gpu_memory_mib": 24576,
+    "isolated_execution_root": "/data/workspace/sanghoon/Fedcore_HSB_v3_exec_ws4",
+    "max_concurrent_scientific_processes": 1,
+    "scientific_timeout_role": "orphan-process safety watchdog only; not a scientific stopping or selection rule",
+    "safety_watchdog_total_gpu_hours": 722,
+    "scientific_watchdog_seconds": 2591700,
+    "completion_rule": "run the fixed 30-cell campaign to terminal accounting unless a genuine execution failure, integrity violation, or 30-day orphan-process safety watchdog occurs"
+  },
+  "interpretation": "This amendment changes only the pre-execution host and operational resource watchdog. It does not authorize any change to the PACS frame, split, seed, model, selector family, H/S/B implementation, audit draw, metric, denominator, or outcome gate. The amendment was made before any v3-specific scientific execution or outcome was observed."
+}

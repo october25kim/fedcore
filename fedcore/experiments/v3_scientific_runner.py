@@ -53,15 +53,15 @@ AUTHORIZATION_STATUS = "RUN_AUTHORIZED"
 EXPECTED_TRAINING_MANIFEST_SHA256 = (
     "7c55b885e6c245b749ca8ba9d9462e077c85e60fa7a6b9f7cbe2ee0dc1e08bfc"
 )
-EXPECTED_IMAGE_TAG = "fedcore-v3-hsb:binding-r2"
+EXPECTED_IMAGE_TAG = "fedcore-v3-hsb:workstation4-r1"
 EXPECTED_GPU_INDEX = 0
-EXPECTED_GPU_UUID = "GPU-ee5a0082-32e6-ede4-27d5-441bee0ca7c6"
-EXPECTED_GPU_NAME = "NVIDIA GeForce RTX 4070 Ti SUPER"
+EXPECTED_GPU_UUID = "GPU-d6e53d0c-b100-5dd4-30b2-0574b2b4dffb"
+EXPECTED_GPU_NAME = "NVIDIA TITAN RTX"
 MAX_CONCURRENT_SCIENTIFIC_PROCESSES = 1
 CONTAINER_OUTPUT_ROOT = Path("/output")
 CONTAINER_TMP_ROOT = Path("/tmp")
 REGISTERED_OUTPUT_DIR = Path(
-    "/home/sanghoon/Desktop/Workspace/Fedcore_HSB_v3_exec/runs/scientific/"
+    "/data/workspace/sanghoon/Fedcore_HSB_v3_exec_ws4/runs/scientific/"
     f"{PROTOCOL_ID}"
 )
 

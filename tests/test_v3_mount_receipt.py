@@ -199,7 +199,7 @@ def test_mount_probe_fails_closed(tmp_path: Path, failure: str) -> None:
         inspect[0]["Mounts"].append(
             {
                 "Type": "bind",
-                "Source": "/home/sanghoon/Desktop/Workspace/Fedcore/outputs",
+                "Source": "/data/workspace/sanghoon/fedcore2/outputs",
                 "Destination": "/legacy",
                 "RW": False,
             }

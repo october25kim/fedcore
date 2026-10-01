@@ -92,8 +92,8 @@ def test_attached_watchdog_streams_logs_and_seals_terminal_receipt(tmp_path):
     assert receipt["gpu_cap_invariant_verified"] is True
 
 
-def test_watchdog_precharges_cleanup_and_rejects_old_46_hour_timeout(tmp_path):
-    assert host.SCIENTIFIC_WALLTIME_SECONDS == (46 * 60 * 60) - 300
+def test_watchdog_precharges_cleanup_and_rejects_unreserved_720_hour_timeout(tmp_path):
+    assert host.SCIENTIFIC_WALLTIME_SECONDS == (720 * 60 * 60) - 300
     assert host.POST_TIMEOUT_CLEANUP_COMMAND_BOUND_SECONDS == 90
     assert host.SCIENTIFIC_CLEANUP_RESERVE_SECONDS == 300
     assert host.SCIENTIFIC_CLEANUP_SAFETY_MARGIN_SECONDS == 210
@@ -110,7 +110,7 @@ def test_watchdog_precharges_cleanup_and_rejects_old_46_hour_timeout(tmp_path):
             ["docker", "start", "--attach", "f" * 64],
             container_id="f" * 64,
             log_dir=log_dir,
-            timeout_seconds=46 * 60 * 60,
+            timeout_seconds=720 * 60 * 60,
         )
     assert not log_dir.exists()
 

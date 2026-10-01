@@ -63,7 +63,7 @@ DOCKER_STOP_COMMAND_TIMEOUT_SECONDS = 45
 DOCKER_KILL_COMMAND_TIMEOUT_SECONDS = 15
 DOCKER_INSPECT_COMMAND_TIMEOUT_SECONDS = 15
 EXPECTED_HOST_LOG_DIR = Path(
-    "/home/sanghoon/Desktop/Workspace/Fedcore_HSB_v3_exec/logs/execution-r3"
+    "/data/workspace/sanghoon/Fedcore_HSB_v3_exec_ws4/logs/execution-r4"
 )
 
 

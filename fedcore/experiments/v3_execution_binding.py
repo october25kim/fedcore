@@ -46,7 +46,7 @@ CONTAINER_AUTHORIZATION_DIR = Path("/authorization")
 CONTAINER_OUTPUT_DIR = Path("/output")
 CANONICAL_CONTAINER_WORKSPACE_DIR = Path("/workspace")
 CONTAINER_WORKSPACE_DIR = CANONICAL_CONTAINER_WORKSPACE_DIR
-EXPECTED_GPU_UUID = "GPU-ee5a0082-32e6-ede4-27d5-441bee0ca7c6"
+EXPECTED_GPU_UUID = "GPU-d6e53d0c-b100-5dd4-30b2-0574b2b4dffb"
 AUTHORIZATION_METHOD = "trusted_host_manual_artifact"
 AUTHORIZED_BY = "Sanghoon Kim"
 SOURCE_MANIFEST_STATUS = "PASS_EXACT_SCIENTIFIC_SOURCE_MANIFEST"
@@ -57,7 +57,10 @@ RUNTIME_INVENTORY_LABEL = "org.opencontainers.image.runtime-inventory-sha256"
 BUILD_INVENTORY_LABEL = "org.opencontainers.image.build-inventory-sha256"
 DOCKERFILE_LABEL = "org.opencontainers.image.dockerfile-sha256"
 REQUIREMENTS_LABEL = "org.opencontainers.image.requirements-lock-sha256"
-TOTAL_GPU_HOUR_CAP = 48.0
+# The original 48-hour scientific cutoff is superseded pre-execution by the
+# workstation4 resource amendment.  This 30-day watchdog is an orphan-process
+# safety bound, not a scientific stopping or outcome-selection rule.
+TOTAL_GPU_HOUR_CAP = 722.0
 SEALED_CAPACITY_GPU_HOURS = 2.0
 POST_TIMEOUT_CLEANUP_COMMAND_BOUND_SECONDS = 90
 SCIENTIFIC_CLEANUP_RESERVE_SECONDS = 300
@@ -251,10 +254,10 @@ REQUIRED_EXECUTION_PYTEST_ARGV = (
     "--junitxml=/evidence/TEST_JUNIT.xml",
 )
 EXPECTED_HOST_CONTROL_DIR = Path(
-    "/home/sanghoon/Desktop/Workspace/Fedcore_HSB_v3_exec/control/execution-r3"
+    "/data/workspace/sanghoon/Fedcore_HSB_v3_exec_ws4/control/execution-r4"
 )
 EXPECTED_HOST_OUTPUT_DIR = Path(
-    "/home/sanghoon/Desktop/Workspace/Fedcore_HSB_v3_exec/runs/scientific/"
+    "/data/workspace/sanghoon/Fedcore_HSB_v3_exec_ws4/runs/scientific/"
     "FEDCORE-IJAR-V34-PACS-FRESH-SEED-REPLICATION-HSB-v3"
 )
 SCIENTIFIC_COMMAND = (
@@ -1128,8 +1131,8 @@ def validate_static_launch_plan(value: Mapping[str, Any]) -> str:
             raise ContractError(f"static launch-plan input registry drift for {spec.name}")
     if value.get("runtime") != {
         "gpu_index": 0,
-        "gpu_name": "NVIDIA GeForce RTX 4070 Ti SUPER",
-        "gpu_uuid": "GPU-ee5a0082-32e6-ede4-27d5-441bee0ca7c6",
+        "gpu_name": "NVIDIA TITAN RTX",
+        "gpu_uuid": "GPU-d6e53d0c-b100-5dd4-30b2-0574b2b4dffb",
         "max_concurrent_scientific_processes": 1,
         "network": "none",
         "root_filesystem_read_only": True,

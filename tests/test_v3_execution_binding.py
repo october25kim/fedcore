@@ -514,7 +514,7 @@ def test_readiness_precharges_bounded_cleanup_inside_total_gpu_cap(chain):
     readiness = chain["readiness"]
     assert (
         readiness["scientific_execution_timeout_seconds"]
-        == (46 * 60 * 60) - 300
+        == (720 * 60 * 60) - 300
     )
     assert readiness["post_timeout_cleanup_command_bound_seconds"] == 90
     assert readiness["scientific_cleanup_reserve_seconds"] == 300
@@ -530,12 +530,12 @@ def test_readiness_precharges_bounded_cleanup_inside_total_gpu_cap(chain):
     )
 
 
-def test_resource_cap_invariant_rejects_old_46_hour_timeout(monkeypatch):
+def test_resource_cap_invariant_rejects_unreserved_720_hour_timeout(monkeypatch):
     monkeypatch.setattr(
-        binding, "SCIENTIFIC_EXECUTION_TIMEOUT_SECONDS", 46 * 60 * 60
+        binding, "SCIENTIFIC_EXECUTION_TIMEOUT_SECONDS", 720 * 60 * 60
     )
-    monkeypatch.setattr(binding, "REMAINING_SCIENTIFIC_WALLTIME_HOURS", 46.0)
-    monkeypatch.setattr(binding, "MAXIMUM_CPU_CORE_HOURS", 23.0)
+    monkeypatch.setattr(binding, "REMAINING_SCIENTIFIC_WALLTIME_HOURS", 720.0)
+    monkeypatch.setattr(binding, "MAXIMUM_CPU_CORE_HOURS", 360.0)
     with pytest.raises(ContractError, match="exceeds the GPU cap"):
         binding._validate_gpu_resource_cap_invariant()
 
