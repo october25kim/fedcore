@@ -254,7 +254,7 @@ REQUIRED_EXECUTION_PYTEST_ARGV = (
     "--junitxml=/evidence/TEST_JUNIT.xml",
 )
 EXPECTED_HOST_CONTROL_DIR = Path(
-    "/data/workspace/sanghoon/Fedcore_HSB_v3_exec_ws4/control/execution-r4"
+    "/data/workspace/sanghoon/Fedcore_HSB_v3_exec_ws4/control/execution-r5"
 )
 EXPECTED_HOST_OUTPUT_DIR = Path(
     "/data/workspace/sanghoon/Fedcore_HSB_v3_exec_ws4/runs/scientific/"
