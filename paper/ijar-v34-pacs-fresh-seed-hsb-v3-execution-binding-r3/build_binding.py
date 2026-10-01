@@ -54,7 +54,7 @@ from fedcore.experiments.v3_orchestrator import write_json
 
 ROOT = Path(__file__).resolve().parents[2]
 BUNDLE = Path(__file__).resolve().parent
-STATIC = ROOT / "paper/ijar-v34-pacs-fresh-seed-hsb-v3-static-input-binding-r5"
+STATIC = ROOT / "paper/ijar-v34-pacs-fresh-seed-hsb-v3-static-input-binding-r2"
 PUBLIC_BUNDLE_FILES = (
     "build_binding.py",
     "SOURCE_MANIFEST.json",
@@ -361,7 +361,7 @@ def stage_readiness(
     control_dir.mkdir(parents=True, exist_ok=True)
     unexpected = [path for path in control_dir.iterdir()]
     if unexpected:
-        raise ContractError("execution-r3 control directory must begin empty")
+        raise ContractError("execution control directory must begin empty")
     EXPECTED_HOST_OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
     if next(EXPECTED_HOST_OUTPUT_DIR.iterdir(), None) is not None:
         raise ContractError("scientific output directory must be empty")
