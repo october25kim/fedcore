@@ -63,12 +63,12 @@ DOCKER_STOP_COMMAND_TIMEOUT_SECONDS = 45
 DOCKER_KILL_COMMAND_TIMEOUT_SECONDS = 15
 DOCKER_INSPECT_COMMAND_TIMEOUT_SECONDS = 15
 EXPECTED_HOST_LOG_DIR = Path(
-    "/data/workspace/sanghoon/Fedcore_HSB_v3_exec_ws4/logs/execution-r5"
+    "/home/sanghoon/Desktop/Workspace/Fedcore_HSB_v3_exec/logs/execution-r6"
 )
 
 
 def _validate_watchdog_gpu_cap(timeout_seconds: int) -> None:
-    """Reject a watchdog budget that can exceed the registered 48 GPU-hours."""
+    """Reject a watchdog budget that exceeds the amended safety envelope."""
 
     cleanup_command_bound = (
         DOCKER_STOP_COMMAND_TIMEOUT_SECONDS

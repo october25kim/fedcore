@@ -46,7 +46,7 @@ CONTAINER_AUTHORIZATION_DIR = Path("/authorization")
 CONTAINER_OUTPUT_DIR = Path("/output")
 CANONICAL_CONTAINER_WORKSPACE_DIR = Path("/workspace")
 CONTAINER_WORKSPACE_DIR = CANONICAL_CONTAINER_WORKSPACE_DIR
-EXPECTED_GPU_UUID = "GPU-afbc9e02-0ce4-a4a4-391f-7c31c414771f"
+EXPECTED_GPU_UUID = "GPU-ee5a0082-32e6-ede4-27d5-441bee0ca7c6"
 AUTHORIZATION_METHOD = "trusted_host_manual_artifact"
 AUTHORIZED_BY = "Sanghoon Kim"
 SOURCE_MANIFEST_STATUS = "PASS_EXACT_SCIENTIFIC_SOURCE_MANIFEST"
@@ -58,7 +58,7 @@ BUILD_INVENTORY_LABEL = "org.opencontainers.image.build-inventory-sha256"
 DOCKERFILE_LABEL = "org.opencontainers.image.dockerfile-sha256"
 REQUIREMENTS_LABEL = "org.opencontainers.image.requirements-lock-sha256"
 # The original 48-hour scientific cutoff is superseded pre-execution by the
-# workstation4 resource amendment.  This 30-day watchdog is an orphan-process
+# author-approved resource amendments.  This 30-day watchdog is an orphan-process
 # safety bound, not a scientific stopping or outcome-selection rule.
 TOTAL_GPU_HOUR_CAP = 722.0
 SEALED_CAPACITY_GPU_HOURS = 2.0
@@ -254,10 +254,10 @@ REQUIRED_EXECUTION_PYTEST_ARGV = (
     "--junitxml=/evidence/TEST_JUNIT.xml",
 )
 EXPECTED_HOST_CONTROL_DIR = Path(
-    "/data/workspace/sanghoon/Fedcore_HSB_v3_exec_ws4/control/execution-r5"
+    "/home/sanghoon/Desktop/Workspace/Fedcore_HSB_v3_exec/control/execution-r6"
 )
 EXPECTED_HOST_OUTPUT_DIR = Path(
-    "/data/workspace/sanghoon/Fedcore_HSB_v3_exec_ws4/runs/scientific/"
+    "/home/sanghoon/Desktop/Workspace/Fedcore_HSB_v3_exec/runs/scientific/"
     "FEDCORE-IJAR-V34-PACS-FRESH-SEED-REPLICATION-HSB-v3"
 )
 SCIENTIFIC_COMMAND = (
@@ -282,22 +282,23 @@ SCIENTIFIC_COMMAND = (
     "cuda:0",
 )
 
-# Public workstation4 GPU 3 r5 static-binding anchors.  These constants prevent a self-consistent
-# replacement of the preceding launch plan, input receipt, or mount receipt.
+# Public ubuntu-4070 GPU 0 r2 static-binding anchors.  These constants prevent a
+# self-consistent replacement of the preceding launch plan, input receipt, or
+# mount receipt.
 STATIC_BINDING_ROOT_SHA256 = (
-    "c7e2f013644d6945d638a23010de14268ea8f77bacb7adb91f3ca2feb14129c8"
+    "362f4e9dc19b9276db54fdef2748887296bc0c01f8e40af56b90a2613a5db752"
 )
 STATIC_LAUNCH_PLAN_FILE_SHA256 = (
-    "d2b3ada89a854d4d2c17623b337542e998405bb1c66488212a246e7a683c2b88"
+    "8eb4fda2228c569a556386dfd7f91a95a9c3400f1c7f706dec2e7325a9f98280"
 )
 STATIC_LAUNCH_PLAN_SHA256 = (
-    "762e64fa7fb2dfc4251ab2bba6e346d3765a62e4f52d35d4eab2eb0a27cb22f7"
+    "0eb4a8b50adbe552c7506475eec379774a776c73f5601fa8e670a26100c37364"
 )
 STATIC_INPUT_BINDING_FILE_SHA256 = (
-    "9ff85d7e7973e4740ef4002cfb3c91687e2b857f3b794ff018380f3bb80a89af"
+    "e12f305858bf793dac02a1e7b38575b4f12fd5ab66872efb8bb40894f00928d9"
 )
 STATIC_MOUNT_RECEIPT_FILE_SHA256 = (
-    "0601ef1cb314c4918b6f7d3948dd2549e810a015f2bf73abeccd1fc5157eede3"
+    "cc4bbbfc68faacfe4e9f6c6f6ebf52c26d44540afac82b84619b19a24b50ef8b"
 )
 
 CONTROL_FILENAMES = (
@@ -1130,9 +1131,9 @@ def validate_static_launch_plan(value: Mapping[str, Any]) -> str:
         if not isinstance(row, Mapping) or any(row.get(k) != v for k, v in expected.items()):
             raise ContractError(f"static launch-plan input registry drift for {spec.name}")
     if value.get("runtime") != {
-        "gpu_index": 3,
-        "gpu_name": "NVIDIA TITAN RTX",
-        "gpu_uuid": "GPU-afbc9e02-0ce4-a4a4-391f-7c31c414771f",
+        "gpu_index": 0,
+        "gpu_name": "NVIDIA GeForce RTX 4070 Ti SUPER",
+        "gpu_uuid": "GPU-ee5a0082-32e6-ede4-27d5-441bee0ca7c6",
         "max_concurrent_scientific_processes": 1,
         "network": "none",
         "root_filesystem_read_only": True,

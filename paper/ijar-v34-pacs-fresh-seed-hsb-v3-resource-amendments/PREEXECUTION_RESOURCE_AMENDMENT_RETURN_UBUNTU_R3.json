@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "protocol_id": "FEDCORE-IJAR-V34-PACS-FRESH-SEED-REPLICATION-HSB-v3",
+  "amendment_id": "PREEXECUTION-RESOURCE-AMENDMENT-RETURN-UBUNTU-R3",
+  "status": "PASS_PREEXECUTION_RESOURCE_REBINDING_NO_SCIENTIFIC_OUTCOME_OBSERVED",
+  "authorized_by": "Sanghoon Kim",
+  "effective_date": "2026-10-01",
+  "reason": "The author selected ubuntu-4070 after the workstation4 GPU 3 Docker start failed inside the NVIDIA pre-start hook. The failed container never entered the running state, had PID 0 and a zero start timestamp, and produced zero scientific files. The workstation4 failure evidence was archived before the exact stopped container was removed.",
+  "supersedes_execution_resource_only": [
+    "PREEXECUTION_RESOURCE_AMENDMENT_WORKSTATION4_R1.json",
+    "PREEXECUTION_RESOURCE_AMENDMENT_WORKSTATION4_GPU3_R2.json"
+  ],
+  "preserved_scientific_contract": {
+    "model_denominator": 30,
+    "architectures": [
+      "resnet18",
+      "convnext_tiny"
+    ],
+    "domain_splits": 5,
+    "training_seeds_per_architecture_and_split": 3,
+    "procedures": [
+      "H",
+      "S",
+      "B"
+    ],
+    "protocol_changed": false,
+    "registered_inputs_changed": false,
+    "outcome_gates_changed": false,
+    "adverse_cells_may_be_removed": false
+  },
+  "closed_workstation4_attempt": {
+    "host_alias": "workstation4",
+    "gpu_uuid": "GPU-afbc9e02-0ce4-a4a4-391f-7c31c414771f",
+    "container_id": "17f7072ec81871b9b2a47d3e2a7262a8c80981a40f170f6cb114cdc2bfe1603b",
+    "container_state_before_removal": "created",
+    "container_running": false,
+    "container_pid": 0,
+    "container_started_at": "0001-01-01T00:00:00Z",
+    "scientific_output_file_count": 0,
+    "failure_layer": "NVIDIA_CONTAINER_PRESTART_HOOK",
+    "failure_summary": "nvidia-container-cli detection failed because host NVML reported an unknown error for a different physical GPU",
+    "archive_path": "/data/workspace/sanghoon/Fedcore_HSB_v3_exec_ws4/logs/archive/execution-r5-gpu3-nvml-prestart-ubuntu-return-20261001",
+    "archive_manifest_sha256": "a00651959bc907a1c0ba8fca51268170700ff11d50c71ded529121cb25ac993a"
+  },
+  "replacement_resource": {
+    "execution_host_alias": "ubuntu-4070",
+    "observed_hostname": "ubuntu",
+    "physical_gpu_index": 0,
+    "gpu_uuid": "GPU-ee5a0082-32e6-ede4-27d5-441bee0ca7c6",
+    "gpu_name": "NVIDIA GeForce RTX 4070 Ti SUPER",
+    "isolated_execution_root": "/home/sanghoon/Desktop/Workspace/Fedcore_HSB_v3_exec",
+    "control_generation": "execution-r6",
+    "log_generation": "execution-r6"
+  },
+  "watchdog_interpretation": "The 30-day watchdog remains an orphan-process safety mechanism. It is not a scientific stopping rule and does not authorize suppression, replacement, or selective rerunning of any registered cell.",
+  "submission_authorized": false
+}

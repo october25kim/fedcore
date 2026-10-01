@@ -27,7 +27,7 @@ from fedcore.experiments.v3_contract import (
 
 
 ISOLATED_INPUT_DIRECTORY = Path(
-    "/data/workspace/sanghoon/Fedcore_HSB_v3_exec_ws4/inputs"
+    "/home/sanghoon/Desktop/Workspace/Fedcore_HSB_v3_exec/inputs"
 )
 
 
@@ -46,7 +46,7 @@ REGISTERED_SCIENTIFIC_INPUTS: tuple[ScientificInputSpec, ...] = (
     ScientificInputSpec(
         name="PACS_mirror.zip",
         source_path=(
-            "/data/workspace/sanghoon/fedcore2/data/v1_pacs/"
+            "/home/sanghoon/Desktop/Workspace/Fedcore/data/v1_pacs/"
             "PACS_mirror.zip"
         ),
         container_path="/inputs/PACS_mirror.zip",
@@ -56,8 +56,8 @@ REGISTERED_SCIENTIFIC_INPUTS: tuple[ScientificInputSpec, ...] = (
     ScientificInputSpec(
         name="IMAGE_MANIFEST.csv",
         source_path=(
-            "/data/workspace/sanghoon/fedcore2/outputs/"
-            "fedcore_v1_preflight/IMAGE_MANIFEST.csv"
+            "/home/sanghoon/Desktop/Workspace/Fedcore/outputs/"
+            "fedcore_v1_ubuntu/IMAGE_MANIFEST.csv"
         ),
         container_path="/inputs/IMAGE_MANIFEST.csv",
         sha256="283d47bd8cfb7017d6e7fde6d65e07ff6479ab25127afcba135da3a06775afae",
@@ -66,8 +66,8 @@ REGISTERED_SCIENTIFIC_INPUTS: tuple[ScientificInputSpec, ...] = (
     ScientificInputSpec(
         name="FOLD_MANIFEST.csv",
         source_path=(
-            "/data/workspace/sanghoon/fedcore2/outputs/"
-            "fedcore_v1_preflight/FOLD_MANIFEST.csv"
+            "/home/sanghoon/Desktop/Workspace/Fedcore/outputs/"
+            "fedcore_v1_ubuntu/FOLD_MANIFEST.csv"
         ),
         container_path="/inputs/FOLD_MANIFEST.csv",
         sha256="fe5b64d237f47f503b8895aa5e566727bc818e05ee597f84c440df70e91e5344",
@@ -76,7 +76,7 @@ REGISTERED_SCIENTIFIC_INPUTS: tuple[ScientificInputSpec, ...] = (
     ScientificInputSpec(
         name="resnet18-f37072fd.pth",
         source_path=(
-            "/data/workspace/sanghoon/fedcore2/data/v1_pacs/torch_cache/"
+            "/home/sanghoon/Desktop/Workspace/Fedcore/data/v1_pacs/torch_cache/"
             "hub/checkpoints/resnet18-f37072fd.pth"
         ),
         container_path="/inputs/resnet18-f37072fd.pth",
@@ -86,7 +86,7 @@ REGISTERED_SCIENTIFIC_INPUTS: tuple[ScientificInputSpec, ...] = (
     ScientificInputSpec(
         name="convnext_tiny-983f1562.pth",
         source_path=(
-            "/data/workspace/sanghoon/fedcore2/data/v1_pacs/torch_cache/"
+            "/home/sanghoon/Desktop/Workspace/Fedcore/data/v1_pacs/torch_cache/"
             "hub/checkpoints/convnext_tiny-983f1562.pth"
         ),
         container_path="/inputs/convnext_tiny-983f1562.pth",
