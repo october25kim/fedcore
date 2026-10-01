@@ -46,7 +46,7 @@ CONTAINER_AUTHORIZATION_DIR = Path("/authorization")
 CONTAINER_OUTPUT_DIR = Path("/output")
 CANONICAL_CONTAINER_WORKSPACE_DIR = Path("/workspace")
 CONTAINER_WORKSPACE_DIR = CANONICAL_CONTAINER_WORKSPACE_DIR
-EXPECTED_GPU_UUID = "GPU-d6e53d0c-b100-5dd4-30b2-0574b2b4dffb"
+EXPECTED_GPU_UUID = "GPU-afbc9e02-0ce4-a4a4-391f-7c31c414771f"
 AUTHORIZATION_METHOD = "trusted_host_manual_artifact"
 AUTHORIZED_BY = "Sanghoon Kim"
 SOURCE_MANIFEST_STATUS = "PASS_EXACT_SCIENTIFIC_SOURCE_MANIFEST"
@@ -1130,9 +1130,9 @@ def validate_static_launch_plan(value: Mapping[str, Any]) -> str:
         if not isinstance(row, Mapping) or any(row.get(k) != v for k, v in expected.items()):
             raise ContractError(f"static launch-plan input registry drift for {spec.name}")
     if value.get("runtime") != {
-        "gpu_index": 0,
+        "gpu_index": 3,
         "gpu_name": "NVIDIA TITAN RTX",
-        "gpu_uuid": "GPU-d6e53d0c-b100-5dd4-30b2-0574b2b4dffb",
+        "gpu_uuid": "GPU-afbc9e02-0ce4-a4a4-391f-7c31c414771f",
         "max_concurrent_scientific_processes": 1,
         "network": "none",
         "root_filesystem_read_only": True,

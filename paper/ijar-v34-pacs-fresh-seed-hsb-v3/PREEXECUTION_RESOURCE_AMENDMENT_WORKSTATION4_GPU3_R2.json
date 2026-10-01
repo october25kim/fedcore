@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "protocol_id": "FEDCORE-IJAR-V34-PACS-FRESH-SEED-REPLICATION-HSB-v3",
+  "amendment_id": "FEDCORE-PACS-v3-WORKSTATION4-GPU3-PREEXECUTION-RESOURCE-AMENDMENT-r2",
+  "status": "PREEXECUTION_DEVICE_REBIND_NO_SCIENTIFIC_OUTCOME_OBSERVED",
+  "issued_at_utc": "2026-10-01T06:02:00Z",
+  "authorized_by": "Sanghoon Kim",
+  "reason": "The author selected idle workstation4 GPU 3 after GPU 0 became occupied by an unrelated host Python process. The GPU 0 wait scheduler was stopped before this rebinding to prevent duplicate execution.",
+  "pre_amendment_state": {
+    "pacs_v3_training_started": false,
+    "pacs_v3_inference_started": false,
+    "pacs_v3_primary_outcome_seen": false,
+    "gpu0_container_running": false,
+    "gpu0_container_status": "created",
+    "gpu0_container_started_at": "0001-01-01T00:00:00Z",
+    "gpu0_output_file_count": 0,
+    "gpu0_wait_scheduler_stopped_before_rebinding": true,
+    "gpu0_stopped_container_removed_after_verification": true
+  },
+  "scientific_contract_unchanged": {
+    "dataset_archive_sha256": "42bf567f1ed8a01d522e47e4a677e2a3149577bbd6fcbb38bedfdd73cb59e147",
+    "image_manifest_sha256": "283d47bd8cfb7017d6e7fde6d65e07ff6479ab25127afcba135da3a06775afae",
+    "fold_manifest_sha256": "fe5b64d237f47f503b8895aa5e566727bc818e05ee597f84c440df70e91e5344",
+    "model_matrix_sha256": "ac91ffbf2ccebb1a35ffcd648051fc4c25db1fd7df6cc45c607d652e0e385104",
+    "planned_cells": 30,
+    "architectures": ["resnet18", "convnext_tiny"],
+    "nominal_training_seeds": [0, 1, 2],
+    "primary_alpha": 0.2,
+    "procedures": ["H", "S", "B"],
+    "outcome_gates_unchanged": true,
+    "negative_result_policy_unchanged": true,
+    "registered_denominators_unchanged": true
+  },
+  "superseded_execution_device": {
+    "host_gpu_index": 0,
+    "gpu_name": "NVIDIA TITAN RTX",
+    "gpu_uuid": "GPU-d6e53d0c-b100-5dd4-30b2-0574b2b4dffb"
+  },
+  "replacement_execution_device": {
+    "execution_host_alias": "workstation4",
+    "observed_hostname": "user",
+    "host_gpu_index": 3,
+    "gpu_name": "NVIDIA TITAN RTX",
+    "gpu_uuid": "GPU-afbc9e02-0ce4-a4a4-391f-7c31c414771f",
+    "gpu_memory_mib": 24576,
+    "observed_memory_used_mib": 6,
+    "observed_utilization_percent": 0,
+    "observed_compute_process_count": 0,
+    "container_visible_device": "cuda:0",
+    "max_concurrent_scientific_processes": 1
+  },
+  "interpretation": "This amendment changes only the pre-execution physical GPU binding. Docker exposes the single selected physical GPU as cuda:0 inside the scientific container. The PACS frame, split, seed, architecture, selector family, H/S/B implementation, audit draw, metric, denominator, and outcome gates remain unchanged."
+}
