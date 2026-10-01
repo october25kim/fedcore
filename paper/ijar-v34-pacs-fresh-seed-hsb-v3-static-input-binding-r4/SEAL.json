@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "protocol_id": "FEDCORE-IJAR-V34-PACS-FRESH-SEED-REPLICATION-HSB-v3",
+  "binding_id": "FEDCORE-IJAR-V34-PACS-HSB-v3-WORKSTATION4-STATIC-INPUT-BINDING-r4",
+  "status": "PASS_WORKSTATION4_FIVE_INPUT_STATIC_BINDING_HOLD_EXECUTION_READINESS_AND_AUTHORIZATION",
+  "bundle_root_definition": "SHA-256 of the sorted '<sha256><two spaces><filename><newline>' records in SHA256SUMS.txt",
+  "bundle_root_sha256": "719e86f7856998a62d77f1948d268d323cd3830f2f6d0c9ce3cf6bb804eafac5",
+  "source_commit": "7a08dafebfefb244f91ebf4bcdf93236ba6dc3c7",
+  "candidate_image_id": "sha256:07646c535c85af2217275d90f7a3172f6df87895e3a7276b0bd0e8a7c8ec0c70",
+  "host_launch_plan_file_sha256": "bb866eb69d4426aa3da0e3657fb07e04d96a9e9417854ccc0a4d359f913f3fd5",
+  "host_launch_plan_internal_sha256": "9662c3d8c23682e5f23b4709a3046618a1720c54a5a5b0761eaca091a41490ed",
+  "input_binding_sha256": "9ff85d7e7973e4740ef4002cfb3c91687e2b857f3b794ff018380f3bb80a89af",
+  "mount_receipt_sha256": "5e58dd6f09adbf8ebcc83f24abb69cb6e4efbbd27707cf26e6a9bcd7d973757c",
+  "training_authorized": false,
+  "pacs_training_started": false,
+  "pacs_inference_started": false,
+  "submission_authorized": false
+}
+
