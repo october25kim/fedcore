@@ -43,6 +43,27 @@ class ContractError(RuntimeError):
     """Raised when implementation state diverges from the sealed contract."""
 
 
+def parse_serialized_bool(value: object, field: str) -> bool:
+    """Strictly decode a boolean that may have survived CSV/JSON serialization.
+
+    ``read_csv`` yields ``dict[str, str]``, so a decision column written as
+    ``false`` is read back as the non-empty string ``"false"``.  The builtin
+    ``bool`` maps every non-empty string to ``True``, which silently converts a
+    refusal into a certification.  This parser accepts only a native bool or
+    the exact serialized tokens and otherwise fails closed.
+    """
+
+    if isinstance(value, bool):
+        return value
+    if isinstance(value, str):
+        normalized = value.strip().lower()
+        if normalized == "true":
+            return True
+        if normalized == "false":
+            return False
+    raise ContractError(f"{field} is not a serialized boolean: {value!r}")
+
+
 def repository_root() -> Path:
     return Path(__file__).resolve().parents[2]
 
@@ -228,6 +249,7 @@ __all__ = [
     "canonical_json_sha256",
     "default_protocol_dir",
     "load_model_cells",
+    "parse_serialized_bool",
     "read_csv",
     "read_json",
     "repository_root",

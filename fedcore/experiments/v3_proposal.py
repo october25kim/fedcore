@@ -15,6 +15,7 @@ from fedcore.experiments.v3_contract import (
     Candidate,
     candidate_family,
     canonical_json_sha256,
+    parse_serialized_bool,
 )
 
 
@@ -179,7 +180,9 @@ def members_from_rows(rows: Iterable[Mapping[str, object]]) -> tuple[ProposalMem
             candidate_index=int(row["candidate_index"]),
             score=str(row["score"]),
             gamma=float(row["gamma"]),
-            proposal_feasible=bool(row["proposal_feasible"]),
+            proposal_feasible=parse_serialized_bool(
+                row["proposal_feasible"], "proposal_feasible"
+            ),
             threshold=(None if row.get("threshold") in (None, "") else float(row["threshold"])),
             proposal_n=int(row.get("proposal_n", 0)),
             proposal_A=int(row.get("proposal_A", 0)),

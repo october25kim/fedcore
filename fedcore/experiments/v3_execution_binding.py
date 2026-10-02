@@ -167,6 +167,7 @@ REQUIRED_EXECUTION_TEST_FILES = (
     "tests/test_v3_mount_receipt.py",
     "tests/test_v3_pacs_stage_isolation.py",
     "tests/test_v3_posttrain.py",
+    "tests/test_v3_posttrain_serialized_bool.py",
     "tests/test_v3_scientific_runner.py",
     "tests/test_v3_training_primitives.py",
 )

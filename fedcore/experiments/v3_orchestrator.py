@@ -24,6 +24,7 @@ from fedcore.experiments.v3_contract import (
     canonical_json_bytes,
     canonical_json_sha256,
     load_model_cells,
+    parse_serialized_bool,
     sha256_file,
     verify_scientific_contract,
 )
@@ -245,8 +246,8 @@ def _truth_rows(
         counts_by_model.setdefault(str(row["model_id"]), []).append(row)
     output: list[dict[str, Any]] = []
     for row in primary_rows:
-        evaluable = bool(row["model_evaluable"])
-        certified = bool(row["certified"])
+        evaluable = parse_serialized_bool(row["model_evaluable"], "model_evaluable")
+        certified = parse_serialized_bool(row["certified"], "certified")
         selected = int(row["selected_candidate"])
         if not evaluable:
             reason = "model_failure"

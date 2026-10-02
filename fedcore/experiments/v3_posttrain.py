@@ -31,6 +31,7 @@ from fedcore.experiments.v3_contract import (
     ModelCell,
     canonical_json_sha256,
     default_protocol_dir,
+    parse_serialized_bool,
     sha256_file,
 )
 from fedcore.experiments.v3_counts import AuditClient, count_audit_records
@@ -352,7 +353,9 @@ def post_decision_truth(
     output: list[dict[str, object]] = []
     for row in primary_rows:
         selected = int(row["selected_candidate"])
-        certified = bool(row["certified"])
+        certified = parse_serialized_bool(row["certified"], "certified")
+        if certified and not 0 <= selected < len(members):
+            raise ContractError("certified row has an invalid selected candidate")
         if not certified:
             reason = (
                 "proposal_infeasible"
