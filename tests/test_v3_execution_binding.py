@@ -9,13 +9,23 @@ import shutil
 
 import pytest
 
-from fedcore.experiments.v3_contract import ContractError, canonical_json_sha256
+from fedcore.experiments.v3_contract import ContractError, canonical_json_bytes, canonical_json_sha256
 import fedcore.experiments.v3_execution_binding as binding
+import fedcore.experiments.v3_mount_receipt as mount_receipt_module
+import fedcore.experiments.v3_scientific_runner as runner
 from fedcore.experiments.v3_orchestrator import write_json
 
 
 REPOSITORY = Path(__file__).resolve().parents[1]
-STATIC = REPOSITORY / "paper" / "ijar-v34-pacs-fresh-seed-hsb-v3-static-input-binding-r2"
+STATIC = (
+    REPOSITORY
+    / "paper"
+    / "ijar-v34-pacs-author-deterministic-rerun-local-v1-static-binding-r1"
+)
+# Historical parent bundle; it must never satisfy the active local anchors.
+R2_STATIC = REPOSITORY / "paper" / "ijar-v34-pacs-fresh-seed-hsb-v3-static-input-binding-r2"
+LEGACY_V3_ROOT = "/home/sanghoon/Desktop/Workspace/Fedcore_HSB_v3_exec"
+LEGACY_V4_ROOT = "/home/sanghoon/Desktop/Workspace/Fedcore_HSB_v4_exec"
 SOURCE_COMMIT = "a" * 40
 SOURCE_TREE = "f" * 40
 IMAGE_ID = "sha256:" + "b" * 64
@@ -600,6 +610,164 @@ def test_readiness_builder_rejects_nonempty_output(chain, tmp_path: Path):
             / "paper/ijar-v34-pacs-fresh-seed-hsb-v3/PACS_MODEL_MATRIX.csv",
             host_control_dir=chain["control"],
             host_output_dir=chain["output"],
+        )
+
+
+def _build_readiness_with(chain, tmp_path: Path, **static_paths: Path) -> dict:
+    image_inspect = tmp_path / "image-local.json"
+    manifest = json.loads(chain["source_manifest"].read_text(encoding="utf-8"))
+    _write_image_inspect(image_inspect, chain["source_manifest"], manifest)
+    paths = {
+        "static_launch_plan_path": STATIC / "HOST_LAUNCH_PLAN.json",
+        "input_binding_path": STATIC / "INPUT_BINDING.json",
+        "mount_receipt_path": STATIC / "MOUNT_RECEIPT.json",
+        **static_paths,
+    }
+    return binding.build_execution_readiness(
+        **paths,
+        source_commit=SOURCE_COMMIT,
+        image_id=IMAGE_ID,
+        image_inspect_path=image_inspect,
+        source_manifest_path=chain["source_manifest"],
+        source_probe_receipt_path=chain["source_probe_receipt"],
+        orchestrator_path=REPOSITORY / "fedcore/experiments/v3_campaign_runner.py",
+        state_machine_path=REPOSITORY / "fedcore/experiments/v3_campaign_state.py",
+        execution_binding_path=REPOSITORY / "fedcore/experiments/v3_execution_binding.py",
+        finalizer_path=REPOSITORY / "fedcore/experiments/v3_campaign_finalizer.py",
+        posttrain_path=REPOSITORY / "fedcore/experiments/v3_posttrain.py",
+        test_report_path=chain["test_report"],
+        test_container_inspect_path=chain["test_container_inspect"],
+        test_junit_path=chain["test_junit"],
+        test_stdout_path=chain["test_stdout"],
+        cell_order_path=REPOSITORY
+        / "paper/ijar-v34-pacs-fresh-seed-hsb-v3/PACS_MODEL_MATRIX.csv",
+        host_control_dir=chain["control"],
+        host_output_dir=chain["output"],
+    )
+
+
+def test_local_static_anchors_bind_the_local_bundle_not_r2():
+    seal = json.loads((STATIC / "SEAL.json").read_text(encoding="utf-8"))
+    plan = json.loads((STATIC / "HOST_LAUNCH_PLAN.json").read_text(encoding="utf-8"))
+    assert binding.STATIC_BINDING_ROOT_SHA256 == seal["bundle_root_sha256"]
+    assert binding.STATIC_LAUNCH_PLAN_FILE_SHA256 == binding.sha256_file(STATIC / "HOST_LAUNCH_PLAN.json")
+    assert binding.STATIC_LAUNCH_PLAN_SHA256 == plan["launch_plan_sha256"]
+    assert binding.STATIC_INPUT_BINDING_FILE_SHA256 == binding.sha256_file(STATIC / "INPUT_BINDING.json")
+    assert binding.STATIC_MOUNT_RECEIPT_FILE_SHA256 == binding.sha256_file(STATIC / "MOUNT_RECEIPT.json")
+    assert seal["parent_static_binding_root_sha256"] != binding.STATIC_BINDING_ROOT_SHA256
+    assert seal["parent_is_active_local_binding"] is False
+    r2_seal = json.loads((R2_STATIC / "SEAL.json").read_text(encoding="utf-8"))
+    assert r2_seal["bundle_root_sha256"] == seal["parent_static_binding_root_sha256"]
+
+
+def test_readiness_rejects_old_r2_input_binding(chain, tmp_path: Path):
+    with pytest.raises(ContractError, match="input-binding"):
+        _build_readiness_with(chain, tmp_path, input_binding_path=R2_STATIC / "INPUT_BINDING.json")
+
+
+def test_readiness_rejects_old_r2_launch_plan(chain, tmp_path: Path):
+    with pytest.raises(ContractError, match="launch-plan"):
+        _build_readiness_with(chain, tmp_path, static_launch_plan_path=R2_STATIC / "HOST_LAUNCH_PLAN.json")
+
+
+def test_readiness_rejects_one_byte_input_binding_mutation(chain, tmp_path: Path):
+    mutated = tmp_path / "INPUT_BINDING.json"
+    data = (STATIC / "INPUT_BINDING.json").read_bytes()
+    mutated.write_bytes(data[:-1] + b" " + data[-1:])
+    assert json.loads(mutated.read_text(encoding="utf-8")) == json.loads(data)
+    with pytest.raises(ContractError, match="input-binding file hash mismatch"):
+        _build_readiness_with(chain, tmp_path, input_binding_path=mutated)
+
+
+def test_static_launch_plan_rejects_internal_hash_mutation():
+    plan = json.loads((STATIC / "HOST_LAUNCH_PLAN.json").read_text(encoding="utf-8"))
+    assert binding.validate_static_launch_plan(plan) == binding.STATIC_LAUNCH_PLAN_SHA256
+    relabeled = deepcopy(plan)
+    relabeled["launch_plan_sha256"] = "0" * 64
+    with pytest.raises(ContractError, match="registry hash mismatch"):
+        binding.validate_static_launch_plan(relabeled)
+    edited = deepcopy(plan)
+    edited["output_directory"] = LEGACY_V3_ROOT + "/runs/scientific/x"
+    with pytest.raises(ContractError, match="canonical hash mismatch"):
+        binding.validate_static_launch_plan(edited)
+
+
+def test_readiness_rejects_mount_receipt_mismatch(chain, tmp_path: Path):
+    with pytest.raises(ContractError, match="mount-receipt"):
+        _build_readiness_with(chain, tmp_path, mount_receipt_path=R2_STATIC / "MOUNT_RECEIPT.json")
+    receipt = json.loads((STATIC / "MOUNT_RECEIPT.json").read_text(encoding="utf-8"))
+    receipt["input_binding_sha256"] = binding.sha256_file(R2_STATIC / "INPUT_BINDING.json")
+    forged = tmp_path / "MOUNT_RECEIPT.json"
+    forged.write_bytes(canonical_json_bytes(receipt))
+    with pytest.raises(ContractError, match="mount-receipt input-binding mismatch"):
+        _build_readiness_with(chain, tmp_path, mount_receipt_path=forged)
+
+
+def test_input_binding_rejects_non_local_staged_path(tmp_path: Path):
+    local = json.loads((STATIC / "INPUT_BINDING.json").read_text(encoding="utf-8"))
+    assert local["isolated_input_directory"] == str(runner.ISOLATED_INPUT_DIRECTORY)
+    moved_directory = deepcopy(local)
+    moved_directory["isolated_input_directory"] = LEGACY_V3_ROOT + "/inputs"
+    moved_record = deepcopy(local)
+    moved_record["files"][0]["staged_path"] = LEGACY_V3_ROOT + "/inputs/PACS_mirror.zip"
+    for forged, message in (
+        (moved_directory, "isolated input directory drift"),
+        (moved_record, "staged input source drift"),
+    ):
+        path = tmp_path / "forged-input-binding.json"
+        path.write_bytes(canonical_json_bytes(forged))
+        with pytest.raises(ContractError, match=message):
+            runner.validate_input_binding(path)
+
+
+def test_registered_host_paths_are_local_not_v3_or_v4():
+    assert binding.EXPECTED_HOST_OUTPUT_DIR == runner.REGISTERED_OUTPUT_DIR
+    for legacy_root in (LEGACY_V3_ROOT, LEGACY_V4_ROOT):
+        for path in (
+            binding.EXPECTED_HOST_OUTPUT_DIR,
+            binding.EXPECTED_HOST_CONTROL_DIR,
+            runner.REGISTERED_OUTPUT_DIR,
+            runner.ISOLATED_INPUT_DIRECTORY,
+        ):
+            assert legacy_root not in str(path)
+
+
+def test_v3_and_v4_output_paths_are_rejected(chain, tmp_path: Path):
+    for legacy_root in (LEGACY_V3_ROOT, LEGACY_V4_ROOT):
+        forged = deepcopy(chain["readiness"])
+        forged["host_output_dir"] = legacy_root + "/runs/scientific/x"
+        forged = _reseal(forged, "readiness_sha256")
+        with pytest.raises(ContractError):
+            binding.validate_execution_readiness(
+                forged,
+                static_launch_plan=chain["static_plan"],
+                input_binding=chain["input_binding"],
+                mount_receipt=chain["mount_receipt"],
+            )
+    elsewhere = tmp_path / "Fedcore_HSB_v3_exec-output"
+    elsewhere.mkdir()
+    with pytest.raises(ContractError, match="output directory drift"):
+        runner.validate_empty_output_dir(elsewhere)
+
+
+def test_local_mount_probe_reproduces_receipt_and_rejects_gpu_request(monkeypatch):
+    # Plan integrity re-hashes the host inputs; it is covered by the bundle verifier.
+    monkeypatch.setattr(mount_receipt_module, "validate_launch_plan_integrity", lambda plan: None)
+    inspect_value = json.loads((STATIC / "MOUNT_PROBE.inspect.json").read_text(encoding="utf-8"))
+    plan = json.loads((STATIC / "HOST_LAUNCH_PLAN.json").read_text(encoding="utf-8"))
+    probe_log = (STATIC / "MOUNT_PROBE.stdout.txt").read_text(encoding="utf-8")
+    image_id = plan["image"]["id"]
+    receipt = mount_receipt_module.validate_no_gpu_mount_probe(
+        inspect_value, plan, expected_image_id=image_id, probe_log=probe_log
+    )
+    assert canonical_json_bytes(receipt) == (STATIC / "MOUNT_RECEIPT.json").read_bytes()
+    gpu = deepcopy(inspect_value)
+    gpu[0]["HostConfig"]["DeviceRequests"] = [
+        {"Driver": "nvidia", "Count": 0, "DeviceIDs": ["0"], "Capabilities": [["gpu"]], "Options": {}}
+    ]
+    with pytest.raises(ContractError, match="must not request a GPU"):
+        mount_receipt_module.validate_no_gpu_mount_probe(
+            gpu, plan, expected_image_id=image_id, probe_log=probe_log
         )
 
 

@@ -283,23 +283,25 @@ SCIENTIFIC_COMMAND = (
     "cuda:0",
 )
 
-# Public ubuntu-4070 GPU 0 r2 static-binding anchors.  These constants prevent a
-# self-consistent replacement of the preceding launch plan, input receipt, or
-# mount receipt.
+# Local author-executed static binding anchors; no scientific execution
+# authorization.  Bound to paper/ijar-v34-pacs-author-deterministic-rerun-
+# local-v1-static-binding-r1 (parent r2 root 362f4e9d... is historical only).
+# These constants prevent a self-consistent replacement of the preceding launch
+# plan, input receipt, or mount receipt.
 STATIC_BINDING_ROOT_SHA256 = (
-    "362f4e9dc19b9276db54fdef2748887296bc0c01f8e40af56b90a2613a5db752"
+    "bcd3ce5a0d4ac79dc554b2b7b295bc18deb340614732cdbf484e0372f00a9df3"
 )
 STATIC_LAUNCH_PLAN_FILE_SHA256 = (
-    "8eb4fda2228c569a556386dfd7f91a95a9c3400f1c7f706dec2e7325a9f98280"
+    "2ffc01f43e040a28b544cae8d9d580a4ad015dd6ad2c1eaeebaddd01d2c13bb5"
 )
 STATIC_LAUNCH_PLAN_SHA256 = (
-    "0eb4a8b50adbe552c7506475eec379774a776c73f5601fa8e670a26100c37364"
+    "97619ec01bc347ac116c2855c3376ecd2b96502c56114b3dd5c96292580eac7c"
 )
 STATIC_INPUT_BINDING_FILE_SHA256 = (
-    "e12f305858bf793dac02a1e7b38575b4f12fd5ab66872efb8bb40894f00928d9"
+    "dc330ceb35752ffece621bd1e2c1006b0edd2f3f340c08b80b574fd42defc4ad"
 )
 STATIC_MOUNT_RECEIPT_FILE_SHA256 = (
-    "cc4bbbfc68faacfe4e9f6c6f6ebf52c26d44540afac82b84619b19a24b50ef8b"
+    "0a0434c34666114b1812f9a9a7c61f954c82dc3a50eeb6910b27941ddaa0f006"
 )
 
 CONTROL_FILENAMES = (
@@ -1094,10 +1096,11 @@ def validate_source_probe_receipt(
 
 
 def validate_static_launch_plan(value: Mapping[str, Any]) -> str:
-    """Validate the public r2 plan against compiled registry values.
+    """Validate the local static-binding plan against compiled registry values.
 
     This check is intentionally structural.  Host file re-hashing belongs to
-    the r2 builder; the execution layer consumes its immutable public bytes.
+    the local static-binding builder; the execution layer consumes its
+    immutable anchored bytes.
     """
 
     if value.get("protocol_id") != PROTOCOL_ID:
@@ -1529,11 +1532,11 @@ def build_execution_readiness(
     validate_static_input_binding(binding)
     validate_static_mount_receipt(mount)
     if sha256_file(static_launch_plan_path) != STATIC_LAUNCH_PLAN_FILE_SHA256:
-        raise ContractError("public static launch-plan file hash mismatch")
+        raise ContractError("local static launch-plan file hash mismatch")
     if sha256_file(input_binding_path) != STATIC_INPUT_BINDING_FILE_SHA256:
-        raise ContractError("public input-binding file hash mismatch")
+        raise ContractError("local input-binding file hash mismatch")
     if sha256_file(mount_receipt_path) != STATIC_MOUNT_RECEIPT_FILE_SHA256:
-        raise ContractError("public mount-receipt file hash mismatch")
+        raise ContractError("local mount-receipt file hash mismatch")
     source_commit = _require_hex(source_commit, 40, "source_commit")
     source_manifest = _read_object(source_manifest_path)
     runtime_sources, build_sources = validate_scientific_source_manifest(
@@ -2502,11 +2505,11 @@ def validate_mounted_authorization_bundle(
     runtime_inspect, runtime_inspect_file_hash = loaded["RUNTIME_INSPECT.json"]
 
     if static_plan_file_hash != STATIC_LAUNCH_PLAN_FILE_SHA256:
-        raise ContractError("mounted static launch-plan bytes differ from the public release")
+        raise ContractError("mounted static launch-plan bytes differ from the local static-binding anchors")
     if input_binding_file_hash != STATIC_INPUT_BINDING_FILE_SHA256:
-        raise ContractError("mounted input-binding bytes differ from the public release")
+        raise ContractError("mounted input-binding bytes differ from the local static-binding anchors")
     if mount_receipt_file_hash != STATIC_MOUNT_RECEIPT_FILE_SHA256:
-        raise ContractError("mounted mount-receipt bytes differ from the public release")
+        raise ContractError("mounted mount-receipt bytes differ from the local static-binding anchors")
     readiness_hash = validate_execution_readiness(
         readiness,
         static_launch_plan=static_plan,

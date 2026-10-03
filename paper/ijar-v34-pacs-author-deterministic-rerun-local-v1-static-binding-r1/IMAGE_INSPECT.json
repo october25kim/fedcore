@@ -1,0 +1,86 @@
+[
+    {
+        "Id": "sha256:943f4ca6d930c839489a8de50b0acef434c0d5d9b5775280c6d757584aaaef94",
+        "RepoTags": [
+            "fedcore-v3-hsb:v4-repair-4fb2d58"
+        ],
+        "RepoDigests": [
+            "fedcore-v3-hsb@sha256:943f4ca6d930c839489a8de50b0acef434c0d5d9b5775280c6d757584aaaef94"
+        ],
+        "Comment": "buildkit.dockerfile.v0",
+        "Created": "2026-10-02T14:57:53.583894646+09:00",
+        "Config": {
+            "User": "1000:1000",
+            "Env": [
+                "PATH=/usr/local/nvidia/bin:/usr/local/cuda/bin:/opt/conda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+                "NVIDIA_VISIBLE_DEVICES=all",
+                "NVIDIA_DRIVER_CAPABILITIES=compute,utility",
+                "LD_LIBRARY_PATH=/usr/local/nvidia/lib:/usr/local/nvidia/lib64",
+                "PYTORCH_VERSION=2.3.0",
+                "PYTHONDONTWRITEBYTECODE=1",
+                "PYTHONPATH=/workspace",
+                "FEDCORE_SOURCE_COMMIT=4fb2d580e96a99f25f6cc5967ff10484ef0f7bd1",
+                "PYTHONUNBUFFERED=1",
+                "PYTHONHASHSEED=0",
+                "CUBLAS_WORKSPACE_CONFIG=:4096:8",
+                "TORCH_HOME=/nonexistent-torch-home"
+            ],
+            "Entrypoint": [
+                "python"
+            ],
+            "WorkingDir": "/workspace",
+            "Labels": {
+                "com.nvidia.volumes.needed": "nvidia_driver",
+                "org.opencontainers.image.build-inventory-sha256": "03936b1aa336ee69a16c67faf6d1dc4f9978eb6cde3d93a18779ca9a9ae8398a",
+                "org.opencontainers.image.description": "Hash-bound PACS fresh-seed replication runtime; launch remains separately authorization-gated",
+                "org.opencontainers.image.dockerfile-sha256": "8efcfac383199e28a4aee6af0b40ef67dacaab56e9a4662cbfdd3f5b4422a16f",
+                "org.opencontainers.image.ref.name": "ubuntu",
+                "org.opencontainers.image.requirements-lock-sha256": "e39dc80bda8d8d1808238c5d4dbfbe580ade33cb38dbf6b3b497119c5d9e3579",
+                "org.opencontainers.image.revision": "4fb2d580e96a99f25f6cc5967ff10484ef0f7bd1",
+                "org.opencontainers.image.runtime-inventory-sha256": "3cdbce561e09b84759b94c3fd090b6e691e5a8b052517bac59832e032ae9523d",
+                "org.opencontainers.image.source-manifest-sha256": "dcbff9d0279a05390c64fa53678d3fd5d80469c28b37af7c6370c026aee226b5",
+                "org.opencontainers.image.title": "FedCORE PACS HSB v3 scientific runtime",
+                "org.opencontainers.image.version": "22.04"
+            }
+        },
+        "Architecture": "amd64",
+        "Os": "linux",
+        "Size": 3778073487,
+        "RootFS": {
+            "Type": "layers",
+            "Layers": [
+                "sha256:e0a9f5911802534ba097660206feabeb0247a81e409029167b30e2e1f2803b57",
+                "sha256:2d49b5c9bc329d6cc3c154dbb57131f2b3153d3374b6b06e4e5707cb0c3789fc",
+                "sha256:36e21b1812d269c799a3e7e1902cc09ee1496480d31a0ec67003c8332861d1a3",
+                "sha256:5f70bf18a086007016e948b04aed3b82103a36bea41755b6cddfaf10ace3c6ef",
+                "sha256:23fcdddbb6de6113cb31c0dee6dcebbd2f80998377c4f87b4a3f64a26410e5c8",
+                "sha256:cc3fdb27c4c23fbf467ed6dad97233e2b73c5034ff84ccef85746935547c3dee",
+                "sha256:5f70bf18a086007016e948b04aed3b82103a36bea41755b6cddfaf10ace3c6ef",
+                "sha256:ad72212552c717603a4a681165c2a9467e64df629b49e1843f829d867e194bed",
+                "sha256:f9a6d43d15a5a0324acce3b8f8cf2ba68120f53f3be946037b2dc7950e2b5bb3",
+                "sha256:71de3e6e29a4b235b2d4c523e5465f4e59057d3a964e4a826622dafd79f87677",
+                "sha256:5f70bf18a086007016e948b04aed3b82103a36bea41755b6cddfaf10ace3c6ef",
+                "sha256:852046ab82e4aaa2d3dc848813d11605910f2722bd21cf712c0fc58b15e43bde",
+                "sha256:c3db79b889ce831092b98c6d77830b924f322339710ee6715f2392c5ca7f27f5",
+                "sha256:4ae52aedf53da6b0ea3a7db26e859e39bafd9893209ca71a6006d4711db13d90",
+                "sha256:5f70bf18a086007016e948b04aed3b82103a36bea41755b6cddfaf10ace3c6ef"
+            ]
+        },
+        "Metadata": {
+            "LastTagTime": "2026-10-02T05:57:53.800618633Z"
+        },
+        "Descriptor": {
+            "mediaType": "application/vnd.oci.image.index.v1+json",
+            "digest": "sha256:943f4ca6d930c839489a8de50b0acef434c0d5d9b5775280c6d757584aaaef94",
+            "size": 856
+        },
+        "Identity": {
+            "Build": [
+                {
+                    "Ref": "qtdo0jhw19awu5si1i24k2qa3",
+                    "CreatedAt": "2026-10-02T14:57:53.9011421+09:00"
+                }
+            ]
+        }
+    }
+]

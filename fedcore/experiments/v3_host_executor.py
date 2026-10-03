@@ -161,11 +161,11 @@ def _load_host_artifacts(control_dir: Path, *, prepared: bool) -> HostArtifacts:
         raise ContractError(f"host control directory content drift: {names!r}")
     values = {name: _load_object(control / name) for name in PREPARE_FILENAMES}
     if sha256_file(control / "HOST_LAUNCH_PLAN.json") != STATIC_LAUNCH_PLAN_FILE_SHA256:
-        raise ContractError("host static launch-plan bytes differ from public r2")
+        raise ContractError("host static launch-plan bytes differ from the local static-binding anchors")
     if sha256_file(control / "INPUT_BINDING.json") != STATIC_INPUT_BINDING_FILE_SHA256:
-        raise ContractError("host input-binding bytes differ from public r2")
+        raise ContractError("host input-binding bytes differ from the local static-binding anchors")
     if sha256_file(control / "MOUNT_RECEIPT.json") != STATIC_MOUNT_RECEIPT_FILE_SHA256:
-        raise ContractError("host mount-receipt bytes differ from public r2")
+        raise ContractError("host mount-receipt bytes differ from the local static-binding anchors")
     readiness = values["EXECUTION_READINESS.json"]
     validate_execution_readiness(
         readiness,
