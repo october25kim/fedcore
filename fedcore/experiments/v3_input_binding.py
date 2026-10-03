@@ -27,7 +27,7 @@ from fedcore.experiments.v3_contract import (
 
 
 ISOLATED_INPUT_DIRECTORY = Path(
-    "/home/sanghoon/Desktop/Workspace/Fedcore_HSB_v3_exec/inputs"
+    "/home/sanghoon/Desktop/Workspace/Fedcore_HSB_local_v1/inputs"
 )
 
 

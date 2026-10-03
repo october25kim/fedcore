@@ -255,11 +255,11 @@ REQUIRED_EXECUTION_PYTEST_ARGV = (
     "--junitxml=/evidence/TEST_JUNIT.xml",
 )
 EXPECTED_HOST_CONTROL_DIR = Path(
-    "/home/sanghoon/Desktop/Workspace/Fedcore_HSB_v3_exec/control/execution-r6"
+    "/home/sanghoon/Desktop/Workspace/Fedcore_HSB_local_v1/control/execution-local-v1"
 )
 EXPECTED_HOST_OUTPUT_DIR = Path(
-    "/home/sanghoon/Desktop/Workspace/Fedcore_HSB_v3_exec/runs/scientific/"
-    "FEDCORE-IJAR-V34-PACS-FRESH-SEED-REPLICATION-HSB-v3"
+    "/home/sanghoon/Desktop/Workspace/Fedcore_HSB_local_v1/runs/scientific/"
+    "FEDCORE-IJAR-PACS-AUTHOR-DETERMINISTIC-RERUN-HSB-local-v1"
 )
 SCIENTIFIC_COMMAND = (
     "-m",

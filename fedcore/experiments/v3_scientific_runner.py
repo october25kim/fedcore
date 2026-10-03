@@ -61,8 +61,8 @@ MAX_CONCURRENT_SCIENTIFIC_PROCESSES = 1
 CONTAINER_OUTPUT_ROOT = Path("/output")
 CONTAINER_TMP_ROOT = Path("/tmp")
 REGISTERED_OUTPUT_DIR = Path(
-    "/home/sanghoon/Desktop/Workspace/Fedcore_HSB_v3_exec/runs/scientific/"
-    f"{PROTOCOL_ID}"
+    "/home/sanghoon/Desktop/Workspace/Fedcore_HSB_local_v1/runs/scientific/"
+    "FEDCORE-IJAR-PACS-AUTHOR-DETERMINISTIC-RERUN-HSB-local-v1"
 )
 
 
