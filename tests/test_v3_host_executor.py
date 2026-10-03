@@ -4,7 +4,12 @@ from copy import deepcopy
 
 import pytest
 
-from fedcore.experiments.v3_contract import ContractError, sha256_file
+from fedcore.experiments.v3_contract import (
+    ContractError,
+    canonical_json_bytes,
+    canonical_json_sha256,
+    sha256_file,
+)
 from fedcore.experiments import v3_host_executor as host
 
 
@@ -25,7 +30,59 @@ def _host_artifacts():
                 "__CONTAINER_ID__",
             ],
         },
+        files={},
     )
+
+
+RENDERED_PLAN = {
+    "authorized_plan_sha256": "b" * 64,
+    "docker_create_argv": ["docker", "create", "--name", "fedcore-v3-" + "1" * 64, "image"],
+    "docker_start_argv_template": ["docker", "start", "--attach", "__CONTAINER_ID__"],
+}
+
+
+def _control_with_validators_stubbed(tmp_path, monkeypatch, *, plan_payload=None):
+    """A prepare-phase control directory whose semantic validators are stubbed.
+
+    These tests isolate the host executor's own file handling: single-read
+    hashing, read-only/symlink/phase checks, byte-for-byte authorized-plan
+    comparison, and the identity re-check before ``docker create``.  The
+    semantic validators are covered in tests/test_v3_execution_binding.py.
+    """
+
+    control = tmp_path / "control"
+    control.mkdir()
+    values = {
+        "HOST_LAUNCH_PLAN.json": {"plan": 1},
+        "INPUT_BINDING.json": {"binding": 1},
+        "MOUNT_RECEIPT.json": {"declaration": 1},
+        "SOURCE_MANIFEST.json": {"manifest": 1},
+        "SOURCE_PROBE_RECEIPT.json": {"probe": 1},
+        "TEST_REPORT.json": {"report": 1},
+        "RUN_AUTHORIZATION.json": {"authorization_sha256": "a" * 64},
+    }
+    for name, value in values.items():
+        (control / name).write_bytes(canonical_json_bytes(value))
+    readiness = {
+        "source_manifest_sha256": sha256_file(control / "SOURCE_MANIFEST.json"),
+        "source_probe_receipt_sha256": sha256_file(control / "SOURCE_PROBE_RECEIPT.json"),
+        "test_report_sha256": sha256_file(control / "TEST_REPORT.json"),
+    }
+    (control / "EXECUTION_READINESS.json").write_bytes(canonical_json_bytes(readiness))
+    (control / "AUTHORIZED_CAMPAIGN_PLAN.json").write_bytes(
+        canonical_json_bytes(RENDERED_PLAN) if plan_payload is None else plan_payload
+    )
+    for path in control.iterdir():
+        path.chmod(0o444)
+    monkeypatch.setattr(host, "EXPECTED_HOST_CONTROL_DIR", control.resolve())
+    monkeypatch.setattr(
+        host, "STATIC_INPUT_BINDING_FILE_SHA256", sha256_file(control / "INPUT_BINDING.json")
+    )
+    monkeypatch.setattr(host, "validate_execution_readiness", lambda *a, **k: None)
+    monkeypatch.setattr(host, "validate_run_authorization", lambda *a, **k: None)
+    monkeypatch.setattr(host, "validate_authorized_campaign_plan", lambda *a, **k: None)
+    monkeypatch.setattr(host, "build_authorized_campaign_plan", lambda *a, **k: dict(RENDERED_PLAN))
+    return control
 
 
 def _comparison_inspect(container_id="d" * 64):
@@ -331,13 +388,7 @@ def test_host_prepare_rejects_tampered_source_probe_receipt(monkeypatch, tmp_pat
 
     monkeypatch.setattr(host, "EXPECTED_HOST_CONTROL_DIR", control.resolve())
     monkeypatch.setattr(
-        host, "STATIC_LAUNCH_PLAN_FILE_SHA256", sha256_file(static_plan)
-    )
-    monkeypatch.setattr(
         host, "STATIC_INPUT_BINDING_FILE_SHA256", sha256_file(input_binding)
-    )
-    monkeypatch.setattr(
-        host, "STATIC_MOUNT_RECEIPT_FILE_SHA256", sha256_file(mount_receipt)
     )
     monkeypatch.setattr(host, "validate_execution_readiness", lambda *a, **k: None)
     monkeypatch.setattr(host, "validate_run_authorization", lambda *a, **k: None)
@@ -360,16 +411,19 @@ def test_prepare_then_start_reinspects_exact_stopped_container(monkeypatch, tmp_
     receipt = {
         "container_id": container_id,
         "runtime_receipt_sha256": "e" * 64,
+        "runtime_inspect_sha256": canonical_json_sha256(inspect_value),
     }
     commands = []
     inspect_calls = 0
     inspect_mount_orders = []
     lease_calls = []
+    rechecks = []
 
     def runner(argv, **kwargs):
         nonlocal inspect_calls
         commands.append(list(argv))
         if argv[:2] == ["docker", "create"]:
+            assert rechecks, "control identity must be re-checked before docker create"
             return subprocess.CompletedProcess(list(argv), 0, container_id + "\n", "")
         if argv[:2] == ["docker", "inspect"]:
             inspect_calls += 1
@@ -385,6 +439,7 @@ def test_prepare_then_start_reinspects_exact_stopped_container(monkeypatch, tmp_
         raise AssertionError(argv)
 
     monkeypatch.setattr(host, "_load_host_artifacts", lambda *a, **k: artifacts)
+    monkeypatch.setattr(host, "_recheck_control_files", lambda value: rechecks.append(value))
     monkeypatch.setattr(host, "_require_directory", lambda *a, **k: output)
     monkeypatch.setattr(
         host,
@@ -493,3 +548,112 @@ def test_runtime_inspect_comparison_preserves_raw_rows_and_other_list_order():
     other_list_drift[0]["Config"]["Env"].reverse()
     with pytest.raises(ContractError, match="stopped container drifted"):
         host._validate_stopped_container_unchanged(prepared, other_list_drift)
+
+
+def test_host_executes_only_rerendered_authorized_plan_bytes(monkeypatch, tmp_path):
+    control = _control_with_validators_stubbed(tmp_path, monkeypatch)
+    artifacts = host._load_host_artifacts(control, prepared=False)
+    assert artifacts.authorized_plan == RENDERED_PLAN
+    assert set(artifacts.files) == set(host.PREPARE_FILENAMES)
+
+    output = tmp_path / "output"
+    output.mkdir()
+    monkeypatch.setattr(host, "EXPECTED_HOST_OUTPUT_DIR", output.resolve())
+    monkeypatch.setattr(host, "build_runtime_receipt_from_inspect", lambda *a, **k: {
+        "container_id": "d" * 64, "runtime_receipt_sha256": "e" * 64,
+    })
+    commands = []
+
+    def runner(argv, **kwargs):
+        commands.append(list(argv))
+        if argv[:2] == ["docker", "create"]:
+            return subprocess.CompletedProcess(list(argv), 0, "d" * 64 + "\n", "")
+        return subprocess.CompletedProcess(list(argv), 0, json.dumps(_comparison_inspect()), "")
+
+    host.prepare_scientific_container(
+        control_dir=control,
+        output_dir=output,
+        lease_path=tmp_path / "prepare.lease",
+        runner=runner,
+    )
+    assert commands[0] == RENDERED_PLAN["docker_create_argv"]
+
+    for drifted in (
+        json.dumps(RENDERED_PLAN, indent=2).encode("utf-8"),
+        canonical_json_bytes(RENDERED_PLAN)[:-1] + b" \n",
+        canonical_json_bytes({**RENDERED_PLAN, "docker_create_argv": ["docker", "run", "--rm", "image"]}),
+    ):
+        other = tmp_path / f"drift-{len(drifted)}"
+        other.mkdir()
+        drift_control = _control_with_validators_stubbed(other, monkeypatch, plan_payload=drifted)
+        with pytest.raises(ContractError, match="authorized-plan bytes differ"):
+            host._load_host_artifacts(drift_control, prepared=False)
+
+
+def test_host_rejects_control_replacement_before_docker_create(monkeypatch, tmp_path):
+    control = _control_with_validators_stubbed(tmp_path, monkeypatch)
+    output = tmp_path / "output"
+    output.mkdir()
+    monkeypatch.setattr(host, "EXPECTED_HOST_OUTPUT_DIR", output.resolve())
+    commands = []
+
+    def replace_after_validation(path, payload):
+        target = control / "MOUNT_RECEIPT.json"
+        data = target.read_bytes()
+        target.chmod(0o644)
+        target.unlink()
+        target.write_bytes(data)
+        target.chmod(0o444)
+
+    monkeypatch.setattr(host, "acquire_exclusive_lease", replace_after_validation)
+
+    def runner(argv, **kwargs):
+        commands.append(list(argv))
+        raise AssertionError("docker must not be invoked after a control-file replacement")
+
+    with pytest.raises(ContractError, match="changed after validation"):
+        host.prepare_scientific_container(
+            control_dir=control,
+            output_dir=output,
+            lease_path=tmp_path / "prepare.lease",
+            runner=runner,
+        )
+    assert commands == []
+
+
+def test_host_load_rejects_unsafe_or_incomplete_control_files(monkeypatch, tmp_path):
+    control = _control_with_validators_stubbed(tmp_path, monkeypatch)
+    host._load_host_artifacts(control, prepared=False)
+    target = control / "SOURCE_MANIFEST.json"
+    original = target.read_bytes()
+
+    target.chmod(0o644)
+    with pytest.raises(ContractError, match="read-only"):
+        host._load_host_artifacts(control, prepared=False)
+    target.chmod(0o444)
+
+    moved = tmp_path / "moved.json"
+    target.rename(moved)
+    target.symlink_to(moved)
+    with pytest.raises(ContractError, match="regular nonsymlink"):
+        host._load_host_artifacts(control, prepared=False)
+    target.unlink()
+    with pytest.raises(ContractError, match="content drift"):
+        host._load_host_artifacts(control, prepared=False)
+    moved.rename(target)
+
+    extra = control / "RUNTIME_INSPECT.json"
+    extra.write_text("[]\n", encoding="utf-8")
+    with pytest.raises(ContractError, match="content drift"):
+        host._load_host_artifacts(control, prepared=False)
+    extra.unlink()
+
+    target.chmod(0o644)
+    target.write_bytes(b'{"manifest":1,"manifest":2}\n')
+    target.chmod(0o444)
+    with pytest.raises(ContractError, match="duplicate JSON key"):
+        host._load_host_artifacts(control, prepared=False)
+    target.chmod(0o644)
+    target.write_bytes(original)
+    target.chmod(0o444)
+    host._load_host_artifacts(control, prepared=False)

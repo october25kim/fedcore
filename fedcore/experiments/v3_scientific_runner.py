@@ -1,19 +1,21 @@
 """Host-side scientific launch staging for the sealed FedCORE PACS v3 run.
 
 This module deliberately does not import torch, inspect PACS records, start a
-container, or touch CUDA.  It has three responsibilities only:
+container, or touch CUDA.  It has two responsibilities only:
 
 * validate the preceding synthetic-binding HOLD without mistaking it for an
-  execution-readiness seal;
-* bind the fixed 30-cell order, the exact five read-only inputs, one empty
-  read-write output directory, and the registered single-GPU runtime; and
-* only after a separately issued execution-readiness seal, validate a distinct
-  ``RUN_AUTHORIZATION.json`` before emitting an authorized Docker argument
-  vector.
+  execution-readiness seal; and
+* emit the control-schema-2 pre-authorization execution template
+  (``HOST_LAUNCH_PLAN.json``): the fixed 30-cell order, the exact five
+  read-only inputs, the read-only ``/authorization`` control mount, one empty
+  read-write output directory, and the registered single-GPU
+  ``docker create`` -> inspect -> start lifecycle of
+  ``fedcore.experiments.v3_campaign_runner run``, all bound to one final image
+  ID read from the actual ``IMAGE_INSPECT.json`` bytes.
 
-There is no execute subcommand.  A later host launcher may consume the sealed
-argument vector only after an independently reviewed execution seal and an
-explicit user authorization exist.
+The template contains no authorization-dependent value.  The container name is
+a rule, ``fedcore-v3-{authorization_id}``, rendered only after authorization.
+There is no execute subcommand.
 """
 
 from __future__ import annotations
@@ -41,6 +43,21 @@ from fedcore.experiments.v3_input_binding import (
     ISOLATED_INPUT_DIRECTORY,
     REGISTERED_SCIENTIFIC_INPUTS,
     ScientificInputSpec,
+)
+from fedcore.experiments.v3_execution_binding import (
+    CONTAINER_USER,
+    CONTAINER_WORKDIR,
+    CONTROL_BINDING_MODE,
+    CONTROL_SCHEMA_VERSION,
+    EXPECTED_HOST_CONTROL_DIR,
+    EXPECTED_HOST_LOG_DIR,
+    LAUNCH_PLAN_HASH_DEFINITION,
+    LAUNCH_PLAN_KEYS,
+    LAUNCH_TEMPLATE_STATUS,
+    PLAN_KIND,
+    RENDERER_VERSION,
+    build_execution_template,
+    read_control_artifact,
 )
 
 
@@ -401,102 +418,37 @@ def validate_empty_output_dir(
     return output_dir.resolve()
 
 
-def exact_mount_plan(
-    inputs: Sequence[Mapping[str, Any]], output_dir: Path
-) -> list[dict[str, Any]]:
-    if len(inputs) != 5:
-        raise ContractError("mount plan requires exactly five scientific inputs")
-    mounts = [
-        {
-            "type": "bind",
-            "source": str(row["source"]),
-            "destination": str(row["destination"]),
-            "read_only": True,
-        }
-        for row in inputs
-    ]
-    mounts.append(
-        {
-            "type": "bind",
-            "source": str(output_dir),
-            "destination": str(CONTAINER_OUTPUT_ROOT),
-            "read_only": False,
-        }
-    )
-    mounts.append(
-        {
-            "type": "tmpfs",
-            "source": "",
-            "destination": str(CONTAINER_TMP_ROOT),
-            "read_only": False,
-            "options": "rw,noexec,nosuid,size=1g",
-        }
-    )
-    return mounts
+def _image_identity(image_inspect: Path) -> tuple[str, str, list[str], str]:
+    """Return (image ID, source revision, environment, inspect file hash) from actual bytes."""
 
-
-def _docker_base_argv(
-    *,
-    image_reference: str,
-    mounts: Sequence[Mapping[str, Any]],
-    readiness_sha256: str,
-    input_binding_sha256: str,
-    model_id: str,
-) -> list[str]:
-    argv = [
-        "docker",
-        "run",
-        "--rm",
-        "--name",
-        "fedcore-v3-hsb-scientific",
-        "--network",
-        "none",
-        "--read-only",
-        "--tmpfs",
-        "/tmp:rw,noexec,nosuid,size=1g",
-        "--cap-drop",
-        "ALL",
-        "--security-opt",
-        "no-new-privileges",
-        "--user",
-        "1000:1000",
-        "--gpus",
-        f"device={EXPECTED_GPU_UUID}",
-    ]
-    for mount in mounts:
-        if mount["type"] == "tmpfs":
-            continue
-        value = (
-            f"type=bind,src={mount['source']},dst={mount['destination']}"
-            + (",readonly" if mount["read_only"] else "")
-        )
-        argv.extend(("--mount", value))
-    argv.extend(
-        (
-            image_reference,
-            "-m",
-            "fedcore.experiments.v3_train",
-            "--pacs-archive",
-            "/inputs/PACS_mirror.zip",
-            "--image-manifest",
-            "/inputs/IMAGE_MANIFEST.csv",
-            "--fold-manifest",
-            "/inputs/FOLD_MANIFEST.csv",
-            "--resnet18-weights",
-            "/inputs/resnet18-f37072fd.pth",
-            "--convnext-tiny-weights",
-            "/inputs/convnext_tiny-983f1562.pth",
-            "--output-dir",
-            "/output",
-            "--readiness-sha256",
-            readiness_sha256,
-            "--input-binding-sha256",
-            input_binding_sha256,
-            "--model-id",
-            model_id,
-        )
-    )
-    return argv
+    artifact = read_control_artifact(Path(image_inspect), require_object=False)
+    value = artifact.value
+    if not isinstance(value, list) or len(value) != 1 or not isinstance(value[0], Mapping):
+        raise ContractError("image inspect must contain exactly one image")
+    image = value[0]
+    image_id = image.get("Id")
+    if not isinstance(image_id, str) or not image_id.startswith("sha256:"):
+        raise ContractError("container image ID must use an immutable sha256 reference")
+    digest = image_id.removeprefix("sha256:")
+    if len(digest) != 64 or any(ch not in "0123456789abcdef" for ch in digest):
+        raise ContractError("container image ID is not a valid SHA-256 digest")
+    config = image.get("Config")
+    if not isinstance(config, Mapping):
+        raise ContractError("image inspect lacks Config")
+    labels = config.get("Labels") or {}
+    revision = labels.get("org.opencontainers.image.revision") if isinstance(labels, Mapping) else None
+    if not isinstance(revision, str):
+        raise ContractError("image inspect lacks a source revision label")
+    environment = config.get("Env")
+    if not isinstance(environment, list) or not all(isinstance(item, str) for item in environment):
+        raise ContractError("image inspect environment must be a list of strings")
+    if (
+        config.get("Entrypoint") != ["python"]
+        or config.get("User") != CONTAINER_USER
+        or config.get("WorkingDir") != CONTAINER_WORKDIR
+    ):
+        raise ContractError("image inspect entrypoint/user/workdir mismatch")
+    return image_id, revision, list(environment), artifact.sha256
 
 
 def build_launch_plan(
@@ -504,21 +456,23 @@ def build_launch_plan(
     prebinding_gate: Path,
     input_binding: Path,
     output_dir: Path,
+    image_inspect: Path,
     protocol_dir: Path | None = None,
     specs: Sequence[ScientificInputSpec] = SCIENTIFIC_INPUTS,
     expected_input_dir: Path = ISOLATED_INPUT_DIRECTORY,
     expected_output_dir: Path = REGISTERED_OUTPUT_DIR,
+    control_dir: Path | None = None,
+    log_dir: Path | None = None,
     image_tag: str = EXPECTED_IMAGE_TAG,
-    image_id: str,
 ) -> dict[str, Any]:
-    """Build an unauthorized, non-executing launch plan."""
+    """Build the unauthorized, non-executing pre-authorization execution template.
+
+    The image ID and source revision are read from the actual image-inspect
+    bytes; no caller-supplied image ID is accepted.
+    """
 
     validate_prebinding_gate(prebinding_gate)
-    if not isinstance(image_id, str) or not image_id.startswith("sha256:"):
-        raise ContractError("container image ID must use an immutable sha256 reference")
-    image_digest = image_id.removeprefix("sha256:")
-    if len(image_digest) != 64 or any(ch not in "0123456789abcdef" for ch in image_digest):
-        raise ContractError("container image ID is not a valid SHA-256 digest")
+    image_id, source_commit, environment, image_inspect_sha256 = _image_identity(image_inspect)
     cells = fixed_model_cells(protocol_dir)
     inputs = validate_input_binding(
         input_binding,
@@ -528,36 +482,89 @@ def build_launch_plan(
     output = validate_empty_output_dir(
         output_dir, expected_output_dir=expected_output_dir
     )
-    mounts = exact_mount_plan(inputs, output)
-    prebinding_hash = sha256_file(Path(prebinding_gate))
-    binding_hash = sha256_file(Path(input_binding))
+    return assemble_launch_plan(
+        prebinding_gate_path=str(Path(prebinding_gate).resolve()),
+        prebinding_gate_sha256=sha256_file(Path(prebinding_gate)),
+        input_binding_path=str(Path(input_binding).resolve()),
+        input_binding_sha256=sha256_file(Path(input_binding)),
+        inputs=inputs,
+        image_id=image_id,
+        image_tag=image_tag,
+        image_inspect_sha256=image_inspect_sha256,
+        source_commit=source_commit,
+        environment=environment,
+        cells=cells,
+        output_dir=output,
+        input_dir=Path(expected_input_dir),
+        control_dir=EXPECTED_HOST_CONTROL_DIR if control_dir is None else Path(control_dir),
+        log_dir=EXPECTED_HOST_LOG_DIR if log_dir is None else Path(log_dir),
+    )
+
+
+def assemble_launch_plan(
+    *,
+    prebinding_gate_path: str,
+    prebinding_gate_sha256: str,
+    input_binding_path: str,
+    input_binding_sha256: str,
+    inputs: Sequence[Mapping[str, Any]],
+    image_id: str,
+    image_tag: str,
+    image_inspect_sha256: str,
+    source_commit: str,
+    environment: Sequence[str],
+    cells: Sequence[ModelCell],
+    output_dir: Path,
+    input_dir: Path,
+    control_dir: Path,
+    log_dir: Path,
+) -> dict[str, Any]:
+    """Assemble the template from already-validated values; performs no file I/O."""
+
     state = initial_cell_state(cells)
     validate_cell_state(state, cells)
+    output = Path(output_dir)
+    template = build_execution_template(
+        image_id=image_id,
+        source_commit=source_commit,
+        environment=environment,
+        inputs=inputs,
+        cell_order_sha256=cell_order_sha256(cells),
+        control_dir=Path(control_dir),
+        input_dir=Path(input_dir),
+        output_dir=output,
+        log_dir=Path(log_dir),
+    )
     body: dict[str, Any] = {
-        "schema_version": 1,
+        "schema_version": 2,
+        "control_schema_version": CONTROL_SCHEMA_VERSION,
+        "control_binding_mode": CONTROL_BINDING_MODE,
+        "plan_kind": PLAN_KIND,
+        "renderer_version": RENDERER_VERSION,
         "protocol_id": PROTOCOL_ID,
-        "status": "PASS_CANDIDATE_HOST_LAUNCH_PLAN_HOLD_EXECUTION_READINESS",
+        "status": LAUNCH_TEMPLATE_STATUS,
         "execution_allowed": False,
         "execution_readiness_required": True,
         "run_authorization_required": True,
         "prebinding_status": PREBINDING_STATUS,
-        "prebinding_gate_path": str(Path(prebinding_gate).resolve()),
-        "prebinding_gate_sha256": prebinding_hash,
-        "input_binding_path": str(Path(input_binding).resolve()),
-        "input_binding_sha256": binding_hash,
-        "input_inventory": inputs,
+        "prebinding_gate_path": prebinding_gate_path,
+        "prebinding_gate_sha256": prebinding_gate_sha256,
+        "input_binding_path": input_binding_path,
+        "input_binding_sha256": input_binding_sha256,
+        "input_inventory": [dict(row) for row in inputs],
         "image": {"tag": image_tag, "id": image_id},
+        "image_inspect_sha256": image_inspect_sha256,
+        "source_commit": source_commit,
         "runtime": {
             "network": "none",
             "root_filesystem_read_only": True,
-            "user": "1000:1000",
+            "user": CONTAINER_USER,
             "gpu_index": EXPECTED_GPU_INDEX,
             "gpu_uuid": EXPECTED_GPU_UUID,
             "gpu_name": EXPECTED_GPU_NAME,
             "max_concurrent_scientific_processes": 1,
             "single_process": True,
         },
-        "mounts": mounts,
         "output_directory": str(output),
         "output_empty_at_plan": True,
         "cell_order": cell_order_rows(cells),
@@ -572,20 +579,8 @@ def build_launch_plan(
             "post_decision_truth",
             "secondary_audits",
         ],
-        "cell_launches": [
-            {
-                **row,
-                "docker_argv_template": _docker_base_argv(
-                    image_reference=image_id,
-                    mounts=mounts,
-                    readiness_sha256="__EXECUTION_READINESS_SHA256__",
-                    input_binding_sha256=binding_hash,
-                    model_id=str(row["model_id"]),
-                ),
-                "docker_argv": None,
-            }
-            for row in cell_order_rows(cells)
-        ],
+        "execution_template": template,
+        "execution_template_sha256": canonical_json_sha256(template),
         "PACS_archive_hashed_for_binding": True,
         "PACS_records_decoded": False,
         "PACS_labels_inspected": False,
@@ -594,21 +589,26 @@ def build_launch_plan(
         "CUDA_touched": False,
     }
     body["launch_plan_sha256"] = canonical_json_sha256(body)
-    body["launch_plan_hash_definition"] = (
-        "canonical JSON of the plan before launch_plan_sha256 and "
-        "launch_plan_hash_definition are inserted"
-    )
+    body["launch_plan_hash_definition"] = LAUNCH_PLAN_HASH_DEFINITION
+    if set(body) != set(LAUNCH_PLAN_KEYS):
+        raise ContractError("launch-plan builder key drift")
     return body
 
 
 def validate_launch_plan_integrity(launch_plan: Mapping[str, Any]) -> None:
-    """Recompute the self-hash and recheck mutable host files before launch."""
+    """Recompute the self-hash and recheck mutable host files before declaration."""
 
+    if launch_plan.get("schema_version") != 2 or launch_plan.get(
+        "control_schema_version"
+    ) != CONTROL_SCHEMA_VERSION:
+        raise ContractError("launch plan is not control schema 2")
+    if set(launch_plan) != set(LAUNCH_PLAN_KEYS):
+        raise ContractError("launch-plan key drift")
     if launch_plan.get("protocol_id") != PROTOCOL_ID:
         raise ContractError("launch-plan protocol mismatch")
-    if launch_plan.get("status") != (
-        "PASS_CANDIDATE_HOST_LAUNCH_PLAN_HOLD_EXECUTION_READINESS"
-    ):
+    if launch_plan.get("status") != LAUNCH_TEMPLATE_STATUS or launch_plan.get(
+        "plan_kind"
+    ) != PLAN_KIND:
         raise ContractError("launch-plan HOLD status mismatch")
     _require_bool(launch_plan.get("execution_allowed"), False, "execution_allowed")
     body = {
@@ -662,9 +662,27 @@ def validate_launch_plan_integrity(launch_plan: Mapping[str, Any]) -> None:
             raise ContractError(f"input hash changed after planning: {record['name']}")
     output = Path(str(launch_plan.get("output_directory")))
     validate_empty_output_dir(output, expected_output_dir=output)
-    expected_mounts = exact_mount_plan(inventory, output)
-    if launch_plan.get("mounts") != expected_mounts:
-        raise ContractError("launch-plan mount scope drift")
+    template = launch_plan.get("execution_template")
+    if not isinstance(template, Mapping) or not isinstance(template.get("paths"), Mapping):
+        raise ContractError("launch-plan execution template is absent")
+    paths = template["paths"]
+    if any(Path(str(row["source"])).parent != Path(str(paths.get("input"))) for row in inventory):
+        raise ContractError("launch-plan staged inputs are outside the template input directory")
+    rebuilt = build_execution_template(
+        image_id=str(launch_plan["image"]["id"]),
+        source_commit=str(launch_plan.get("source_commit")),
+        environment=template.get("environment"),
+        inputs=inventory,
+        cell_order_sha256=str(launch_plan.get("cell_order_sha256")),
+        control_dir=Path(str(paths.get("control"))),
+        input_dir=Path(str(paths.get("input"))),
+        output_dir=output,
+        log_dir=Path(str(paths.get("log"))),
+    )
+    if dict(template) != rebuilt:
+        raise ContractError("launch-plan execution template drift")
+    if canonical_json_sha256(rebuilt) != launch_plan.get("execution_template_sha256"):
+        raise ContractError("launch-plan execution-template hash mismatch")
 
 
 def validate_run_authorization(
@@ -702,36 +720,15 @@ def validate_run_authorization(
 def bind_authorized_launch(
     launch_plan: Mapping[str, Any], readiness_gate: Path, authorization_path: Path
 ) -> dict[str, Any]:
-    """Return an authorized argument vector without running it."""
+    """Legacy entry point; it can never emit an argument vector.
+
+    Control schema 2 renders the authorized Docker create plan only through
+    ``v3_execution_binding.build_authorized_campaign_plan`` from a validated
+    template and authorization.  This function keeps its refusal semantics.
+    """
 
     validate_run_authorization(authorization_path, launch_plan, readiness_gate)
-    authorized = json.loads(json.dumps(launch_plan))
-    authorized["status"] = "PASS_AUTHORIZED_HOST_LAUNCH_PLAN_NOT_EXECUTED"
-    authorized["execution_allowed"] = True
-    authorization_hash = sha256_file(Path(authorization_path))
-    readiness_hash = sha256_file(Path(readiness_gate))
-    authorized["readiness_gate_path"] = str(Path(readiness_gate).resolve())
-    authorized["readiness_gate_sha256"] = readiness_hash
-    authorized["run_authorization_sha256"] = authorization_hash
-    for cell in authorized["cell_launches"]:
-        argv = [
-            readiness_hash if item == "__EXECUTION_READINESS_SHA256__" else item
-            for item in cell["docker_argv_template"]
-        ]
-        argv.extend(
-            (
-                "--run-authorization-sha256",
-                authorization_hash,
-                "--training-authorized",
-            )
-        )
-        cell["docker_argv"] = argv
-    authorized["authorized_launch_sha256"] = canonical_json_sha256(authorized)
-    authorized["authorized_launch_hash_definition"] = (
-        "canonical JSON of the authorized launch before authorized_launch_sha256 "
-        "and authorized_launch_hash_definition are inserted"
-    )
-    return authorized
+    raise ContractError("legacy launch binding is superseded by the control-schema-2 renderer")
 
 
 def _parser() -> argparse.ArgumentParser:
@@ -744,7 +741,7 @@ def _parser() -> argparse.ArgumentParser:
         command.add_argument("--output-dir", type=Path, required=True)
         command.add_argument("--protocol-dir", type=Path)
         command.add_argument("--image-tag", default=EXPECTED_IMAGE_TAG)
-        command.add_argument("--image-id", required=True)
+        command.add_argument("--image-inspect", type=Path, required=True)
     authorize = subparsers.add_parser("authorization-check")
     authorize.add_argument("--launch-plan", type=Path, required=True)
     authorize.add_argument("--readiness-gate", type=Path, required=True)
@@ -767,7 +764,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         output_dir=args.output_dir,
         protocol_dir=args.protocol_dir,
         image_tag=args.image_tag,
-        image_id=args.image_id,
+        image_inspect=args.image_inspect,
     )
     if args.command == "validate-only":
         result = {
@@ -803,11 +800,11 @@ __all__ = [
     "REGISTERED_OUTPUT_DIR",
     "SCIENTIFIC_INPUTS",
     "ScientificInputSpec",
+    "assemble_launch_plan",
     "bind_authorized_launch",
     "build_launch_plan",
     "cell_order_rows",
     "cell_order_sha256",
-    "exact_mount_plan",
     "fixed_model_cells",
     "initial_cell_state",
     "main",

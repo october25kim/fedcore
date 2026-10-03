@@ -111,6 +111,28 @@ def _inputs(
     return binding, tuple(specs), staged
 
 
+SOURCE_REVISION = "c" * 40
+
+
+def _image_inspect(path: Path, image_id: str = "sha256:" + "a" * 64) -> Path:
+    _write_json(
+        path,
+        [
+            {
+                "Id": image_id,
+                "Config": {
+                    "Labels": {"org.opencontainers.image.revision": SOURCE_REVISION},
+                    "Env": [f"FEDCORE_SOURCE_COMMIT={SOURCE_REVISION}", "PYTHONPATH=/workspace"],
+                    "Entrypoint": ["python"],
+                    "User": "1000:1000",
+                    "WorkingDir": "/workspace",
+                },
+            }
+        ],
+    )
+    return path
+
+
 def _plan(tmp_path: Path) -> tuple[dict[str, object], Path, Path]:
     gate = _prebinding(tmp_path / "PREBINDING_GATE.json")
     binding, specs, staged = _inputs(tmp_path)
@@ -120,11 +142,13 @@ def _plan(tmp_path: Path) -> tuple[dict[str, object], Path, Path]:
         prebinding_gate=gate,
         input_binding=binding,
         output_dir=output,
+        image_inspect=_image_inspect(tmp_path / "IMAGE_INSPECT.json"),
         specs=specs,
         expected_input_dir=staged,
         expected_output_dir=output,
+        control_dir=tmp_path / "control",
+        log_dir=tmp_path / "logs",
         image_tag="synthetic-image:sealed",
-        image_id="sha256:" + "a" * 64,
     )
     return plan, gate, binding
 
@@ -197,7 +221,8 @@ def test_prebinding_then_readiness_do_not_authorize_training(tmp_path: Path) -> 
     with pytest.raises(ContractError, match="end-to-end artifact-bound runner"):
         validate_readiness_gate(gate, launch_plan=plan)
     assert plan["execution_allowed"] is False
-    assert all(cell["docker_argv"] is None for cell in plan["cell_launches"])
+    assert plan["plan_kind"] == "PREAUTH_EXECUTION_TEMPLATE"
+    assert "cell_launches" not in plan
     missing = tmp_path / "RUN_AUTHORIZATION.json"
     with pytest.raises(ContractError, match="end-to-end artifact-bound runner"):
         validate_run_authorization(missing, plan, gate)
@@ -205,11 +230,28 @@ def test_prebinding_then_readiness_do_not_authorize_training(tmp_path: Path) -> 
 
 def test_plan_has_exact_mount_scope_gpu_and_no_execution(tmp_path: Path) -> None:
     plan, _, _ = _plan(tmp_path)
-    mounts = plan["mounts"]
-    assert len(mounts) == 7
-    assert sum(row["type"] == "bind" and row["read_only"] for row in mounts) == 5
+    template = plan["execution_template"]
+    mounts = template["mounts"]
+    assert len(mounts) == 8
+    assert [row["destination"] for row in mounts] == sorted(row["destination"] for row in mounts)
+    assert sum(
+        row["type"] == "bind" and row["read_only"] and row["destination"].startswith("/inputs/")
+        for row in mounts
+    ) == 5
+    assert [row for row in mounts if row["destination"] == "/authorization"] == [
+        {
+            "type": "bind",
+            "source": str(tmp_path / "control"),
+            "destination": "/authorization",
+            "read_only": True,
+        }
+    ]
     assert sum(row["type"] == "bind" and not row["read_only"] for row in mounts) == 1
     assert sum(row["type"] == "tmpfs" and row["destination"] == "/tmp" for row in mounts) == 1
+    assert template["gpu_device_ids"] == [EXPECTED_GPU_UUID]
+    assert template["image_id"] == plan["image"]["id"] == "sha256:" + "a" * 64
+    assert template["source_commit"] == plan["source_commit"] == SOURCE_REVISION
+    assert template["paths"]["log"] == str(tmp_path / "logs")
     assert plan["runtime"]["gpu_uuid"] == EXPECTED_GPU_UUID
     assert plan["runtime"]["max_concurrent_scientific_processes"] == 1
     assert plan["runtime"]["single_process"] is True
@@ -221,35 +263,107 @@ def test_plan_has_exact_mount_scope_gpu_and_no_execution(tmp_path: Path) -> None
     assert plan["torch_imported"] is False
     assert plan["CUDA_touched"] is False
     mounted_sources = {
-        row["source"] for row in mounts if row["type"] == "bind" and row["read_only"]
+        row["source"]
+        for row in mounts
+        if row["type"] == "bind" and row["read_only"] and row["destination"].startswith("/inputs/")
     }
     assert mounted_sources == {row["source"] for row in plan["input_inventory"]}
     assert not any(row["provenance_source"] in mounted_sources for row in plan["input_inventory"])
-    launches = plan["cell_launches"]
-    assert len(launches) == 30
-    for ordinal, launch in enumerate(launches):
-        argv = launch["docker_argv_template"]
-        assert launch["ordinal"] == ordinal
-        assert "--training-authorized" not in argv
-        assert "--run-authorization-sha256" not in argv
-        assert argv.count("--mount") == 6
-        assert argv[argv.index("--model-id") + 1] == launch["model_id"]
+    assert len(plan["cell_order"]) == 30
+    serialized = json.dumps(plan)
+    for legacy in ("docker_argv_template", "--rm", "fedcore.experiments.v3_train", "--training-authorized"):
+        assert legacy not in serialized
 
 
-def test_planned_container_arguments_match_static_training_cli(
+def test_template_command_parses_under_campaign_runner_cli(tmp_path: Path) -> None:
+    from fedcore.experiments import v3_campaign_runner as campaign_runner
+
+    plan, _, _ = _plan(tmp_path)
+    template = plan["execution_template"]
+    command = template["container_command"]
+    assert template["entrypoint"] == ["python"]
+    assert command[:3] == ["-m", "fedcore.experiments.v3_campaign_runner", "run"]
+    assert template["lifecycle"] == ["docker create", "docker inspect", "docker start --attach"]
+    args = campaign_runner._parser().parse_args(command[2:])
+    campaign_runner._validate_fixed_cli_paths(args)
+    assert args.authorization_dir == template["authorization_directory"] == "/authorization"
+    assert args.device == template["device"] == "cuda:0"
+
+
+def test_legacy_per_cell_training_cli_remains_static_only(
     tmp_path: Path, capsys: pytest.CaptureFixture[str]
 ) -> None:
-    plan, _, _ = _plan(tmp_path)
-    argv = plan["cell_launches"][0]["docker_argv_template"]
-    image_index = argv.index("sha256:" + "a" * 64)
-    container_argv = argv[image_index + 1 :]
-    assert container_argv[:2] == ["-m", "fedcore.experiments.v3_train"]
-    assert training_main([*container_argv[2:], "--validate-only"]) == 0
+    argv = [
+        "--pacs-archive", "/inputs/PACS_mirror.zip",
+        "--image-manifest", "/inputs/IMAGE_MANIFEST.csv",
+        "--fold-manifest", "/inputs/FOLD_MANIFEST.csv",
+        "--resnet18-weights", "/inputs/resnet18-f37072fd.pth",
+        "--convnext-tiny-weights", "/inputs/convnext_tiny-983f1562.pth",
+        "--output-dir", "/output",
+        "--readiness-sha256", "__EXECUTION_READINESS_SHA256__",
+        "--input-binding-sha256", "2" * 64,
+        "--model-id", "pacs__resnet18__split00__seed0",
+    ]
+    assert training_main([*argv, "--validate-only"]) == 0
     report = json.loads(capsys.readouterr().out)
     assert report["status"] == "PASS_STATIC_TRAINING_CLI_BINDING"
     assert report["PACS_opened"] is False
     assert report["torch_imported_by_cli"] is False
     assert report["GPU_used"] is False
+
+
+def test_launch_plan_derives_image_identity_from_inspect_bytes(tmp_path: Path) -> None:
+    gate = _prebinding(tmp_path / "PREBINDING_GATE.json")
+    binding, specs, staged = _inputs(tmp_path)
+    output = tmp_path / "out"
+    output.mkdir()
+    with pytest.raises(TypeError):
+        build_launch_plan(  # type: ignore[call-arg]
+            prebinding_gate=gate,
+            input_binding=binding,
+            output_dir=output,
+            specs=specs,
+            expected_input_dir=staged,
+            expected_output_dir=output,
+            image_id="sha256:" + "a" * 64,
+        )
+    mutable = _image_inspect(tmp_path / "MUTABLE.json", image_id="fedcore-v3-hsb:latest")
+    with pytest.raises(ContractError, match="immutable sha256"):
+        build_launch_plan(
+            prebinding_gate=gate,
+            input_binding=binding,
+            output_dir=output,
+            image_inspect=mutable,
+            specs=specs,
+            expected_input_dir=staged,
+            expected_output_dir=output,
+        )
+    plan = build_launch_plan(
+        prebinding_gate=gate,
+        input_binding=binding,
+        output_dir=output,
+        image_inspect=_image_inspect(tmp_path / "IMAGE_INSPECT.json"),
+        specs=specs,
+        expected_input_dir=staged,
+        expected_output_dir=output,
+        control_dir=tmp_path / "control",
+        log_dir=tmp_path / "logs",
+    )
+    validate_launch_plan_integrity(plan)
+    tampered = copy.deepcopy(plan)
+    tampered["execution_template"]["restart_policy"] = "always"
+    body = {
+        key: value
+        for key, value in tampered.items()
+        if key not in {"launch_plan_sha256", "launch_plan_hash_definition"}
+    }
+    body["execution_template_sha256"] = hashlib.sha256(
+        canonical_json_bytes(body["execution_template"])
+    ).hexdigest()
+    tampered["execution_template_sha256"] = body["execution_template_sha256"]
+    tampered["launch_plan_sha256"] = hashlib.sha256(canonical_json_bytes(body)).hexdigest()
+    with pytest.raises(ContractError, match="execution template drift"):
+        validate_launch_plan_integrity(tampered)
 
 
 def test_input_tamper_and_nonempty_output_fail_closed(tmp_path: Path) -> None:
@@ -269,7 +383,7 @@ def test_input_tamper_and_nonempty_output_fail_closed(tmp_path: Path) -> None:
             specs=specs,
             expected_input_dir=staged,
             expected_output_dir=output,
-            image_id="sha256:" + "b" * 64,
+            image_inspect=_image_inspect(tmp_path / "IMAGE_INSPECT.json", "sha256:" + "b" * 64),
         )
     staged_file.chmod(0o644)
     staged_file.write_bytes(b"synthetic-0-PACS_mirror.zip")
@@ -283,7 +397,7 @@ def test_input_tamper_and_nonempty_output_fail_closed(tmp_path: Path) -> None:
             specs=specs,
             expected_input_dir=staged,
             expected_output_dir=output,
-            image_id="sha256:" + "b" * 64,
+            image_inspect=_image_inspect(tmp_path / "IMAGE_INSPECT.json", "sha256:" + "b" * 64),
         )
 
 

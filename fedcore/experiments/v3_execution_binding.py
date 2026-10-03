@@ -27,6 +27,7 @@ from pathlib import PurePosixPath
 import stat
 import subprocess
 from typing import Any, Mapping, Sequence
+import xml.etree.ElementTree as ElementTree
 
 from fedcore.experiments.v3_contract import (
     PROTOCOL_ID,
@@ -35,7 +36,10 @@ from fedcore.experiments.v3_contract import (
     canonical_json_sha256,
     sha256_file,
 )
-from fedcore.experiments.v3_input_binding import REGISTERED_SCIENTIFIC_INPUTS
+from fedcore.experiments.v3_input_binding import (
+    ISOLATED_INPUT_DIRECTORY,
+    REGISTERED_SCIENTIFIC_INPUTS,
+)
 
 
 READINESS_STATUS = "PASS_EXECUTION_READY_HOLD_RUN_AUTHORIZATION"
@@ -145,6 +149,7 @@ REQUIRED_RUNTIME_SOURCE_FILES = (
     "fedcore/experiments/v3_counts.py",
     "fedcore/experiments/v3_execution_binding.py",
     "fedcore/experiments/v3_hsb.py",
+    "fedcore/experiments/v3_local_control_issuer.py",
     "fedcore/experiments/v3_orchestrator.py",
     "fedcore/experiments/v3_pacs_data.py",
     "fedcore/experiments/v3_posttrain.py",
@@ -237,6 +242,31 @@ REQUIRED_EXECUTION_GATE_NODEIDS = {
         "tests/test_v3_execution_binding.py::test_registered_test_runtime_version"
     ),
 }
+# Critical dynamic image-bound control-chain tests.  Readiness requires each
+# node to appear as a passed test case in the registered test-container JUnit.
+REQUIRED_EXECUTION_TEST_NODEIDS = (
+    "tests/test_v3_execution_binding.py::test_dynamic_chain_binds_one_final_image_end_to_end",
+    "tests/test_v3_execution_binding.py::test_template_declares_docker_create_campaign_runner_not_legacy_run",
+    "tests/test_v3_execution_binding.py::test_authorized_plan_is_deterministic_render_of_template_and_authorization",
+    "tests/test_v3_execution_binding.py::test_wrong_image_rejected_at_every_stage",
+    "tests/test_v3_execution_binding.py::test_execution_configuration_drift_rejected",
+    "tests/test_v3_execution_binding.py::test_resealed_upstream_artifacts_rejected",
+    "tests/test_v3_execution_binding.py::test_role_swapped_labeled_control_root_rejected",
+    "tests/test_v3_execution_binding.py::test_old_v1_r2_r3_bundles_rejected",
+    "tests/test_v3_execution_binding.py::test_cross_run_artifact_mixing_rejected",
+    "tests/test_v3_execution_binding.py::test_legacy_and_mixed_schema_rejected",
+    "tests/test_v3_execution_binding.py::test_authorization_missing_expired_unissued_or_challenge_mismatch_rejected",
+    "tests/test_v3_execution_binding.py::test_mounted_bundle_rejects_unsafe_or_incomplete_control_files",
+    "tests/test_v3_execution_binding.py::test_issuer_derives_identity_and_ignores_caller_hashes",
+    "tests/test_v3_execution_binding.py::test_issuer_rejects_artifact_replacement_before_authorization",
+    "tests/test_v3_execution_binding.py::test_historical_r3_bundle_unchanged",
+    "tests/test_v3_execution_binding.py::test_scientific_contract_invariants_unchanged",
+    "tests/test_v3_host_executor.py::test_host_executes_only_rerendered_authorized_plan_bytes",
+    "tests/test_v3_host_executor.py::test_host_rejects_control_replacement_before_docker_create",
+    "tests/test_v3_host_executor.py::test_host_load_rejects_unsafe_or_incomplete_control_files",
+    "tests/test_v3_scientific_runner.py::test_template_command_parses_under_campaign_runner_cli",
+    "tests/test_v3_mount_receipt.py::test_mount_declaration_includes_read_only_authorization_mount",
+)
 REQUIRED_EXECUTION_CONTAINER_TEST_FILES = tuple(
     f"/testrepo/{path}" for path in REQUIRED_EXECUTION_TEST_FILES
 )
@@ -283,27 +313,50 @@ SCIENTIFIC_COMMAND = (
     "cuda:0",
 )
 
-# Local author-executed static binding anchors; no scientific execution
-# authorization.  Bound to paper/ijar-v34-pacs-author-deterministic-rerun-
-# local-v1-static-binding-r1 (parent r2 root 362f4e9d... is historical only).
-# These constants prevent a self-consistent replacement of the preceding launch
-# plan, input receipt, or mount receipt.
-STATIC_BINDING_ROOT_SHA256 = (
-    "bcd3ce5a0d4ac79dc554b2b7b295bc18deb340614732cdbf484e0372f00a9df3"
+EXPECTED_HOST_LOG_DIR = Path(
+    "/home/sanghoon/Desktop/Workspace/Fedcore_HSB_local_v1/logs/execution-local-v1"
 )
-STATIC_LAUNCH_PLAN_FILE_SHA256 = (
-    "2ffc01f43e040a28b544cae8d9d580a4ad015dd6ad2c1eaeebaddd01d2c13bb5"
-)
-STATIC_LAUNCH_PLAN_SHA256 = (
-    "97619ec01bc347ac116c2855c3376ecd2b96502c56114b3dd5c96292580eac7c"
-)
+
+# The only compile-time exact-file anchor.  INPUT_BINDING.json names the five
+# staged inputs and contains no image identity, so anchoring it in source does
+# not create an image self-reference.
 STATIC_INPUT_BINDING_FILE_SHA256 = (
     "dc330ceb35752ffece621bd1e2c1006b0edd2f3f340c08b80b574fd42defc4ad"
 )
-STATIC_MOUNT_RECEIPT_FILE_SHA256 = (
-    "0a0434c34666114b1812f9a9a7c61f954c82dc3a50eeb6910b27941ddaa0f006"
+
+# Dynamic image-bound control chain (control schema 2).  The launch template,
+# mount declaration, readiness, authorization, authorized plan, and runtime
+# receipt are bound to one final image ID at run time and are never copied
+# back into source, the Docker build context, or the image.
+CONTROL_SCHEMA_VERSION = 2
+CONTROL_BINDING_MODE = "DYNAMIC_IMAGE_BOUND_V1"
+PLAN_KIND = "PREAUTH_EXECUTION_TEMPLATE"
+RENDERER_VERSION = "FEDCORE_LOCAL_EXECUTION_RENDERER_V1"
+CONTAINER_NAME_RULE = "fedcore-v3-{authorization_id}"
+EXECUTION_TEMPLATE_DOMAIN = "FEDCORE_LOCAL_EXECUTION_TEMPLATE_V1"
+INSTANTIATED_EXECUTION_DOMAIN = "FEDCORE_LOCAL_INSTANTIATED_EXECUTION_V1"
+PRE_READINESS_CONTROL_ROOT_DOMAIN = "FEDCORE_LOCAL_PRE_READINESS_CONTROL_ROOT_V1"
+LAUNCH_TEMPLATE_STATUS = "PASS_PREAUTH_EXECUTION_TEMPLATE_HOLD_READINESS"
+MOUNT_DECLARATION_STATUS = "PASS_PREEXECUTION_MOUNT_DECLARATION_NO_GPU"
+MOUNT_DECLARATION_ROLE = "PREEXECUTION_MOUNT_DECLARATION_NOT_RUNTIME_PROOF"
+CONTAINER_WORKDIR = "/workspace"
+CONTAINER_USER = "1000:1000"
+CONTAINER_TMPFS_OPTIONS = "rw,noexec,nosuid,size=1g"
+CONTAINER_LIFECYCLE = ("docker create", "docker inspect", "docker start --attach")
+MAX_CONTROL_ARTIFACT_BYTES = 16 * 1024 * 1024
+TRUSTED_COMPUTING_BASE = (
+    "host root, the Docker daemon, and the kernel are trusted; this contract does "
+    "not defend against a malicious root user or Docker daemon"
 )
 
+PRE_READINESS_FILENAMES = (
+    "HOST_LAUNCH_PLAN.json",
+    "INPUT_BINDING.json",
+    "MOUNT_RECEIPT.json",
+    "SOURCE_MANIFEST.json",
+    "SOURCE_PROBE_RECEIPT.json",
+    "TEST_REPORT.json",
+)
 CONTROL_FILENAMES = (
     "HOST_LAUNCH_PLAN.json",
     "INPUT_BINDING.json",
@@ -420,14 +473,40 @@ def _read_object(path: Path) -> dict[str, Any]:
     return value
 
 
-def _read_control_bytes_once(
-    path: Path, *, require_object: bool = True
-) -> tuple[Any, str]:
+@dataclass(frozen=True)
+class ControlArtifact:
+    """One control file read exactly once: parsed value, byte hash, identity."""
+
+    path: Path
+    value: Any
+    sha256: str
+    payload: bytes
+    identity: tuple[int, int, int, int]
+
+
+def _file_identity(metadata: os.stat_result) -> tuple[int, int, int, int]:
+    return (
+        int(metadata.st_dev),
+        int(metadata.st_ino),
+        int(metadata.st_size),
+        int(metadata.st_mtime_ns),
+    )
+
+
+def read_control_artifact(
+    path: Path,
+    *,
+    require_object: bool = True,
+    require_read_only: bool = False,
+    max_bytes: int = MAX_CONTROL_ARTIFACT_BYTES,
+) -> ControlArtifact:
     """Hash and parse one descriptor-backed byte buffer.
 
     Reading once through an ``O_NOFOLLOW`` descriptor prevents a path swap
-    between a hash pass and a later JSON parse pass.  This is used by the
-    in-container guard, where the mounted bytes are the actual authority.
+    between a hash pass and a later JSON parse pass.  The descriptor's
+    ``fstat`` must match the path's ``lstat`` so a replacement between the two
+    calls is refused.  The returned identity lets callers re-check device,
+    inode, size, and mtime immediately before a later side effect.
     """
 
     path = Path(path)
@@ -437,6 +516,8 @@ def _read_control_bytes_once(
         raise ContractError(f"required control artifact is missing: {path}") from exc
     if stat.S_ISLNK(before.st_mode) or not stat.S_ISREG(before.st_mode):
         raise ContractError(f"control artifact must be a regular nonsymlink file: {path}")
+    if require_read_only and stat.S_IMODE(before.st_mode) & 0o222:
+        raise ContractError(f"control artifact must be read-only: {path.name}")
     flags = os.O_RDONLY
     if hasattr(os, "O_NOFOLLOW"):
         flags |= os.O_NOFOLLOW
@@ -448,6 +529,10 @@ def _read_control_bytes_once(
         opened = os.fstat(descriptor)
         if not stat.S_ISREG(opened.st_mode):
             raise ContractError(f"control artifact changed type while opening: {path}")
+        if (opened.st_dev, opened.st_ino) != (before.st_dev, before.st_ino):
+            raise ContractError(f"control artifact was replaced while opening: {path}")
+        if opened.st_size > max_bytes:
+            raise ContractError(f"control artifact exceeds the size limit: {path}")
         chunks: list[bytes] = []
         total = 0
         while True:
@@ -456,11 +541,13 @@ def _read_control_bytes_once(
                 break
             chunks.append(chunk)
             total += len(chunk)
-            if total > 16 * 1024 * 1024:
-                raise ContractError(f"control artifact exceeds the 16 MiB limit: {path}")
+            if total > max_bytes:
+                raise ContractError(f"control artifact exceeds the size limit: {path}")
     finally:
         os.close(descriptor)
     payload = b"".join(chunks)
+    if len(payload) != opened.st_size:
+        raise ContractError(f"control artifact changed size while reading: {path}")
     try:
         text = payload.decode("utf-8")
         value = json.loads(
@@ -473,9 +560,38 @@ def _read_control_bytes_once(
         raise ContractError(f"invalid control artifact JSON: {path}") from exc
     if require_object and not isinstance(value, dict):
         raise ContractError(f"control artifact must contain a JSON object: {path}")
-    import hashlib
+    return ControlArtifact(
+        path=path,
+        value=value,
+        sha256=hashlib.sha256(payload).hexdigest(),
+        payload=payload,
+        identity=_file_identity(opened),
+    )
 
-    return value, hashlib.sha256(payload).hexdigest()
+
+def recheck_control_artifact(artifact: ControlArtifact) -> None:
+    """Fail closed unless the path still names the exact bytes that were validated."""
+
+    try:
+        metadata = artifact.path.lstat()
+    except FileNotFoundError as exc:
+        raise ContractError(f"control artifact disappeared after validation: {artifact.path}") from exc
+    if stat.S_ISLNK(metadata.st_mode) or not stat.S_ISREG(metadata.st_mode):
+        raise ContractError(f"control artifact changed type after validation: {artifact.path}")
+    if _file_identity(metadata) != artifact.identity:
+        raise ContractError(f"control artifact changed after validation: {artifact.path.name}")
+    again = read_control_artifact(
+        artifact.path, require_object=isinstance(artifact.value, dict)
+    )
+    if again.sha256 != artifact.sha256 or again.identity != artifact.identity:
+        raise ContractError(f"control artifact changed after validation: {artifact.path.name}")
+
+
+def _read_control_bytes_once(
+    path: Path, *, require_object: bool = True
+) -> tuple[Any, str]:
+    artifact = read_control_artifact(path, require_object=require_object)
+    return artifact.value, artifact.sha256
 
 
 def _json_object_without_duplicate_keys(
@@ -1095,65 +1211,14 @@ def validate_source_probe_receipt(
     return digest
 
 
-def validate_static_launch_plan(value: Mapping[str, Any]) -> str:
-    """Validate the local static-binding plan against compiled registry values.
-
-    This check is intentionally structural.  Host file re-hashing belongs to
-    the local static-binding builder; the execution layer consumes its
-    immutable anchored bytes.
-    """
-
-    if value.get("protocol_id") != PROTOCOL_ID:
-        raise ContractError("static launch-plan protocol mismatch")
-    if value.get("status") != (
-        "PASS_CANDIDATE_HOST_LAUNCH_PLAN_HOLD_EXECUTION_READINESS"
-    ):
-        raise ContractError("static launch-plan status mismatch")
-    _require_bool(value.get("execution_allowed"), False, "execution_allowed")
-    if value.get("launch_plan_sha256") != STATIC_LAUNCH_PLAN_SHA256:
-        raise ContractError("static launch-plan registry hash mismatch")
-    body = {
-        key: item
-        for key, item in value.items()
-        if key not in {"launch_plan_sha256", "launch_plan_hash_definition"}
-    }
-    if canonical_json_sha256(body) != STATIC_LAUNCH_PLAN_SHA256:
-        raise ContractError("static launch-plan canonical hash mismatch")
-    inventory = value.get("input_inventory")
-    if not isinstance(inventory, list) or len(inventory) != 5:
-        raise ContractError("static launch plan must contain exactly five inputs")
-    for spec, row in zip(REGISTERED_SCIENTIFIC_INPUTS, inventory, strict=True):
-        expected = {
-            "name": spec.name,
-            "provenance_source": spec.source_path,
-            "destination": spec.container_path,
-            "sha256": spec.sha256,
-            "bytes": spec.size_bytes,
-            "read_only": True,
-            "symlink": False,
-        }
-        if not isinstance(row, Mapping) or any(row.get(k) != v for k, v in expected.items()):
-            raise ContractError(f"static launch-plan input registry drift for {spec.name}")
-    if value.get("runtime") != {
-        "gpu_index": 0,
-        "gpu_name": "NVIDIA GeForce RTX 4070 Ti SUPER",
-        "gpu_uuid": "GPU-ee5a0082-32e6-ede4-27d5-441bee0ca7c6",
-        "max_concurrent_scientific_processes": 1,
-        "network": "none",
-        "root_filesystem_read_only": True,
-        "single_process": True,
-        "user": "1000:1000",
-    }:
-        raise ContractError("static launch-plan runtime registry drift")
-    return STATIC_LAUNCH_PLAN_SHA256
-
-
 def validate_static_input_binding(value: Mapping[str, Any]) -> None:
     if value.get("protocol_id") != PROTOCOL_ID or value.get("status") != "PASS_FIVE_INPUT_BINDING":
         raise ContractError("static input-binding status/protocol mismatch")
     _require_bool(value.get("exact_directory_contents"), True, "exact_directory_contents")
     _require_bool(value.get("all_regular_nonsymlink"), True, "all_regular_nonsymlink")
     _require_bool(value.get("all_read_only"), True, "all_read_only")
+    if value.get("isolated_input_directory") != str(ISOLATED_INPUT_DIRECTORY):
+        raise ContractError("static input-binding isolated input directory drift")
     rows = value.get("files")
     if not isinstance(rows, list) or len(rows) != 5:
         raise ContractError("static input binding must contain exactly five records")
@@ -1162,6 +1227,7 @@ def validate_static_input_binding(value: Mapping[str, Any]) -> None:
             "name": spec.name,
             "source_path": spec.source_path,
             "container_path": spec.container_path,
+            "staged_path": str(ISOLATED_INPUT_DIRECTORY / spec.name),
             "sha256": spec.sha256,
             "size_bytes": spec.size_bytes,
             "read_only_mount_required": True,
@@ -1172,23 +1238,686 @@ def validate_static_input_binding(value: Mapping[str, Any]) -> None:
             raise ContractError(f"static input-binding registry drift for {spec.name}")
 
 
-def validate_static_mount_receipt(value: Mapping[str, Any]) -> None:
-    if value.get("protocol_id") != PROTOCOL_ID:
-        raise ContractError("static mount-receipt protocol mismatch")
-    if value.get("status") != "PASS_EXACT_FIVE_RO_MOUNT_PROBE_NO_GPU":
-        raise ContractError("static mount-receipt status mismatch")
-    if value.get("launch_plan_sha256") != STATIC_LAUNCH_PLAN_SHA256:
-        raise ContractError("static mount-receipt launch-plan mismatch")
-    if value.get("input_binding_sha256") != STATIC_INPUT_BINDING_FILE_SHA256:
-        raise ContractError("static mount-receipt input-binding mismatch")
+# --------------------------------------------------------------------------
+# control schema 2: pre-authorization execution template and its renderer
+# --------------------------------------------------------------------------
+
+LAUNCH_PLAN_KEYS = frozenset(
+    {
+        "schema_version", "control_schema_version", "control_binding_mode", "plan_kind",
+        "renderer_version", "protocol_id", "status", "execution_allowed",
+        "execution_readiness_required", "run_authorization_required",
+        "prebinding_status", "prebinding_gate_path", "prebinding_gate_sha256",
+        "input_binding_path", "input_binding_sha256", "input_inventory", "image",
+        "image_inspect_sha256", "source_commit", "runtime", "output_directory",
+        "output_empty_at_plan", "cell_order", "cell_order_sha256",
+        "initial_cell_state", "stage_order", "execution_template",
+        "execution_template_sha256", "PACS_archive_hashed_for_binding",
+        "PACS_records_decoded", "PACS_labels_inspected",
+        "PACS_scientific_content_opened", "torch_imported", "CUDA_touched",
+        "launch_plan_sha256", "launch_plan_hash_definition",
+    }
+)
+LAUNCH_PLAN_HASH_DEFINITION = (
+    "canonical JSON of the plan before launch_plan_sha256 and "
+    "launch_plan_hash_definition are inserted"
+)
+EXECUTION_TEMPLATE_KEYS = frozenset(
+    {
+        "domain", "renderer_version", "control_schema_version", "protocol_id",
+        "lifecycle", "image_id", "source_commit", "entrypoint", "container_command",
+        "module", "subcommand", "authorization_directory", "device", "environment",
+        "working_dir", "user", "network_mode", "read_only_root_filesystem", "tmpfs",
+        "cap_drop", "security_opt", "restart_policy", "cpu_limit_cores", "nano_cpus",
+        "gpu_device_ids", "gpu_capabilities", "mounts", "paths",
+        "cell_order_sha256", "container_name_rule",
+    }
+)
+RUNTIME_EXECUTION_KEYS = (
+    "image_id", "container_name", "entrypoint", "cmd", "environment", "working_dir",
+    "user", "network_mode", "read_only_root_filesystem", "tmpfs", "cap_drop",
+    "security_opt", "restart_policy", "nano_cpus", "gpu_device_ids",
+    "gpu_capabilities", "mounts",
+)
+MOUNT_RECEIPT_KEYS = frozenset(
+    {
+        "schema_version", "control_schema_version", "control_binding_mode",
+        "protocol_id", "status", "evidence_role", "launch_plan_sha256",
+        "execution_template_sha256", "input_binding_sha256", "image_id",
+        "container_id", "container_name", "network_mode", "read_only_root_filesystem",
+        "user", "cap_drop", "security_opt", "device_requests", "mounts",
+        "exact_five_read_only_inputs", "authorization_mount_read_only_per_inspect",
+        "authorization_write_rejection_tested", "one_read_write_output",
+        "tmpfs_only_at_tmp", "legacy_workspace_mounted", "runtime_proof",
+        "PACS_records_decoded", "PACS_labels_inspected", "GPU_used",
+        "training_started",
+    }
+)
+
+
+def _require_image_id(value: Any, label: str) -> str:
+    if not isinstance(value, str) or not value.startswith("sha256:"):
+        raise ContractError(f"{label} must be an immutable sha256 image ID")
+    _require_hex(value.removeprefix("sha256:"), 64, label)
+    return value
+
+
+def _require_absolute_path(value: Any, label: str) -> str:
+    if not isinstance(value, str) or not value or not PurePosixPath(value).is_absolute():
+        raise ContractError(f"{label} must be a nonempty absolute path")
+    if PurePosixPath(value).as_posix() != value or ".." in PurePosixPath(value).parts:
+        raise ContractError(f"{label} is not a canonical absolute path")
+    return value
+
+
+def canonical_mounts(rows: Any) -> list[dict[str, Any]]:
+    """Canonicalize mounts by destination and refuse duplicate destinations."""
+
+    if not isinstance(rows, (list, tuple)):
+        raise ContractError("mount list must be a list")
+    normalized: list[dict[str, Any]] = []
+    for row in rows:
+        if not isinstance(row, Mapping):
+            raise ContractError("mount row must be an object")
+        kind = row.get("type")
+        if kind == "bind":
+            _require_exact_keys(row, {"type", "source", "destination", "read_only"}, "bind mount")
+            if not isinstance(row.get("read_only"), bool):
+                raise ContractError("bind mount read_only must be a boolean")
+            normalized.append(
+                {
+                    "type": "bind",
+                    "source": _require_absolute_path(row.get("source"), "bind mount source"),
+                    "destination": _require_absolute_path(
+                        row.get("destination"), "bind mount destination"
+                    ),
+                    "read_only": row["read_only"],
+                }
+            )
+        elif kind == "tmpfs":
+            _require_exact_keys(
+                row, {"type", "source", "destination", "read_only", "options"}, "tmpfs mount"
+            )
+            if (
+                row.get("source") != ""
+                or row.get("destination") != "/tmp"
+                or row.get("read_only") is not False
+                or row.get("options") != CONTAINER_TMPFS_OPTIONS
+            ):
+                raise ContractError("tmpfs mount drift")
+            normalized.append(dict(row))
+        else:
+            raise ContractError(f"unsupported mount type {kind!r}")
+    destinations = [row["destination"] for row in normalized]
+    if len(destinations) != len(set(destinations)):
+        raise ContractError("duplicate mount destination")
+    return sorted(normalized, key=lambda row: row["destination"])
+
+
+def _execution_mounts(
+    inputs: Sequence[Mapping[str, Any]], *, control_dir: Path, output_dir: Path
+) -> list[dict[str, Any]]:
+    if len(inputs) != 5:
+        raise ContractError("execution template requires exactly five input mounts")
+    rows: list[dict[str, Any]] = []
+    for row in inputs:
+        destination = str(row["destination"])
+        if PurePosixPath(destination).parent != PurePosixPath("/inputs"):
+            raise ContractError(f"input mount destination drift: {destination}")
+        rows.append(
+            {
+                "type": "bind",
+                "source": str(row["source"]),
+                "destination": destination,
+                "read_only": True,
+            }
+        )
+    rows.append(
+        {
+            "type": "bind",
+            "source": str(control_dir),
+            "destination": str(CONTAINER_AUTHORIZATION_DIR),
+            "read_only": True,
+        }
+    )
+    rows.append(
+        {
+            "type": "bind",
+            "source": str(output_dir),
+            "destination": str(CONTAINER_OUTPUT_DIR),
+            "read_only": False,
+        }
+    )
+    rows.append(
+        {
+            "type": "tmpfs",
+            "source": "",
+            "destination": "/tmp",
+            "read_only": False,
+            "options": CONTAINER_TMPFS_OPTIONS,
+        }
+    )
+    return canonical_mounts(rows)
+
+
+def _command_option(command: Sequence[str], option: str) -> str:
+    if list(command).count(option) != 1:
+        raise ContractError(f"container command must contain {option} exactly once")
+    index = list(command).index(option)
+    if index + 1 >= len(command):
+        raise ContractError(f"container command lacks a value for {option}")
+    return str(command[index + 1])
+
+
+def build_execution_template(
+    *,
+    image_id: str,
+    source_commit: str,
+    environment: Sequence[str],
+    inputs: Sequence[Mapping[str, Any]],
+    cell_order_sha256: str,
+    control_dir: Path | None = None,
+    input_dir: Path | None = None,
+    output_dir: Path | None = None,
+    log_dir: Path | None = None,
+) -> dict[str, Any]:
+    """Return the pre-authorization semantic execution object.
+
+    It contains everything the executor will run except the authorization ID
+    and the container name derived from it.
+    """
+
+    image_id = _require_image_id(image_id, "template image_id")
+    source_commit = _require_hex(source_commit, 40, "template source_commit")
+    if not isinstance(environment, (list, tuple)) or not all(
+        isinstance(item, str) for item in environment
+    ):
+        raise ContractError("template environment must be a list of strings")
+    commits = [item for item in environment if item.startswith("FEDCORE_SOURCE_COMMIT=")]
+    if commits != [f"FEDCORE_SOURCE_COMMIT={source_commit}"]:
+        raise ContractError("template environment source revision mismatch")
+    _require_hex(cell_order_sha256, 64, "template cell_order_sha256")
+    control = Path(EXPECTED_HOST_CONTROL_DIR if control_dir is None else control_dir)
+    staged = Path(ISOLATED_INPUT_DIRECTORY if input_dir is None else input_dir)
+    output = Path(EXPECTED_HOST_OUTPUT_DIR if output_dir is None else output_dir)
+    logs = Path(EXPECTED_HOST_LOG_DIR if log_dir is None else log_dir)
+    command = list(SCIENTIFIC_COMMAND)
+    return {
+        "domain": EXECUTION_TEMPLATE_DOMAIN,
+        "renderer_version": RENDERER_VERSION,
+        "control_schema_version": CONTROL_SCHEMA_VERSION,
+        "protocol_id": PROTOCOL_ID,
+        "lifecycle": list(CONTAINER_LIFECYCLE),
+        "image_id": image_id,
+        "source_commit": source_commit,
+        "entrypoint": ["python"],
+        "container_command": command,
+        "module": command[1],
+        "subcommand": command[2],
+        "authorization_directory": _command_option(command, "--authorization-dir"),
+        "device": _command_option(command, "--device"),
+        "environment": list(environment),
+        "working_dir": CONTAINER_WORKDIR,
+        "user": CONTAINER_USER,
+        "network_mode": "none",
+        "read_only_root_filesystem": True,
+        "tmpfs": {"/tmp": CONTAINER_TMPFS_OPTIONS},
+        "cap_drop": ["ALL"],
+        "security_opt": ["no-new-privileges"],
+        "restart_policy": "no",
+        "cpu_limit_cores": CPU_LIMIT_CORES,
+        "nano_cpus": DOCKER_NANO_CPUS,
+        "gpu_device_ids": [EXPECTED_GPU_UUID],
+        "gpu_capabilities": [["gpu"]],
+        "mounts": _execution_mounts(inputs, control_dir=control, output_dir=output),
+        "paths": {
+            "control": str(control),
+            "input": str(staged),
+            "output": str(output),
+            "log": str(logs),
+        },
+        "cell_order_sha256": cell_order_sha256,
+        "container_name_rule": CONTAINER_NAME_RULE,
+    }
+
+
+def _template_shape(template: Any) -> Mapping[str, Any]:
+    if not isinstance(template, Mapping):
+        raise ContractError("execution template must be an object")
+    _require_exact_keys(template, set(EXECUTION_TEMPLATE_KEYS), "execution template")
+    if template.get("domain") != EXECUTION_TEMPLATE_DOMAIN:
+        raise ContractError("execution template domain drift")
+    if template.get("renderer_version") != RENDERER_VERSION:
+        raise ContractError("execution template renderer version drift")
+    if template.get("control_schema_version") != CONTROL_SCHEMA_VERSION:
+        raise ContractError("execution template control schema drift")
+    if template.get("container_name_rule") != CONTAINER_NAME_RULE:
+        raise ContractError("execution template container-name rule drift")
+    if template.get("lifecycle") != list(CONTAINER_LIFECYCLE):
+        raise ContractError("execution template lifecycle drift")
+    return template
+
+
+def validate_execution_template(
+    template: Any,
+    *,
+    expected_image_id: str,
+    expected_source_commit: str,
+    inputs: Sequence[Mapping[str, Any]],
+    expected_environment: Sequence[str] | None = None,
+    expected_cell_order_sha256: str | None = None,
+) -> str:
+    """Rebuild the template from trusted inputs and require exact equality."""
+
+    template = _template_shape(template)
+    environment = template.get("environment") if expected_environment is None else expected_environment
+    cell_order = (
+        template.get("cell_order_sha256")
+        if expected_cell_order_sha256 is None
+        else expected_cell_order_sha256
+    )
+    rebuilt = build_execution_template(
+        image_id=expected_image_id,
+        source_commit=expected_source_commit,
+        environment=environment,
+        inputs=inputs,
+        cell_order_sha256=cell_order,
+    )
+    if dict(template) != rebuilt:
+        drift = sorted(key for key in rebuilt if template.get(key) != rebuilt[key])
+        raise ContractError(f"execution template drift: {drift!r}")
+    return canonical_json_sha256(rebuilt)
+
+
+def execution_template_sha256(template: Mapping[str, Any]) -> str:
+    return canonical_json_sha256(_template_shape(template))
+
+
+def render_authorized_execution(
+    template: Mapping[str, Any], authorization_id: str
+) -> dict[str, Any]:
+    """Render the exact Docker create plan for one authorization ID."""
+
+    template = _template_shape(template)
+    authorization_id = _require_hex(authorization_id, 64, "authorization_id")
+    if template.get("container_command") != list(SCIENTIFIC_COMMAND):
+        raise ContractError("execution template command drift")
+    name = CONTAINER_NAME_RULE.format(authorization_id=authorization_id)
+    gpu_ids = template["gpu_device_ids"]
+    if gpu_ids != [EXPECTED_GPU_UUID]:
+        raise ContractError("execution template GPU device drift")
+    argv = [
+        "docker",
+        "create",
+        "--name",
+        name,
+        "--network",
+        str(template["network_mode"]),
+        "--read-only",
+        "--tmpfs",
+        f"/tmp:{template['tmpfs']['/tmp']}",
+        "--cap-drop",
+        "ALL",
+        "--security-opt",
+        "no-new-privileges",
+        "--restart",
+        str(template["restart_policy"]),
+        "--user",
+        str(template["user"]),
+        "--workdir",
+        str(template["working_dir"]),
+        "--cpus",
+        str(template["cpu_limit_cores"]),
+        "--gpus",
+        f"device={gpu_ids[0]}",
+    ]
+    for mount in canonical_mounts(template["mounts"]):
+        if mount["type"] == "tmpfs":
+            continue
+        argv.extend(
+            (
+                "--mount",
+                f"type=bind,src={mount['source']},dst={mount['destination']}"
+                + (",readonly" if mount["read_only"] else ""),
+            )
+        )
+    argv.append(str(template["image_id"]))
+    argv.extend(str(item) for item in template["container_command"])
+    runtime = {
+        "image_id": template["image_id"],
+        "container_name": name,
+        "entrypoint": list(template["entrypoint"]),
+        "cmd": list(template["container_command"]),
+        "environment": list(template["environment"]),
+        "working_dir": template["working_dir"],
+        "user": template["user"],
+        "network_mode": template["network_mode"],
+        "read_only_root_filesystem": template["read_only_root_filesystem"],
+        "tmpfs": dict(template["tmpfs"]),
+        "cap_drop": list(template["cap_drop"]),
+        "security_opt": list(template["security_opt"]),
+        "restart_policy": template["restart_policy"],
+        "nano_cpus": template["nano_cpus"],
+        "gpu_device_ids": list(gpu_ids),
+        "gpu_capabilities": [list(item) for item in template["gpu_capabilities"]],
+        "mounts": canonical_mounts(template["mounts"]),
+    }
+    return {
+        "domain": INSTANTIATED_EXECUTION_DOMAIN,
+        "renderer_version": RENDERER_VERSION,
+        "execution_template_sha256": canonical_json_sha256(template),
+        "authorization_id": authorization_id,
+        "container_name": name,
+        "docker_create_argv": argv,
+        "docker_start_argv_template": ["docker", "start", "--attach", "__CONTAINER_ID__"],
+        "runtime": runtime,
+    }
+
+
+def instantiated_execution_configuration_sha256(instantiated: Mapping[str, Any]) -> str:
+    return canonical_json_sha256(instantiated)
+
+
+def _normalize_inspect_mounts(inspect: Mapping[str, Any]) -> list[dict[str, Any]]:
+    mounts = inspect.get("Mounts")
+    if not isinstance(mounts, list):
+        raise ContractError("docker inspect mount list is absent")
+    rows: list[dict[str, Any]] = []
+    for row in mounts:
+        if not isinstance(row, Mapping) or row.get("Type") != "bind":
+            raise ContractError("docker inspect has an unregistered non-bind mount")
+        if str(row.get("Propagation", "rprivate")) not in ("", "rprivate"):
+            raise ContractError("bind mount propagation must be rprivate")
+        if not isinstance(row.get("RW"), bool):
+            raise ContractError("docker inspect mount RW flag must be a boolean")
+        rows.append(
+            {
+                "type": "bind",
+                "source": str(row.get("Source", "")),
+                "destination": str(row.get("Destination", "")),
+                "read_only": not row["RW"],
+            }
+        )
+    host = inspect.get("HostConfig")
+    tmpfs = host.get("Tmpfs") if isinstance(host, Mapping) else None
+    if not isinstance(tmpfs, Mapping) or set(tmpfs) != {"/tmp"}:
+        raise ContractError("docker inspect requires exactly one /tmp tmpfs")
+    options = set(str(tmpfs["/tmp"]).split(","))
+    size = {item for item in options if item.startswith("size=")}
+    if options - size != {"rw", "noexec", "nosuid"} or size not in (
+        {"size=1g"},
+        {"size=1073741824"},
+    ):
+        raise ContractError("/tmp tmpfs option drift")
+    rows.append(
+        {
+            "type": "tmpfs",
+            "source": "",
+            "destination": "/tmp",
+            "read_only": False,
+            "options": CONTAINER_TMPFS_OPTIONS,
+        }
+    )
+    return canonical_mounts(rows)
+
+
+def _one_container(inspect_value: Any, label: str) -> Mapping[str, Any]:
+    if (
+        not isinstance(inspect_value, list)
+        or len(inspect_value) != 1
+        or not isinstance(inspect_value[0], Mapping)
+    ):
+        raise ContractError(f"{label} docker inspect must contain exactly one container")
+    inspect = inspect_value[0]
+    for field in ("HostConfig", "Config"):
+        if not isinstance(inspect.get(field), Mapping):
+            raise ContractError(f"{label} docker inspect lacks {field}")
+    return inspect
+
+
+def normalize_runtime_inspect_execution(inspect_value: Any) -> dict[str, Any]:
+    """Project raw ``docker inspect`` onto the rendered runtime execution object."""
+
+    inspect = _one_container(inspect_value, "scientific")
+    host = inspect["HostConfig"]
+    config = inspect["Config"]
+    requests = host.get("DeviceRequests")
+    if not isinstance(requests, list) or len(requests) != 1 or not isinstance(requests[0], Mapping):
+        raise ContractError("scientific container must request exactly one GPU device")
+    request = requests[0]
+    if request.get("Count") not in (0, -1):
+        raise ContractError("scientific container GPU request count drift")
+    if request.get("Driver") not in (None, "", "nvidia"):
+        raise ContractError("scientific container GPU driver request drift")
+    if request.get("Options") not in (None, {}):
+        raise ContractError("scientific container GPU request options drift")
+    restart = host.get("RestartPolicy")
+    if not isinstance(restart, Mapping) or restart.get("Name") not in ("", "no"):
+        raise ContractError("scientific container restart policy drift")
+    if int(restart.get("MaximumRetryCount", 0)) != 0:
+        raise ContractError("scientific container retry count drift")
+    security = []
+    for item in host.get("SecurityOpt") or []:
+        text = str(item)
+        security.append("no-new-privileges" if text == "no-new-privileges:true" else text)
+    mounts = _normalize_inspect_mounts(inspect)
+    return {
+        "image_id": str(inspect.get("Image", "")),
+        "container_name": str(inspect.get("Name", "")).lstrip("/"),
+        "entrypoint": config.get("Entrypoint"),
+        "cmd": config.get("Cmd"),
+        "environment": config.get("Env"),
+        "working_dir": config.get("WorkingDir"),
+        "user": config.get("User"),
+        "network_mode": host.get("NetworkMode"),
+        "read_only_root_filesystem": host.get("ReadonlyRootfs"),
+        "tmpfs": {"/tmp": CONTAINER_TMPFS_OPTIONS},
+        "cap_drop": sorted(str(item) for item in (host.get("CapDrop") or [])),
+        "security_opt": security,
+        "restart_policy": "no",
+        "nano_cpus": host.get("NanoCpus"),
+        "gpu_device_ids": request.get("DeviceIDs"),
+        "gpu_capabilities": request.get("Capabilities"),
+        "mounts": mounts,
+    }
+
+
+def _launch_plan_inputs(input_binding: Mapping[str, Any]) -> list[dict[str, Any]]:
+    validate_static_input_binding(input_binding)
+    return [
+        {"source": row["staged_path"], "destination": row["container_path"]}
+        for row in input_binding["files"]
+    ]
+
+
+def validate_launch_template_plan(
+    plan: Any,
+    *,
+    input_binding: Mapping[str, Any],
+    expected_image_id: str,
+    expected_source_commit: str,
+    expected_environment: Sequence[str] | None = None,
+) -> tuple[str, str]:
+    """Validate a schema-2 HOST_LAUNCH_PLAN.json; return (internal hash, template hash)."""
+
+    if not isinstance(plan, Mapping):
+        raise ContractError("launch plan must be an object")
+    if plan.get("schema_version") != 2 or plan.get("control_schema_version") != CONTROL_SCHEMA_VERSION:
+        raise ContractError("launch plan is not control schema 2")
+    _require_exact_keys(plan, set(LAUNCH_PLAN_KEYS), "launch plan")
+    if plan.get("control_binding_mode") != CONTROL_BINDING_MODE or plan.get("plan_kind") != PLAN_KIND:
+        raise ContractError("launch plan binding mode/kind drift")
+    if plan.get("renderer_version") != RENDERER_VERSION:
+        raise ContractError("launch plan renderer version drift")
+    if plan.get("protocol_id") != PROTOCOL_ID or plan.get("status") != LAUNCH_TEMPLATE_STATUS:
+        raise ContractError("launch plan status/protocol mismatch")
+    _require_bool(plan.get("execution_allowed"), False, "execution_allowed")
+    _require_bool(plan.get("execution_readiness_required"), True, "execution_readiness_required")
+    _require_bool(plan.get("run_authorization_required"), True, "run_authorization_required")
+    if plan.get("launch_plan_hash_definition") != LAUNCH_PLAN_HASH_DEFINITION:
+        raise ContractError("launch plan hash definition drift")
+    internal = _require_hex(plan.get("launch_plan_sha256"), 64, "launch_plan_sha256")
+    body = {
+        key: value
+        for key, value in plan.items()
+        if key not in {"launch_plan_sha256", "launch_plan_hash_definition"}
+    }
+    if canonical_json_sha256(body) != internal:
+        raise ContractError("launch plan self-hash mismatch")
+    image = plan.get("image")
+    if not isinstance(image, Mapping) or set(image) != {"tag", "id"}:
+        raise ContractError("launch plan image record drift")
+    if image.get("id") != expected_image_id:
+        raise ContractError("launch plan image ID differs from the bound image")
+    if plan.get("source_commit") != expected_source_commit:
+        raise ContractError("launch plan source revision differs from the bound source")
+    _require_hex(plan.get("image_inspect_sha256"), 64, "launch plan image_inspect_sha256")
+    if plan.get("input_binding_sha256") != STATIC_INPUT_BINDING_FILE_SHA256:
+        raise ContractError("launch plan input-binding hash differs from the static anchor")
+    if plan.get("output_directory") != str(EXPECTED_HOST_OUTPUT_DIR):
+        raise ContractError("launch plan output directory drift")
+    _require_bool(plan.get("output_empty_at_plan"), True, "output_empty_at_plan")
+    inputs = _launch_plan_inputs(input_binding)
+    inventory = plan.get("input_inventory")
+    if not isinstance(inventory, list) or len(inventory) != 5:
+        raise ContractError("launch plan must contain exactly five inputs")
+    for spec, row, binding_row in zip(
+        REGISTERED_SCIENTIFIC_INPUTS, inventory, input_binding["files"], strict=True
+    ):
+        expected = {
+            "name": spec.name,
+            "source": binding_row["staged_path"],
+            "provenance_source": spec.source_path,
+            "destination": spec.container_path,
+            "sha256": spec.sha256,
+            "bytes": spec.size_bytes,
+            "read_only": True,
+            "symlink": False,
+        }
+        if not isinstance(row, Mapping) or any(row.get(k) != v for k, v in expected.items()):
+            raise ContractError(f"launch plan input registry drift for {spec.name}")
+    cell_order = plan.get("cell_order")
+    if not isinstance(cell_order, list) or len(cell_order) != 30:
+        raise ContractError("launch plan must bind exactly 30 cells")
+    if canonical_json_sha256(cell_order) != plan.get("cell_order_sha256"):
+        raise ContractError("launch plan cell-order hash mismatch")
+    if plan.get("runtime") != {
+        "gpu_index": 0,
+        "gpu_name": "NVIDIA GeForce RTX 4070 Ti SUPER",
+        "gpu_uuid": EXPECTED_GPU_UUID,
+        "max_concurrent_scientific_processes": 1,
+        "network": "none",
+        "root_filesystem_read_only": True,
+        "single_process": True,
+        "user": CONTAINER_USER,
+    }:
+        raise ContractError("launch plan runtime registry drift")
     for field in (
+        "PACS_records_decoded",
+        "PACS_labels_inspected",
+        "PACS_scientific_content_opened",
+        "torch_imported",
+        "CUDA_touched",
+    ):
+        _require_bool(plan.get(field), False, field)
+    template_hash = validate_execution_template(
+        plan.get("execution_template"),
+        expected_image_id=expected_image_id,
+        expected_source_commit=expected_source_commit,
+        inputs=inputs,
+        expected_environment=expected_environment,
+        expected_cell_order_sha256=plan.get("cell_order_sha256"),
+    )
+    if plan.get("execution_template_sha256") != template_hash:
+        raise ContractError("launch plan execution-template hash mismatch")
+    return internal, template_hash
+
+
+def validate_mount_declaration(
+    value: Any,
+    *,
+    launch_plan: Mapping[str, Any],
+    expected_image_id: str,
+) -> None:
+    """Validate MOUNT_RECEIPT.json as a pre-execution declaration only."""
+
+    if not isinstance(value, Mapping):
+        raise ContractError("mount declaration must be an object")
+    if value.get("schema_version") != 2 or value.get("control_schema_version") != CONTROL_SCHEMA_VERSION:
+        raise ContractError("mount declaration is not control schema 2")
+    _require_exact_keys(value, set(MOUNT_RECEIPT_KEYS), "mount declaration")
+    if value.get("control_binding_mode") != CONTROL_BINDING_MODE:
+        raise ContractError("mount declaration binding mode drift")
+    if value.get("protocol_id") != PROTOCOL_ID or value.get("status") != MOUNT_DECLARATION_STATUS:
+        raise ContractError("mount declaration status/protocol mismatch")
+    if value.get("evidence_role") != MOUNT_DECLARATION_ROLE:
+        raise ContractError("mount declaration evidence role drift")
+    if value.get("launch_plan_sha256") != launch_plan.get("launch_plan_sha256"):
+        raise ContractError("mount declaration launch-plan mismatch")
+    if value.get("execution_template_sha256") != launch_plan.get("execution_template_sha256"):
+        raise ContractError("mount declaration execution-template mismatch")
+    if value.get("input_binding_sha256") != STATIC_INPUT_BINDING_FILE_SHA256:
+        raise ContractError("mount declaration input-binding mismatch")
+    if value.get("image_id") != expected_image_id:
+        raise ContractError("mount declaration image ID differs from the bound image")
+    _require_hex(value.get("container_id"), 64, "mount declaration container_id")
+    if value.get("mounts") != launch_plan["execution_template"]["mounts"]:
+        raise ContractError("mount declaration mount scope differs from the template")
+    if (
+        value.get("network_mode") != "none"
+        or value.get("user") != CONTAINER_USER
+        or value.get("cap_drop") != ["ALL"]
+        or value.get("security_opt") != ["no-new-privileges"]
+        or value.get("device_requests") is not None
+    ):
+        raise ContractError("mount declaration isolation drift")
+    for field in (
+        "read_only_root_filesystem",
         "exact_five_read_only_inputs",
+        "authorization_mount_read_only_per_inspect",
         "one_read_write_output",
         "tmpfs_only_at_tmp",
     ):
         _require_bool(value.get(field), True, field)
-    _require_bool(value.get("GPU_used"), False, "GPU_used")
-    _require_bool(value.get("training_started"), False, "training_started")
+    for field in (
+        "authorization_write_rejection_tested",
+        "legacy_workspace_mounted",
+        "runtime_proof",
+        "PACS_records_decoded",
+        "PACS_labels_inspected",
+        "GPU_used",
+        "training_started",
+    ):
+        _require_bool(value.get(field), False, field)
+
+
+def pre_readiness_control_root_sha256(
+    *,
+    source_commit: str,
+    image_id: str,
+    execution_template_sha256_value: str,
+    file_sha256: Mapping[str, str],
+) -> str:
+    """Domain-separated canonical root over the six pre-readiness control files."""
+
+    if not isinstance(file_sha256, Mapping):
+        raise ContractError("control root file hashes must be an object")
+    _require_exact_keys(file_sha256, set(PRE_READINESS_FILENAMES), "control root files")
+    for name in PRE_READINESS_FILENAMES:
+        _require_hex(file_sha256.get(name), 64, f"control root {name}")
+    return canonical_json_sha256(
+        {
+            "domain": PRE_READINESS_CONTROL_ROOT_DOMAIN,
+            "control_schema_version": CONTROL_SCHEMA_VERSION,
+            "protocol_id": PROTOCOL_ID,
+            "source_commit": _require_hex(source_commit, 40, "control root source_commit"),
+            "image_id": _require_image_id(image_id, "control root image_id"),
+            "execution_template_sha256": _require_hex(
+                execution_template_sha256_value, 64, "control root template hash"
+            ),
+            "files": {name: file_sha256[name] for name in PRE_READINESS_FILENAMES},
+        }
+    )
 
 
 def validate_execution_test_report(
@@ -1499,6 +2228,125 @@ def validate_execution_test_report_against_git_commit(
     _validate_test_report_against_git_commit(value, repository_root)
 
 
+def _read_regular_bytes(path: Path, label: str, *, max_bytes: int = MAX_CONTROL_ARTIFACT_BYTES) -> bytes:
+    path = Path(path)
+    try:
+        metadata = path.lstat()
+    except FileNotFoundError as exc:
+        raise ContractError(f"{label} is absent: {path}") from exc
+    if stat.S_ISLNK(metadata.st_mode) or not stat.S_ISREG(metadata.st_mode):
+        raise ContractError(f"{label} must be a regular nonsymlink file: {path}")
+    flags = os.O_RDONLY | getattr(os, "O_NOFOLLOW", 0)
+    descriptor = os.open(path, flags)
+    try:
+        opened = os.fstat(descriptor)
+        if (opened.st_dev, opened.st_ino) != (metadata.st_dev, metadata.st_ino):
+            raise ContractError(f"{label} was replaced while opening: {path}")
+        if opened.st_size > max_bytes:
+            raise ContractError(f"{label} exceeds the size limit: {path}")
+        chunks: list[bytes] = []
+        while True:
+            chunk = os.read(descriptor, 1024 * 1024)
+            if not chunk:
+                break
+            chunks.append(chunk)
+    finally:
+        os.close(descriptor)
+    return b"".join(chunks)
+
+
+def _junit_passed_nodeids(payload: bytes) -> set[str]:
+    try:
+        root = ElementTree.fromstring(payload)
+    except ElementTree.ParseError as exc:
+        raise ContractError("registered test JUnit XML is not well formed") from exc
+    passed: set[str] = set()
+    for case in root.iter("testcase"):
+        if any(child.tag in ("failure", "error", "skipped") for child in case):
+            continue
+        classname = str(case.get("classname", ""))
+        name = str(case.get("name", ""))
+        passed.add(f"{classname.replace('.', '/')}.py::{name}")
+    return passed
+
+
+def validate_critical_test_nodes(test_junit_path: Path) -> None:
+    """Require every registered control-chain node to have passed in the JUnit XML."""
+
+    passed = _junit_passed_nodeids(_read_regular_bytes(test_junit_path, "test JUnit XML"))
+    missing = [node for node in REQUIRED_EXECUTION_TEST_NODEIDS if node not in passed]
+    if missing:
+        raise ContractError(f"critical control-chain test nodes did not pass: {missing!r}")
+
+
+READINESS_KEYS = frozenset(
+    {
+        "schema_version", "control_schema_version", "control_binding_mode",
+        "renderer_version", "protocol_id", "status", "technical_execution_ready",
+        "run_authorization_required", "run_authorization_issued", "training_authorized",
+        "fresh_output_required", "resume_authorized",
+        "pre_readiness_control_root_sha256", "launch_plan_file_sha256",
+        "launch_plan_sha256", "execution_template_sha256", "input_binding_sha256",
+        "mount_receipt_sha256", "source_commit", "image_id", "image_source_revision",
+        "image_inspect_sha256", "source_manifest_sha256", "runtime_inventory_sha256",
+        "build_inventory_sha256", "dockerfile_sha256", "requirements_lock_sha256",
+        "orchestrator_sha256", "state_machine_sha256", "execution_binding_sha256",
+        "finalizer_sha256", "posttrain_sha256", "test_report_sha256",
+        "source_probe_receipt_sha256", "cell_order_sha256", "critical_test_nodeids",
+        "planned_cells", "max_concurrent_scientific_processes", "total_gpu_hour_cap",
+        "sealed_capacity_gpu_hours", "remaining_scientific_walltime_hours",
+        "scientific_execution_timeout_seconds",
+        "post_timeout_cleanup_command_bound_seconds",
+        "scientific_cleanup_reserve_seconds", "scientific_cleanup_safety_margin_seconds",
+        "cpu_limit_cores", "maximum_cpu_core_hours", "host_control_dir",
+        "host_input_dir", "host_output_dir", "host_log_dir",
+        "container_authorization_dir", "container_output_dir", "container_entry_module",
+        "container_command", "authorization_method_required",
+        "authorization_threat_model", "trusted_computing_base",
+        "scientific_output_empty_when_readiness_issued", "PACS_opened",
+        "PACS_inference_started", "PACS_training_started", "GPU_used",
+        "readiness_sha256", "readiness_sha256_definition",
+    }
+)
+READINESS_FILE_FIELDS = {
+    "HOST_LAUNCH_PLAN.json": "launch_plan_file_sha256",
+    "INPUT_BINDING.json": "input_binding_sha256",
+    "MOUNT_RECEIPT.json": "mount_receipt_sha256",
+    "SOURCE_MANIFEST.json": "source_manifest_sha256",
+    "SOURCE_PROBE_RECEIPT.json": "source_probe_receipt_sha256",
+    "TEST_REPORT.json": "test_report_sha256",
+}
+AUTHORIZATION_THREAT_MODEL = (
+    "trusted-host procedural authorization; no cryptographic signer identity claim"
+)
+
+
+def _image_record(image_inspect_value: Any, image_id: str, source_commit: str) -> Mapping[str, Any]:
+    if (
+        not isinstance(image_inspect_value, list)
+        or len(image_inspect_value) != 1
+        or not isinstance(image_inspect_value[0], Mapping)
+    ):
+        raise ContractError("image inspect must contain exactly one image")
+    image = image_inspect_value[0]
+    config = image.get("Config")
+    if not isinstance(config, Mapping) or image.get("Id") != image_id:
+        raise ContractError("image inspect immutable ID mismatch")
+    labels = config.get("Labels") or {}
+    if not isinstance(labels, Mapping) or labels.get(
+        "org.opencontainers.image.revision"
+    ) != source_commit:
+        raise ContractError("image inspect source-revision label mismatch")
+    environment = config.get("Env")
+    if not isinstance(environment, list) or f"FEDCORE_SOURCE_COMMIT={source_commit}" not in environment:
+        raise ContractError("image inspect lacks the immutable source environment")
+    if config.get("Entrypoint") != ["python"] or config.get("User") != CONTAINER_USER:
+        raise ContractError("image inspect entrypoint/user mismatch")
+    if config.get("WorkingDir") != CONTAINER_WORKDIR:
+        raise ContractError("image inspect working directory mismatch")
+    return image
+
+
 def build_execution_readiness(
     *,
     static_launch_plan_path: Path,
@@ -1522,26 +2370,51 @@ def build_execution_readiness(
     host_control_dir: Path,
     host_output_dir: Path,
 ) -> dict[str, Any]:
-    """Create technical readiness without creating run authorization."""
+    """Create technical readiness without creating run authorization.
+
+    Every control artifact is read once from its actual bytes; no caller-supplied
+    artifact hash is accepted.
+    """
 
     _validate_gpu_resource_cap_invariant()
-    plan = _read_object(static_launch_plan_path)
-    binding = _read_object(input_binding_path)
-    mount = _read_object(mount_receipt_path)
-    validate_static_launch_plan(plan)
-    validate_static_input_binding(binding)
-    validate_static_mount_receipt(mount)
-    if sha256_file(static_launch_plan_path) != STATIC_LAUNCH_PLAN_FILE_SHA256:
-        raise ContractError("local static launch-plan file hash mismatch")
-    if sha256_file(input_binding_path) != STATIC_INPUT_BINDING_FILE_SHA256:
+    control = {
+        "HOST_LAUNCH_PLAN.json": read_control_artifact(static_launch_plan_path, require_read_only=True),
+        "INPUT_BINDING.json": read_control_artifact(input_binding_path, require_read_only=True),
+        "MOUNT_RECEIPT.json": read_control_artifact(mount_receipt_path, require_read_only=True),
+        "SOURCE_MANIFEST.json": read_control_artifact(source_manifest_path, require_read_only=True),
+        "SOURCE_PROBE_RECEIPT.json": read_control_artifact(
+            source_probe_receipt_path, require_read_only=True
+        ),
+        "TEST_REPORT.json": read_control_artifact(test_report_path, require_read_only=True),
+    }
+    image_artifact = read_control_artifact(image_inspect_path, require_object=False)
+    plan = control["HOST_LAUNCH_PLAN.json"].value
+    binding = control["INPUT_BINDING.json"].value
+    mount = control["MOUNT_RECEIPT.json"].value
+    if control["INPUT_BINDING.json"].sha256 != STATIC_INPUT_BINDING_FILE_SHA256:
         raise ContractError("local input-binding file hash mismatch")
-    if sha256_file(mount_receipt_path) != STATIC_MOUNT_RECEIPT_FILE_SHA256:
-        raise ContractError("local mount-receipt file hash mismatch")
+    validate_static_input_binding(binding)
     source_commit = _require_hex(source_commit, 40, "source_commit")
-    source_manifest = _read_object(source_manifest_path)
+    image_id = _require_image_id(image_id, "image_id")
+    image = _image_record(image_artifact.value, image_id, source_commit)
+    config = image["Config"]
+    labels = config.get("Labels") or {}
+    plan_internal, template_hash = validate_launch_template_plan(
+        plan,
+        input_binding=binding,
+        expected_image_id=image_id,
+        expected_source_commit=source_commit,
+        expected_environment=list(config["Env"]),
+    )
+    if plan.get("image_inspect_sha256") != image_artifact.sha256:
+        raise ContractError("launch plan was rendered from a different image inspect")
+    validate_mount_declaration(mount, launch_plan=plan, expected_image_id=image_id)
+
+    source_manifest = control["SOURCE_MANIFEST.json"].value
     runtime_sources, build_sources = validate_scientific_source_manifest(
         source_manifest, expected_source_commit=source_commit
     )
+    del runtime_sources
     repository_root = Path(execution_binding_path).resolve().parents[2]
     _validate_manifest_files(
         source_manifest,
@@ -1550,32 +2423,7 @@ def build_execution_readiness(
         include_build=True,
     )
     _validate_manifest_against_git_commit(source_manifest, repository_root)
-    source_manifest_file_sha256 = _hash_regular_file(
-        source_manifest_path, "source manifest"
-    )
-    if not isinstance(image_id, str) or not image_id.startswith("sha256:"):
-        raise ContractError("image_id must be an immutable sha256 reference")
-    _require_hex(image_id.removeprefix("sha256:"), 64, "image_id")
-    image_inspect_sha256 = _hash_regular_file(image_inspect_path, "image inspect")
-    try:
-        image_inspect = json.loads(Path(image_inspect_path).read_text(encoding="utf-8"))
-    except (OSError, UnicodeError, json.JSONDecodeError) as exc:
-        raise ContractError("image inspect is not valid JSON") from exc
-    if (
-        not isinstance(image_inspect, list)
-        or len(image_inspect) != 1
-        or not isinstance(image_inspect[0], Mapping)
-    ):
-        raise ContractError("image inspect must contain exactly one image")
-    image = image_inspect[0]
-    config = image.get("Config")
-    if not isinstance(config, Mapping) or image.get("Id") != image_id:
-        raise ContractError("image inspect immutable ID mismatch")
-    labels = config.get("Labels") or {}
-    if not isinstance(labels, Mapping) or labels.get(
-        "org.opencontainers.image.revision"
-    ) != source_commit:
-        raise ContractError("image inspect source-revision label mismatch")
+    source_manifest_file_sha256 = control["SOURCE_MANIFEST.json"].sha256
     expected_labels = {
         SOURCE_MANIFEST_LABEL: source_manifest_file_sha256,
         RUNTIME_INVENTORY_LABEL: source_manifest["runtime_inventory_sha256"],
@@ -1594,12 +2442,7 @@ def build_execution_readiness(
     for label, expected in expected_labels.items():
         if labels.get(label) != expected:
             raise ContractError(f"image inspect scientific source label mismatch: {label}")
-    environment = {str(item) for item in (config.get("Env") or [])}
-    if f"FEDCORE_SOURCE_COMMIT={source_commit}" not in environment:
-        raise ContractError("image inspect lacks the immutable source environment")
-    if config.get("Entrypoint") != ["python"] or config.get("User") != "1000:1000":
-        raise ContractError("image inspect entrypoint/user mismatch")
-    test_report = _read_object(test_report_path)
+    test_report = control["TEST_REPORT.json"].value
     validate_execution_test_report(
         test_report,
         expected_image_id=image_id,
@@ -1641,7 +2484,8 @@ def build_execution_readiness(
         != test_report["pytest_stdout_sha256"]
     ):
         raise ContractError("raw pytest transcript differs from the test report")
-    source_probe = _read_object(source_probe_receipt_path)
+    validate_critical_test_nodes(test_junit_path)
+    source_probe = control["SOURCE_PROBE_RECEIPT.json"].value
     validate_source_probe_receipt(
         source_probe,
         source_manifest=source_manifest,
@@ -1666,10 +2510,8 @@ def build_execution_readiness(
         ),
         "finalizer_sha256": _hash_regular_file(finalizer_path, "campaign finalizer"),
         "posttrain_sha256": _hash_regular_file(posttrain_path, "post-training module"),
-        "test_report_sha256": _hash_regular_file(test_report_path, "test report"),
-        "source_probe_receipt_sha256": _hash_regular_file(
-            source_probe_receipt_path, "source-probe receipt"
-        ),
+        "test_report_sha256": control["TEST_REPORT.json"].sha256,
+        "source_probe_receipt_sha256": control["SOURCE_PROBE_RECEIPT.json"].sha256,
         "cell_order_sha256": _hash_regular_file(cell_order_path, "cell-order manifest"),
     }
     control_dir = _require_real_directory(host_control_dir, "host control directory")
@@ -1680,8 +2522,19 @@ def build_execution_readiness(
         raise ContractError("host control/output path differs from the fixed execution root")
     if control_dir == output_dir or control_dir in output_dir.parents or output_dir in control_dir.parents:
         raise ContractError("control and scientific output directories must be disjoint")
+    root = pre_readiness_control_root_sha256(
+        source_commit=source_commit,
+        image_id=image_id,
+        execution_template_sha256_value=template_hash,
+        file_sha256={name: artifact.sha256 for name, artifact in control.items()},
+    )
+    for artifact in (*control.values(), image_artifact):
+        recheck_control_artifact(artifact)
     body = {
-        "schema_version": 1,
+        "schema_version": 2,
+        "control_schema_version": CONTROL_SCHEMA_VERSION,
+        "control_binding_mode": CONTROL_BINDING_MODE,
+        "renderer_version": RENDERER_VERSION,
         "protocol_id": PROTOCOL_ID,
         "status": READINESS_STATUS,
         "technical_execution_ready": True,
@@ -1690,16 +2543,18 @@ def build_execution_readiness(
         "training_authorized": False,
         "fresh_output_required": True,
         "resume_authorized": False,
-        "static_binding_root_sha256": STATIC_BINDING_ROOT_SHA256,
-        "static_launch_plan_file_sha256": STATIC_LAUNCH_PLAN_FILE_SHA256,
-        "static_launch_plan_sha256": STATIC_LAUNCH_PLAN_SHA256,
-        "input_binding_sha256": STATIC_INPUT_BINDING_FILE_SHA256,
-        "mount_receipt_sha256": STATIC_MOUNT_RECEIPT_FILE_SHA256,
+        "pre_readiness_control_root_sha256": root,
+        "launch_plan_file_sha256": control["HOST_LAUNCH_PLAN.json"].sha256,
+        "launch_plan_sha256": plan_internal,
+        "execution_template_sha256": template_hash,
+        "input_binding_sha256": control["INPUT_BINDING.json"].sha256,
+        "mount_receipt_sha256": control["MOUNT_RECEIPT.json"].sha256,
         "source_commit": source_commit,
         "image_id": image_id,
         "image_source_revision": source_commit,
-        "image_inspect_sha256": image_inspect_sha256,
+        "image_inspect_sha256": image_artifact.sha256,
         **source_hashes,
+        "critical_test_nodeids": list(REQUIRED_EXECUTION_TEST_NODEIDS),
         "planned_cells": 30,
         "max_concurrent_scientific_processes": 1,
         "total_gpu_hour_cap": TOTAL_GPU_HOUR_CAP,
@@ -1716,15 +2571,16 @@ def build_execution_readiness(
         "cpu_limit_cores": CPU_LIMIT_CORES,
         "maximum_cpu_core_hours": MAXIMUM_CPU_CORE_HOURS,
         "host_control_dir": str(control_dir),
+        "host_input_dir": str(ISOLATED_INPUT_DIRECTORY),
         "host_output_dir": str(output_dir),
+        "host_log_dir": str(EXPECTED_HOST_LOG_DIR),
         "container_authorization_dir": str(CONTAINER_AUTHORIZATION_DIR),
         "container_output_dir": str(CONTAINER_OUTPUT_DIR),
         "container_entry_module": "fedcore.experiments.v3_campaign_runner",
         "container_command": list(SCIENTIFIC_COMMAND),
         "authorization_method_required": AUTHORIZATION_METHOD,
-        "authorization_threat_model": (
-            "trusted-host procedural authorization; no cryptographic signer identity claim"
-        ),
+        "authorization_threat_model": AUTHORIZATION_THREAT_MODEL,
+        "trusted_computing_base": TRUSTED_COMPUTING_BASE,
         "scientific_output_empty_when_readiness_issued": True,
         "PACS_opened": False,
         "PACS_inference_started": False,
@@ -1734,44 +2590,45 @@ def build_execution_readiness(
     return _self_hashed(body, "readiness_sha256")
 
 
+def _launch_plan_self_hash(plan: Any) -> str:
+    if not isinstance(plan, Mapping):
+        raise ContractError("launch plan must be an object")
+    digest = _require_hex(plan.get("launch_plan_sha256"), 64, "launch_plan_sha256")
+    body = {
+        key: value
+        for key, value in plan.items()
+        if key not in {"launch_plan_sha256", "launch_plan_hash_definition"}
+    }
+    if canonical_json_sha256(body) != digest:
+        raise ContractError("launch plan self-hash mismatch")
+    return digest
+
+
 def validate_execution_readiness(
     value: Mapping[str, Any],
     *,
     static_launch_plan: Mapping[str, Any],
     input_binding: Mapping[str, Any],
     mount_receipt: Mapping[str, Any],
+    artifact_sha256: Mapping[str, str],
     expected_source_commit: str | None = None,
 ) -> str:
+    """Validate readiness against the actual bytes of the six pre-readiness files.
+
+    ``artifact_sha256`` must be computed by the caller from the exact bytes it
+    read; it is compared with readiness and folded into the control root.
+    """
+
+    if not isinstance(value, Mapping):
+        raise ContractError("execution readiness must be an object")
+    if value.get("schema_version") != 2 or value.get("control_schema_version") != CONTROL_SCHEMA_VERSION:
+        raise ContractError("execution readiness is not control schema 2")
     digest = _validate_self_hash(value, "readiness_sha256", "execution readiness")
-    expected_keys = {
-        "schema_version", "protocol_id", "status", "technical_execution_ready",
-        "run_authorization_required", "run_authorization_issued", "training_authorized",
-        "fresh_output_required", "resume_authorized", "static_binding_root_sha256",
-        "static_launch_plan_file_sha256", "static_launch_plan_sha256",
-        "input_binding_sha256", "mount_receipt_sha256", "source_commit", "image_id",
-        "image_source_revision", "image_inspect_sha256", "source_manifest_sha256",
-        "runtime_inventory_sha256", "build_inventory_sha256", "dockerfile_sha256",
-        "requirements_lock_sha256",
-        "orchestrator_sha256", "state_machine_sha256", "execution_binding_sha256",
-        "finalizer_sha256", "posttrain_sha256", "test_report_sha256",
-        "source_probe_receipt_sha256",
-        "cell_order_sha256", "planned_cells", "max_concurrent_scientific_processes",
-        "total_gpu_hour_cap", "sealed_capacity_gpu_hours",
-        "remaining_scientific_walltime_hours", "scientific_execution_timeout_seconds",
-        "post_timeout_cleanup_command_bound_seconds",
-        "scientific_cleanup_reserve_seconds",
-        "scientific_cleanup_safety_margin_seconds", "cpu_limit_cores",
-        "maximum_cpu_core_hours",
-        "host_control_dir", "host_output_dir", "container_authorization_dir",
-        "container_output_dir", "container_entry_module", "container_command",
-        "authorization_method_required", "authorization_threat_model",
-        "scientific_output_empty_when_readiness_issued", "PACS_opened",
-        "PACS_inference_started", "PACS_training_started", "GPU_used",
-        "readiness_sha256", "readiness_sha256_definition",
-    }
-    _require_exact_keys(value, expected_keys, "execution readiness")
-    if value.get("schema_version") != 1:
-        raise ContractError("execution-readiness schema version mismatch")
+    _require_exact_keys(value, set(READINESS_KEYS), "execution readiness")
+    if value.get("control_binding_mode") != CONTROL_BINDING_MODE:
+        raise ContractError("execution-readiness binding mode drift")
+    if value.get("renderer_version") != RENDERER_VERSION:
+        raise ContractError("execution-readiness renderer version drift")
     if value.get("protocol_id") != PROTOCOL_ID or value.get("status") != READINESS_STATUS:
         raise ContractError("execution-readiness status/protocol mismatch")
     _require_bool(value.get("technical_execution_ready"), True, "technical_execution_ready")
@@ -1780,28 +2637,52 @@ def validate_execution_readiness(
     _require_bool(value.get("training_authorized"), False, "training_authorized")
     _require_bool(value.get("fresh_output_required"), True, "fresh_output_required")
     _require_bool(value.get("resume_authorized"), False, "resume_authorized")
-    if value.get("static_binding_root_sha256") != STATIC_BINDING_ROOT_SHA256:
-        raise ContractError("readiness static-binding root mismatch")
-    if value.get("static_launch_plan_file_sha256") != STATIC_LAUNCH_PLAN_FILE_SHA256:
-        raise ContractError("readiness static-plan file mismatch")
-    if value.get("static_launch_plan_sha256") != STATIC_LAUNCH_PLAN_SHA256:
-        raise ContractError("readiness static-plan hash mismatch")
+    if not isinstance(artifact_sha256, Mapping):
+        raise ContractError("actual artifact hashes are absent")
+    _require_exact_keys(artifact_sha256, set(PRE_READINESS_FILENAMES), "actual artifact hashes")
+    for name, field in READINESS_FILE_FIELDS.items():
+        _require_hex(artifact_sha256.get(name), 64, f"actual hash of {name}")
+        if value.get(field) != artifact_sha256[name]:
+            raise ContractError(f"readiness {field} differs from the actual {name} bytes")
+    # Each supplied object must be the canonical encoding of the file whose
+    # actual-byte hash was supplied for that role; this also refuses
+    # non-canonical byte drift and role-swapped hashes.
+    for name, supplied in (
+        ("HOST_LAUNCH_PLAN.json", static_launch_plan),
+        ("INPUT_BINDING.json", input_binding),
+        ("MOUNT_RECEIPT.json", mount_receipt),
+    ):
+        if canonical_json_sha256(supplied) != artifact_sha256[name]:
+            raise ContractError(f"{name} is not the canonical encoding of its actual bytes")
     if value.get("input_binding_sha256") != STATIC_INPUT_BINDING_FILE_SHA256:
-        raise ContractError("readiness input-binding hash mismatch")
-    if value.get("mount_receipt_sha256") != STATIC_MOUNT_RECEIPT_FILE_SHA256:
-        raise ContractError("readiness mount-receipt hash mismatch")
-    validate_static_launch_plan(static_launch_plan)
-    validate_static_input_binding(input_binding)
-    validate_static_mount_receipt(mount_receipt)
+        raise ContractError("readiness input-binding hash differs from the static anchor")
     source_commit = _require_hex(value.get("source_commit"), 40, "source_commit")
     if expected_source_commit is not None and source_commit != expected_source_commit:
         raise ContractError("readiness source commit differs from the running image")
     if value.get("image_source_revision") != source_commit:
         raise ContractError("readiness image/source label mismatch")
-    image_id = str(value.get("image_id", ""))
-    if not image_id.startswith("sha256:"):
-        raise ContractError("readiness image ID is mutable or absent")
-    _require_hex(image_id.removeprefix("sha256:"), 64, "image_id")
+    image_id = _require_image_id(value.get("image_id"), "readiness image_id")
+    plan_internal, template_hash = validate_launch_template_plan(
+        static_launch_plan,
+        input_binding=input_binding,
+        expected_image_id=image_id,
+        expected_source_commit=source_commit,
+    )
+    if value.get("launch_plan_sha256") != plan_internal:
+        raise ContractError("readiness launch-plan internal hash mismatch")
+    if value.get("execution_template_sha256") != template_hash:
+        raise ContractError("readiness execution-template hash mismatch")
+    if static_launch_plan.get("image_inspect_sha256") != value.get("image_inspect_sha256"):
+        raise ContractError("readiness image inspect differs from the launch plan")
+    validate_mount_declaration(mount_receipt, launch_plan=static_launch_plan, expected_image_id=image_id)
+    root = pre_readiness_control_root_sha256(
+        source_commit=source_commit,
+        image_id=image_id,
+        execution_template_sha256_value=template_hash,
+        file_sha256=artifact_sha256,
+    )
+    if value.get("pre_readiness_control_root_sha256") != root:
+        raise ContractError("readiness pre-readiness control root mismatch")
     for field in (
         "image_inspect_sha256",
         "source_manifest_sha256",
@@ -1819,6 +2700,8 @@ def validate_execution_readiness(
         "cell_order_sha256",
     ):
         _require_hex(value.get(field), 64, field)
+    if value.get("critical_test_nodeids") != list(REQUIRED_EXECUTION_TEST_NODEIDS):
+        raise ContractError("readiness critical test-node registry drift")
     if value.get("planned_cells") != 30 or value.get("max_concurrent_scientific_processes") != 1:
         raise ContractError("readiness cell/process denominator drift")
     _validate_gpu_resource_cap_invariant()
@@ -1849,29 +2732,99 @@ def validate_execution_readiness(
         raise ContractError("readiness scientific command drift")
     if value.get("host_control_dir") != str(EXPECTED_HOST_CONTROL_DIR):
         raise ContractError("readiness host control directory drift")
+    if value.get("host_input_dir") != str(ISOLATED_INPUT_DIRECTORY):
+        raise ContractError("readiness host input directory drift")
     if value.get("host_output_dir") != str(EXPECTED_HOST_OUTPUT_DIR):
         raise ContractError("readiness host output directory drift")
+    if value.get("host_log_dir") != str(EXPECTED_HOST_LOG_DIR):
+        raise ContractError("readiness host log directory drift")
+    template_paths = static_launch_plan["execution_template"]["paths"]
+    if template_paths != {
+        "control": value["host_control_dir"],
+        "input": value["host_input_dir"],
+        "output": value["host_output_dir"],
+        "log": value["host_log_dir"],
+    }:
+        raise ContractError("readiness host paths differ from the execution template")
     if value.get("authorization_method_required") != AUTHORIZATION_METHOD:
         raise ContractError("readiness authorization method drift")
-    if value.get("authorization_threat_model") != (
-        "trusted-host procedural authorization; no cryptographic signer identity claim"
-    ):
+    if value.get("authorization_threat_model") != AUTHORIZATION_THREAT_MODEL:
         raise ContractError("readiness authorization threat model drift")
-    for field in (
+    if value.get("trusted_computing_base") != TRUSTED_COMPUTING_BASE:
+        raise ContractError("readiness trusted computing base drift")
+    _require_bool(
+        value.get("scientific_output_empty_when_readiness_issued"),
+        True,
         "scientific_output_empty_when_readiness_issued",
-    ):
-        _require_bool(value.get(field), True, field)
+    )
     for field in ("PACS_opened", "PACS_inference_started", "PACS_training_started", "GPU_used"):
         _require_bool(value.get(field), False, field)
     return digest
+
+
+AUTHORIZATION_KEYS = frozenset(
+    {
+        "schema_version", "control_schema_version", "control_binding_mode",
+        "protocol_id", "status", "training_authorized", "scope", "readiness_sha256",
+        "authorization_challenge_sha256", "authorization_method", "source_commit",
+        "image_id", "input_binding_sha256", "launch_plan_file_sha256",
+        "launch_plan_sha256", "mount_receipt_sha256",
+        "pre_readiness_control_root_sha256", "execution_template_sha256",
+        "renderer_version", "instantiated_execution_configuration_sha256",
+        "cell_order_sha256", "host_output_dir", "planned_cells",
+        "max_concurrent_scientific_processes", "fresh_output_required",
+        "remaining_scientific_walltime_hours", "cpu_limit_cores",
+        "maximum_cpu_core_hours", "resume_authorized", "authorization_nonce",
+        "authorization_id", "authorized_by", "issued_at_utc", "valid_until_utc",
+        "authorization_sha256", "authorization_sha256_definition",
+    }
+)
+AUTHORIZATION_ECHO_FIELDS = (
+    "source_commit",
+    "image_id",
+    "input_binding_sha256",
+    "launch_plan_file_sha256",
+    "launch_plan_sha256",
+    "mount_receipt_sha256",
+    "pre_readiness_control_root_sha256",
+    "execution_template_sha256",
+    "renderer_version",
+    "cell_order_sha256",
+    "host_output_dir",
+    "remaining_scientific_walltime_hours",
+    "cpu_limit_cores",
+    "maximum_cpu_core_hours",
+)
+
+
+def authorization_id_for(
+    *,
+    readiness_sha256: str,
+    authorization_nonce: str,
+    issued_at_utc: str,
+    valid_until_utc: str,
+) -> str:
+    """Derive the authorization ID from the readiness challenge, never from a self-hash."""
+
+    return canonical_json_sha256(
+        {
+            "authorization_challenge_sha256": _authorization_challenge(readiness_sha256),
+            "authorization_nonce": _require_hex(authorization_nonce, 64, "authorization_nonce"),
+            "authorized_by": AUTHORIZED_BY,
+            "issued_at_utc": issued_at_utc,
+            "valid_until_utc": valid_until_utc,
+        }
+    )
 
 
 def build_run_authorization_template(readiness: Mapping[str, Any]) -> dict[str, Any]:
     """Return a non-authorizing template.  It can never pass validation."""
 
     readiness_hash = _validate_self_hash(readiness, "readiness_sha256", "execution readiness")
-    return {
-        "schema_version": 1,
+    value: dict[str, Any] = {
+        "schema_version": 2,
+        "control_schema_version": CONTROL_SCHEMA_VERSION,
+        "control_binding_mode": CONTROL_BINDING_MODE,
         "protocol_id": PROTOCOL_ID,
         "status": "TEMPLATE_NOT_AUTHORIZED",
         "training_authorized": False,
@@ -1879,19 +2832,9 @@ def build_run_authorization_template(readiness: Mapping[str, Any]) -> dict[str, 
         "readiness_sha256": readiness_hash,
         "authorization_challenge_sha256": _authorization_challenge(readiness_hash),
         "authorization_method": AUTHORIZATION_METHOD,
-        "source_commit": readiness.get("source_commit"),
-        "image_id": readiness.get("image_id"),
-        "input_binding_sha256": readiness.get("input_binding_sha256"),
-        "mount_receipt_sha256": readiness.get("mount_receipt_sha256"),
-        "cell_order_sha256": readiness.get("cell_order_sha256"),
-        "host_output_dir": readiness.get("host_output_dir"),
+        "instantiated_execution_configuration_sha256": None,
         "planned_cells": 30,
         "max_concurrent_scientific_processes": 1,
-        "remaining_scientific_walltime_hours": readiness.get(
-            "remaining_scientific_walltime_hours"
-        ),
-        "cpu_limit_cores": readiness.get("cpu_limit_cores"),
-        "maximum_cpu_core_hours": readiness.get("maximum_cpu_core_hours"),
         "fresh_output_required": True,
         "resume_authorized": False,
         "authorization_nonce": None,
@@ -1904,28 +2847,27 @@ def build_run_authorization_template(readiness: Mapping[str, Any]) -> dict[str, 
             "canonical JSON before authorization_sha256 and its definition are inserted"
         ),
     }
+    for field in AUTHORIZATION_ECHO_FIELDS:
+        value[field] = readiness.get(field)
+    return value
 
 
 def validate_run_authorization(
-    value: Mapping[str, Any], readiness: Mapping[str, Any]
+    value: Mapping[str, Any],
+    readiness: Mapping[str, Any],
+    launch_plan: Mapping[str, Any],
 ) -> str:
+    """Validate an issued authorization; ``launch_plan`` supplies the template to render."""
+
+    if not isinstance(value, Mapping):
+        raise ContractError("run authorization must be an object")
+    if value.get("schema_version") != 2 or value.get("control_schema_version") != CONTROL_SCHEMA_VERSION:
+        raise ContractError("run authorization is not control schema 2")
     readiness_hash = _validate_self_hash(readiness, "readiness_sha256", "execution readiness")
     digest = _validate_self_hash(value, "authorization_sha256", "run authorization")
-    expected_keys = {
-        "schema_version", "protocol_id", "status", "training_authorized", "scope",
-        "readiness_sha256", "authorization_challenge_sha256", "authorization_method",
-        "source_commit", "image_id", "input_binding_sha256", "mount_receipt_sha256",
-        "cell_order_sha256", "host_output_dir", "planned_cells",
-        "max_concurrent_scientific_processes", "fresh_output_required",
-        "remaining_scientific_walltime_hours", "cpu_limit_cores",
-        "maximum_cpu_core_hours",
-        "resume_authorized", "authorization_nonce", "authorization_id", "authorized_by",
-        "issued_at_utc", "valid_until_utc", "authorization_sha256",
-        "authorization_sha256_definition",
-    }
-    _require_exact_keys(value, expected_keys, "run authorization")
-    if value.get("schema_version") != 1:
-        raise ContractError("run-authorization schema version mismatch")
+    _require_exact_keys(value, set(AUTHORIZATION_KEYS), "run authorization")
+    if value.get("control_binding_mode") != CONTROL_BINDING_MODE:
+        raise ContractError("run authorization binding mode drift")
     if value.get("protocol_id") != PROTOCOL_ID or value.get("status") != AUTHORIZATION_STATUS:
         raise ContractError("RUN_AUTHORIZATION status/protocol mismatch")
     _require_bool(value.get("training_authorized"), True, "training_authorized")
@@ -1940,17 +2882,7 @@ def validate_run_authorization(
         raise ContractError("run authorization challenge mismatch")
     if value.get("authorization_method") != AUTHORIZATION_METHOD:
         raise ContractError("run authorization method mismatch")
-    for field in (
-        "source_commit",
-        "image_id",
-        "input_binding_sha256",
-        "mount_receipt_sha256",
-        "cell_order_sha256",
-        "host_output_dir",
-        "remaining_scientific_walltime_hours",
-        "cpu_limit_cores",
-        "maximum_cpu_core_hours",
-    ):
+    for field in AUTHORIZATION_ECHO_FIELDS:
         if value.get(field) != readiness.get(field):
             raise ContractError(f"run authorization {field} mismatch")
     nonce = _require_hex(value.get("authorization_nonce"), 64, "authorization_nonce")
@@ -1962,14 +2894,11 @@ def validate_run_authorization(
     now = datetime.now(timezone.utc)
     if issued > now or valid_until <= issued or now > valid_until:
         raise ContractError("run authorization is future-dated, expired, or has an invalid window")
-    expected_authorization_id = canonical_json_sha256(
-        {
-            "authorization_challenge_sha256": challenge,
-            "authorization_nonce": nonce,
-            "authorized_by": AUTHORIZED_BY,
-            "issued_at_utc": value["issued_at_utc"],
-            "valid_until_utc": value["valid_until_utc"],
-        }
+    expected_authorization_id = authorization_id_for(
+        readiness_sha256=readiness_hash,
+        authorization_nonce=nonce,
+        issued_at_utc=value["issued_at_utc"],
+        valid_until_utc=value["valid_until_utc"],
     )
     if authorization_id != expected_authorization_id:
         raise ContractError("run authorization ID is not derived from the challenge")
@@ -1977,47 +2906,33 @@ def validate_run_authorization(
         raise ContractError("run authorization denominator/process drift")
     if authorization_id == "0" * 64:
         raise ContractError("run authorization ID must not be the all-zero placeholder")
+    if _launch_plan_self_hash(launch_plan) != readiness.get("launch_plan_sha256"):
+        raise ContractError("run authorization launch plan differs from readiness")
+    template = launch_plan.get("execution_template")
+    if execution_template_sha256(template) != value.get("execution_template_sha256"):
+        raise ContractError("run authorization execution template mismatch")
+    instantiated = render_authorized_execution(template, authorization_id)
+    if value.get("instantiated_execution_configuration_sha256") != (
+        instantiated_execution_configuration_sha256(instantiated)
+    ):
+        raise ContractError("run authorization instantiated execution configuration mismatch")
     return digest
 
 
-def expected_scientific_mounts(
-    readiness: Mapping[str, Any], input_binding: Mapping[str, Any]
-) -> list[dict[str, Any]]:
-    validate_static_input_binding(input_binding)
-    rows = input_binding["files"]
-    mounts = [
-        {
-            "type": "bind",
-            "source": str(row["staged_path"]),
-            "destination": str(row["container_path"]),
-            "read_only": True,
-        }
-        for row in rows
-    ]
-    mounts.extend(
-        (
-            {
-                "type": "bind",
-                "source": str(readiness["host_control_dir"]),
-                "destination": str(CONTAINER_AUTHORIZATION_DIR),
-                "read_only": True,
-            },
-            {
-                "type": "bind",
-                "source": str(readiness["host_output_dir"]),
-                "destination": str(CONTAINER_OUTPUT_DIR),
-                "read_only": False,
-            },
-            {
-                "type": "tmpfs",
-                "source": "",
-                "destination": "/tmp",
-                "read_only": False,
-                "options": "rw,noexec,nosuid,size=1g",
-            },
-        )
-    )
-    return mounts
+AUTHORIZED_PLAN_ECHO_FIELDS = (
+    "source_commit",
+    "image_id",
+    "input_binding_sha256",
+    "launch_plan_file_sha256",
+    "launch_plan_sha256",
+    "mount_receipt_sha256",
+    "pre_readiness_control_root_sha256",
+    "execution_template_sha256",
+    "cell_order_sha256",
+    "remaining_scientific_walltime_hours",
+    "cpu_limit_cores",
+    "maximum_cpu_core_hours",
+)
 
 
 def build_authorized_campaign_plan(
@@ -2025,48 +2940,25 @@ def build_authorized_campaign_plan(
     authorization: Mapping[str, Any],
     *,
     input_binding: Mapping[str, Any],
+    launch_plan: Mapping[str, Any],
 ) -> dict[str, Any]:
-    """Build a Docker-create plan.  It never starts the container."""
+    """Deterministically render the Docker-create plan.  It never starts a container.
+
+    The plan may reference the authorization hash; the authorization never
+    references the plan hash, so there is no bidirectional cycle.
+    """
 
     readiness_hash = _validate_self_hash(readiness, "readiness_sha256", "execution readiness")
-    authorization_hash = validate_run_authorization(authorization, readiness)
-    mounts = expected_scientific_mounts(readiness, input_binding)
-    name = f"fedcore-v3-{str(authorization['authorization_id'])[:12]}"
-    argv = [
-        "docker",
-        "create",
-        "--name",
-        name,
-        "--network",
-        "none",
-        "--read-only",
-        "--tmpfs",
-        "/tmp:rw,noexec,nosuid,size=1g",
-        "--cap-drop",
-        "ALL",
-        "--security-opt",
-        "no-new-privileges",
-        "--restart",
-        "no",
-        "--user",
-        "1000:1000",
-        "--cpus",
-        str(CPU_LIMIT_CORES),
-        "--gpus",
-        f"device={EXPECTED_GPU_UUID}",
-    ]
-    for mount in mounts:
-        if mount["type"] == "tmpfs":
-            continue
-        value = (
-            f"type=bind,src={mount['source']},dst={mount['destination']}"
-            + (",readonly" if mount["read_only"] else "")
-        )
-        argv.extend(("--mount", value))
-    argv.append(str(readiness["image_id"]))
-    argv.extend(str(item) for item in readiness["container_command"])
-    body = {
-        "schema_version": 1,
+    authorization_hash = validate_run_authorization(authorization, readiness, launch_plan)
+    validate_static_input_binding(input_binding)
+    instantiated = render_authorized_execution(
+        launch_plan["execution_template"], str(authorization["authorization_id"])
+    )
+    body: dict[str, Any] = {
+        "schema_version": 2,
+        "control_schema_version": CONTROL_SCHEMA_VERSION,
+        "control_binding_mode": CONTROL_BINDING_MODE,
+        "renderer_version": RENDERER_VERSION,
         "protocol_id": PROTOCOL_ID,
         "status": AUTHORIZED_PLAN_STATUS,
         "execution_allowed": True,
@@ -2074,23 +2966,22 @@ def build_authorized_campaign_plan(
         "readiness_sha256": readiness_hash,
         "run_authorization_sha256": authorization_hash,
         "authorization_id": authorization["authorization_id"],
-        "source_commit": readiness["source_commit"],
-        "image_id": readiness["image_id"],
-        "input_binding_sha256": readiness["input_binding_sha256"],
-        "mount_receipt_sha256": readiness["mount_receipt_sha256"],
-        "cell_order_sha256": readiness["cell_order_sha256"],
-        "remaining_scientific_walltime_hours": readiness[
-            "remaining_scientific_walltime_hours"
+        "instantiated_execution_configuration_sha256": authorization[
+            "instantiated_execution_configuration_sha256"
         ],
-        "cpu_limit_cores": readiness["cpu_limit_cores"],
-        "maximum_cpu_core_hours": readiness["maximum_cpu_core_hours"],
-        "mounts": mounts,
-        "container_name": name,
-        "docker_create_argv": argv,
-        "docker_start_argv_template": ["docker", "start", "--attach", "__CONTAINER_ID__"],
-        "runtime_inspect_receipt_required": True,
-        "execution_started": False,
     }
+    for field in AUTHORIZED_PLAN_ECHO_FIELDS:
+        body[field] = readiness[field]
+    body.update(
+        {
+            "mounts": instantiated["runtime"]["mounts"],
+            "container_name": instantiated["container_name"],
+            "docker_create_argv": instantiated["docker_create_argv"],
+            "docker_start_argv_template": instantiated["docker_start_argv_template"],
+            "runtime_inspect_receipt_required": True,
+            "execution_started": False,
+        }
+    )
     return _self_hashed(body, "authorized_plan_sha256")
 
 
@@ -2099,65 +2990,40 @@ def validate_authorized_campaign_plan(
     readiness: Mapping[str, Any],
     authorization: Mapping[str, Any],
     input_binding: Mapping[str, Any],
+    launch_plan: Mapping[str, Any],
 ) -> str:
+    if not isinstance(value, Mapping):
+        raise ContractError("authorized campaign plan must be an object")
+    if value.get("schema_version") != 2 or value.get("control_schema_version") != CONTROL_SCHEMA_VERSION:
+        raise ContractError("authorized campaign plan is not control schema 2")
     digest = _validate_self_hash(value, "authorized_plan_sha256", "authorized plan")
-    expected_keys = {
-        "schema_version", "protocol_id", "status", "execution_allowed",
-        "container_start_allowed_only_after_inspect_receipt", "readiness_sha256",
-        "run_authorization_sha256", "authorization_id", "source_commit", "image_id",
-        "input_binding_sha256", "mount_receipt_sha256", "cell_order_sha256", "mounts",
-        "remaining_scientific_walltime_hours", "cpu_limit_cores",
-        "maximum_cpu_core_hours",
-        "container_name", "docker_create_argv", "docker_start_argv_template",
-        "runtime_inspect_receipt_required", "execution_started", "authorized_plan_sha256",
-        "authorized_plan_sha256_definition",
-    }
-    _require_exact_keys(value, expected_keys, "authorized campaign plan")
-    if value.get("schema_version") != 1:
-        raise ContractError("authorized-plan schema version mismatch")
-    readiness_hash = _validate_self_hash(readiness, "readiness_sha256", "execution readiness")
-    authorization_hash = validate_run_authorization(authorization, readiness)
-    if value.get("protocol_id") != PROTOCOL_ID or value.get("status") != AUTHORIZED_PLAN_STATUS:
-        raise ContractError("authorized campaign-plan status/protocol mismatch")
-    _require_bool(value.get("execution_allowed"), True, "execution_allowed")
-    _require_bool(
-        value.get("container_start_allowed_only_after_inspect_receipt"),
-        True,
-        "container_start_allowed_only_after_inspect_receipt",
-    )
-    _require_bool(value.get("runtime_inspect_receipt_required"), True, "runtime_inspect_receipt_required")
-    _require_bool(value.get("execution_started"), False, "execution_started")
-    if value.get("readiness_sha256") != readiness_hash:
-        raise ContractError("authorized plan readiness mismatch")
-    if value.get("run_authorization_sha256") != authorization_hash:
-        raise ContractError("authorized plan run-authorization mismatch")
-    for field in (
-        "authorization_id",
-        "source_commit",
-        "image_id",
-        "input_binding_sha256",
-        "mount_receipt_sha256",
-        "cell_order_sha256",
-        "remaining_scientific_walltime_hours",
-        "cpu_limit_cores",
-        "maximum_cpu_core_hours",
-    ):
-        expected = authorization.get(field, readiness.get(field))
-        if value.get(field) != expected:
-            raise ContractError(f"authorized plan {field} mismatch")
-    if value.get("mounts") != expected_scientific_mounts(readiness, input_binding):
-        raise ContractError("authorized plan mount scope mismatch")
     rebuilt = build_authorized_campaign_plan(
-        readiness, authorization, input_binding=input_binding
+        readiness, authorization, input_binding=input_binding, launch_plan=launch_plan
     )
-    for field in (
-        "container_name",
-        "docker_create_argv",
-        "docker_start_argv_template",
-    ):
-        if value.get(field) != rebuilt.get(field):
-            raise ContractError(f"authorized plan {field} drift")
+    if dict(value) != rebuilt:
+        drift = sorted(
+            key for key in set(value) | set(rebuilt) if value.get(key) != rebuilt.get(key)
+        )
+        raise ContractError(f"authorized plan differs from the deterministic render: {drift!r}")
     return digest
+
+
+RUNTIME_RECEIPT_KEYS = frozenset(
+    {
+        "schema_version", "control_schema_version", "control_binding_mode",
+        "protocol_id", "status", "readiness_sha256", "run_authorization_sha256",
+        "authorized_plan_sha256", "authorization_id", "image_id",
+        "execution_template_sha256", "instantiated_execution_configuration_sha256",
+        "normalized_runtime_execution_sha256", "cell_order_sha256", "container_id",
+        "container_name", "remaining_scientific_walltime_hours", "cpu_limit_cores",
+        "maximum_cpu_core_hours", "runtime_inspect_sha256", "container_created",
+        "container_inspected_before_start", "exact_mounts_verified",
+        "exact_gpu_uuid_verified", "network_none", "root_filesystem_read_only",
+        "capabilities_dropped", "no_new_privileges", "exact_cpu_limit_verified",
+        "execution_started", "mounts", "runtime_receipt_sha256",
+        "runtime_receipt_sha256_definition",
+    }
+)
 
 
 def validate_runtime_receipt(
@@ -2168,71 +3034,21 @@ def validate_runtime_receipt(
     authorized_plan: Mapping[str, Any],
     inspect_value: Any,
     input_binding: Mapping[str, Any],
+    launch_plan: Mapping[str, Any],
 ) -> str:
+    if not isinstance(value, Mapping):
+        raise ContractError("runtime inspect receipt must be an object")
+    if value.get("schema_version") != 2 or value.get("control_schema_version") != CONTROL_SCHEMA_VERSION:
+        raise ContractError("runtime inspect receipt is not control schema 2")
     digest = _validate_self_hash(value, "runtime_receipt_sha256", "runtime receipt")
-    expected_keys = {
-        "schema_version", "protocol_id", "status", "readiness_sha256",
-        "run_authorization_sha256", "authorized_plan_sha256", "authorization_id",
-        "image_id", "cell_order_sha256", "container_id", "container_name",
-        "remaining_scientific_walltime_hours", "cpu_limit_cores",
-        "maximum_cpu_core_hours",
-        "runtime_inspect_sha256", "container_created", "container_inspected_before_start",
-        "exact_mounts_verified", "exact_gpu_uuid_verified", "network_none",
-        "root_filesystem_read_only", "capabilities_dropped", "no_new_privileges",
-        "exact_cpu_limit_verified",
-        "execution_started", "mounts", "runtime_receipt_sha256",
-        "runtime_receipt_sha256_definition",
-    }
-    _require_exact_keys(value, expected_keys, "runtime inspect receipt")
-    if value.get("schema_version") != 1:
-        raise ContractError("runtime-receipt schema version mismatch")
-    readiness_hash = _validate_self_hash(readiness, "readiness_sha256", "execution readiness")
-    authorization_hash = validate_run_authorization(authorization, readiness)
-    plan_hash = _validate_self_hash(
-        authorized_plan, "authorized_plan_sha256", "authorized plan"
-    )
-    if value.get("protocol_id") != PROTOCOL_ID or value.get("status") != RUNTIME_RECEIPT_STATUS:
-        raise ContractError("runtime receipt status/protocol mismatch")
-    expected = {
-        "readiness_sha256": readiness_hash,
-        "run_authorization_sha256": authorization_hash,
-        "authorized_plan_sha256": plan_hash,
-        "authorization_id": authorization["authorization_id"],
-        "image_id": readiness["image_id"],
-        "cell_order_sha256": readiness["cell_order_sha256"],
-        "remaining_scientific_walltime_hours": readiness[
-            "remaining_scientific_walltime_hours"
-        ],
-        "cpu_limit_cores": readiness["cpu_limit_cores"],
-        "maximum_cpu_core_hours": readiness["maximum_cpu_core_hours"],
-    }
-    if any(value.get(field) != item for field, item in expected.items()):
-        raise ContractError("runtime receipt artifact chain mismatch")
-    _require_hex(value.get("container_id"), 64, "container_id")
-    _require_hex(value.get("runtime_inspect_sha256"), 64, "runtime_inspect_sha256")
-    if value.get("container_name") != authorized_plan.get("container_name"):
-        raise ContractError("runtime receipt container name mismatch")
-    if value.get("mounts") != authorized_plan.get("mounts"):
-        raise ContractError("runtime receipt mount scope mismatch")
-    for field in (
-        "container_created",
-        "container_inspected_before_start",
-        "exact_mounts_verified",
-        "exact_gpu_uuid_verified",
-        "network_none",
-        "root_filesystem_read_only",
-        "capabilities_dropped",
-        "no_new_privileges",
-        "exact_cpu_limit_verified",
-    ):
-        _require_bool(value.get(field), True, field)
-    _require_bool(value.get("execution_started"), False, "execution_started")
+    _require_exact_keys(value, set(RUNTIME_RECEIPT_KEYS), "runtime inspect receipt")
     rebuilt = build_runtime_receipt_from_inspect(
         inspect_value,
         readiness=readiness,
         authorization=authorization,
         authorized_plan=authorized_plan,
         input_binding=input_binding,
+        launch_plan=launch_plan,
     )
     if dict(value) != rebuilt:
         raise ContractError("runtime receipt differs from the exact raw Docker inspect")
@@ -2246,28 +3062,25 @@ def build_runtime_receipt_from_inspect(
     authorization: Mapping[str, Any],
     authorized_plan: Mapping[str, Any],
     input_binding: Mapping[str, Any],
+    launch_plan: Mapping[str, Any],
 ) -> dict[str, Any]:
     """Validate a stopped scientific container before any ``docker start``.
 
     The caller must obtain ``inspect_value`` from the Docker daemon after
-    ``docker create``.  This function has no Docker side effects.
+    ``docker create``.  Raw inspect is the authority for the actual mounts and
+    configuration; MOUNT_RECEIPT.json is only a pre-execution declaration.
+    This function has no Docker side effects.
     """
 
-    validate_authorized_campaign_plan(
-        authorized_plan, readiness, authorization, input_binding
+    plan_hash = validate_authorized_campaign_plan(
+        authorized_plan, readiness, authorization, input_binding, launch_plan
     )
-    if (
-        not isinstance(inspect_value, list)
-        or len(inspect_value) != 1
-        or not isinstance(inspect_value[0], Mapping)
-    ):
-        raise ContractError("scientific docker inspect must contain exactly one container")
-    inspect = inspect_value[0]
-    host = inspect.get("HostConfig")
-    config = inspect.get("Config")
+    inspect = _one_container(inspect_value, "scientific")
+    host = inspect["HostConfig"]
+    config = inspect["Config"]
     state = inspect.get("State")
-    if not isinstance(host, Mapping) or not isinstance(config, Mapping) or not isinstance(state, Mapping):
-        raise ContractError("scientific docker inspect lacks Config/HostConfig/State")
+    if not isinstance(state, Mapping):
+        raise ContractError("scientific docker inspect lacks State")
     if str(inspect.get("Image", "")) != readiness.get("image_id"):
         raise ContractError("scientific container image ID mismatch")
     _require_hex(inspect.get("Id"), 64, "container_id")
@@ -2275,31 +3088,17 @@ def build_runtime_receipt_from_inspect(
         raise ContractError("scientific container must be inspected in stopped created state")
     if state.get("Dead") not in (None, False) or state.get("OOMKilled") not in (None, False):
         raise ContractError("scientific container state is not a clean created state")
-    if host.get("NetworkMode") != "none" or host.get("ReadonlyRootfs") is not True:
-        raise ContractError("scientific container network/root-filesystem drift")
     if host.get("Privileged") is not False or host.get("Devices") not in (None, []):
         raise ContractError("scientific container exposes unregistered host privilege/device")
     if host.get("AutoRemove") is not False:
         raise ContractError("scientific container must not auto-remove its inspect evidence")
-    restart = host.get("RestartPolicy")
-    if not isinstance(restart, Mapping) or restart.get("Name") not in ("", "no"):
-        raise ContractError("scientific container restart policy drift")
-    if int(restart.get("MaximumRetryCount", 0)) != 0:
-        raise ContractError("scientific container retry count drift")
+    if host.get("CapAdd") not in (None, []):
+        raise ContractError("scientific container adds capabilities")
     for field in ("Links", "VolumesFrom"):
         if host.get(field) not in (None, []):
             raise ContractError(f"scientific container has unregistered {field}")
-    if set(str(item) for item in (host.get("CapDrop") or [])) != {"ALL"}:
-        raise ContractError("scientific container must drop all capabilities")
-    security = [str(item) for item in (host.get("SecurityOpt") or [])]
-    if not any(item.split(":", 1)[0] == "no-new-privileges" for item in security):
-        raise ContractError("scientific container lacks no-new-privileges")
-    if str(config.get("User", "")) != "1000:1000":
-        raise ContractError("scientific container user mismatch")
-    if config.get("Entrypoint") != ["python"]:
-        raise ContractError("scientific container entrypoint mismatch")
-    if config.get("Cmd") != readiness.get("container_command"):
-        raise ContractError("scientific container command mismatch")
+    if host.get("NanoCpus") != DOCKER_NANO_CPUS:
+        raise ContractError("scientific container CPU limit drift")
     labels = config.get("Labels") or {}
     if not isinstance(labels, Mapping) or labels.get(
         "org.opencontainers.image.revision"
@@ -2315,87 +3114,24 @@ def build_runtime_receipt_from_inspect(
     for label, expected in expected_source_labels.items():
         if labels.get(label) != expected:
             raise ContractError(f"scientific container source label mismatch: {label}")
-    environment = {str(item) for item in (config.get("Env") or [])}
-    expected_source_env = f"FEDCORE_SOURCE_COMMIT={readiness['source_commit']}"
-    if expected_source_env not in environment:
-        raise ContractError("scientific container source-revision environment mismatch")
-
-    requests = host.get("DeviceRequests")
-    if not isinstance(requests, list) or len(requests) != 1 or not isinstance(requests[0], Mapping):
-        raise ContractError("scientific container must request exactly one GPU device")
-    request = requests[0]
-    if request.get("DeviceIDs") != [EXPECTED_GPU_UUID]:
-        raise ContractError("scientific container GPU UUID mismatch")
-    capabilities = request.get("Capabilities")
-    if capabilities != [["gpu"]]:
-        raise ContractError("scientific container GPU capability request mismatch")
-    if request.get("Count") not in (0, -1):
-        raise ContractError("scientific container GPU request count drift")
-    if request.get("Driver") not in (None, "", "nvidia"):
-        raise ContractError("scientific container GPU driver request drift")
-    if request.get("Options") not in (None, {}):
-        raise ContractError("scientific container GPU request options drift")
-
-    if host.get("NanoCpus") != DOCKER_NANO_CPUS:
-        raise ContractError("scientific container CPU limit drift")
-
-    tmpfs = host.get("Tmpfs")
-    if not isinstance(tmpfs, Mapping) or set(tmpfs) != {"/tmp"}:
-        raise ContractError("scientific container requires exactly one /tmp tmpfs")
-    options = set(str(tmpfs["/tmp"]).split(","))
-    size = {item for item in options if item.startswith("size=")}
-    if options - size != {"rw", "noexec", "nosuid"} or size not in (
-        {"size=1g"},
-        {"size=1073741824"},
-    ):
-        raise ContractError("scientific /tmp tmpfs option drift")
-
-    observed_mounts: list[dict[str, Any]] = []
-    mounts = inspect.get("Mounts")
-    if not isinstance(mounts, list):
-        raise ContractError("scientific container mount list is absent")
-    for row in mounts:
-        if not isinstance(row, Mapping) or row.get("Type") != "bind":
-            raise ContractError("scientific container has an unregistered non-bind mount")
-        if str(row.get("Propagation", "rprivate")) not in ("", "rprivate"):
-            raise ContractError("scientific bind mount propagation must be rprivate")
-        observed_mounts.append(
-            {
-                "type": "bind",
-                "source": str(row.get("Source", "")),
-                "destination": str(row.get("Destination", "")),
-                "read_only": not bool(row.get("RW")),
-            }
-        )
-    observed_mounts.append(
-        {
-            "type": "tmpfs",
-            "source": "",
-            "destination": "/tmp",
-            "read_only": False,
-            "options": "rw,noexec,nosuid,size=1g",
-        }
+    normalized = normalize_runtime_inspect_execution(inspect_value)
+    instantiated = render_authorized_execution(
+        launch_plan["execution_template"], str(authorization["authorization_id"])
     )
-    expected_mounts = expected_scientific_mounts(readiness, input_binding)
-    observed_by_destination = {
-        str(row["destination"]): row for row in observed_mounts
-    }
-    expected_by_destination = {
-        str(row["destination"]): row for row in expected_mounts
-    }
-    if (
-        len(observed_by_destination) != len(observed_mounts)
-        or observed_by_destination != expected_by_destination
+    expected_runtime = instantiated["runtime"]
+    for key in RUNTIME_EXECUTION_KEYS:
+        if normalized.get(key) != expected_runtime[key]:
+            raise ContractError(f"runtime execution configuration drift: {key}")
+    if instantiated_execution_configuration_sha256(instantiated) != authorization.get(
+        "instantiated_execution_configuration_sha256"
     ):
-        raise ContractError("scientific container exact mount scope mismatch")
-
+        raise ContractError("runtime instantiated execution configuration mismatch")
     readiness_hash = _validate_self_hash(readiness, "readiness_sha256", "execution readiness")
-    authorization_hash = validate_run_authorization(authorization, readiness)
-    plan_hash = _validate_self_hash(
-        authorized_plan, "authorized_plan_sha256", "authorized plan"
-    )
+    authorization_hash = validate_run_authorization(authorization, readiness, launch_plan)
     body = {
-        "schema_version": 1,
+        "schema_version": 2,
+        "control_schema_version": CONTROL_SCHEMA_VERSION,
+        "control_binding_mode": CONTROL_BINDING_MODE,
         "protocol_id": PROTOCOL_ID,
         "status": RUNTIME_RECEIPT_STATUS,
         "readiness_sha256": readiness_hash,
@@ -2403,6 +3139,11 @@ def build_runtime_receipt_from_inspect(
         "authorized_plan_sha256": plan_hash,
         "authorization_id": authorization["authorization_id"],
         "image_id": readiness["image_id"],
+        "execution_template_sha256": readiness["execution_template_sha256"],
+        "instantiated_execution_configuration_sha256": authorization[
+            "instantiated_execution_configuration_sha256"
+        ],
+        "normalized_runtime_execution_sha256": canonical_json_sha256(normalized),
         "cell_order_sha256": readiness["cell_order_sha256"],
         "remaining_scientific_walltime_hours": readiness[
             "remaining_scientific_walltime_hours"
@@ -2422,9 +3163,9 @@ def build_runtime_receipt_from_inspect(
         "exact_cpu_limit_verified": True,
         "execution_started": False,
         "runtime_inspect_sha256": canonical_json_sha256(inspect_value),
-        "mounts": expected_mounts,
+        "mounts": expected_runtime["mounts"],
     }
-    if not body["container_id"] or body["container_name"] != authorized_plan["container_name"]:
+    if body["container_name"] != authorized_plan["container_name"]:
         raise ContractError("scientific container ID/name mismatch")
     return _self_hashed(body, "runtime_receipt_sha256")
 
@@ -2477,48 +3218,37 @@ def validate_mounted_authorization_bundle(
     names = tuple(sorted(item.name for item in root.iterdir()))
     if names != tuple(sorted(CONTROL_FILENAMES)):
         raise ContractError(f"authorization directory content drift: {names!r}")
-    paths = {name: root / name for name in CONTROL_FILENAMES}
-    for path in paths.values():
-        metadata = path.lstat()
-        if stat.S_ISLNK(metadata.st_mode) or not stat.S_ISREG(metadata.st_mode):
-            raise ContractError(f"authorization artifact is not a regular file: {path.name}")
-        if stat.S_IMODE(metadata.st_mode) & 0o222:
-            raise ContractError(f"authorization artifact is writable in container: {path.name}")
-
-    loaded = {
-        name: _read_control_bytes_once(
-            path, require_object=name != "RUNTIME_INSPECT.json"
+    artifacts = {
+        name: read_control_artifact(
+            root / name,
+            require_object=name != "RUNTIME_INSPECT.json",
+            require_read_only=True,
         )
-        for name, path in paths.items()
+        for name in CONTROL_FILENAMES
     }
-    static_plan, static_plan_file_hash = loaded["HOST_LAUNCH_PLAN.json"]
-    input_binding, input_binding_file_hash = loaded["INPUT_BINDING.json"]
-    mount_receipt, mount_receipt_file_hash = loaded["MOUNT_RECEIPT.json"]
-    source_manifest = loaded["SOURCE_MANIFEST.json"][0]
-    source_manifest_file_hash = loaded["SOURCE_MANIFEST.json"][1]
-    source_probe, source_probe_file_hash = loaded["SOURCE_PROBE_RECEIPT.json"]
-    test_report, test_report_file_hash = loaded["TEST_REPORT.json"]
-    readiness = loaded["EXECUTION_READINESS.json"][0]
-    authorization = loaded["RUN_AUTHORIZATION.json"][0]
-    authorized_plan = loaded["AUTHORIZED_CAMPAIGN_PLAN.json"][0]
-    runtime_receipt = loaded["RUNTIME_INSPECT_RECEIPT.json"][0]
-    runtime_inspect, runtime_inspect_file_hash = loaded["RUNTIME_INSPECT.json"]
+    static_plan = artifacts["HOST_LAUNCH_PLAN.json"].value
+    input_binding = artifacts["INPUT_BINDING.json"].value
+    mount_receipt = artifacts["MOUNT_RECEIPT.json"].value
+    source_manifest = artifacts["SOURCE_MANIFEST.json"].value
+    source_manifest_file_hash = artifacts["SOURCE_MANIFEST.json"].sha256
+    source_probe = artifacts["SOURCE_PROBE_RECEIPT.json"].value
+    test_report = artifacts["TEST_REPORT.json"].value
+    readiness = artifacts["EXECUTION_READINESS.json"].value
+    authorization = artifacts["RUN_AUTHORIZATION.json"].value
+    authorized_plan = artifacts["AUTHORIZED_CAMPAIGN_PLAN.json"].value
+    runtime_receipt = artifacts["RUNTIME_INSPECT_RECEIPT.json"].value
+    runtime_inspect = artifacts["RUNTIME_INSPECT.json"].value
 
-    if static_plan_file_hash != STATIC_LAUNCH_PLAN_FILE_SHA256:
-        raise ContractError("mounted static launch-plan bytes differ from the local static-binding anchors")
-    if input_binding_file_hash != STATIC_INPUT_BINDING_FILE_SHA256:
-        raise ContractError("mounted input-binding bytes differ from the local static-binding anchors")
-    if mount_receipt_file_hash != STATIC_MOUNT_RECEIPT_FILE_SHA256:
-        raise ContractError("mounted mount-receipt bytes differ from the local static-binding anchors")
+    if artifacts["INPUT_BINDING.json"].sha256 != STATIC_INPUT_BINDING_FILE_SHA256:
+        raise ContractError("mounted input-binding bytes differ from the static anchor")
     readiness_hash = validate_execution_readiness(
         readiness,
         static_launch_plan=static_plan,
         input_binding=input_binding,
         mount_receipt=mount_receipt,
+        artifact_sha256={name: artifacts[name].sha256 for name in PRE_READINESS_FILENAMES},
         expected_source_commit=expected_source_commit,
     )
-    if source_manifest_file_hash != readiness.get("source_manifest_sha256"):
-        raise ContractError("mounted source-manifest bytes differ from readiness")
     validate_scientific_source_manifest(
         source_manifest, expected_source_commit=str(readiness["source_commit"])
     )
@@ -2528,8 +3258,6 @@ def validate_mounted_authorization_bundle(
         "build_inventory_sha256"
     ):
         raise ContractError("mounted source-manifest inventory differs from readiness")
-    if source_probe_file_hash != readiness.get("source_probe_receipt_sha256"):
-        raise ContractError("mounted source-probe receipt bytes differ from readiness")
     validate_source_probe_receipt(
         source_probe,
         source_manifest=source_manifest,
@@ -2543,8 +3271,6 @@ def validate_mounted_authorization_bundle(
         include_runtime=True,
         include_build=False,
     )
-    if test_report_file_hash != readiness.get("test_report_sha256"):
-        raise ContractError("mounted test-report bytes differ from readiness")
     validate_execution_test_report(
         test_report,
         expected_image_id=str(readiness["image_id"]),
@@ -2568,10 +3294,17 @@ def validate_mounted_authorization_bundle(
     for field, path in workspace_sources.items():
         if _hash_regular_file(path, field) != readiness.get(field):
             raise ContractError(f"running image source bytes differ for {field}")
-    authorization_hash = validate_run_authorization(authorization, readiness)
+    authorization_hash = validate_run_authorization(authorization, readiness, static_plan)
     authorized_plan_hash = validate_authorized_campaign_plan(
-        authorized_plan, readiness, authorization, input_binding
+        authorized_plan, readiness, authorization, input_binding, static_plan
     )
+    rendered_plan_bytes = canonical_json_bytes(
+        build_authorized_campaign_plan(
+            readiness, authorization, input_binding=input_binding, launch_plan=static_plan
+        )
+    )
+    if artifacts["AUTHORIZED_CAMPAIGN_PLAN.json"].payload != rendered_plan_bytes:
+        raise ContractError("mounted authorized-plan bytes differ from the deterministic render")
     runtime_hash = validate_runtime_receipt(
         runtime_receipt,
         readiness=readiness,
@@ -2579,8 +3312,9 @@ def validate_mounted_authorization_bundle(
         authorized_plan=authorized_plan,
         inspect_value=runtime_inspect,
         input_binding=input_binding,
+        launch_plan=static_plan,
     )
-    if runtime_inspect_file_hash != runtime_receipt.get("runtime_inspect_sha256"):
+    if artifacts["RUNTIME_INSPECT.json"].sha256 != runtime_receipt.get("runtime_inspect_sha256"):
         raise ContractError("mounted raw inspect bytes differ from runtime receipt")
     return VerifiedExecutionAuthorization(
         readiness_sha256=readiness_hash,
@@ -2658,22 +3392,45 @@ __all__ = [
     "TEST_RUNTIME_PYTEST_VERSION",
     "TEST_RUNTIME_ROOT",
     "TEST_RUNTIME_WHEEL_FILES",
-    "STATIC_BINDING_ROOT_SHA256",
     "STATIC_INPUT_BINDING_FILE_SHA256",
-    "STATIC_LAUNCH_PLAN_FILE_SHA256",
-    "STATIC_LAUNCH_PLAN_SHA256",
-    "STATIC_MOUNT_RECEIPT_FILE_SHA256",
+    "CONTAINER_NAME_RULE",
+    "CONTROL_BINDING_MODE",
+    "CONTROL_SCHEMA_VERSION",
+    "ControlArtifact",
+    "EXPECTED_HOST_LOG_DIR",
+    "LAUNCH_PLAN_KEYS",
+    "LAUNCH_TEMPLATE_STATUS",
+    "MOUNT_DECLARATION_ROLE",
+    "MOUNT_DECLARATION_STATUS",
+    "MOUNT_RECEIPT_KEYS",
+    "PLAN_KIND",
+    "PRE_READINESS_FILENAMES",
+    "RENDERER_VERSION",
+    "REQUIRED_EXECUTION_TEST_NODEIDS",
     "VerifiedExecutionAuthorization",
     "acquire_exclusive_lease",
+    "authorization_id_for",
     "build_authorized_campaign_plan",
     "build_execution_readiness",
+    "build_execution_template",
     "build_run_authorization_template",
     "build_runtime_receipt_from_inspect",
+    "canonical_mounts",
     "canonical_runtime_inspect_comparison_bytes",
     "build_scientific_source_manifest",
     "build_source_probe_receipt",
-    "expected_scientific_mounts",
+    "execution_template_sha256",
+    "instantiated_execution_configuration_sha256",
+    "normalize_runtime_inspect_execution",
+    "pre_readiness_control_root_sha256",
+    "read_control_artifact",
+    "recheck_control_artifact",
+    "render_authorized_execution",
     "validate_authorized_campaign_plan",
+    "validate_critical_test_nodes",
+    "validate_execution_template",
+    "validate_launch_template_plan",
+    "validate_mount_declaration",
     "validate_execution_readiness",
     "validate_execution_test_report",
     "validate_execution_test_report_against_git_commit",
@@ -2685,6 +3442,4 @@ __all__ = [
     "validate_scientific_source_manifest",
     "validate_source_probe_receipt",
     "validate_static_input_binding",
-    "validate_static_launch_plan",
-    "validate_static_mount_receipt",
 ]

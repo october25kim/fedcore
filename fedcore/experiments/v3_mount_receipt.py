@@ -1,9 +1,15 @@
 """Normalize and validate a no-GPU Docker mount probe for FedCORE v3.
 
-The probe is deliberately pre-scientific.  It verifies container isolation and
-the exact five read-only input mounts from ``docker inspect``.  It neither
-requests a GPU nor opens any mounted file.  A later execution authorization
-must separately bind the registered GPU device request.
+The probe is deliberately pre-scientific.  Its receipt is a pre-execution
+mount declaration (``PREEXECUTION_MOUNT_DECLARATION_NOT_RUNTIME_PROOF``), not
+evidence of the scientific run: the raw runtime ``docker inspect`` of the
+created scientific container is the only authority for actual mounts.
+
+The declaration covers the five read-only inputs, the read-only
+``/authorization`` control mount, the read-write output, and ``/tmp``.  For
+``/authorization`` it claims only that ``docker inspect`` reported ``RW=false``;
+the probe module does not attempt a write there.  The probe neither requests a
+GPU nor opens any mounted file.
 """
 
 from __future__ import annotations
@@ -14,13 +20,22 @@ from pathlib import Path
 from typing import Any, Mapping, Sequence
 
 from fedcore.experiments.v3_contract import PROTOCOL_ID, ContractError, read_json
+from fedcore.experiments.v3_execution_binding import (
+    CONTAINER_AUTHORIZATION_DIR,
+    CONTROL_BINDING_MODE,
+    CONTROL_SCHEMA_VERSION,
+    EXPECTED_HOST_CONTROL_DIR,
+    MOUNT_DECLARATION_ROLE,
+    MOUNT_DECLARATION_STATUS,
+    MOUNT_RECEIPT_KEYS,
+    canonical_mounts,
+)
 from fedcore.experiments.v3_input_binding import (
     REGISTERED_SCIENTIFIC_INPUTS,
     ScientificInputSpec,
 )
 from fedcore.experiments.v3_scientific_runner import (
     REGISTERED_OUTPUT_DIR,
-    exact_mount_plan,
     validate_launch_plan_integrity,
 )
 from fedcore.experiments.v3_validate import validate_mount_scope
@@ -56,12 +71,14 @@ def _observed_mounts(inspect: Mapping[str, Any]) -> list[dict[str, Any]]:
     for row in mounts:
         if not isinstance(row, Mapping) or row.get("Type") != "bind":
             raise ContractError("only bind mounts are permitted outside /tmp")
+        if not isinstance(row.get("RW"), bool):
+            raise ContractError("docker inspect mount RW flag must be a boolean")
         rows.append(
             {
                 "type": "bind",
                 "source": str(row.get("Source", "")),
                 "destination": str(row.get("Destination", "")),
-                "read_only": not bool(row.get("RW")),
+                "read_only": not row["RW"],
             }
         )
     tmpfs = inspect.get("HostConfig", {}).get("Tmpfs", {})
@@ -87,8 +104,9 @@ def validate_no_gpu_mount_probe(
     probe_log: str,
     registered_specs: Sequence[ScientificInputSpec] = REGISTERED_SCIENTIFIC_INPUTS,
     expected_output_dir: Path = REGISTERED_OUTPUT_DIR,
+    expected_control_dir: Path | None = None,
 ) -> dict[str, Any]:
-    """Validate Docker isolation and emit a deterministic receipt body."""
+    """Validate Docker isolation and emit the deterministic mount declaration."""
 
     validate_launch_plan_integrity(launch_plan)
     inspect = _one_inspect(inspect_value)
@@ -102,10 +120,8 @@ def validate_no_gpu_mount_probe(
     host = inspect.get("HostConfig", {})
     config = inspect.get("Config", {})
     state = inspect.get("State", {})
-    if launch_plan.get("status") != (
-        "PASS_CANDIDATE_HOST_LAUNCH_PLAN_HOLD_EXECUTION_READINESS"
-    ) or launch_plan.get("execution_allowed") is not False:
-        raise ContractError("mount probe requires the non-executing candidate plan")
+    if launch_plan.get("execution_allowed") is not False:
+        raise ContractError("mount probe requires the non-executing pre-authorization template")
     inventory = launch_plan.get("input_inventory")
     if not isinstance(inventory, list) or len(inventory) != 5:
         raise ContractError("mount probe requires exactly five registered inputs")
@@ -128,6 +144,10 @@ def validate_no_gpu_mount_probe(
         expected_output_dir
     ).resolve():
         raise ContractError("registered scientific output path drift")
+    template = launch_plan["execution_template"]
+    control = Path(EXPECTED_HOST_CONTROL_DIR if expected_control_dir is None else expected_control_dir)
+    if template["paths"]["control"] != str(control):
+        raise ContractError("registered control path drift")
     if host.get("NetworkMode") != "none":
         raise ContractError("probe network mode must be none")
     if host.get("ReadonlyRootfs") is not True:
@@ -168,17 +188,27 @@ def validate_no_gpu_mount_probe(
         raise ContractError("/tmp tmpfs option drift")
     if size_tokens not in ({"size=1g"}, {"size=1073741824"}):
         raise ContractError("/tmp tmpfs size drift")
-    expected = exact_mount_plan(
-        launch_plan["input_inventory"], Path(str(launch_plan["output_directory"]))
-    )
-    validate_mount_scope(observed, expected, forbidden_roots=FORBIDDEN_RUNTIME_ROOTS)
-    return {
-        "schema_version": 1,
+    declared = canonical_mounts(template["mounts"])
+    validate_mount_scope(observed, declared, forbidden_roots=FORBIDDEN_RUNTIME_ROOTS)
+    authorization_rows = [
+        row for row in declared if row["destination"] == str(CONTAINER_AUTHORIZATION_DIR)
+    ]
+    if len(authorization_rows) != 1 or authorization_rows[0]["read_only"] is not True:
+        raise ContractError("declaration requires one read-only /authorization mount")
+    container_id = str(inspect.get("Id", ""))
+    if len(container_id) != 64 or any(ch not in "0123456789abcdef" for ch in container_id):
+        raise ContractError("probe container ID must be one immutable 64-hex ID")
+    receipt = {
+        "schema_version": 2,
+        "control_schema_version": CONTROL_SCHEMA_VERSION,
+        "control_binding_mode": CONTROL_BINDING_MODE,
         "protocol_id": PROTOCOL_ID,
-        "status": "PASS_EXACT_FIVE_RO_MOUNT_PROBE_NO_GPU",
+        "status": MOUNT_DECLARATION_STATUS,
+        "evidence_role": MOUNT_DECLARATION_ROLE,
         "launch_plan_sha256": launch_plan["launch_plan_sha256"],
+        "execution_template_sha256": launch_plan["execution_template_sha256"],
         "input_binding_sha256": launch_plan["input_binding_sha256"],
-        "container_id": str(inspect.get("Id", "")),
+        "container_id": container_id,
         "container_name": str(inspect.get("Name", "")).lstrip("/"),
         "image_id": observed_image,
         "network_mode": "none",
@@ -187,16 +217,22 @@ def validate_no_gpu_mount_probe(
         "cap_drop": ["ALL"],
         "security_opt": ["no-new-privileges"],
         "device_requests": None,
-        "mounts": observed,
+        "mounts": declared,
         "exact_five_read_only_inputs": True,
+        "authorization_mount_read_only_per_inspect": True,
+        "authorization_write_rejection_tested": False,
         "one_read_write_output": True,
         "tmpfs_only_at_tmp": True,
         "legacy_workspace_mounted": False,
+        "runtime_proof": False,
         "PACS_records_decoded": False,
         "PACS_labels_inspected": False,
         "GPU_used": False,
         "training_started": False,
     }
+    if set(receipt) != set(MOUNT_RECEIPT_KEYS):
+        raise ContractError("mount declaration builder key drift")
+    return receipt
 
 
 def _parser() -> argparse.ArgumentParser:
