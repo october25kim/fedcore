@@ -1,0 +1,72 @@
+{
+  "ledger_id": "T04",
+  "object_type": "numbered_table",
+  "table_number": 4,
+  "table_index": 5,
+  "caption": "Table 4. CIFAR risk-target grid: certified/50 and ECA (%). Smaller d means stronger heterogeneity. Each column reuses the same trained models and realized audit counts.",
+  "rows": [
+    [
+      "Dataset, heterogeneity",
+      "α = 0.05",
+      "0.10",
+      "0.15",
+      "0.20",
+      "0.25",
+      "0.30"
+    ],
+    [
+      "CIFAR-10, d = 0.1",
+      "0; 0.0",
+      "0; 0.0",
+      "1; 0.3",
+      "5; 1.5",
+      "9; 3.4",
+      "21; 7.5"
+    ],
+    [
+      "CIFAR-10, d = 0.5",
+      "0; 0.0",
+      "1; 0.5",
+      "12; 4.9",
+      "25; 12.1",
+      "33; 22.8",
+      "41; 33.1"
+    ],
+    [
+      "CIFAR-10, d = 5.0",
+      "0; 0.0",
+      "7; 2.8",
+      "19; 9.1",
+      "33; 20.3",
+      "40; 33.9",
+      "49; 46.2"
+    ],
+    [
+      "CIFAR-100, d = 0.1",
+      "0; 0.0",
+      "0; 0.0",
+      "0; 0.0",
+      "0; 0.0",
+      "2; 0.2",
+      "8; 1.2"
+    ],
+    [
+      "CIFAR-100, d = 0.5",
+      "0; 0.0",
+      "0; 0.0",
+      "0; 0.0",
+      "3; 0.3",
+      "13; 2.6",
+      "37; 9.4"
+    ],
+    [
+      "CIFAR-100, d = 5.0",
+      "0; 0.0",
+      "0; 0.0",
+      "0; 0.0",
+      "6; 1.0",
+      "28; 6.7",
+      "47; 15.5"
+    ]
+  ]
+}

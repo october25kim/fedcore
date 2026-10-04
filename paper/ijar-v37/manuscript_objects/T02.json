@@ -1,0 +1,39 @@
+{
+  "ledger_id": "T02",
+  "object_type": "numbered_table",
+  "table_number": 2,
+  "table_index": 3,
+  "caption": "Table 2. Predictor and audit settings for 450 fixed conditions. Comparisons share predictors and realized evidence within each condition.",
+  "rows": [
+    [
+      "Dataset / conditions",
+      "Clients; known/unknown classes",
+      "Predictor; FedAvg rounds",
+      "Reservoir records/client"
+    ],
+    [
+      "CIFAR-10\nN = 150; d = 0.1, 0.5, 5",
+      "5 synthetic Dirichlet; 6/4",
+      "WRN-28-10 + PROSER; 50",
+      "514"
+    ],
+    [
+      "CIFAR-100\nN = 150; d = 0.1, 0.5, 5",
+      "5 synthetic Dirichlet; 60/40",
+      "WRN-28-10 + PROSER; 50",
+      "514"
+    ],
+    [
+      "Office-Home\nN = 100; 50 per arm",
+      "4 observed domains; 45/20",
+      "ImageNet-1K ConvNeXt-Tiny; 30; full / frozen-linear adaptation",
+      "510–1,047"
+    ],
+    [
+      "PathMNIST\nN = 50; d = 0.5, 5",
+      "5 synthetic Dirichlet; 6/3",
+      "ResNeXt-29 (8 × 64d); 25",
+      "399–430"
+    ]
+  ]
+}

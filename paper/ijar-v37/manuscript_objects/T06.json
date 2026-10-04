@@ -1,0 +1,65 @@
+{
+  "ledger_id": "T06",
+  "object_type": "numbered_table",
+  "table_number": 6,
+  "table_index": 7,
+  "caption": "Table 6. Office-Home traffic sensitivity: certified/100 and ECA (%). Rows change the protection target or confidence allocation; they are not matched-target rankings.",
+  "rows": [
+    [
+      "Protection contract",
+      "α = 0.10",
+      "0.15",
+      "0.20",
+      "0.25",
+      "0.30"
+    ],
+    [
+      "Simplex;  =  = 0.05",
+      "8; 0.6",
+      "36; 3.4",
+      "79; 10.2",
+      "92; 16.2",
+      "100; 21.9"
+    ],
+    [
+      "Simplex;  =  = 0.04",
+      "4; 0.4",
+      "35; 3.3",
+      "74; 9.6",
+      "92; 15.8",
+      "100; 21.6"
+    ],
+    [
+      "Traffic box; m = 250",
+      "2; 0.3",
+      "39; 5.9",
+      "92; 17.9",
+      "98; 24.9",
+      "100; 31.3"
+    ],
+    [
+      "Traffic box; m = 500",
+      "2; 0.3",
+      "43; 6.7",
+      "92; 18.7",
+      "99; 25.9",
+      "100; 32.0"
+    ],
+    [
+      "Traffic box; m = 1,000",
+      "2; 0.3",
+      "46; 7.3",
+      "92; 19.3",
+      "99; 26.6",
+      "100; 32.7"
+    ],
+    [
+      "Traffic box; m = 2,000",
+      "3; 0.5",
+      "46; 7.5",
+      "92; 19.8",
+      "99; 27.1",
+      "100; 33.3"
+    ]
+  ]
+}

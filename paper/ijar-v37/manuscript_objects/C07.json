@@ -1,0 +1,5 @@
+{
+  "ledger_id": "C07",
+  "object_type": "paragraph",
+  "text": "Public dataset distributors provide CIFAR-10/100, Office-Home, MedMNIST v2, CIFAR-10.1, and PACS. The versioned repository at https://github.com/october25kim/fedcore provides the count-to-decision implementation and the evidence explicitly listed in its claim-artifact ledger. Release v0.7.0 binds the manuscript and rendered-PDF hashes and contains the complete PACS 30-model denominator ledger, all 90 H/S/B decision rows, registered configurations, count-level evidence, deterministic decision replay, final validation, completion seal, and checksum verifier. The release reproduces the registered count-to-decision analyses. Licensed datasets, source image arrays, pretrained initialization archives, checkpoints, and full model-training reproduction remain outside its scope. All theorem-critical definitions and proofs are contained in the manuscript; no separate supplementary file is required. The released PACS record binds the rerun to source commit fa016c199a7c846bbe20b64d54ab34164adf7647, its 217-file runtime manifest, one authorized campaign, and one complete 30-model denominator."
+}

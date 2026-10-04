@@ -1,7 +1,7 @@
 # Fed-CORE run manifest (paper artifact -> exact command -> golden oracle).
 # Deterministic CPU targets diff their output against tests/golden/ (must be identical).
 # See REPRODUCE.md for the full table and the GPU training targets.
-.PHONY: help install unit test test-core smoke agg-main agg-covtype agg-t8 agg-selftrain figs repro-check reproduce-wr-v3 reproduce-v18 reproduce-ijar-v32 reproduce-ijar-v33 reproduce-ijar-v34
+.PHONY: help install unit test test-core smoke agg-main agg-covtype agg-t8 agg-selftrain figs repro-check reproduce-wr-v3 reproduce-v18 reproduce-ijar-v32 reproduce-ijar-v33 reproduce-ijar-v34 reproduce-ijar-v37
 PY ?= python
 # All targets run from the project root and invoke the installed package with `python -m`
 # (no path shims). Modules use a CWD-relative base so runs/ and experiments/fedcore/figs/
@@ -10,7 +10,7 @@ PY ?= python
 # Prereq: `make install` (editable install) once after checkout so `import fedcore` resolves
 # from the project-root fedcore/ package. The golden gate self-bootstraps and needs no install.
 help:
-	@echo "targets: install unit test-core test smoke agg-main agg-covtype agg-t8 agg-selftrain figs repro-check reproduce-wr-v3 reproduce-v18 reproduce-ijar-v32 reproduce-ijar-v33 reproduce-ijar-v34"
+	@echo "targets: install unit test-core test smoke agg-main agg-covtype agg-t8 agg-selftrain figs repro-check reproduce-wr-v3 reproduce-v18 reproduce-ijar-v32 reproduce-ijar-v33 reproduce-ijar-v34 reproduce-ijar-v37"
 	@echo "  install        editable install so 'import fedcore' resolves (run once after checkout)"
 	@echo "  unit           artifact-free current-theorem unit tests"
 	@echo "  test-core      deterministic golden check; allows absent frozen run artifacts"
@@ -23,7 +23,8 @@ help:
 	@echo "  reproduce-v18  verify the historical v0.2.0 count-to-decision release"
 	@echo "  reproduce-ijar-v32 verify the IJAR v32 manuscript-to-artifact binding"
 	@echo "  reproduce-ijar-v33 verify the IJAR v33 evidence-contract binding"
-	@echo "  reproduce-ijar-v34 verify the IJAR v34 theory-and-evidence binding"
+	@echo "  reproduce-ijar-v34 verify the historical IJAR v34 theory-and-evidence binding"
+	@echo "  reproduce-ijar-v37 verify the current IJAR v37 manuscript-and-evidence binding"
 
 install:
 	$(PY) -m pip install -e .
@@ -96,6 +97,9 @@ reproduce-ijar-v33:
 
 reproduce-ijar-v34:
 	$(PY) paper/ijar-v34/verify_release.py
+
+reproduce-ijar-v37:
+	$(PY) paper/ijar-v37/verify_release.py
 
 comparator-matrix:
 	$(PY) -m fedcore.analysis.comparator_matrix \

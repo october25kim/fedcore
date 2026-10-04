@@ -9,8 +9,8 @@ releases and the execution-time PACS protocol identifiers remain unchanged.
 ## Binding
 
 - Manuscript version: v37
-- Manuscript SHA-256: `3cdf07988c670016e00be135bd93ee8e5d8477811b6f40284e0e945c0f703c4d`
-- Rendered PDF SHA-256: `ef585347079765f70990312326a7c9e4107ecd29363b99e65d0a8fe8cd903699`
+- Manuscript SHA-256: `e0e8934121136fcc09ae49571f50082d22cc82c9a0a752b65eb01cdfb9197acf`
+- Rendered PDF SHA-256: `f4b768c9aaba7f7305e3282f417fe8fd706f713dfcedfcdf587273d461650f99`
 - Release tag: `v0.7.0`
 - PACS source tag: `pacs-local-v1-fa016c1`
 - Release asset: `FedCORE_IJAR_v37_evidence_release.zip`
@@ -58,4 +58,8 @@ make unit
 The release verifier checks the complete checksum manifest, the 7F+6T+3H+8C
 ledger, manuscript/PDF binding, 443-condition validity evidence, 450-condition
 same-count H/S/B analyses, the complete PACS denominator and candidate gates,
-independent replay, final outcome gates, and exact source-tag binding.
+independent replay, final outcome gates, and exact source-tag binding. In a
+tagged checkout it additionally requires `HEAD` to resolve to `v0.7.0`. The
+downloaded ZIP can run the content and source verification without a checkout
+because it contains the exact PACS source tag as a Git bundle; public release
+tag resolution is then verified separately from a fresh tagged clone.

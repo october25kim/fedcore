@@ -10,21 +10,26 @@ import json
 import math
 import subprocess
 import sys
+import tempfile
+import zipfile
 from collections import Counter, defaultdict
 from pathlib import Path
+from xml.etree import ElementTree as ET
 
 
 ROOT = Path(__file__).resolve().parent
 REPO = ROOT.parents[1]
 PACS = ROOT / "artifacts" / "pacs"
-DOCX_SHA256 = "3cdf07988c670016e00be135bd93ee8e5d8477811b6f40284e0e945c0f703c4d"
-PDF_SHA256 = "ef585347079765f70990312326a7c9e4107ecd29363b99e65d0a8fe8cd903699"
+DOCX_SHA256 = "e0e8934121136fcc09ae49571f50082d22cc82c9a0a752b65eb01cdfb9197acf"
+PDF_SHA256 = "f4b768c9aaba7f7305e3282f417fe8fd706f713dfcedfcdf587273d461650f99"
 RELEASE_TAG = "v0.7.0"
 SOURCE_TAG = "pacs-local-v1-fa016c1"
 SOURCE_COMMIT = "fa016c199a7c846bbe20b64d54ab34164adf7647"
 SOURCE_TREE = "8adbb6fea6b5f7eef4ea8e7f78b484103bf08024"
 IMAGE_ID = "sha256:62c35527e56f5a05c026598ffda355e2b2b80256d966e5d9202ba639a5bfde8a"
 PROTOCOL_ID = "FEDCORE-IJAR-V34-PACS-FRESH-SEED-REPLICATION-HSB-v3"
+W_NS = "http://schemas.openxmlformats.org/wordprocessingml/2006/main"
+DC_NS = "http://purl.org/dc/elements/1.1/"
 
 
 class VerificationError(RuntimeError):
@@ -68,6 +73,73 @@ def close(a: float, b: float, tol: float = 1e-12) -> bool:
     return math.isclose(a, b, rel_tol=0.0, abs_tol=tol)
 
 
+def normalized_text(value: str) -> str:
+    return " ".join(value.split())
+
+
+def docx_objects(path: Path):
+    with zipfile.ZipFile(path) as archive:
+        document = ET.fromstring(archive.read("word/document.xml"))
+        core = ET.fromstring(archive.read("docProps/core.xml"))
+    paragraphs = []
+    tables = []
+
+    def paragraph_text(element) -> str:
+        pieces = []
+        for node in element.iter():
+            if node.tag == f"{{{W_NS}}}t":
+                pieces.append(node.text or "")
+            elif node.tag in {f"{{{W_NS}}}br", f"{{{W_NS}}}cr"}:
+                pieces.append("\n")
+            elif node.tag == f"{{{W_NS}}}tab":
+                pieces.append("\t")
+        return "".join(pieces)
+
+    for child in document.find(f"{{{W_NS}}}body"):
+        if child.tag == f"{{{W_NS}}}p":
+            paragraphs.append(paragraph_text(child))
+        elif child.tag == f"{{{W_NS}}}tbl":
+            rows = []
+            for row in child.findall(f"{{{W_NS}}}tr"):
+                cells = []
+                for cell in row.findall(f"{{{W_NS}}}tc"):
+                    cell_paragraphs = [
+                        paragraph_text(paragraph)
+                        for paragraph in cell.iter(f"{{{W_NS}}}p")
+                    ]
+                    cells.append("\n".join(cell_paragraphs))
+                rows.append(cells)
+            tables.append(rows)
+    description = core.find(f"{{{DC_NS}}}description")
+    return paragraphs, tables, "" if description is None else description.text or ""
+
+
+def correlation(left, right) -> float:
+    mean_left = sum(left) / len(left)
+    mean_right = sum(right) / len(right)
+    numerator = sum((a - mean_left) * (b - mean_right) for a, b in zip(left, right))
+    denominator = math.sqrt(
+        sum((a - mean_left) ** 2 for a in left)
+        * sum((b - mean_right) ** 2 for b in right)
+    )
+    return numerator / denominator
+
+
+def average_ranks(values):
+    order = sorted(range(len(values)), key=values.__getitem__)
+    ranks = [0.0] * len(values)
+    start = 0
+    while start < len(order):
+        end = start + 1
+        while end < len(order) and values[order[end]] == values[order[start]]:
+            end += 1
+        rank = (start + end - 1) / 2 + 1
+        for position in range(start, end):
+            ranks[order[position]] = rank
+        start = end
+    return ranks
+
+
 def verify_manifest() -> None:
     manifest = ROOT / "SHA256SUMS.txt"
     require(manifest.is_file(), "SHA256SUMS.txt is missing")
@@ -99,12 +171,34 @@ def verify_binding() -> None:
     require(binding["manuscript_included"] is True, "manuscript must be included")
     require(sha256(docx) == DOCX_SHA256 == binding["manuscript_sha256"], "DOCX binding mismatch")
     require(sha256(pdf) == PDF_SHA256 == binding["rendered_pdf_sha256"], "PDF binding mismatch")
+    _, _, description = docx_objects(docx)
+    require(
+        description == "IJAR v37 public-release-bound manuscript with complete PACS evidence",
+        "DOCX core metadata is stale",
+    )
     require(release["release_tag"] == RELEASE_TAG, "wrong tag in RELEASE.json")
     require(release["pacs_source_tag"] == SOURCE_TAG, "wrong PACS source tag")
     require(release["status"] == "VERSIONED_RELEASE", "release is not final")
     require(release["ledger_composition"] == {"figures": 7, "tables": 6, "abstract_claims": 3, "prose_claims": 8}, "wrong ledger composition")
     retained = (ROOT / "RETAINED_NON_GOVERNING.md").read_text(encoding="utf-8")
     require("The sole claim-to-evidence authority for v37 is `CLAIM_ARTIFACT.csv`" in retained, "non-governing boundary is missing")
+
+    try:
+        inside = subprocess.run(
+            ["git", "rev-parse", "--is-inside-work-tree"],
+            cwd=REPO,
+            text=True,
+            capture_output=True,
+            check=False,
+        )
+        if inside.returncode == 0 and inside.stdout.strip() == "true":
+            head = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=REPO, text=True).strip()
+            tagged = subprocess.check_output(
+                ["git", "rev-parse", f"{RELEASE_TAG}^{{commit}}"], cwd=REPO, text=True
+            ).strip()
+            require(head == tagged, f"checkout HEAD is not release tag {RELEASE_TAG}")
+    except subprocess.CalledProcessError as exc:
+        raise VerificationError(f"release tag cannot be resolved: {RELEASE_TAG}") from exc
 
 
 def verify_ledger() -> None:
@@ -113,10 +207,24 @@ def verify_ledger() -> None:
     ids = [row["LedgerID"] for row in rows]
     require(len(rows) == 24 and len(set(ids)) == 24 and set(ids) == expected, "ledger ID composition mismatch")
     require(all(row["Status"] == "GOVERNING_V37" for row in rows), "non-v37 governing ledger row")
+    docx_path = ROOT / read_json(ROOT / "MANUSCRIPT_BINDING.json")["manuscript_filename"]
+    paragraphs, tables, _ = docx_objects(docx_path)
+    normalized_paragraphs = {normalized_text(text) for text in paragraphs}
     for row in rows:
         obj = row["ManuscriptObject"]
-        if obj:
-            require(sha256(ROOT / obj) == row["ManuscriptObjectSHA256"], f"manuscript object mismatch: {row['LedgerID']}")
+        require(obj, f"missing manuscript object: {row['LedgerID']}")
+        require(sha256(ROOT / obj) == row["ManuscriptObjectSHA256"], f"manuscript object mismatch: {row['LedgerID']}")
+        if obj.startswith("manuscript_objects/"):
+            payload = read_json(ROOT / obj)
+            require(payload["ledger_id"] == row["LedgerID"], f"manuscript object ID mismatch: {row['LedgerID']}")
+            if payload["object_type"] == "paragraph":
+                require(normalized_text(payload["text"]) in normalized_paragraphs, f"paragraph object absent from DOCX: {row['LedgerID']}")
+            elif payload["object_type"] == "numbered_table":
+                index = int(payload["table_index"])
+                require(index < len(tables) and payload["rows"] == tables[index], f"table object differs from DOCX: {row['LedgerID']}")
+                require(normalized_text(payload["caption"]) in normalized_paragraphs, f"table caption absent from DOCX: {row['LedgerID']}")
+            else:
+                raise VerificationError(f"unknown manuscript object type: {row['LedgerID']}")
         paths = row["GoverningArtifact"].split(";")
         digests = row["ArtifactSHA256"].split(";")
         require(len(paths) == len(digests), f"artifact/hash arity mismatch: {row['LedgerID']}")
@@ -144,6 +252,112 @@ def verify_legacy_governing_claims() -> None:
         eca = float(rows[0]["EffectiveCertCov"])
         require(total == 450 and certified == expected_cert[procedure], f"headline denominator mismatch for {procedure}")
         require(close(eca, expected_eca[procedure]), f"headline ECA mismatch for {procedure}")
+
+
+def verify_remaining_claim_estimators() -> None:
+    overview = read_json(ROOT / "artifacts" / "figures" / "deployment_contract_overview_source.json")
+    require(overview["new_id"] == 1 and len(overview["old_ids"]) == 2, "Figure 1 source contract mismatch")
+    require("logical dependencies" in overview["scope"], "Figure 1 scope boundary is missing")
+
+    mixture = read_csv(ROOT / "artifacts" / "figures" / "mixture_shift.csv")
+    mixture_by_weight = {float(row["bad_client_weight"]): row for row in mixture}
+    require(len(mixture) == 9, "Figure 3 traffic-shift grid mismatch")
+    require(close(float(mixture_by_weight[0.2]["naive_pooled_coverage"]), 0.913), "Figure 3 traffic value mismatch")
+    require(close(float(mixture_by_weight[0.3]["naive_pooled_coverage"]), 0.061), "Figure 3 traffic value mismatch")
+    require(close(float(mixture_by_weight[0.4]["naive_pooled_coverage"]), 0.0), "Figure 3 traffic value mismatch")
+    require(min(float(row["full_simplex_coverage"]) for row in mixture) >= 0.915, "Figure 3 full-simplex coverage mismatch")
+    prevalence = {float(row["audit_unknown_prevalence"]): row for row in read_csv(ROOT / "artifacts" / "figures" / "prevalence_mismatch.csv")}
+    require(close(float(prevalence[0.1]["deployment_target_coverage"]), 0.008666666666666666), "Figure 3 prevalence mismatch")
+    require(close(float(prevalence[0.3]["deployment_target_coverage"]), 0.929), "Figure 3 matched-prevalence mismatch")
+    composition = {float(row["hard_unknown_share_within_unknown"]): row for row in read_csv(ROOT / "artifacts" / "figures" / "composition_mismatch.csv")}
+    require(close(float(composition[0.0]["deployment_target_coverage"]), 0.06333333333333334), "Figure 3 composition mismatch")
+    require(close(float(composition[0.5]["deployment_target_coverage"]), 0.929), "Figure 3 matched-composition mismatch")
+
+    anatomy = read_csv(ROOT / "artifacts" / "figures" / "failure_anatomy_per_cell_alpha020.csv")
+    h_refusals = [row for row in anatomy if row["procedure"] == "H" and row["certified"] == "0"]
+    causes = Counter(row["diagnostic_cause"] for row in h_refusals)
+    require(len(h_refusals) == 273, "Figure 4 refusal denominator mismatch")
+    require(causes == Counter({
+        "finite-sample-evidence-margin": 223,
+        "selector-tradeoff": 26,
+        "empirical-error-only": 9,
+        "joint-count-and-empirical": 7,
+        "proposal-infeasible": 7,
+        "count-only": 1,
+    }), "Figure 4 refusal decomposition mismatch")
+
+    betting = read_csv(ROOT / "artifacts" / "figures" / "all_targets_betting_source.csv")
+    require(len(betting) == 120, "Figure 5 row denominator mismatch")
+    for row in betting:
+        require(
+            close(float(row["delta_eca"]), float(row["mean_method_eca"]) - float(row["mean_reference_eca"])),
+            "Figure 5 paired difference mismatch",
+        )
+        require(int(row["wins"]) + int(row["losses"]) + int(row["ties"]) == int(row["n_cells"]), "Figure 5 win/loss/tie mismatch")
+
+    split_rows = read_csv(ROOT / "artifacts" / "figures" / "pathmnist_split_primary.csv")
+    split_certified = defaultdict(int)
+    for row in split_rows:
+        split_certified[row["condition"]] += int(row["certified"])
+    frontier = read_csv(ROOT / "artifacts" / "figures" / "pathmnist_alpha_frontier.csv")
+    frontier_primary = {row["condition"]: int(row["certified"]) for row in frontier if close(float(row["alpha"]), 0.20)}
+    require(split_certified == frontier_primary == {"d0.5": 14, "d5": 12}, "Figure 6 PathMNIST aggregation mismatch")
+
+    manifest = read_csv(ROOT / "artifacts" / "governing" / "analysis_input_manifest.csv")
+    accounting = read_csv(ROOT / "artifacts" / "governing" / "primary_reservoir_accounting.csv")
+    require(len(manifest) == 450 and len({row["semantic_id"] for row in manifest}) == 450, "Table 2 condition roster mismatch")
+    require(len(accounting) == 2150 and {row["semantic_id"] for row in accounting} == {row["semantic_id"] for row in manifest}, "Table 2 reservoir accounting mismatch")
+
+    delta = read_csv(ROOT / "artifacts" / "tables" / "delta_sensitivity.csv")
+    require(len(delta) == 12, "Table 3 confidence grid mismatch")
+    primary_delta = {row["procedure"]: (int(row["certified_cells"]), float(row["effective_certified_acceptance"])) for row in delta if row["joint_confidence"] == "0.90"}
+    require(primary_delta == {"H": (177, 0.0834), "S": (177, 0.0817), "B": (130, 0.0602)}, "Table 3 primary row mismatch")
+
+    sweep = read_csv(ROOT / "artifacts" / "tables" / "full_sweep_summary.csv")
+    require(len(sweep) == 180 and {float(row["alpha"]) for row in sweep} == {0.05, 0.10, 0.15, 0.20, 0.25, 0.30}, "Table 4 sweep grid mismatch")
+    require(all(int(row["N_cells"]) in {25, 50} for row in sweep), "Table 4 cell denominator mismatch")
+
+    procedure = read_csv(ROOT / "artifacts" / "tables" / "procedure_primary_table_source.csv")
+    representative = {"RATIO", "CP_IUT_H", "DIRECT_BETTING_H", "SCALE_H"}
+    table5 = [row for row in procedure if row["method"] in representative]
+    require(len(table5) == 20 and {row["dataset"] for row in table5} == {"cifar10", "cifar100", "officehome", "pathmnist", "ALL"}, "Table 5 representative roster mismatch")
+
+    traffic = read_csv(ROOT / "artifacts" / "tables" / "officehome_traffic_summary.csv")
+    traffic_map = {(row["procedure"], float(row["alpha"])): row for row in traffic}
+    matched = traffic_map[("FS_matched", 0.20)]
+    box = traffic_map[("BOX1000", 0.20)]
+    require(int(matched["certified"]) == 74 and close(float(matched["eca"]), 0.0957), "Table 6 matched-simplex row mismatch")
+    require(int(box["certified"]) == 92 and close(float(box["eca"]), 0.193), "Table 6 traffic-box row mismatch")
+
+    auroc = read_csv(ROOT / "artifacts" / "analysis" / "auroc_vs_cert.csv")
+    x = [float(row["best_auroc"]) for row in auroc]
+    y = [float(row["H_ecc"]) for row in auroc]
+    require(len(auroc) == 450, "AUROC diagnostic denominator mismatch")
+    require(close(correlation(average_ranks(x), average_ranks(y)), 0.6615282312525805), "Spearman diagnostic mismatch")
+    require(close(correlation(x, y), 0.570477852534833), "Pearson diagnostic mismatch")
+    descending = sorted(range(len(x)), key=x.__getitem__, reverse=True)
+    ascending = sorted(range(len(x)), key=x.__getitem__)
+    require(sum(auroc[index]["H_certified"] == "0" for index in descending[:45]) == 7, "top-decile refusal mismatch")
+    require(sum(auroc[index]["H_certified"] == "1" for index in ascending[:225]) == 13, "lower-half certification mismatch")
+
+    bootstrap = [row for row in read_csv(ROOT / "artifacts" / "analysis" / "paired_hierarchical_bootstrap_alpha020.csv") if row["effect"] == "H_minus_B"]
+    require(len(bootstrap) == 10 and all(int(row["bootstrap_replicates"]) == 20000 for row in bootstrap), "bootstrap roster mismatch")
+    require(all(float(row["point_difference"]) >= 0.0 for row in bootstrap), "negative H-minus-B point estimate")
+    require(sum(float(row["hierarchical_bootstrap_ci_low"]) > 0.0 for row in bootstrap) == 7, "bootstrap positive-interval count mismatch")
+    require(sum(close(float(row["hierarchical_bootstrap_ci_low"]), 0.0) for row in bootstrap) == 3, "bootstrap zero-touch count mismatch")
+
+    frontier_rows = read_csv(ROOT / "artifacts" / "analysis" / "h_evidence_margin_audit_frontier_by_dataset.csv")
+    all_frontier = next(row for row in frontier_rows if row["dataset"] == "ALL")
+    require((int(all_frontier["N_evidence_margin_cells"]), int(all_frontier["N_reachable_at_fixed_rates"]), int(all_frontier["N_unreachable_at_fixed_rates"])) == (223, 222, 1), "audit-frontier denominator mismatch")
+    require(close(float(all_frontier["audit_multiplier_median"]), 3.0) and close(float(all_frontier["audit_multiplier_p25"]), 2.0) and close(float(all_frontier["audit_multiplier_p75"]), 5.0), "audit-frontier summary mismatch")
+    frontier_validation = read_json(ROOT / "artifacts" / "analysis" / "H_AUDIT_FRONTIER_VALIDATION.json")
+    require(frontier_validation["status"] == "PASS" and frontier_validation["minimum_frontier_checks_passed"] == 222, "audit-frontier validation failed")
+
+    comparator = read_csv(ROOT / "artifacts" / "analysis" / "comparator_primary_source.csv")
+    scale_vs_betting = next(row for row in comparator if row["A"] == "SCALE_H" and row["B"] == "DIRECT_BETTING_H")
+    require(int(scale_vs_betting["N"]) == 50 and (int(scale_vs_betting["wins"]), int(scale_vs_betting["losses"]), int(scale_vs_betting["ties"])) == (1, 0, 49), "closest-comparator roster mismatch")
+    require(close(100 * float(scale_vs_betting["delta_ECA"]), 0.06147069234777442), "closest-comparator effect mismatch")
+    require(close(100 * float(scale_vs_betting["CI95_low"]), -0.07758567465234415) and close(100 * float(scale_vs_betting["CI95_high"]), 0.200527059347893), "closest-comparator interval mismatch")
 
 
 def verify_pacs_denominator_and_contract():
@@ -274,19 +488,49 @@ def verify_source_tag() -> None:
     require(binding["runtime_file_count"] == len(manifest["runtime_files"]) == 217, "runtime manifest count mismatch")
     require(binding["source_manifest_sha256"] == sha256(manifest_path), "source manifest file hash mismatch")
     require(binding["execution_image_id"] == IMAGE_ID, "source binding image mismatch")
+    temporary = None
+    command = ["git"]
+    cwd = REPO
+    local_probe = subprocess.run(
+        ["git", "rev-parse", f"{SOURCE_TAG}^{{commit}}"],
+        cwd=REPO,
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+    if local_probe.returncode != 0:
+        bundle = PACS / "provenance" / "pacs_source.bundle"
+        require(bundle.is_file(), "standalone source bundle is missing")
+        temporary = tempfile.TemporaryDirectory(prefix="fedcore-v37-source-")
+        git_dir = Path(temporary.name) / "source.git"
+        subprocess.run(["git", "init", "--bare", "--quiet", str(git_dir)], check=True)
+        subprocess.run(
+            [
+                "git",
+                f"--git-dir={git_dir}",
+                "fetch",
+                "--quiet",
+                str(bundle),
+                f"refs/tags/{SOURCE_TAG}:refs/tags/{SOURCE_TAG}",
+            ],
+            check=True,
+        )
+        command = ["git", f"--git-dir={git_dir}"]
+        cwd = ROOT
     try:
-        commit = subprocess.check_output(["git", "rev-parse", f"{SOURCE_TAG}^{{commit}}"], cwd=REPO, text=True).strip()
-        tree = subprocess.check_output(["git", "rev-parse", f"{SOURCE_TAG}^{{tree}}"], cwd=REPO, text=True).strip()
-    except subprocess.CalledProcessError as exc:
-        raise VerificationError(f"source tag cannot be resolved: {SOURCE_TAG}") from exc
-    require(commit == SOURCE_COMMIT and tree == SOURCE_TREE, "source tag does not resolve to execution source")
-    for item in manifest["runtime_files"]:
-        try:
-            blob = subprocess.check_output(["git", "show", f"{SOURCE_TAG}:{item['path']}"], cwd=REPO)
-        except subprocess.CalledProcessError as exc:
-            raise VerificationError(f"source-tag file missing: {item['path']}") from exc
-        require(len(blob) == item["size_bytes"], f"source-tag size mismatch: {item['path']}")
-        require(hashlib.sha256(blob).hexdigest() == item["sha256"], f"source-tag hash mismatch: {item['path']}")
+        commit = subprocess.check_output([*command, "rev-parse", f"{SOURCE_TAG}^{{commit}}"], cwd=cwd, text=True).strip()
+        tree = subprocess.check_output([*command, "rev-parse", f"{SOURCE_TAG}^{{tree}}"], cwd=cwd, text=True).strip()
+        require(commit == SOURCE_COMMIT and tree == SOURCE_TREE, "source tag does not resolve to execution source")
+        for item in manifest["runtime_files"]:
+            try:
+                blob = subprocess.check_output([*command, "show", f"{SOURCE_TAG}:{item['path']}"], cwd=cwd)
+            except subprocess.CalledProcessError as exc:
+                raise VerificationError(f"source-tag file missing: {item['path']}") from exc
+            require(len(blob) == item["size_bytes"], f"source-tag size mismatch: {item['path']}")
+            require(hashlib.sha256(blob).hexdigest() == item["sha256"], f"source-tag hash mismatch: {item['path']}")
+    finally:
+        if temporary is not None:
+            temporary.cleanup()
 
 
 def main() -> int:
@@ -295,6 +539,7 @@ def main() -> int:
         ("manuscript binding", verify_binding),
         ("claim-artifact ledger", verify_ledger),
         ("legacy governing claims", verify_legacy_governing_claims),
+        ("remaining claim estimators", verify_remaining_claim_estimators),
     ]
     for label, check in checks:
         check()

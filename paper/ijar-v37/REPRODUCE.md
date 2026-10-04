@@ -14,7 +14,11 @@ diagnostics rather than full-simplex competitors.
 The PACS package retains the complete 30-model roster, 90 procedure decisions,
 1,080 candidate decisions, count tensors, outcome gates, independent replay,
 completion seal, and exact execution-source identity. The public source tag
-`pacs-local-v1-fa016c1` resolves to the execution commit. Licensed input arrays,
+`pacs-local-v1-fa016c1` resolves to the execution commit. The downloaded
+release asset includes a self-contained Git bundle for that exact source tag,
+so the 217-file runtime manifest can be verified outside a repository clone.
+The public `v0.7.0` release tag itself must be checked in a fresh tagged clone.
+Licensed input arrays,
 pretrained archives, checkpoints, and full training reproduction are excluded.
 The rerun used fresh seeds after earlier PACS outcomes were known and is not an
 untouched-dataset or source-population replication.
