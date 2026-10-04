@@ -1,0 +1,44 @@
+{
+  "ledger_id": "T05",
+  "object_type": "numbered_table",
+  "table_number": 5,
+  "table_index": 6,
+  "caption": "Table 5. Representative procedure comparison at α = 0.20 and t = 0.50. Entries are ECA mean ± sample SD (%) and certified/N. Refusals contribute zero. Values describe the fixed roster and are not confidence intervals. All procedures reuse the same realized counts within a condition. CP–IUT–Holm is a conservative off-Algorithm comparator for the strict target.",
+  "rows": [
+    [
+      "Procedure",
+      "CIFAR-10",
+      "CIFAR-100",
+      "Office-Home",
+      "PathMNIST"
+    ],
+    [
+      "RATIO",
+      "9.63 ± 14.27\n52/150",
+      "0.09 ± 0.81\n2/150",
+      "10.98 ± 8.11\n69/100",
+      "17.27 ± 20.75\n23/50"
+    ],
+    [
+      "CP–IUT–Holm",
+      "11.49 ± 15.23\n63/150",
+      "0.47 ± 2.06\n9/150",
+      "13.35 ± 7.96\n79/100",
+      "19.38 ± 21.29\n26/50"
+    ],
+    [
+      "BETTING–H",
+      "16.14 ± 17.97\n76/150",
+      "2.53 ± 4.59\n40/150",
+      "17.34 ± 5.83\n95/100",
+      "28.18 ± 21.52\n36/50"
+    ],
+    [
+      "SCALE–H",
+      "16.25 ± 18.07\n75/150",
+      "2.61 ± 4.75\n40/150",
+      "17.79 ± 5.96\n95/100",
+      "29.98 ± 20.86\n38/50"
+    ]
+  ]
+}

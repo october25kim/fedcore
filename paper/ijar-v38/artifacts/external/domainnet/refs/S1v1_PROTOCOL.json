@@ -1,0 +1,367 @@
+{
+  "protocol_id": "FEDCORE-S1-DOMAINNET-PACSCLS-20260923-v1",
+  "status": "SCIENTIFIC_SPEC_FROZEN_EXECUTION_NOT_READY",
+  "external_registry_registration": false,
+  "seal_utc": "2026-09-23T14:50:36Z",
+  "seal_kst": "2026-09-23T23:50:36+09:00",
+  "experiment_family": "STRENGTHENING_S1",
+  "hypothesis_label": "transferable_selection_rule_superiority",
+  "target_claim": "S1: Under frozen V1 PACS predictors, does the registered selection-rule superiority (vs strongest equal-info/equal-budget fixed procedures) transfer to a NEW external image domain (DomainNet), restricted to the same 7 PACS class names? No new testing principle; no predictor SOTA; no RATIO general-superiority claim; no geometry-alone causation claim.",
+  "parent_protocols": {
+    "V1_protocol_id": "FEDCORE-V1-PACS-20260916-v1",
+    "V1_protocol_sha256": "a8c944d57246d2fc46b175982cdada76f1c797da30090a35fbb344bad0cb7c50",
+    "V1_result_lock_id": "FEDCORE-V1-RESULT-LOCK-20260918",
+    "V1_result_lock_sha256": "6f332e5ced1f0a0f1cb0befed59146a726fb9dffbd1cfb78d324932b65ce353b",
+    "V1_decision": "HOLD",
+    "AC_S1_source": "outputs/fedcore_ac_eval_20260923/AC_EVAL_REPORT_ko.md (STRENGTHENING S1 row)"
+  },
+  "scientific_freeze": {
+    "do_not_edit": [
+      "V1 RESULT_LOCK",
+      "V1 PROTOCOL",
+      "E2 Discussion paragraph",
+      "manuscript LaTeX/PDF in this seal step"
+    ],
+    "forbid_reinterpret_V1_as_CONFIRM": true,
+    "forbid_new_predictor_training": true,
+    "forbid_RATIO_general_superiority_claim": true,
+    "forbid_geometry_alone_causation_claim": true,
+    "on_KILL_or_HOLD": "Manuscript keeps existing V1 HOLD narrative; may later add 'additional domain also non-transfer' limits language; do NOT reinterpret V1 as CONFIRM.",
+    "peek_DomainNet_outcomes": false,
+    "note": "This seal is written before any DomainNet experiment outcomes exist or are viewed."
+  },
+  "dataset": {
+    "name": "DomainNet",
+    "source_paper": "Peng et al., Moment Matching for Multi-Source Domain Adaptation, ICCV 2019; https://ai.bu.edu/M3SDA/",
+    "domains_required_standard6": [
+      "clipart",
+      "infograph",
+      "painting",
+      "quickdraw",
+      "real",
+      "sketch"
+    ],
+    "domains_availability_gate": "Use the 6 standard DomainNet domains if present. If Code later finds fewer, document availability gate as HOLD_VALIDITY/INVALID rather than silently changing the domain list.",
+    "classes": [
+      "dog",
+      "elephant",
+      "giraffe",
+      "guitar",
+      "horse",
+      "house",
+      "person"
+    ],
+    "class_filter": "Images whose DomainNet label maps to these 7 names via case-insensitive exact match after strip. Other DomainNet classes are excluded.",
+    "missing_class_in_domain": "If a required class is missing (empty after filter) in a domain needed for support, mark INVALID for that support requirement (same spirit as V1 domain_support_required).",
+    "verified_archive_path": null,
+    "verified_archive_sha256": null,
+    "splits": [
+      {
+        "split": 0,
+        "known": [
+          "dog",
+          "elephant",
+          "giraffe",
+          "guitar"
+        ],
+        "unknown": [
+          "horse",
+          "house",
+          "person"
+        ]
+      },
+      {
+        "split": 1,
+        "known": [
+          "dog",
+          "elephant",
+          "house",
+          "person"
+        ],
+        "unknown": [
+          "giraffe",
+          "guitar",
+          "horse"
+        ]
+      },
+      {
+        "split": 2,
+        "known": [
+          "elephant",
+          "giraffe",
+          "horse",
+          "person"
+        ],
+        "unknown": [
+          "dog",
+          "guitar",
+          "house"
+        ]
+      },
+      {
+        "split": 3,
+        "known": [
+          "dog",
+          "guitar",
+          "horse",
+          "house"
+        ],
+        "unknown": [
+          "elephant",
+          "giraffe",
+          "person"
+        ]
+      },
+      {
+        "split": 4,
+        "known": [
+          "dog",
+          "elephant",
+          "guitar",
+          "house"
+        ],
+        "unknown": [
+          "giraffe",
+          "horse",
+          "person"
+        ]
+      }
+    ],
+    "class_split_rule": "COPIED verbatim from V1 PROTOCOL identical known/unknown 4-of-7 lists (not re-derived under S1 protocol_id). Same five splits as FEDCORE-V1-PACS-20260916-v1.",
+    "identity": "SHA256 of uint32-big-endian width,height followed by decoded EXIF-transposed RGB bytes",
+    "duplicate_rule": "Collapse identical RGB content within a domain and class; conflicting class labels INVALID; same content across domains kept but assigned the same role",
+    "role_rule": "H=int(SHA256(protocol_id|role|image_identity)); training if 5*H<3*2**256; proposal if 5*H<4*2**256; audit otherwise — with protocol_id = FEDCORE-S1-DOMAINNET-PACSCLS-20260923-v1",
+    "role_is_global_across_class_splits": true,
+    "training_role_in_S1": "UNUSED for training (predictors frozen). Training-role images may still be excluded from proposal/audit the same way as V1 role partitioning.",
+    "unknown_training_role": "unused; never reallocated",
+    "domain_support_required": "All class/domain combinations present among the available domains after filter; nonempty proposal/audit per domain for each required support cell. Missing required support → INVALID (do not silently drop domains/classes).",
+    "standard_DomainNet_DG_protocol": false,
+    "note": "This is NOT the standard DomainNet domain-generalization protocol. It is a federated open-set certification transfer probe restricted to the 7 PACS class name strings under frozen V1 predictors."
+  },
+  "predictors": {
+    "frozen": true,
+    "retraining_forbidden": true,
+    "source": "V1 PACS run checkpoints, 30/30 models (resnet18 + convnext_tiny × 5 splits × 3 seeds)",
+    "ubuntu_run_dir": "/home/sanghoon/Desktop/Workspace/Fedcore/outputs/fedcore_v1_run",
+    "ubuntu_active_pointer": "/home/sanghoon/Desktop/Workspace/Fedcore/outputs/FEDCORE_V1_ACTIVE.json",
+    "binding": "Each S1 model row binds 1:1 to the corresponding V1 checkpoint (same arch/split/seed).",
+    "architectures": [
+      "resnet18",
+      "convnext_tiny"
+    ],
+    "seeds": [
+      0,
+      1,
+      2
+    ],
+    "models": 30,
+    "inference_transform": "EXIF transpose/RGB; Resize(shorter=256,bilinear,antialias=True); CenterCrop(224); ToTensor; ImageNet mean/std — identical to V1",
+    "no_weight_update": true,
+    "no_head_reinit": true,
+    "no_AMP_changes": true,
+    "missing_checkpoint_policy": "If any of 30 checkpoints missing → INCOMPLETE; do not substitute ImageNet-only or other-domain weights.",
+    "weight_file_hashes": null
+  },
+  "training": {
+    "executed_in_S1": false,
+    "note": "S1 forbids new training/retraining of predictors (재학습 금지). Training block from V1 is inherited only as historical provenance of frozen checkpoints; no S1 training loop."
+  },
+  "candidate_family": {
+    "size": 12,
+    "score_order": [
+      "msp",
+      "energy",
+      "margin"
+    ],
+    "gamma_order": [
+      0.3,
+      0.5,
+      0.7,
+      1.0
+    ],
+    "scores": "softmax-known max; logsumexp-known at T=1 (negative energy, higher accepts); top1-top2 known probability",
+    "thresholds": "unique numpy.quantile(proposal_scores,linspace(0,1,300),method=linear); no extra endpoints",
+    "proposal": "pool all proposal domains unweighted by record; maximize accepted count subject to K/A<=gamma/5, A>=1; exact rational risk comparisons; tie smaller threshold",
+    "minimum_proposal_coverage": 0.01,
+    "infeasible": "reject-all slot retained in M=12; never replace",
+    "certified_selection": "maximum common positive acceptance LCB; tie smaller gamma, lexical score alias, candidate index"
+  },
+  "audit": {
+    "alpha": 0.2,
+    "delta_r": 0.05,
+    "delta_c": 0.05,
+    "J": 4,
+    "protection_t": [
+      0.5,
+      1.0
+    ],
+    "protection_weights": [
+      0.5,
+      0.5
+    ],
+    "protection_set": "(1-t)*uniform+t*simplex",
+    "primary_budget": 512,
+    "secondary_budgets": [
+      256,
+      1024
+    ],
+    "budget_unit": "with-replacement audit draws, not unique acquired labels",
+    "allocation": "equal per client; note: DomainNet may have 6 domains — equal allocation splits primary/secondary budgets equally across the domains that pass availability (document realized per-domain draw counts; do not change total B).",
+    "allocation_note_vs_V1": "V1 had 4 PACS domains → 64/128/256 per domain at B=256/512/1024. S1 with 6 DomainNet domains uses equal allocation of the same total budgets (document floor/remainder rule in runner binding before GPU work). Changing total B after viewing outcomes is forbidden.",
+    "replicates": 100,
+    "draws": "nested fixed-size prefixes; NumPy PCG64 uniform integer draws; no adaptive stopping",
+    "draw_seed": "Use frozen seed function with label=audit_draw and parts=[split,domain,replicate]; choose indices from source-identity-sorted domain audit list; protocol_id = this S1 id",
+    "coupling": "same (split,domain,replicate) stream across architectures, training seeds, all methods, both t and all budgets; independent replicate streams",
+    "certifier_information": "proposal eligibility plus n,A,K count tensors; no full-frame labels, error rates, future outcomes or full acceptance masks",
+    "common_acceptance_tail": "delta_c/(J*M)=.05/48",
+    "risk_engines": "Exact Section 4.9 seven constructions and frozen stakes; RATIO retains own denominator gate; no tolerance-based enlargement of the safe set",
+    "guarantee_scope": "Per fixed model, budget, t and prespecified procedure; not simultaneous over all reported experiment rows",
+    "full_frame_truth": "Only post-decision evaluator may compute exact empirical risks and acceptance from full audit frame"
+  },
+  "procedures": {
+    "fixed_controls": [
+      "RATIO",
+      "MASS_CP",
+      "HOEFFDING_H",
+      "DIRECT_BETTING_H",
+      "SCALE_H",
+      "CP_IUT_H",
+      "COMPOSED_CP_BETTING_H"
+    ],
+    "primary_rule": {
+      "name": "V1_SCALE_CP",
+      "0.5": "SCALE_H",
+      "1.0": "CP_IUT_H"
+    },
+    "diagnostic_control": {
+      "name": "GEOMETRY_DIRECT_CP",
+      "0.5": "DIRECT_BETTING_H",
+      "1.0": "CP_IUT_H"
+    },
+    "diagnostic_role": "Required report; not a fixed comparator and not part of S1 CONFIRM. A method-superiority claim would additionally need superiority over this composed control.",
+    "per_t_tuning": false
+  },
+  "analysis": {
+    "primary_metric": "ECA=common acceptance lower bound of selected certified candidate; refusal=0",
+    "per_arch_estimand": "Average over 5 fixed splits, 3 fixed training seeds (V1 frozen predictors), and two equally weighted protection tasks; expectation over fresh with-replacement draws conditional on all frozen DomainNet frames and frozen V1 predictors",
+    "statistical_unit": "one complete audit-replicate block across all 30 models and all conditions; 100 independent RNG blocks conditional on fixed inputs",
+    "never_independent_units": [
+      "overlapping class splits",
+      "shared-image identity roles",
+      "multiple candidates",
+      "two t values",
+      "three budgets",
+      "derived policy rows"
+    ],
+    "primary_comparisons": 14,
+    "additional_diagnostic_comparisons": 2,
+    "CI": "paired percentile bootstrap of 100 replicate blocks, 20000 resamples, shared resample indices, method=linear quantiles .05/(2*16) and 1-.05/(2*16)",
+    "CI_scope": "Approximate simultaneous conditional Monte Carlo uncertainty; not source-population, architecture-population, or finite-sample coverage guarantee",
+    "bootstrap_seed": 2026092301,
+    "bootstrap_seed_note": "NEW preregistered seed; do not reuse V1 resample stream id 2026091601 as outcome-dependent. Seed chosen before any DomainNet outcomes.",
+    "support": "report all per-model deltas, per-split seed means, win/tie/loss and each t separately; no selective model exclusion",
+    "secondary": [
+      "ECA by each budget and t",
+      "certification/refusal rate",
+      "post-decision empirical joint failure",
+      "unique source labels/draws",
+      "domain-level values",
+      "walltime/GPU time"
+    ],
+    "missing": "retain full matrix; incomplete or failed run not treated as refusal or imputed zero"
+  },
+  "gates": {
+    "precedence": [
+      "INVALID",
+      "INCOMPLETE",
+      "HOLD_VALIDITY",
+      "KILL",
+      "CONFIRM",
+      "HOLD"
+    ],
+    "CONFIRM": "All 30 models and all primary rows complete and valid; in EACH architecture minimum of seven mean paired differences >=.01 AND all seven CI lowers >0",
+    "KILL": "Any architecture has any fixed-control CI upper <=0, OR in BOTH architectures minimum mean fixed-control difference <.002",
+    "HOLD": "Complete valid result that is neither CONFIRM nor KILL; do not expand budget/replicates or change endpoints after viewing outcome",
+    "INVALID": "Leakage, changed outcome-dependent knobs, wrong certification, unequal information/budgets or source binding failure; or silent domain/class list change after outcomes",
+    "HOLD_VALIDITY": "For any of 30*3*2*7=1260 model-budget-t-fixed-method groups, exact Bin(100,.10) upper-tail p at observed joint-family-failure count <=.05/1260; investigate without claiming performance PASS. No flag does not prove validity. Also: DomainNet archive/domain availability shortfalls documented before GPU work.",
+    "joint_failure_event": "Any deployment-eligible risk-passing candidate has true empirical worst-mixture risk >alpha OR any candidate common acceptance LCB exceeds its true worst-mixture acceptance. Full-frame truth computed after decisions only.",
+    "INCOMPLETE": "Any missing required model or primary outcome or resource stop; any of 30 V1 checkpoints missing",
+    "new_policy_superiority": "NOT implied by CONFIRM against fixed procedures",
+    "manuscript_policy_on_nonCONFIRM": "On KILL or HOLD for S1: keep V1 HOLD narrative; optional later limits language that additional domain also non-transfer; NEVER reinterpret V1 as CONFIRM."
+  },
+  "denominators": {
+    "models": 30,
+    "candidates_per_model": 12,
+    "audit_replicates": 100,
+    "t_values": 2,
+    "budgets": 3,
+    "fixed_procedures": 7,
+    "derived_rules": 2,
+    "primary_fixed_procedure_rows": 42000,
+    "all_fixed_procedure_rows": 126000,
+    "primary_derived_rule_rows": 12000,
+    "all_derived_rule_rows": 36000,
+    "primary_total_rows": 54000,
+    "all_total_rows": 162000,
+    "primary_candidate_method_flags": 504000,
+    "all_candidate_method_flags": 1512000,
+    "independent_block_units_conditional": 100,
+    "note": "Row denominators match V1 structure (30 models × replicates × t × procedures × budgets). Domain count affects per-client allocation of draws inside each budget, not these row counts."
+  },
+  "availability_gates": {
+    "must_pass_before_GPU_work": [
+      {
+        "id": 1,
+        "gate": "DomainNet archive present on research host with SHA recorded",
+        "status_at_seal": "NOT_CHECKED_FROM_BOX"
+      },
+      {
+        "id": 2,
+        "gate": "All 7 class names nonempty across required domains after filtering",
+        "status_at_seal": "NOT_CHECKED_FROM_BOX"
+      },
+      {
+        "id": 3,
+        "gate": "All 30 V1 checkpoints present and hash-bound",
+        "status_at_seal": "NOT_CHECKED_FROM_BOX"
+      },
+      {
+        "id": 4,
+        "gate": "Runner wiring dry-check PASS without touching test outcomes",
+        "status_at_seal": "NOT_RUN"
+      }
+    ],
+    "fail_policy": "Do not start inference/cert GPU work until all four gates PASS. Document HOLD_VALIDITY/INVALID/INCOMPLETE rather than silently changing design."
+  },
+  "resources": {
+    "preferred_host": "ubuntu-4070",
+    "workdir": "/home/sanghoon/Desktop/Workspace/Fedcore",
+    "GPU_hours_cap": 8,
+    "GPU_hours_note": "Cap for inference+cert only; no training",
+    "CPU_as_needed": true,
+    "GPU_tasks_this_seal_turn": 0,
+    "box_reachability": {
+      "box_cannot_DNS_ubuntu_4070": true,
+      "mac_local_shell_zsh_ENOENT_known": true,
+      "recommended_path": "Human/Mac enables local-execution and ssh to ubuntu-4070 for DomainNet archive + 30 ckpt probe before any GPU work"
+    }
+  },
+  "execution_binding": {
+    "code_commit_or_source_hash": null,
+    "dependency_lock_hash": null,
+    "dataset_manifest_hash": null,
+    "weight_file_hashes": null,
+    "fold_manifest_hash": null,
+    "training_or_inference_executed": false,
+    "external_registry_registration": false,
+    "status": "SCIENTIFIC_SPEC_FROZEN_EXECUTION_NOT_READY"
+  },
+  "preexecution_notes": [
+    "S1 sealed BEFORE any DomainNet experiment outcomes are viewed.",
+    "Predictors are frozen V1 PACS checkpoints; no relearning.",
+    "Class splits copied identically from V1; role hashes use S1 protocol_id.",
+    "Audit contract copied from V1 (alpha/deltas/J/t/weights/budgets/replicates/engines/controls/primary_rule/diagnostic).",
+    "bootstrap_seed newly preregistered as 2026092301.",
+    "Equal-info/equal-budget fixed procedures remain the CONFIRM comparators; GEOMETRY_DIRECT_CP remains diagnostic only."
+  ]
+}

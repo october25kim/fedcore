@@ -1,0 +1,561 @@
+{
+  "protocol_id": "FEDCORE-S1-DOMAINNET6-PACSCLS-20260925-v2",
+  "protocol_version": "v2",
+  "status": "SCIENTIFIC_SPEC_FROZEN_BEFORE_DATA_DOWNLOAD",
+  "external_registry_registration": false,
+  "seal_utc": "2026-09-25T11:47:22Z",
+  "seal_kst": "2026-09-25T20:47:22+09:00",
+  "experiment_family": "STRENGTHENING_S1",
+  "separate_experiment_statement": "This is a NEW, separately registered experiment. It is NOT S1 v1 and must never be presented as S1 v1. S1 v1 (FEDCORE-S1-DOMAINNET-PACSCLS-20260923-v1, sha256 e7dc391888db2abc9993e19762ff84959098a10063bc67566d2f5cbb9d1a3173) was declared INVALID_BY_PROTOCOL on 2026-09-25 because the DomainNet 345-class taxonomy contains no \"person\" class. v2 is registered AFTER that failure, which was a class-availability failure observed from label lists only (no DomainNet image decoded, no model output computed). S1 v1 remains INVALID permanently.",
+  "information_available_at_seal": [
+    "DomainNet official cleaned label lists (class names and per-class counts only; hashes in refs/official_cleaned_lists.sha256)",
+    "HTTP HEAD metadata (Content-Length/ETag/Last-Modified) of the 6 official zips",
+    "V1 checkpoint sha256 and V1 code sha256 (gate PASS in S1 v1 run)",
+    "V1 locked results (HOLD) on PACS"
+  ],
+  "information_NOT_available_at_seal": [
+    "any DomainNet image pixels",
+    "any DomainNet model output (logits, scores, predictions)",
+    "any certification/ECA on DomainNet"
+  ],
+  "hypothesis_label": "transferable_selection_rule_superiority_DomainNet6",
+  "target_claim": "Under the 30 frozen V1 PACS predictors (no retraining), does the V1-registered selection rule V1_SCALE_CP (vs the 7 equal-information/equal-budget fixed procedures) retain its ECA advantage on an external domain collection (DomainNet, 6 official domains) restricted to the 6 PACS class names present in DomainNet? No new testing principle; no predictor SOTA; no RATIO general-superiority claim; no geometry-alone causation claim; results are descriptive of transfer and never rewrite V1.",
+  "parent_protocols": {
+    "V1_protocol_id": "FEDCORE-V1-PACS-20260916-v1",
+    "V1_protocol_sha256": "a8c944d57246d2fc46b175982cdada76f1c797da30090a35fbb344bad0cb7c50",
+    "V1_result_lock_id": "FEDCORE-V1-RESULT-LOCK-20260918",
+    "V1_result_lock_sha256": "6f332e5ced1f0a0f1cb0befed59146a726fb9dffbd1cfb78d324932b65ce353b",
+    "V1_decision": "HOLD",
+    "V1_g_by_arch": {
+      "resnet18": 0.0003380993227023714,
+      "convnext_tiny": 0.015626814934086953
+    },
+    "S1v1_protocol_id": "FEDCORE-S1-DOMAINNET-PACSCLS-20260923-v1",
+    "S1v1_protocol_sha256": "e7dc391888db2abc9993e19762ff84959098a10063bc67566d2f5cbb9d1a3173",
+    "S1v1_outcome": "INVALID_BY_PROTOCOL (person absent)"
+  },
+  "scientific_freeze": {
+    "do_not_edit": [
+      "V1 PROTOCOL",
+      "V1 RESULT_LOCK",
+      "S1 v1 protocol and its INVALID outputs",
+      "E2 lock",
+      "manuscript",
+      "LaTeX"
+    ],
+    "forbid_reinterpret_V1_as_CONFIRM": true,
+    "forbid_new_predictor_training": true,
+    "forbid_finetuning": true,
+    "forbid_recalibrating_V1_parameters_on_DomainNet": true,
+    "forbid_RATIO_general_superiority_claim": true,
+    "forbid_geometry_alone_causation_claim": true,
+    "forbid_post_outcome_changes": "thresholds, budgets, replicates, endpoints, class/domain lists, gates, bootstrap seed are fixed here and may not change after any DomainNet output is seen",
+    "on_KILL_or_HOLD": "Keep V1 HOLD narrative; S1 v2 is reported as an additional descriptive transfer probe; never reinterpret V1 as CONFIRM."
+  },
+  "dataset": {
+    "name": "DomainNet",
+    "source_paper": "Peng et al., Moment Matching for Multi-Source Domain Adaptation, ICCV 2019",
+    "official_page": "https://ai.bu.edu/M3SDA/",
+    "official_page_snapshot_sha256": "4e98f2fbaecef8228ffa0a35b9365bdc28fd37dfdf774811dfadcf07ae0e3141",
+    "version": "CLEANED (the version the official page labels \"cleaned version, recommended\")",
+    "version_rationale": "(i) The official page recommends it; (ii) cleaning removed duplicated images (credited to G. Kang), which is aligned with V1's duplicate-collapse identity rule; (iii) the cleaned label lists are exactly the lists whose hashes were already recorded in the S1 v1 evidence (official_cleaned_txt.sha256); (iv) V1-style label lists (path + integer label, class taken from the path) apply directly. For infograph/quickdraw/real/sketch the cleaned and original sections link the SAME zip URL; cleaning is realised by the cleaned lists. For clipart/painting the cleaned section links groundtruth/{domain}.zip.",
+    "domains": [
+      "clipart",
+      "infograph",
+      "painting",
+      "quickdraw",
+      "real",
+      "sketch"
+    ],
+    "domain_order": "alphabetical (as listed); this order defines client index j=0..5",
+    "zip_urls": {
+      "clipart": "https://csr.bu.edu/ftp/visda/2019/multi-source/groundtruth/clipart.zip",
+      "infograph": "https://csr.bu.edu/ftp/visda/2019/multi-source/infograph.zip",
+      "painting": "https://csr.bu.edu/ftp/visda/2019/multi-source/groundtruth/painting.zip",
+      "quickdraw": "https://csr.bu.edu/ftp/visda/2019/multi-source/quickdraw.zip",
+      "real": "https://csr.bu.edu/ftp/visda/2019/multi-source/real.zip",
+      "sketch": "https://csr.bu.edu/ftp/visda/2019/multi-source/sketch.zip"
+    },
+    "zip_content_length_from_HEAD_at_seal": {
+      "clipart": 1270909081,
+      "infograph": 4338659804,
+      "painting": 3679366174,
+      "quickdraw": 459920701,
+      "real": 6062039589,
+      "sketch": 2633992926
+    },
+    "zip_sha256": "recorded at download and bound in DATA_BINDING.md/json addendum in the run directory; this addendum is NOT an analysis choice. A Content-Length mismatch is a transport error (re-download), never a reason to change source.",
+    "label_list_urls": {
+      "clipart_train": "https://csr.bu.edu/ftp/visda/2019/multi-source/domainnet/txt/clipart_train.txt",
+      "clipart_test": "https://csr.bu.edu/ftp/visda/2019/multi-source/domainnet/txt/clipart_test.txt",
+      "infograph_train": "https://csr.bu.edu/ftp/visda/2019/multi-source/domainnet/txt/infograph_train.txt",
+      "infograph_test": "https://csr.bu.edu/ftp/visda/2019/multi-source/domainnet/txt/infograph_test.txt",
+      "painting_train": "https://csr.bu.edu/ftp/visda/2019/multi-source/domainnet/txt/painting_train.txt",
+      "painting_test": "https://csr.bu.edu/ftp/visda/2019/multi-source/domainnet/txt/painting_test.txt",
+      "quickdraw_train": "https://csr.bu.edu/ftp/visda/2019/multi-source/domainnet/txt/quickdraw_train.txt",
+      "quickdraw_test": "https://csr.bu.edu/ftp/visda/2019/multi-source/domainnet/txt/quickdraw_test.txt",
+      "real_train": "https://csr.bu.edu/ftp/visda/2019/multi-source/domainnet/txt/real_train.txt",
+      "real_test": "https://csr.bu.edu/ftp/visda/2019/multi-source/domainnet/txt/real_test.txt",
+      "sketch_train": "https://csr.bu.edu/ftp/visda/2019/multi-source/domainnet/txt/sketch_train.txt",
+      "sketch_test": "https://csr.bu.edu/ftp/visda/2019/multi-source/domainnet/txt/sketch_test.txt"
+    },
+    "label_list_sha256_cleaned": {
+      "clipart_test.txt": "62c8e36aaba1c41ad9e249099739707220a44c08f167b37ef420f34a31628a6b",
+      "clipart_train.txt": "affdadf5f95a7583e6b98030a3d35007e2613ee4dd942393c5a705ec2b429312",
+      "infograph_test.txt": "413cfa54ac92e7e6b242f4f09fbd9c8ace85c4deaf3cb6c81ff6b68264460136",
+      "infograph_train.txt": "36b44cbd41a2915e0dc73b4f4be8862a6f3c220f93c8d63fb2439beeae3aefda",
+      "painting_test.txt": "11472b13b5188e09f06918b12eebb660588c97a20e43e268d9b02e3e37eb8f97",
+      "painting_train.txt": "f1da38d50a702fddf1329f85bc607d7a2abcae7e6aec75e1fd49cc1bd340d47b",
+      "quickdraw_test.txt": "2a00a60650a453c65c356da748fec54084a197272137c440e7d52d08947357bf",
+      "quickdraw_train.txt": "3a5edd3bc215772010eebc87f158707703dd7e48091d13b816af81326a9d1c0f",
+      "real_test.txt": "2b3f75bcde309aeb5931292084b2162e936b5f189e3bb1ad716f0f74c460864c",
+      "real_train.txt": "19d483256d24aef19e581b65eda8333fd918aef3eb733fe499ff384120e3a289",
+      "sketch_test.txt": "3fb48fca18c507c4321f007c3f62b308ec232ff6928cbfe2af64e76ec366e840",
+      "sketch_train.txt": "72f4bc6afa5702a1ccba800d0053c1427de87439dfaf246dbc9a2e71abfec54f"
+    },
+    "label_lists_used": "BOTH train and test lists (union). The DomainNet train/test partition plays no role because predictors are frozen and never trained on DomainNet.",
+    "classes": [
+      "dog",
+      "elephant",
+      "giraffe",
+      "guitar",
+      "horse",
+      "house"
+    ],
+    "excluded_class": "person (absent from DomainNet taxonomy; not substituted by face/hand/etc.)",
+    "class_filter": "Class = second path component of the list entry (e.g. clipart/dog/xxx.jpg -> dog), case-insensitive exact match after strip against the 6 names. Integer label must be consistent within a class name (else INVALID).",
+    "image_selection": "ALL list entries (train union test) of the 6 classes in all 6 domains; no subsampling; no image selection by content. Files present in a zip but absent from the cleaned lists are excluded.",
+    "expected_listed_counts_train_plus_test": {
+      "dog": {
+        "clipart": 70,
+        "infograph": 220,
+        "painting": 718,
+        "quickdraw": 500,
+        "real": 779,
+        "sketch": 310
+      },
+      "elephant": {
+        "clipart": 115,
+        "infograph": 187,
+        "painting": 424,
+        "quickdraw": 500,
+        "real": 783,
+        "sketch": 266
+      },
+      "giraffe": {
+        "clipart": 133,
+        "infograph": 168,
+        "painting": 105,
+        "quickdraw": 500,
+        "real": 591,
+        "sketch": 186
+      },
+      "guitar": {
+        "clipart": 100,
+        "infograph": 201,
+        "painting": 202,
+        "quickdraw": 500,
+        "real": 626,
+        "sketch": 181
+      },
+      "horse": {
+        "clipart": 200,
+        "infograph": 210,
+        "painting": 521,
+        "quickdraw": 500,
+        "real": 595,
+        "sketch": 101
+      },
+      "house": {
+        "clipart": 107,
+        "infograph": 305,
+        "painting": 105,
+        "quickdraw": 500,
+        "real": 374,
+        "sketch": 144
+      }
+    },
+    "expected_listed_total": 12027,
+    "expected_listed_per_domain": {
+      "clipart": 725,
+      "infograph": 1291,
+      "painting": 2075,
+      "quickdraw": 3000,
+      "real": 3748,
+      "sketch": 1188
+    },
+    "identity": "SHA256 of uint32-big-endian width,height followed by decoded EXIF-transposed RGB bytes (V1)",
+    "duplicate_rule": "V1: collapse identical RGB content within a domain and class (keep lexicographically smallest path); identical content with conflicting class labels within a domain -> INVALID; same content across domains kept, same role automatically (role is a function of identity).",
+    "role_rule": "H=int(SHA256(protocol_id|role|image_identity)) with protocol_id=FEDCORE-S1-DOMAINNET6-PACSCLS-20260925-v2; proposal if 2*H < 2**256, audit otherwise. No training role.",
+    "role_rule_rationale": "V1 used 60/20/20 train/proposal/audit because it trained predictors. S1 predictors are frozen, so a training share would discard ~60% of scarce support (smallest cell clipart/dog = 70 listed) with no scientific purpose. The V1 proposal:audit ratio (1:1) is preserved. Proposal and audit remain disjoint.",
+    "role_is_global_across_class_splits": true,
+    "splits": [
+      {
+        "split": 0,
+        "known_head_order_frozen": [
+          "dog",
+          "elephant",
+          "giraffe",
+          "guitar"
+        ],
+        "known_supported_in_DomainNet": [
+          "dog",
+          "elephant",
+          "giraffe",
+          "guitar"
+        ],
+        "unknown_in_DomainNet": [
+          "horse",
+          "house"
+        ],
+        "person_role_in_V1": "unknown",
+        "person_head_index": null,
+        "label_map": {
+          "dog": 0,
+          "elephant": 1,
+          "giraffe": 2,
+          "guitar": 3,
+          "horse": -1,
+          "house": -1
+        }
+      },
+      {
+        "split": 1,
+        "known_head_order_frozen": [
+          "dog",
+          "elephant",
+          "house",
+          "person"
+        ],
+        "known_supported_in_DomainNet": [
+          "dog",
+          "elephant",
+          "house"
+        ],
+        "unknown_in_DomainNet": [
+          "giraffe",
+          "guitar",
+          "horse"
+        ],
+        "person_role_in_V1": "known",
+        "person_head_index": 3,
+        "label_map": {
+          "dog": 0,
+          "elephant": 1,
+          "giraffe": -1,
+          "guitar": -1,
+          "horse": -1,
+          "house": 2
+        }
+      },
+      {
+        "split": 2,
+        "known_head_order_frozen": [
+          "elephant",
+          "giraffe",
+          "horse",
+          "person"
+        ],
+        "known_supported_in_DomainNet": [
+          "elephant",
+          "giraffe",
+          "horse"
+        ],
+        "unknown_in_DomainNet": [
+          "dog",
+          "guitar",
+          "house"
+        ],
+        "person_role_in_V1": "known",
+        "person_head_index": 3,
+        "label_map": {
+          "dog": -1,
+          "elephant": 0,
+          "giraffe": 1,
+          "guitar": -1,
+          "horse": 2,
+          "house": -1
+        }
+      },
+      {
+        "split": 3,
+        "known_head_order_frozen": [
+          "dog",
+          "guitar",
+          "horse",
+          "house"
+        ],
+        "known_supported_in_DomainNet": [
+          "dog",
+          "guitar",
+          "horse",
+          "house"
+        ],
+        "unknown_in_DomainNet": [
+          "elephant",
+          "giraffe"
+        ],
+        "person_role_in_V1": "unknown",
+        "person_head_index": null,
+        "label_map": {
+          "dog": 0,
+          "elephant": -1,
+          "giraffe": -1,
+          "guitar": 1,
+          "horse": 2,
+          "house": 3
+        }
+      },
+      {
+        "split": 4,
+        "known_head_order_frozen": [
+          "dog",
+          "elephant",
+          "guitar",
+          "house"
+        ],
+        "known_supported_in_DomainNet": [
+          "dog",
+          "elephant",
+          "guitar",
+          "house"
+        ],
+        "unknown_in_DomainNet": [
+          "giraffe",
+          "horse"
+        ],
+        "person_role_in_V1": "unknown",
+        "person_head_index": null,
+        "label_map": {
+          "dog": 0,
+          "elephant": 1,
+          "giraffe": -1,
+          "guitar": 2,
+          "horse": -1,
+          "house": 3
+        }
+      }
+    ],
+    "split_rule": "The 5 V1 known/unknown splits are copied verbatim (the frozen 4-way heads fix them); person is removed from the DomainNet data only, never from the heads.",
+    "standard_DomainNet_DG_protocol": false
+  },
+  "person_asymmetry": {
+    "splits_with_person_known": [
+      1,
+      2
+    ],
+    "splits_with_person_unknown": [
+      0,
+      3,
+      4
+    ],
+    "person_known_rule": "Predictor used exactly as frozen: full 4-way head, all 4 logits enter msp/energy/margin and argmax; no logit removal, masking or renormalisation. The person head receives no inputs. Any argmax=person on a known-class DomainNet image is a wrong-known error and any acceptance of an unknown image is an error, exactly as V1 err=(label<0)|(argmax!=label).",
+    "person_unknown_rule": "Unknown set has 2 classes instead of 3; nothing else changes.",
+    "V1_rule_check": "V1 adapter.proposals/counts_for_draws define err=(labels<0)|(argmax!=labels) with scores over all 4 known logits; the rule above IS V1's rule, so no structural adaptation is needed for person. Only the class support differs.",
+    "primary_analysis": "All 5 splits, 30 models, V1 aggregation (average over 5 splits x 3 seeds x 2 t per architecture).",
+    "secondary_sensitivity_analysis": "Splits {0,3,4} only (person unknown; all 4 known heads supported): 9 models per architecture; the same 16 contrasts, same bootstrap generator/seed/quantiles, and the V1 decision function evaluated DESCRIPTIVELY. It never overrides the primary verdict. The complement {1,2} is reported descriptively too.",
+    "person_prediction_diagnostic": "Post-decision only: fraction of full audit-frame images whose argmax is person in splits 1,2, per architecture/domain (descriptive)."
+  },
+  "predictors": {
+    "frozen": true,
+    "retraining_forbidden": true,
+    "source": "V1 PACS checkpoints outputs/fedcore_v1_run/checkpoints/pacs__{arch}__split0{s}__seed{k}/latest.pt on ubuntu-4070",
+    "binding": "1:1 to V1 (arch, split, seed); sha256 must equal refs/V1_CHECKPOINT_SHA256.txt (=V1 RUN_ARTIFACTS); state digest must equal V1 RUN_STATE state_sha256",
+    "architectures": [
+      "resnet18",
+      "convnext_tiny"
+    ],
+    "seeds": [
+      0,
+      1,
+      2
+    ],
+    "models": 30,
+    "model_order": "V1 MODEL_MATRIX order (sha256 53541e59650fe1f63c315a8433e80e88b7373a4371a8c7dd50fa89e10e87f6d4)",
+    "load": "V1 adapter.build_model(arch, V1_protocol_id, split, seed) then load_state_dict(checkpoint.state) strictly; eval mode",
+    "inference_transform": "identical to V1: EXIF transpose/RGB; Resize(256, bilinear, antialias=True); CenterCrop(224); ToTensor; Normalize(ImageNet mean/std)",
+    "inference_precision": "FP32, no AMP, no TF32, V1 deterministic_torch(); batch size 32",
+    "implementation_note": "For speed, EXIF/RGB/Resize/CenterCrop may be computed once per image and cached as uint8 224x224; ToTensor+Normalize are then applied with the same float32 ops. The dry-check must show max|x_cached - x_V1transform| == 0 on a subset, else the cache is not used. num_workers is a non-scientific setting.",
+    "no_weight_update": true,
+    "no_head_reinit": true,
+    "no_calibration_on_DomainNet": true,
+    "missing_checkpoint_policy": "any of 30 missing -> INCOMPLETE; hash mismatch -> INVALID; no substitution"
+  },
+  "candidate_family": "COPIED from V1 verbatim (12 candidates: msp/energy/margin x gamma {0.3,0.5,0.7,1.0}; thresholds unique numpy.quantile(proposal_scores, linspace(0,1,300)); pooled proposal over all 6 domains unweighted by record; K/A<=gamma/5, A>=1; min proposal coverage 0.01; reject-all slot kept; certified selection = max common acceptance LCB, ties smaller gamma, score alias, index). Executed by the unmodified V1 adapter.proposals.",
+  "audit": {
+    "alpha": 0.2,
+    "delta_r": 0.05,
+    "delta_c": 0.05,
+    "J": 6,
+    "J_rationale": "J = number of clients = number of domains (V1: 4 PACS domains). The V1 certifier is generic in J (uses A.shape[-1]); every tail keeps its V1 formula evaluated at J=6.",
+    "common_acceptance_tail": "delta_c/(J*M)=.05/72",
+    "risk_tails": "as V1 formulas with J=6 (e.g. RATIO dr/(3JM)=.05/216, MASS_CP dr/(2JM)=.05/144)",
+    "protection_t": [
+      0.5,
+      1.0
+    ],
+    "protection_weights": [
+      0.5,
+      0.5
+    ],
+    "protection_set": "(1-t)*uniform+t*simplex over the 6 domains",
+    "total_budgets": {
+      "primary": 512,
+      "secondary": [
+        256,
+        1024
+      ]
+    },
+    "budget_unit": "with-replacement audit draws",
+    "allocation": "equal per client: n_B = floor(B/6) draws per domain = 42/85/170 for B=256/512/1024; realised totals 252/510/1020",
+    "remainder_rule": "The remainder B - 6*floor(B/6) (4/2/4 draws) is NOT drawn for any domain. Rationale: V1 contract is equal per client with identical n across domains and methods; floor never exceeds the registered total B; no domain receives extra information. Total B itself is unchanged from V1/S1 v1.",
+    "small_cell_rule": "Draws are with replacement from the identity-sorted per-domain audit frame (all 6 classes pooled within a domain), so a cell smaller than any budget (e.g. infograph giraffe 168 listed, clipart dog 70, sketch horse 101) needs no floor: nothing is drawn per cell. Cell sizes only enter via the support gate below.",
+    "replicates": 100,
+    "draws": "nested fixed-size prefixes of the V1 256-length stream: adapter.audit_indices(protocol_id_v2, split, domain, replicate, audit_frame_size)[:n_B]; NumPy PCG64; no adaptive stopping",
+    "draw_seed": "V1 seed function, label=audit_draw, parts=[split, domain, replicate], protocol_id = v2 id",
+    "coupling": "same (split,domain,replicate) stream across architectures, seeds, methods, both t and all budgets (V1)",
+    "certifier": "unmodified V1 v1_pacs_certifier.certify/choose (sha256 e0e44645...)",
+    "certifier_information": "proposal eligibility plus n,A,K count tensors only (V1)",
+    "full_frame_truth": "post-decision only (V1 truth_summaries/joint_failure with J=6 vertices)"
+  },
+  "procedures": {
+    "fixed_controls": [
+      "RATIO",
+      "MASS_CP",
+      "HOEFFDING_H",
+      "DIRECT_BETTING_H",
+      "SCALE_H",
+      "CP_IUT_H",
+      "COMPOSED_CP_BETTING_H"
+    ],
+    "primary_rule": {
+      "name": "V1_SCALE_CP",
+      "0.5": "SCALE_H",
+      "1.0": "CP_IUT_H"
+    },
+    "diagnostic_control": {
+      "name": "GEOMETRY_DIRECT_CP",
+      "0.5": "DIRECT_BETTING_H",
+      "1.0": "CP_IUT_H"
+    },
+    "diagnostic_role": "Required report; not a fixed comparator; not part of CONFIRM/TRANSFER.",
+    "per_t_tuning": false,
+    "source": "COPIED from V1"
+  },
+  "analysis": {
+    "primary_metric": "ECA = common acceptance LCB of the selected certified candidate; refusal = 0 (V1)",
+    "per_arch_estimand": "Average over 5 fixed splits, 3 fixed seeds (frozen V1 predictors) and 2 equally weighted t; expectation over fresh with-replacement draws conditional on the frozen DomainNet frames and predictors",
+    "statistical_unit": "one complete audit-replicate block across all 30 models; 100 blocks (V1)",
+    "primary_comparisons": 14,
+    "additional_diagnostic_comparisons": 2,
+    "CI": "paired percentile bootstrap of 100 replicate blocks, 20000 resamples, shared indices, linear quantiles .05/(2*16) and 1-.05/(2*16) (V1)",
+    "bootstrap_seed": 2026092501,
+    "bootstrap_seed_note": "NEW seed registered here, before any DomainNet output; not V1 2026091601, not S1 v1 2026092301",
+    "implementation": "V1 analysis functions contrasts/bootstrap/truth_groups/decide/per_model_support/outcome_rows/assemble are reused unmodified by passing a v2 constants dict; only protocol_constants (which hard-codes J=4 and the V1 seed) and the domain list are re-specified in a thin v2 wrapper.",
+    "secondary": [
+      "ECA by budget and t",
+      "certification/refusal rate",
+      "post-decision joint failure rate",
+      "unique draws per domain",
+      "domain-level truth acceptance",
+      "person-unknown split subset {0,3,4} (sensitivity)",
+      "split subset {1,2} (descriptive)",
+      "person-prediction diagnostic (splits 1,2)",
+      "per-model deltas, per-split seed means, win/tie/loss",
+      "descriptive comparison with V1 locked numbers",
+      "walltime/GPU time"
+    ],
+    "missing": "retain full matrix; failed/incomplete not imputed as refusal or zero",
+    "V1_comparison": "Descriptive side-by-side of V1 locked contrasts vs S1 v2 contrasts; no pooling, no test of difference, no rewrite of V1."
+  },
+  "gates": {
+    "precedence": [
+      "INVALID",
+      "INCOMPLETE",
+      "HOLD_VALIDITY",
+      "KILL",
+      "CONFIRM",
+      "HOLD"
+    ],
+    "CONFIRM": "All 30 models and all primary rows complete and valid; in EACH architecture min of the seven mean paired differences >= .01 AND all 14 CI lowers > 0 (V1, unchanged)",
+    "KILL": "Any architecture has any fixed-control CI upper <= 0, OR in BOTH architectures min mean fixed-control difference < .002 (V1, unchanged)",
+    "HOLD": "Complete valid result that is neither CONFIRM nor KILL (V1)",
+    "transfer_labels": {
+      "CONFIRM": "TRANSFER",
+      "KILL": "NOT_TRANSFER",
+      "HOLD": "HOLD (inconclusive transfer)"
+    },
+    "INVALID": "Leakage, changed outcome-dependent knobs, wrong certification, unequal information/budgets, source/data binding failure, pre-GPU data gates below, or any class/domain list change",
+    "HOLD_VALIDITY": "For any of 30*3*2*7=1260 model-budget-t-fixed-method groups, exact Bin(100,.10) upper-tail p at observed joint-failure count <= .05/1260 (V1); OR exact-identity overlap between the DomainNet frame and any V1 PACS image (V1: any detected overlap HOLD, no silent deletion)",
+    "INCOMPLETE": "Any missing required model or primary outcome, resource stop (8 GPU-h cap), or data not obtainable",
+    "joint_failure_event": "V1 definition"
+  },
+  "pre_GPU_gates": [
+    {
+      "id": "G1_DOWNLOAD",
+      "rule": "All 6 zips downloaded from the exact URLs above; sha256 recorded; size equals HEAD Content-Length. If any official zip cannot be obtained (dead URL, persistent failure) -> STOP, verdict INCOMPLETE_DATA; no substitute data (in particular no third-party/other-user DomainNet copies)."
+    },
+    {
+      "id": "G2_LIST_FILES",
+      "rule": "Every listed 6-class entry must exist in its zip and decode. Missing+undecodable entries are excluded and listed; if they exceed 0.5% of that domain's listed 6-class entries (clipart 3, infograph 6, painting 10, quickdraw 15, real 18, sketch 5; floor) -> INVALID. Integer label must be constant within each class name per domain -> else INVALID."
+    },
+    {
+      "id": "G3_DUPLICATES",
+      "rule": "Within-domain identical RGB with conflicting class -> INVALID (V1). Within-class duplicates collapsed and counted."
+    },
+    {
+      "id": "G4_SUPPORT",
+      "rule": "Minimum support: each of the 36 (class, domain) cells must have >= 10 unique images in the proposal role AND >= 10 in the audit role after dedup. ANY cell failure -> whole-run INVALID (no cell or domain dropping: the J=6 equal-budget structure and all 5 splits share every cell, so dropping would silently change the domain/class list). Expected minimum from lists ~35 per role (clipart dog 70); the gate targets data/decoding failures, not tuning."
+    },
+    {
+      "id": "G5_BINDING",
+      "rule": "30/30 checkpoint sha256 = V1 RUN_ARTIFACTS; state digest = V1 RUN_STATE; V1 code sha256 = V1 RUN_STATE code_sha256. Missing -> INCOMPLETE; mismatch -> INVALID."
+    },
+    {
+      "id": "G6_PACS_OVERLAP",
+      "rule": "Exact identity intersection between DomainNet frame and V1 FOLD_MANIFEST identities (all PACS images). Count >0 -> HOLD_VALIDITY (images retained, listed)."
+    },
+    {
+      "id": "G7_DRYCHECK",
+      "rule": "On <=64 images per domain: logits shape (N,4) finite; label map per split equals label_map above; known head order alphabetical = V1 MODEL_MATRIX known list; cached transform equals V1 transform bitwise. No ECA/certificate/score summary is computed or viewed. Dry-check outputs cannot change any sealed choice; failure -> fix wiring only (no science change) and rerun dry-check, recorded."
+    }
+  ],
+  "post_run_INVALID_checks": "V1 audit_checks with n == floor(B/6) per domain; rows 162000; primary rows 54000; flags 1512000; derived rows equal their sources; audit files hash-bound.",
+  "denominators": {
+    "models": 30,
+    "candidates_per_model": 12,
+    "audit_replicates": 100,
+    "t_values": 2,
+    "budgets": 3,
+    "fixed_procedures": 7,
+    "derived_rules": 2,
+    "primary_fixed_procedure_rows": 42000,
+    "all_fixed_procedure_rows": 126000,
+    "primary_derived_rule_rows": 12000,
+    "all_derived_rule_rows": 36000,
+    "primary_total_rows": 54000,
+    "all_total_rows": 162000,
+    "primary_candidate_method_flags": 504000,
+    "all_candidate_method_flags": 1512000,
+    "validity_groups": 1260,
+    "secondary_subset_models": {
+      "splits_0_3_4": 18,
+      "splits_1_2": 12
+    }
+  },
+  "resources": {
+    "GPU_hours_cap_total": 8,
+    "hosts": {
+      "ubuntu-4070": "RTX 4070 Ti SUPER GPU 0",
+      "workstation4": "TITAN RTX GPU 0 ONLY (CUDA_VISIBLE_DEVICES=0); GPUs 1-3 never touched"
+    },
+    "launch_rule": "nvidia-smi check before every launch; target GPU must be idle (no foreign compute process); if workstation4 GPU0 is busy it is not used",
+    "work_split": "by architecture or seed when both hosts are idle; otherwise ubuntu only",
+    "ledger": "wall-clock GPU seconds per host logged"
+  },
+  "execution_binding": {
+    "runner": "new thin v2 runner importing unmodified V1 adapter/certifier/analysis; its sha256 recorded in the run directory RUN_BINDING before full inference; any divergence from this spec -> INVALID",
+    "data_binding": "DATA_BINDING addendum (zip sha256, file counts)",
+    "training_or_inference_executed_at_seal": false
+  }
+}

@@ -1,0 +1,94 @@
+{
+  "checks": {
+    "cached_transform_equals_v1_transform": {
+      "images": 48,
+      "max_abs_diff": 0.0,
+      "pass": true
+    },
+    "draw_per_domain": {
+      "256": 42,
+      "512": 85,
+      "1024": 170
+    },
+    "head_order_alphabetical_equals_v1_matrix": true,
+    "label_maps": {
+      "0": {
+        "dog": 0,
+        "elephant": 1,
+        "giraffe": 2,
+        "guitar": 3,
+        "horse": -1,
+        "house": -1
+      },
+      "1": {
+        "dog": 0,
+        "elephant": 1,
+        "giraffe": -1,
+        "guitar": -1,
+        "horse": -1,
+        "house": 2
+      },
+      "2": {
+        "dog": -1,
+        "elephant": 0,
+        "giraffe": 1,
+        "guitar": -1,
+        "horse": 2,
+        "house": -1
+      },
+      "3": {
+        "dog": 0,
+        "elephant": -1,
+        "giraffe": -1,
+        "guitar": 1,
+        "horse": 2,
+        "house": 3
+      },
+      "4": {
+        "dog": 0,
+        "elephant": 1,
+        "giraffe": -1,
+        "guitar": 2,
+        "horse": -1,
+        "house": 3
+      }
+    },
+    "label_maps_equal_protocol": true,
+    "logit_shapes": {
+      "pacs__convnext_tiny__split00__seed0": {
+        "finite": true,
+        "shape": [
+          384,
+          4
+        ],
+        "state_digest_match_v1": true
+      },
+      "pacs__resnet18__split00__seed0": {
+        "finite": true,
+        "shape": [
+          384,
+          4
+        ],
+        "state_digest_match_v1": true
+      }
+    },
+    "role_split": {
+      "clipart/audit": 357,
+      "clipart/proposal": 368,
+      "infograph/audit": 619,
+      "infograph/proposal": 672,
+      "painting/audit": 1042,
+      "painting/proposal": 1033,
+      "quickdraw/audit": 1499,
+      "quickdraw/proposal": 1501,
+      "real/audit": 1865,
+      "real/proposal": 1883,
+      "sketch/audit": 606,
+      "sketch/proposal": 582
+    }
+  },
+  "gpu_seconds": 2.3411027239635587,
+  "note": "Wiring only. No ECA, certificate, score threshold, accuracy or acceptance summary is computed or viewed.",
+  "pass": true,
+  "utc": "2026-09-25T12:41:13.691797+00:00"
+}

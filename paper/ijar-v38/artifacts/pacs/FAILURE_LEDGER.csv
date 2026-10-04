@@ -1,0 +1,1 @@
+protocol_id,ordinal,model_id,architecture,split,nominal_training_seed,training_status,model_evaluable,failure_stage,checkpoint_sha256,primary_fragment_sha256,failure_reason

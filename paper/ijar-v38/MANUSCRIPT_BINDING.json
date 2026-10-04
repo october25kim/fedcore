@@ -1,0 +1,20 @@
+{
+  "manuscript_version": "v38",
+  "manuscript_filename": "manuscript/01_FedCORE_IJAR_Manuscript_v38_EvidenceUpgrade.docx",
+  "manuscript_sha256": "5f7762730782a44664a331d24fce76e6efd5a8f13d5fc63dd7124bf4b5d6b2de",
+  "rendered_pdf_filename": "manuscript/01_FedCORE_IJAR_Manuscript_v38_EvidenceUpgrade.pdf",
+  "rendered_pdf_sha256": "10f0509b984586226506b5238feeb81a6bc00c6781e64fdcca991c11bf5b6312",
+  "release_tag": "v0.8.0",
+  "pacs_source_tag": "pacs-local-v1-fa016c1",
+  "scope": "claim-to-artifact reproduction for 27 v38 manuscript elements, same-target comparator evidence, adverse external fixed-frame evidence, complete PACS count-to-decision evidence, and hash-bound PACS training assets",
+  "manuscript_included": true,
+  "ledger_entries": 27,
+  "binding_state": "PUBLIC_RELEASE_BOUND",
+  "commit_binding": "The annotated Git tag records the immutable release object; no self-referential release commit hash is stored in this tracked JSON.",
+  "release_boundary": {
+    "untouched_population_confirmation_claimed": false,
+    "independent_clean_machine_training_rerun_claimed": false,
+    "raw_third_party_images_redistributed": false,
+    "external_results_retained_when_adverse": true
+  }
+}

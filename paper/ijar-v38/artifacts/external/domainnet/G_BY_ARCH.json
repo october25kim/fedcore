@@ -1,0 +1,16 @@
+{
+  "convnext_tiny": {
+    "argmin_control": "DIRECT_BETTING_H",
+    "g_min_mean_diff": -0.0003512049138328681,
+    "models": 15,
+    "n_ci_lower_gt0": 4,
+    "n_ci_upper_le0": 0
+  },
+  "resnet18": {
+    "argmin_control": "RATIO",
+    "g_min_mean_diff": 0.0,
+    "models": 15,
+    "n_ci_lower_gt0": 0,
+    "n_ci_upper_le0": 7
+  }
+}

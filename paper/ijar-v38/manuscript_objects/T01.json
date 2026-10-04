@@ -1,0 +1,58 @@
+{
+  "ledger_id": "T01",
+  "object_type": "numbered_table",
+  "table_number": 1,
+  "table_index": 0,
+  "caption": "Table 1. Theorem-linked novelty map. Established statistical components are separated from the target-specific steps supplied by FedCORE.",
+  "rows": [
+    [
+      "Established component",
+      "Standard object",
+      "Target-specific gap",
+      "FedCORE result",
+      "Validity scope"
+    ],
+    [
+      "Federated conformal calibration",
+      "Distributed prediction-set coverage",
+      "Error among accepted point predictions",
+      "Proposition 1 and Equation (1)",
+      "Different protected object"
+    ],
+    [
+      "Exact binomial inference",
+      "Fixed-stratum sampling bounds",
+      "Accepted-mixture risk over uncertain traffic",
+      "Theorem 1",
+      "Fixed selector; full simplex"
+    ],
+    [
+      "Credal regular extension",
+      "Conditional lower and upper expectation",
+      "Finite-sample audit uncertainty and deploy-or-refuse gate",
+      "Theorem 2",
+      "Strict credal polytope; positive denominator"
+    ],
+    [
+      "Holm and intersection-union testing",
+      "Familywise testing",
+      "Proposal-frozen client-dependent selectors",
+      "Theorem 6",
+      "Full-simplex finite family"
+    ],
+    [
+      "Linear-fractional optimization",
+      "Ratio optimization",
+      "Simultaneous endpoints with denominator failure",
+      "Theorem 2",
+      "Strict-polytope robust program"
+    ],
+    [
+      "Target-specific synthesis",
+      "Credal accepted-error ratio",
+      "Traffic and audit uncertainty are coupled in the ratio",
+      "Theorems 1, 2, and 6",
+      "Proposal-frozen selector or finite family"
+    ]
+  ]
+}

@@ -1,0 +1,221 @@
+{
+  "checkpoints": {
+    "pacs__convnext_tiny__split00__seed0": {
+      "exists": true,
+      "expected": "fe5d7ba59de170390f4b40be455850194a2df44e196f869c259b5cac8be4a11b",
+      "path": "outputs/fedcore_v1_run/checkpoints/pacs__convnext_tiny__split00__seed0/latest.pt",
+      "sha256": "fe5d7ba59de170390f4b40be455850194a2df44e196f869c259b5cac8be4a11b"
+    },
+    "pacs__convnext_tiny__split00__seed1": {
+      "exists": true,
+      "expected": "af947131b13869585a90f87d12b2ace064b19a307912c7675b14de9f4c88abfd",
+      "path": "outputs/fedcore_v1_run/checkpoints/pacs__convnext_tiny__split00__seed1/latest.pt",
+      "sha256": "af947131b13869585a90f87d12b2ace064b19a307912c7675b14de9f4c88abfd"
+    },
+    "pacs__convnext_tiny__split00__seed2": {
+      "exists": true,
+      "expected": "5b91365a7f626ec346243c909ff3fb02134d8ec0f8f866e0bda9529216754feb",
+      "path": "outputs/fedcore_v1_run/checkpoints/pacs__convnext_tiny__split00__seed2/latest.pt",
+      "sha256": "5b91365a7f626ec346243c909ff3fb02134d8ec0f8f866e0bda9529216754feb"
+    },
+    "pacs__convnext_tiny__split01__seed0": {
+      "exists": true,
+      "expected": "23ffba34d4890fdada71a95ffa89eefa3c95b47624ad9cd80e03b264e6de35bf",
+      "path": "outputs/fedcore_v1_run/checkpoints/pacs__convnext_tiny__split01__seed0/latest.pt",
+      "sha256": "23ffba34d4890fdada71a95ffa89eefa3c95b47624ad9cd80e03b264e6de35bf"
+    },
+    "pacs__convnext_tiny__split01__seed1": {
+      "exists": true,
+      "expected": "aae9f67948ad8d85c4d93764eb901fd95a8f21470866a055e428d0379d73aa1e",
+      "path": "outputs/fedcore_v1_run/checkpoints/pacs__convnext_tiny__split01__seed1/latest.pt",
+      "sha256": "aae9f67948ad8d85c4d93764eb901fd95a8f21470866a055e428d0379d73aa1e"
+    },
+    "pacs__convnext_tiny__split01__seed2": {
+      "exists": true,
+      "expected": "0ef8d86ae4318cdf3abb589f5816ef6ae0873b988246c579f7b43dba129602ff",
+      "path": "outputs/fedcore_v1_run/checkpoints/pacs__convnext_tiny__split01__seed2/latest.pt",
+      "sha256": "0ef8d86ae4318cdf3abb589f5816ef6ae0873b988246c579f7b43dba129602ff"
+    },
+    "pacs__convnext_tiny__split02__seed0": {
+      "exists": true,
+      "expected": "1db86bb33a8e9799aeea9b160e5e4ec4e5efafbfa83ada572ef83120c7edfd62",
+      "path": "outputs/fedcore_v1_run/checkpoints/pacs__convnext_tiny__split02__seed0/latest.pt",
+      "sha256": "1db86bb33a8e9799aeea9b160e5e4ec4e5efafbfa83ada572ef83120c7edfd62"
+    },
+    "pacs__convnext_tiny__split02__seed1": {
+      "exists": true,
+      "expected": "45c713cbb3517e015cab30588536341893442e2d6cedc077c446b51ba452ca2b",
+      "path": "outputs/fedcore_v1_run/checkpoints/pacs__convnext_tiny__split02__seed1/latest.pt",
+      "sha256": "45c713cbb3517e015cab30588536341893442e2d6cedc077c446b51ba452ca2b"
+    },
+    "pacs__convnext_tiny__split02__seed2": {
+      "exists": true,
+      "expected": "a59ec7200449a046bc15eca63187f95d755d210c74165f87906d8851df0ce27f",
+      "path": "outputs/fedcore_v1_run/checkpoints/pacs__convnext_tiny__split02__seed2/latest.pt",
+      "sha256": "a59ec7200449a046bc15eca63187f95d755d210c74165f87906d8851df0ce27f"
+    },
+    "pacs__convnext_tiny__split03__seed0": {
+      "exists": true,
+      "expected": "286f0c79537b44dab441afb0eec4514fb0cba09400937827d32e279c864e4fe3",
+      "path": "outputs/fedcore_v1_run/checkpoints/pacs__convnext_tiny__split03__seed0/latest.pt",
+      "sha256": "286f0c79537b44dab441afb0eec4514fb0cba09400937827d32e279c864e4fe3"
+    },
+    "pacs__convnext_tiny__split03__seed1": {
+      "exists": true,
+      "expected": "60ba5622c02d469b41e27af10c3bdd366fa894771a262dbb3b774a3436dd44c2",
+      "path": "outputs/fedcore_v1_run/checkpoints/pacs__convnext_tiny__split03__seed1/latest.pt",
+      "sha256": "60ba5622c02d469b41e27af10c3bdd366fa894771a262dbb3b774a3436dd44c2"
+    },
+    "pacs__convnext_tiny__split03__seed2": {
+      "exists": true,
+      "expected": "34ea6c38b22bba493074728f09bb5170c2b087f1caabe341ac52c0740c9d0f63",
+      "path": "outputs/fedcore_v1_run/checkpoints/pacs__convnext_tiny__split03__seed2/latest.pt",
+      "sha256": "34ea6c38b22bba493074728f09bb5170c2b087f1caabe341ac52c0740c9d0f63"
+    },
+    "pacs__convnext_tiny__split04__seed0": {
+      "exists": true,
+      "expected": "25c9e98d3617b8e665a90265462c7d9c616069f3f7bfa6215d359ccdf0f91cf5",
+      "path": "outputs/fedcore_v1_run/checkpoints/pacs__convnext_tiny__split04__seed0/latest.pt",
+      "sha256": "25c9e98d3617b8e665a90265462c7d9c616069f3f7bfa6215d359ccdf0f91cf5"
+    },
+    "pacs__convnext_tiny__split04__seed1": {
+      "exists": true,
+      "expected": "aefa875bbf4ca0c8edf537227972c9f543e3a5f5a3676e7b27b191c2b13c730c",
+      "path": "outputs/fedcore_v1_run/checkpoints/pacs__convnext_tiny__split04__seed1/latest.pt",
+      "sha256": "aefa875bbf4ca0c8edf537227972c9f543e3a5f5a3676e7b27b191c2b13c730c"
+    },
+    "pacs__convnext_tiny__split04__seed2": {
+      "exists": true,
+      "expected": "9e7c6f5ed7e170a71ab782d3282820f57b5f0f8f145c65a766d20250978d631c",
+      "path": "outputs/fedcore_v1_run/checkpoints/pacs__convnext_tiny__split04__seed2/latest.pt",
+      "sha256": "9e7c6f5ed7e170a71ab782d3282820f57b5f0f8f145c65a766d20250978d631c"
+    },
+    "pacs__resnet18__split00__seed0": {
+      "exists": true,
+      "expected": "159ee6a3ba49251e2a9b803875e3c014e2e035b899934d4a4142f10f58bb2355",
+      "path": "outputs/fedcore_v1_run/checkpoints/pacs__resnet18__split00__seed0/latest.pt",
+      "sha256": "159ee6a3ba49251e2a9b803875e3c014e2e035b899934d4a4142f10f58bb2355"
+    },
+    "pacs__resnet18__split00__seed1": {
+      "exists": true,
+      "expected": "ddd0f4e3b3664bf0f2581ff25ff577eb905af8db9b0aaf05ad4b5754293125ad",
+      "path": "outputs/fedcore_v1_run/checkpoints/pacs__resnet18__split00__seed1/latest.pt",
+      "sha256": "ddd0f4e3b3664bf0f2581ff25ff577eb905af8db9b0aaf05ad4b5754293125ad"
+    },
+    "pacs__resnet18__split00__seed2": {
+      "exists": true,
+      "expected": "6d6a668a9bbc83e89136688ec888e147bf3d9e6521d27592f177563b50be2a54",
+      "path": "outputs/fedcore_v1_run/checkpoints/pacs__resnet18__split00__seed2/latest.pt",
+      "sha256": "6d6a668a9bbc83e89136688ec888e147bf3d9e6521d27592f177563b50be2a54"
+    },
+    "pacs__resnet18__split01__seed0": {
+      "exists": true,
+      "expected": "a356d1acc5e04a6c3f004dd81d0d4e8a8d6144744081519fbd642080abb31958",
+      "path": "outputs/fedcore_v1_run/checkpoints/pacs__resnet18__split01__seed0/latest.pt",
+      "sha256": "a356d1acc5e04a6c3f004dd81d0d4e8a8d6144744081519fbd642080abb31958"
+    },
+    "pacs__resnet18__split01__seed1": {
+      "exists": true,
+      "expected": "44e248d2ad28fd0b32d6df82a111a8cb40d02c686448b433d814d77cbba3b439",
+      "path": "outputs/fedcore_v1_run/checkpoints/pacs__resnet18__split01__seed1/latest.pt",
+      "sha256": "44e248d2ad28fd0b32d6df82a111a8cb40d02c686448b433d814d77cbba3b439"
+    },
+    "pacs__resnet18__split01__seed2": {
+      "exists": true,
+      "expected": "7ce2b76a58e5f2adc3b7cfc5c439ec57d02e33771bcf9521f1e3e3b837214124",
+      "path": "outputs/fedcore_v1_run/checkpoints/pacs__resnet18__split01__seed2/latest.pt",
+      "sha256": "7ce2b76a58e5f2adc3b7cfc5c439ec57d02e33771bcf9521f1e3e3b837214124"
+    },
+    "pacs__resnet18__split02__seed0": {
+      "exists": true,
+      "expected": "8cd647ca2dabb4e1382074a94dc0253d9e52f271112fd015ed8a758b03ada2dd",
+      "path": "outputs/fedcore_v1_run/checkpoints/pacs__resnet18__split02__seed0/latest.pt",
+      "sha256": "8cd647ca2dabb4e1382074a94dc0253d9e52f271112fd015ed8a758b03ada2dd"
+    },
+    "pacs__resnet18__split02__seed1": {
+      "exists": true,
+      "expected": "f986b4aea1496a72428d6bb58f18e773e286db4d4bf4879bd517cace21561a19",
+      "path": "outputs/fedcore_v1_run/checkpoints/pacs__resnet18__split02__seed1/latest.pt",
+      "sha256": "f986b4aea1496a72428d6bb58f18e773e286db4d4bf4879bd517cace21561a19"
+    },
+    "pacs__resnet18__split02__seed2": {
+      "exists": true,
+      "expected": "201ca7a070c6499e58fce38a148b14574afe1034931a014cbef8d145ea9156b2",
+      "path": "outputs/fedcore_v1_run/checkpoints/pacs__resnet18__split02__seed2/latest.pt",
+      "sha256": "201ca7a070c6499e58fce38a148b14574afe1034931a014cbef8d145ea9156b2"
+    },
+    "pacs__resnet18__split03__seed0": {
+      "exists": true,
+      "expected": "f9632435c29bf7d276944a3ce81b7fcd497932b2ea2c065c5fdd829e64f1e000",
+      "path": "outputs/fedcore_v1_run/checkpoints/pacs__resnet18__split03__seed0/latest.pt",
+      "sha256": "f9632435c29bf7d276944a3ce81b7fcd497932b2ea2c065c5fdd829e64f1e000"
+    },
+    "pacs__resnet18__split03__seed1": {
+      "exists": true,
+      "expected": "251679dea5fc859d3d543037b473579fe77532946fe4635b951d0b6115754b01",
+      "path": "outputs/fedcore_v1_run/checkpoints/pacs__resnet18__split03__seed1/latest.pt",
+      "sha256": "251679dea5fc859d3d543037b473579fe77532946fe4635b951d0b6115754b01"
+    },
+    "pacs__resnet18__split03__seed2": {
+      "exists": true,
+      "expected": "0042a4b5bfdfc22668542c3484664e5c1eeb8f05ea78efce753f79c52bd124d6",
+      "path": "outputs/fedcore_v1_run/checkpoints/pacs__resnet18__split03__seed2/latest.pt",
+      "sha256": "0042a4b5bfdfc22668542c3484664e5c1eeb8f05ea78efce753f79c52bd124d6"
+    },
+    "pacs__resnet18__split04__seed0": {
+      "exists": true,
+      "expected": "ec01bb17a1e43ba5a44bc8eedc67e5ef0362f788f1b750221bffa6e86812180c",
+      "path": "outputs/fedcore_v1_run/checkpoints/pacs__resnet18__split04__seed0/latest.pt",
+      "sha256": "ec01bb17a1e43ba5a44bc8eedc67e5ef0362f788f1b750221bffa6e86812180c"
+    },
+    "pacs__resnet18__split04__seed1": {
+      "exists": true,
+      "expected": "d545156329051e7e0fd2d3410bbb822b11224170accb35fa3e1b894bb3810941",
+      "path": "outputs/fedcore_v1_run/checkpoints/pacs__resnet18__split04__seed1/latest.pt",
+      "sha256": "d545156329051e7e0fd2d3410bbb822b11224170accb35fa3e1b894bb3810941"
+    },
+    "pacs__resnet18__split04__seed2": {
+      "exists": true,
+      "expected": "7eb8ceab6aee00cb64c7f98077bff3466a907b2b055f2da0cf01e25a79bc7531",
+      "path": "outputs/fedcore_v1_run/checkpoints/pacs__resnet18__split04__seed2/latest.pt",
+      "sha256": "7eb8ceab6aee00cb64c7f98077bff3466a907b2b055f2da0cf01e25a79bc7531"
+    }
+  },
+  "checkpoints_match": 30,
+  "checkpoints_present": 30,
+  "crops_sha256": "30f5f1c54ef89c88e6d80eed93db382b63c09d80682817173bf2e538d8c71619",
+  "data_check_sha256": "60189c31a16a1b29876bf60c60c8cd2380d8541afdef32969b72d90b2c3405c9",
+  "env": {
+    "PIL": "12.1.1",
+    "numpy": "2.4.3",
+    "python": "3.11.15 (main, Mar 11 2026, 17:20:07) [GCC 14.3.0]",
+    "scipy": "1.17.1",
+    "torch": "2.11.0+cu128",
+    "torchvision": "0.26.0+cu128"
+  },
+  "manifest_sha256": "106c2ff8897d0c246b2f64f6a8c3ad3c21b43d61ff4c8674c35ea27c7ff9ae2c",
+  "model_matrix_sha256": "53541e59650fe1f63c315a8433e80e88b7373a4371a8c7dd50fa89e10e87f6d4",
+  "protocol_id": "FEDCORE-S1-DOMAINNET6-PACSCLS-20260925-v2",
+  "protocol_sha256_actual": "06dd7e1a22f3d504dc76dd115b3f1803754ffe022a9d436e7dcef8a20c7c142b",
+  "protocol_sha256_expected": "06dd7e1a22f3d504dc76dd115b3f1803754ffe022a9d436e7dcef8a20c7c142b",
+  "s1v2_code_sha256": {
+    "common.py": "acd5b695f27497abb4b1b897fdc7c44ec44f99f1c851341d41d1c8d5f387b424",
+    "prepare.py": "8dd7b090cdc492284780cd472aff3afd182b3be0c53d81195500b17eebc681bd",
+    "runner.py": "5d0293fb0537d20181ce25236f439b246be5b4ade6f9b6932d9731f511c58c72"
+  },
+  "status": "PASS",
+  "utc": "2026-09-25T12:12:29.328855+00:00",
+  "v1_code_match": true,
+  "v1_code_match_run_state": true,
+  "v1_code_sha256": {
+    "v1_pacs_adapter.py": "ceff2d0e3138cd99f96262e0d7193af5b96895118cc55c820aed6b6d0ba7871e",
+    "v1_pacs_analysis.py": "a8c7d45483c1f52ae11b8d65c95271a205267a153958b171d959b004e1afb7c2",
+    "v1_pacs_certifier.py": "e0e446452c0f9cbd7ceb75221a842083be10f12c33b809e12d302816dc64d954",
+    "v1_pacs_gpu_check.py": "7abe4e1793a15d622a55cf3d2d30220f9093ff774cdc1e657077cdffcb24ffbd",
+    "v1_pacs_preflight.py": "9313123dd0278d32095e6f91e740a0b0cc3412c61549f5531fe2dcefb456b367",
+    "v1_pacs_runner.py": "4442fa54193f563f84b6456b88c3332ab8a7c9b075a1886834fd417e66fba223",
+    "v1_pacs_runner_tests.py": "0ed12a957e65acc70e0feaac894306da555bcd98110ce5b22184bfa4f5e95b84",
+    "v1_pacs_synthetic.py": "ac23ebf179629255efbab1e3092421dcb79393e6c15e4ccc16c9810ec4b90095"
+  },
+  "v1_run_state_sha256": "de8548bbf7db0de4846cc55f3887045c0e1d2ee4f513cbe81ab0d7fe3c5052de"
+}

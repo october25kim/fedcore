@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "comparison": "full_simplex_same_target_fixed_prior_betting",
+  "scientific_contract": {
+    "predictor": "identical within each registered cell",
+    "selector_family_size": 12,
+    "mixture_set": "full_simplex",
+    "risk_target_alpha": 0.2,
+    "risk_and_acceptance_budgets": "identical",
+    "realized_audit_counts": "identical",
+    "family_correction": "Holm"
+  },
+  "inputs": [
+    {
+      "path": "paper/wr-v3/artifacts/primary/primary_candidate_counts.csv.gz",
+      "sha256": "898ddf057a3a0ed6e00323cc57e97c7bb68dbc0a3de204fac7c6f9760a83b9b4"
+    },
+    {
+      "path": "paper/wr-v3/governing/family_manifest.csv.gz",
+      "sha256": "8771ded5334910dec3be688861df161a80cf19dfd4868053f661ec26fa2a5470"
+    },
+    {
+      "path": "fedcore/analysis/comparator_matrix.py",
+      "sha256": "92eb617b87c7db1b6116d8620c33cda0e9a4fb6c231c13bbb68ec8601362a385"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "contract.json",
+      "sha256": "16450ccaa8b9ecc5f088477343bc8d534f269a72cd1b85f51c427a994a948128"
+    },
+    {
+      "path": "per_cell_eca.csv",
+      "sha256": "d30cf2ce56f112e2c251043cb8606c0b522db57c5fa507d223543201988547a3"
+    },
+    {
+      "path": "summary.csv",
+      "sha256": "39408692dfa75a44b1a1509eaa311e9d0ba2cc1cd255999e00a46b1c1e9c1109"
+    }
+  ],
+  "claim_boundary": "The result is specific to the registered fixed-prior betting construction and does not establish dominance over all valid betting procedures."
+}

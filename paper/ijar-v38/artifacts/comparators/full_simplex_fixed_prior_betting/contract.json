@@ -1,0 +1,31 @@
+{
+  "counts": "primary_candidate_counts.csv.gz",
+  "arms": [
+    "exact-cp",
+    "wilson",
+    "hoeffding",
+    "emp-bernstein",
+    "betting",
+    "betting-oracle"
+  ],
+  "delta_r": 0.05,
+  "delta_c": 0.05,
+  "family_size": 12,
+  "stakes_betting": [
+    0.01,
+    0.02,
+    0.05,
+    0.1,
+    0.2,
+    0.4,
+    0.6,
+    0.8
+  ],
+  "stakes_oracle_grid": 72,
+  "family_procedure": "holm over member-level max-p IUT",
+  "acceptance_rule": "Clopper-Pearson LCB at delta_c / M",
+  "invalid_arms": [
+    "betting-oracle",
+    "wilson"
+  ]
+}

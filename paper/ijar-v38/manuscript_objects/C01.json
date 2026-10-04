@@ -1,0 +1,5 @@
+{
+  "ledger_id": "C01",
+  "object_type": "paragraph",
+  "text": "At the registered risk target of 0.20, H, S, and B each certified three of 30 models. Mean ECA across the complete denominator was 3.87% for H, 3.87% for S, and 3.56% for B. Among the three certified models, mean selected coverage lower bounds were 38.67%, 38.67%, and 35.57%, respectively. All three procedures certified the same ConvNeXt-Tiny split two models at seeds zero, one, and two. No ResNet18 model and no other class split certified. Proposal construction was not the limiting step because every candidate family was feasible. In addition, 321 of 360 candidates per procedure had positive coverage lower bounds. The risk decision passed for only 11 candidates under H and S and eight under B, all concentrated in the same three models. The risk gate, rather than proposal feasibility or coverage positivity, was therefore the empirical bottleneck."
+}

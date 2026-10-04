@@ -1,0 +1,128 @@
+{
+  "contrasts": {
+    "convnext_tiny|COMPOSED_CP_BETTING_H": {
+      "boot_mean": 0.0003229789659437463,
+      "boot_sd": 0.00013969978333453804,
+      "ci_lower": 0.0,
+      "ci_upper": 0.0007928662202965672,
+      "delta_hat": 0.0003236161958585754
+    },
+    "convnext_tiny|CP_IUT_H": {
+      "boot_mean": 0.000734745454526506,
+      "boot_sd": 0.00024651629596952917,
+      "ci_lower": 0.000135901355035881,
+      "ci_upper": 0.0015531275372556287,
+      "delta_hat": 0.0007339044262154225
+    },
+    "convnext_tiny|DIRECT_BETTING_H": {
+      "boot_mean": -0.0003504507089367367,
+      "boot_sd": 0.00020689845765923918,
+      "ci_lower": -0.0010327923684583938,
+      "ci_upper": 0.00017826999886336173,
+      "delta_hat": -0.0003512049138328681
+    },
+    "convnext_tiny|GEOMETRY_DIRECT_CP": {
+      "boot_mean": -0.0004773572603405546,
+      "boot_sd": 0.0001893191037428905,
+      "ci_lower": -0.0011220013233001795,
+      "ci_upper": -1.7717164541383973e-05,
+      "delta_hat": -0.0004780531984228152
+    },
+    "convnext_tiny|HOEFFDING_H": {
+      "boot_mean": 0.0010441510775305942,
+      "boot_sd": 0.0004245300044138865,
+      "ci_lower": 0.00013615996430375735,
+      "ci_upper": 0.002545087618269191,
+      "delta_hat": 0.001043182542652421
+    },
+    "convnext_tiny|MASS_CP": {
+      "boot_mean": 0.0010441510775305942,
+      "boot_sd": 0.0004245300044138865,
+      "ci_lower": 0.00013615996430375735,
+      "ci_upper": 0.002545087618269191,
+      "delta_hat": 0.001043182542652421
+    },
+    "convnext_tiny|RATIO": {
+      "boot_mean": 0.0010441510775305942,
+      "boot_sd": 0.0004245300044138865,
+      "ci_lower": 0.00013615996430375735,
+      "ci_upper": 0.002545087618269191,
+      "delta_hat": 0.001043182542652421
+    },
+    "convnext_tiny|SCALE_H": {
+      "boot_mean": 0.00012690655140381788,
+      "boot_sd": 8.935088271149268e-05,
+      "ci_lower": 0.0,
+      "ci_upper": 0.000453452832751695,
+      "delta_hat": 0.00012684828458994714
+    },
+    "resnet18|COMPOSED_CP_BETTING_H": {
+      "boot_mean": 0.0,
+      "boot_sd": 0.0,
+      "ci_lower": 0.0,
+      "ci_upper": 0.0,
+      "delta_hat": 0.0
+    },
+    "resnet18|CP_IUT_H": {
+      "boot_mean": 0.0,
+      "boot_sd": 0.0,
+      "ci_lower": 0.0,
+      "ci_upper": 0.0,
+      "delta_hat": 0.0
+    },
+    "resnet18|DIRECT_BETTING_H": {
+      "boot_mean": 0.0,
+      "boot_sd": 0.0,
+      "ci_lower": 0.0,
+      "ci_upper": 0.0,
+      "delta_hat": 0.0
+    },
+    "resnet18|GEOMETRY_DIRECT_CP": {
+      "boot_mean": 0.0,
+      "boot_sd": 0.0,
+      "ci_lower": 0.0,
+      "ci_upper": 0.0,
+      "delta_hat": 0.0
+    },
+    "resnet18|HOEFFDING_H": {
+      "boot_mean": 0.0,
+      "boot_sd": 0.0,
+      "ci_lower": 0.0,
+      "ci_upper": 0.0,
+      "delta_hat": 0.0
+    },
+    "resnet18|MASS_CP": {
+      "boot_mean": 0.0,
+      "boot_sd": 0.0,
+      "ci_lower": 0.0,
+      "ci_upper": 0.0,
+      "delta_hat": 0.0
+    },
+    "resnet18|RATIO": {
+      "boot_mean": 0.0,
+      "boot_sd": 0.0,
+      "ci_lower": 0.0,
+      "ci_upper": 0.0,
+      "delta_hat": 0.0
+    },
+    "resnet18|SCALE_H": {
+      "boot_mean": 0.0,
+      "boot_sd": 0.0,
+      "ci_lower": 0.0,
+      "ci_upper": 0.0,
+      "delta_hat": 0.0
+    }
+  },
+  "meta": {
+    "index_sha256": "297a53245ea2ef829401cae6bddf9d695b5db14da276ca7f2acd669f9b436f96",
+    "method": "linear",
+    "n_boot": 20000,
+    "quantiles": [
+      0.0015625,
+      0.9984375
+    ],
+    "rng": "numpy PCG64 Generator, integers(0,R,size=(n_boot,R)) shared across all contrasts",
+    "seed": 2026092501
+  },
+  "per_replicate_D_sha256": "b11612549ce5b1921a2b0f4ee203e05441d7ee044729563a449d852c5058d869"
+}

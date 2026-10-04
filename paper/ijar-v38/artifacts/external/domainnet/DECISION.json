@@ -1,0 +1,34 @@
+{
+  "J": 6,
+  "bootstrap_seed": 2026092501,
+  "candidate_flags": 1512000,
+  "decision": "KILL",
+  "detail": {
+    "all_14_ci_lower_gt_0": false,
+    "any_fixed_ci_upper_le_0": true,
+    "g_by_arch": {
+      "convnext_tiny": -0.0003512049138328681,
+      "resnet18": 0.0
+    },
+    "incomplete_reasons": [],
+    "invalid_reasons": [],
+    "pacs_overlap_count": 0,
+    "validity_flagged_groups": 0,
+    "validity_threshold_p": 3.968253968253968e-05
+  },
+  "models": 30,
+  "note": "S1 v2 DomainNet-6 transfer probe under frozen V1 predictors. Descriptive of transfer only; does not rewrite V1 (V1 remains HOLD).",
+  "per_domain_draws": {
+    "256": 42,
+    "512": 85,
+    "1024": 170
+  },
+  "primary_rows": 54000,
+  "protocol_id": "FEDCORE-S1-DOMAINNET6-PACSCLS-20260925-v2",
+  "protocol_sha256": "06dd7e1a22f3d504dc76dd115b3f1803754ffe022a9d436e7dcef8a20c7c142b",
+  "rows_total": 162000,
+  "transfer_label": "NOT_TRANSFER",
+  "utc": "2026-09-25T12:48:57.641032+00:00",
+  "validity_groups": 1260,
+  "validity_threshold_p": 3.968253968253968e-05
+}

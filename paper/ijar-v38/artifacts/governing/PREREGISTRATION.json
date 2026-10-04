@@ -1,0 +1,113 @@
+{
+  "schema_version": 3,
+  "contract_id": "fedcore-headline-wr-v3",
+  "sealed_date": "2026-08-29",
+  "state": "SEALED_BEFORE_PRIMARY_RESULT_COMPUTATION",
+  "objective": "Recompute the frozen 450-cell H/S/B campaign under the manuscript's theorem-aligned frozen-reservoir with-replacement sampling branch.",
+  "provenance_amendment": "The v1 process terminated before writing any primary result file. Version 2 added pre-result SHA-256 pins for all 450 raw NPZ files and all 450 TERMINAL sidecars, then terminated at the first PathMNIST cell because its semantic ID uses split_00 rather than split00; it also wrote no primary result file. Version 3 changes only that metadata parser and adds both identifier formats to the self-test. No estimand, seed, selector, sampling law, confidence allocation, or reporting rule changed.",
+  "scientific_scope": {
+    "cells": 450,
+    "datasets": {
+      "cifar10": 150,
+      "cifar100": 150,
+      "officehome": 100,
+      "pathmnist": 50
+    },
+    "alpha_grid": [0.05, 0.1, 0.15, 0.2, 0.25, 0.3],
+    "primary_alpha": 0.2,
+    "delta_r": 0.05,
+    "delta_c": 0.05,
+    "family_size_M": 12,
+    "mixture_target": "client-level full simplex"
+  },
+  "frozen_selector_contract": {
+    "source": "proposal-defined family_manifest.csv.gz",
+    "thresholds_reselected": false,
+    "family_reordered": false,
+    "certification_or_evaluation_outcomes_used_to_define_family": false,
+    "proposal_feasibility_gate_retained": true,
+    "candidate_selection": "maximum positive certified coverage LCB; ties by smaller gamma, lexicographic theorem-facing score name, then candidate index"
+  },
+  "target_population": {
+    "name": "clientwise frozen certification-fold empirical reservoir conditional",
+    "reservoir_atom": "one source-unique certification-fold image record",
+    "within_client_distribution": "uniform over the fixed certification records",
+    "future_deployment_population_claimed": false,
+    "test_or_evaluation_fold_used": false,
+    "pathmnist_identity_scope": "image record, not patient"
+  },
+  "primary_sampling_law": {
+    "draws_per_cell": 1,
+    "within_client_draw_size": "n_draw_j = N_reservoir_j, equal to the archived certification count for that client",
+    "replacement": true,
+    "law": "I_jl iid Uniform({0,...,N_reservoir_j-1}) independently within every declared client",
+    "duplicate_indices": "retained with multiplicity and never interpreted as additional source-level labels",
+    "common_random_numbers": "the same realized client index vector is used for all 12 selectors and all H/S/B procedures",
+    "rng": "NumPy PCG64",
+    "seed_derivation": "SeedSequence([frozen_primary_audit_seed, client_id, 0])",
+    "seed_sources": {
+      "cifar_and_officehome": "final_training_matrix_v2_bound.csv:seed_primary_audit_draw",
+      "pathmnist": "final_training_matrix.csv:seed_audit"
+    },
+    "officehome_seed_resolution": "The frozen Confirmatory-400R matrix seed governs this paired headline recalculation. The different artifact-embedded audit_draw_seed belongs to the earlier standalone Office-Home analysis and is archived only as provenance.",
+    "headline_is_single_draw": true,
+    "repeated_draw_average_is_not_a_certificate": true
+  },
+  "procedures": {
+    "H": {
+      "risk": "p_m = max_j BinomCDF(K_mj; A_mj, alpha), followed by Holm over M at delta_r",
+      "coverage": "min_j L_minus(A_mj, n_j; delta_c/M)",
+      "reports_numeric_risk_ucb": false
+    },
+    "S": {
+      "risk": "max_j U_plus(K_mj, A_mj; delta_r/M)",
+      "coverage": "min_j L_minus(A_mj, n_j; delta_c/M)",
+      "client_divisor": false
+    },
+    "B": {
+      "role": "deliberately conservative clientwise Bonferroni confidence-allocation ablation",
+      "risk": "max_j U_plus(K_mj, A_mj; delta_r/(M J))",
+      "coverage": "min_j L_minus(A_mj, n_j; delta_c/(M J))",
+      "headline_method": false
+    }
+  },
+  "estimands": {
+    "certification_rate": "certified cells / all declared cells in the reported denominator",
+    "EffectiveCertCov": "mean of certified coverage LCB with zero assigned to an uncertified cell",
+    "CondCertCov": "mean coverage LCB among certified cells, reported with the certified denominator",
+    "cell_variation_interval": "20,000-replicate paired hierarchical bootstrap over split then training repetition, seed 20260825",
+    "bootstrap_is_theorem_confidence": false
+  },
+  "fail_closed_validation": [
+    "exactly 450 unique semantic IDs must be present",
+    "every declared NPZ and TERMINAL sidecar must match its pre-result byte count and SHA-256 pin",
+    "raw-input, family, archived-count, and seed maps must reject duplicate keys and exactly match the declared roster",
+    "certification source IDs must be unique within every cell",
+    "every declared client must have a nonempty reservoir",
+    "the record-level reconstruction must exactly reproduce all archived as-is A/K/n rows for six alpha values",
+    "every primary draw must satisfy 0 <= K <= A <= n",
+    "H, S, and B must consume an identical count-tensor hash in each cell and alpha",
+    "candidatewise S risk UCB cannot exceed B and S coverage LCB cannot fall below B",
+    "every B-certified cell must also be S-certified",
+    "any failed invariant aborts the run before a headline is accepted"
+  ],
+  "frozen_inputs": {
+    "remote_repo": "/data/workspace/sanghoon/fedcore2",
+    "remote_head_observed": "ee3c646d6190c86d96c3bcf0c9ddbe260a09a8e6",
+    "analysis_input_manifest_sha256": "7651e6f16ab43839c2d57f914b68cc188158ce5b1dd9f048f780c54d6375209c",
+    "family_manifest_sha256": "8771ded5334910dec3be688861df161a80cf19dfd4868053f661ec26fa2a5470",
+    "archived_candidate_counts_sha256": "4e75063de5c54f03a3d8fb698b0d75fdd8d38972e49de2a1d1fd24af789ed865",
+    "confirmatory_400r_matrix_sha256": "d035925afe8d9ad30cfdbba0adf9f0205171d688898abe8f696aee3b5df41ebb",
+    "medmnist_matrix_sha256": "5d6562addd3ccf1c988e336dd24c6105fba20748ac6e1e682ae2f6b5bf40251b",
+    "raw_input_pins_sha256": "80f9e4bd85c92192fbaf3de44f89de17d9fd533871ca19a294a7ba5bf172c808",
+    "raw_input_pin_builder_sha256": "9ca8f44662db3f62fdfc066b7f9b55ad5b2ac96b567945cfef3ba6499eaec874",
+    "analysis_script_sha256": "4cab82ffc29c30e5cbcef0308f8d46056edb3edc1772c6873210af992ef2ec9f"
+  },
+  "output_policy": {
+    "existing_artifacts_overwritten": false,
+    "isolated_remote_directory": "results/theorem_aligned_wr_450_v3",
+    "raw_primary_index_vectors": "not released; per-client sequence SHA-256, uniqueness count, duplication rate, and maximum multiplicity are released",
+    "full_A_K_n_released": true,
+    "all_output_files_hashed": true
+  }
+}

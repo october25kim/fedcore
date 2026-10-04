@@ -1,0 +1,5813 @@
+{
+  "protocol_sha256": "f750087a7fd18284f75b98b71ebec892dae1ec273a0adabaf15b5472e633212d",
+  "source_gate_sha256": "dcc7a7e06dbd52781f1ff8d64e7004fa038a4f1b8edcccf543b30092e8096dde",
+  "code_sha256": {
+    "fedcore/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "fedcore/experiments/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "fedcore/experiments/v1_pacs_adapter.py": "d25520dad2ada796874f9b644581ccfa732a37112446072a1b2d646aba3a94a8",
+    "fedcore/experiments/v1_pacs_analysis.py": "a8c7d45483c1f52ae11b8d65c95271a205267a153958b171d959b004e1afb7c2",
+    "fedcore/experiments/v1_pacs_certifier.py": "e0e446452c0f9cbd7ceb75221a842083be10f12c33b809e12d302816dc64d954",
+    "fedcore/experiments/v1_pacs_gpu_check.py": "7abe4e1793a15d622a55cf3d2d30220f9093ff774cdc1e657077cdffcb24ffbd",
+    "fedcore/experiments/v1_pacs_preflight.py": "9313123dd0278d32095e6f91e740a0b0cc3412c61549f5531fe2dcefb456b367",
+    "fedcore/experiments/v1_pacs_runner.py": "4442fa54193f563f84b6456b88c3332ab8a7c9b075a1886834fd417e66fba223",
+    "fedcore/experiments/v1_pacs_runner_tests.py": "0ed12a957e65acc70e0feaac894306da555bcd98110ce5b22184bfa4f5e95b84",
+    "fedcore/experiments/v1_pacs_synthetic.py": "ac23ebf179629255efbab1e3092421dcb79393e6c15e4ccc16c9810ec4b90095",
+    "run_vlcs.py": "5253e88f8fe78d38254b05bc39f60a2e02b084550b8ce60b7f13f60fa14c4c4c"
+  },
+  "models": [
+    {
+      "model_id": "vlcs__resnet18__split00__seed0",
+      "architecture": "resnet18",
+      "split": "0",
+      "seed": "0",
+      "status": "AUDITED",
+      "completed_rounds": 30,
+      "client_steps": {
+        "0": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "1": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "2": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "3": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "4": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "5": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "6": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "7": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "8": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "9": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "10": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "11": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "12": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "13": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "14": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "15": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "16": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "17": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "18": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "19": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "20": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "21": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "22": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "23": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "24": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "25": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "26": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "27": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "28": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "29": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        }
+      },
+      "state_sha256": "83206d441f3c2f6e13bdf9db88b093d45d671deca90a91d5954bc95997ccc745",
+      "logits_sha256": "422163d42b0679d31d35b921a4a344b4d126bf596c04e9a1c9e9bd6fb7cd8e21",
+      "audit_sha256": "96d3ef0af2a52ecf7087cacffdfc07501dd8b2ee1a2b3fac0e2048ac1c2518a2"
+    },
+    {
+      "model_id": "vlcs__convnext_tiny__split00__seed0",
+      "architecture": "convnext_tiny",
+      "split": "0",
+      "seed": "0",
+      "status": "AUDITED",
+      "completed_rounds": 30,
+      "client_steps": {
+        "0": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "1": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "2": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "3": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "4": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "5": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "6": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "7": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "8": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "9": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "10": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "11": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "12": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "13": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "14": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "15": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "16": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "17": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "18": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "19": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "20": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "21": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "22": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "23": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "24": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "25": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "26": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "27": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "28": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "29": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        }
+      },
+      "state_sha256": "b9e0acb5f4d36c7bb0fa233adbf35d64140e2458398107abf21a7a7c3a8b69a1",
+      "logits_sha256": "ef49c06bbffc096c5db6fc8eb4e1ca5a4ff440ec09f8948be3152cad59c1d07e",
+      "audit_sha256": "7d9d01723e44d695d26e36f2d255f746c2fb05180fde560c3c61606085b9e923"
+    },
+    {
+      "model_id": "vlcs__resnet18__split00__seed1",
+      "architecture": "resnet18",
+      "split": "0",
+      "seed": "1",
+      "status": "AUDITED",
+      "completed_rounds": 30,
+      "client_steps": {
+        "0": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "1": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "2": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "3": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "4": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "5": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "6": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "7": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "8": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "9": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "10": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "11": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "12": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "13": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "14": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "15": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "16": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "17": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "18": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "19": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "20": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "21": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "22": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "23": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "24": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "25": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "26": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "27": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "28": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "29": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        }
+      },
+      "state_sha256": "b574793c0d978779420394d42a65bcad8de0ca509d743801141fa3ab6396176b",
+      "logits_sha256": "d5b92f64581c4c596b27edd4b39ccaedf20e5cd233196b498b282348dc1da45c",
+      "audit_sha256": "f098abeb1217f33af82e4c888af8e11fb55f96c8174b848ff55786bc2b5f90ad"
+    },
+    {
+      "model_id": "vlcs__convnext_tiny__split00__seed1",
+      "architecture": "convnext_tiny",
+      "split": "0",
+      "seed": "1",
+      "status": "AUDITED",
+      "completed_rounds": 30,
+      "client_steps": {
+        "0": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "1": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "2": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "3": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "4": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "5": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "6": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "7": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "8": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "9": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "10": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "11": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "12": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "13": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "14": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "15": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "16": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "17": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "18": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "19": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "20": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "21": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "22": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "23": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "24": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "25": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "26": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "27": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "28": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "29": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        }
+      },
+      "state_sha256": "d6371c75449adbef05fb349e28cd56b2281a73e327d3e3bc3178fe542cdfe3d3",
+      "logits_sha256": "163a41ceab63b9f7602d1c9a4cd0650114b90fd9035cd0e846d2aba11172de76",
+      "audit_sha256": "4689c0500ac6dbbe81351fe3fb2cb05dff37f785ce3c2ad206c9815d8840be28"
+    },
+    {
+      "model_id": "vlcs__resnet18__split00__seed2",
+      "architecture": "resnet18",
+      "split": "0",
+      "seed": "2",
+      "status": "AUDITED",
+      "completed_rounds": 30,
+      "client_steps": {
+        "0": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "1": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "2": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "3": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "4": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "5": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "6": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "7": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "8": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "9": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "10": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "11": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "12": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "13": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "14": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "15": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "16": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "17": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "18": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "19": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "20": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "21": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "22": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "23": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "24": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "25": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "26": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "27": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "28": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "29": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        }
+      },
+      "state_sha256": "50efda808b5cc12d9e900f36d90ae527cf56d8df5c1fd16d5b9fd7613f1ffa4f",
+      "logits_sha256": "87ac480952bc0da23c1bcdf6b81ea430dc9eb169b3f35937364ba55a2d919e15",
+      "audit_sha256": "50d53a1e25a32ffe706deab62274d1212220b7d802e800c1ac04881b85a60cd2"
+    },
+    {
+      "model_id": "vlcs__convnext_tiny__split00__seed2",
+      "architecture": "convnext_tiny",
+      "split": "0",
+      "seed": "2",
+      "status": "AUDITED",
+      "completed_rounds": 30,
+      "client_steps": {
+        "0": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "1": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "2": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "3": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "4": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "5": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "6": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "7": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "8": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "9": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "10": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "11": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "12": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "13": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "14": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "15": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "16": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "17": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "18": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "19": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "20": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "21": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "22": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "23": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "24": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "25": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "26": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "27": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "28": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        },
+        "29": {
+          "CALTECH": 21,
+          "LABELME": 26,
+          "PASCAL": 44,
+          "SUN": 44
+        }
+      },
+      "state_sha256": "6a0512b259a422209cbae725746a37cf3a4a9da9c6bc9b62e19955c55e57386a",
+      "logits_sha256": "03dbe0bf016ba8e576fcc82f964fb56f773ed0f49a81ae3b03da1eacf4988931",
+      "audit_sha256": "d2bac90b8a84d6256c5852b0159d3c4baa556133a84c2fceb235c1c144a9725c"
+    },
+    {
+      "model_id": "vlcs__resnet18__split01__seed0",
+      "architecture": "resnet18",
+      "split": "1",
+      "seed": "0",
+      "status": "AUDITED",
+      "completed_rounds": 30,
+      "client_steps": {
+        "0": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "1": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "2": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "3": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "4": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "5": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "6": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "7": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "8": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "9": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "10": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "11": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "12": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "13": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "14": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "15": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "16": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "17": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "18": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "19": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "20": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "21": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "22": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "23": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "24": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "25": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "26": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "27": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "28": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "29": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        }
+      },
+      "state_sha256": "bb66557c86de83706c3eb5636e07faeef852dffcb6d2529e07a23c5e8110445f",
+      "logits_sha256": "212ba65c83e4389839633584dd5539d800324b3ced065c137b4d72bdf6a08d8d",
+      "audit_sha256": "64f61e2793ddc3c65b7abf49a46a01176124b4438cb87302c2409ac2498bec2b"
+    },
+    {
+      "model_id": "vlcs__convnext_tiny__split01__seed0",
+      "architecture": "convnext_tiny",
+      "split": "1",
+      "seed": "0",
+      "status": "AUDITED",
+      "completed_rounds": 30,
+      "client_steps": {
+        "0": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "1": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "2": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "3": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "4": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "5": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "6": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "7": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "8": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "9": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "10": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "11": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "12": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "13": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "14": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "15": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "16": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "17": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "18": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "19": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "20": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "21": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "22": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "23": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "24": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "25": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "26": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "27": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "28": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "29": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        }
+      },
+      "state_sha256": "ea569673446bbcc9f753fb09c68b8a14f3237816bc83c68db8244e3bc3d1a1ef",
+      "logits_sha256": "dc13ad4d9f138d48b792cd6fc5f3925e309ab47fade608b9de299c2ae1095da9",
+      "audit_sha256": "491e810c4e5a93796380e31a08329e0ea28f615c232c7ab35942521499e0b68d"
+    },
+    {
+      "model_id": "vlcs__resnet18__split01__seed1",
+      "architecture": "resnet18",
+      "split": "1",
+      "seed": "1",
+      "status": "AUDITED",
+      "completed_rounds": 30,
+      "client_steps": {
+        "0": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "1": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "2": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "3": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "4": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "5": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "6": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "7": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "8": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "9": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "10": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "11": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "12": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "13": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "14": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "15": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "16": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "17": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "18": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "19": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "20": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "21": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "22": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "23": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "24": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "25": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "26": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "27": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "28": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "29": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        }
+      },
+      "state_sha256": "c55004f288c0742db29c4105efb0886e938ff7830fd56fa3d8cde62d302df1de",
+      "logits_sha256": "7fcf7b893fc1d1cccca6f26a7c916405baf0604fdbb7410c09d88490fd6b8b85",
+      "audit_sha256": "424d3ae8a2d0c178bf5e521a58e401239ead7f69280ee05f67bd6545543f29bc"
+    },
+    {
+      "model_id": "vlcs__convnext_tiny__split01__seed1",
+      "architecture": "convnext_tiny",
+      "split": "1",
+      "seed": "1",
+      "status": "AUDITED",
+      "completed_rounds": 30,
+      "client_steps": {
+        "0": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "1": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "2": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "3": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "4": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "5": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "6": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "7": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "8": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "9": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "10": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "11": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "12": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "13": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "14": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "15": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "16": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "17": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "18": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "19": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "20": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "21": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "22": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "23": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "24": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "25": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "26": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "27": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "28": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "29": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        }
+      },
+      "state_sha256": "8d670060f3345bd370653405a0c09d031a793855a255a6bd2a3537605818b323",
+      "logits_sha256": "b7be2bbc84eb90ca6c7188cbf27fe616735546a027f15a5dc9eba06f091b1664",
+      "audit_sha256": "eb952f37a63fee5e82891c947f63df10b17ce0e5471e70f270f7cbda36976940"
+    },
+    {
+      "model_id": "vlcs__resnet18__split01__seed2",
+      "architecture": "resnet18",
+      "split": "1",
+      "seed": "2",
+      "status": "AUDITED",
+      "completed_rounds": 30,
+      "client_steps": {
+        "0": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "1": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "2": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "3": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "4": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "5": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "6": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "7": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "8": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "9": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "10": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "11": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "12": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "13": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "14": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "15": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "16": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "17": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "18": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "19": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "20": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "21": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "22": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "23": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "24": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "25": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "26": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "27": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "28": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "29": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        }
+      },
+      "state_sha256": "4cf50400fd90ea2dad0493d7f267431912473478cda5f9ad3bce867f369ee113",
+      "logits_sha256": "7c016884310dcc43fe5ca5222f1a517bd9a936d31f9e5f3867d9b295f3070857",
+      "audit_sha256": "2f3801c34726382b4ce0da9ee11b33f5d1d5d0b23b4d6f7754d3647099233496"
+    },
+    {
+      "model_id": "vlcs__convnext_tiny__split01__seed2",
+      "architecture": "convnext_tiny",
+      "split": "1",
+      "seed": "2",
+      "status": "AUDITED",
+      "completed_rounds": 30,
+      "client_steps": {
+        "0": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "1": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "2": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "3": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "4": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "5": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "6": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "7": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "8": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "9": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "10": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "11": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "12": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "13": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "14": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "15": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "16": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "17": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "18": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "19": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "20": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "21": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "22": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "23": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "24": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "25": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "26": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "27": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "28": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        },
+        "29": {
+          "CALTECH": 9,
+          "LABELME": 26,
+          "PASCAL": 27,
+          "SUN": 39
+        }
+      },
+      "state_sha256": "68ec41108a4b55e256316e266c1a64b2144bc5864715cc8093384f795f0f480f",
+      "logits_sha256": "03328644dbaae04a35b5f0f65763073b0d206fb55252fcfcdb4cec8b3fe4491b",
+      "audit_sha256": "531bde48eb8a926438c011fe2d262f390c0746e24def7223eb2b28fe5b5b9f0f"
+    },
+    {
+      "model_id": "vlcs__resnet18__split02__seed0",
+      "architecture": "resnet18",
+      "split": "2",
+      "seed": "0",
+      "status": "AUDITED",
+      "completed_rounds": 30,
+      "client_steps": {
+        "0": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "1": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "2": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "3": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "4": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "5": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "6": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "7": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "8": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "9": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "10": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "11": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "12": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "13": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "14": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "15": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "16": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "17": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "18": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "19": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "20": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "21": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "22": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "23": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "24": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "25": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "26": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "27": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "28": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "29": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        }
+      },
+      "state_sha256": "14ede5579759a0a2887cfaf13aeef60db410dbe1253caf12724743ce675686dd",
+      "logits_sha256": "665751c21bbad102a061895125006858ef9dd1c1a8295db28fda948b3b113810",
+      "audit_sha256": "eab4d2838ee7c5f2ebe64f4ed78265740dd4fa280ab1de02623dc781e65eb265"
+    },
+    {
+      "model_id": "vlcs__convnext_tiny__split02__seed0",
+      "architecture": "convnext_tiny",
+      "split": "2",
+      "seed": "0",
+      "status": "AUDITED",
+      "completed_rounds": 30,
+      "client_steps": {
+        "0": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "1": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "2": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "3": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "4": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "5": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "6": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "7": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "8": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "9": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "10": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "11": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "12": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "13": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "14": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "15": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "16": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "17": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "18": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "19": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "20": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "21": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "22": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "23": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "24": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "25": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "26": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "27": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "28": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "29": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        }
+      },
+      "state_sha256": "bf4ba2d3805aaf1fb96c29e87e212c0ec68c692ea2138685481b821bc715b430",
+      "logits_sha256": "bd94ae3e7d0c58006747554c5db4d64729702885146066c4ee083a16559a7da0",
+      "audit_sha256": "322d0af36b6b65e25e3bad36cace828aa416d5afd975c159ccf3f77f20ba6aeb"
+    },
+    {
+      "model_id": "vlcs__resnet18__split02__seed1",
+      "architecture": "resnet18",
+      "split": "2",
+      "seed": "1",
+      "status": "AUDITED",
+      "completed_rounds": 30,
+      "client_steps": {
+        "0": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "1": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "2": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "3": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "4": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "5": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "6": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "7": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "8": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "9": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "10": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "11": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "12": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "13": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "14": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "15": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "16": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "17": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "18": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "19": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "20": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "21": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "22": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "23": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "24": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "25": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "26": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "27": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "28": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "29": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        }
+      },
+      "state_sha256": "81b1e5471b8d593bcbd29b51b6b9240eb170022c7bbe317b9cc8bd3c17af41fc",
+      "logits_sha256": "296d3255c4a23f5dc2bbca74af22d469446fb99880692606f559011e38ec47a5",
+      "audit_sha256": "b62fc5569d8286e1259fe018e88dd2f087bb462dbafb972ce1541a30c7f071f8"
+    },
+    {
+      "model_id": "vlcs__convnext_tiny__split02__seed1",
+      "architecture": "convnext_tiny",
+      "split": "2",
+      "seed": "1",
+      "status": "AUDITED",
+      "completed_rounds": 30,
+      "client_steps": {
+        "0": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "1": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "2": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "3": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "4": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "5": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "6": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "7": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "8": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "9": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "10": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "11": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "12": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "13": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "14": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "15": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "16": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "17": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "18": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "19": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "20": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "21": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "22": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "23": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "24": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "25": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "26": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "27": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "28": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "29": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        }
+      },
+      "state_sha256": "baf81e173fa4c46c2845661ff7dd74bdbc2b8dc3af7bf4724cf9f566e93b98af",
+      "logits_sha256": "1ae1adb21f604cf8123aecc586c682623d1b6dabace6d08897c75f1434be5648",
+      "audit_sha256": "add8defd0ae70530c60b6c6a6716062c769390a996d046ac06e804525dc9c6b1"
+    },
+    {
+      "model_id": "vlcs__resnet18__split02__seed2",
+      "architecture": "resnet18",
+      "split": "2",
+      "seed": "2",
+      "status": "AUDITED",
+      "completed_rounds": 30,
+      "client_steps": {
+        "0": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "1": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "2": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "3": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "4": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "5": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "6": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "7": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "8": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "9": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "10": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "11": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "12": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "13": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "14": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "15": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "16": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "17": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "18": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "19": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "20": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "21": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "22": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "23": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "24": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "25": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "26": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "27": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "28": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "29": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        }
+      },
+      "state_sha256": "4a8f60b69d66c7202ce29f4497af1d46b71ca8140b367f7db2d37ac5da617e41",
+      "logits_sha256": "f8e0429b323aa1f9825cd4bf09128aa4f629506aacb3f31bf519e496a7dac0a1",
+      "audit_sha256": "c44e8a50e74e48cc5b91c8f1d05742131a6e927a9bd199f63b301c4381ab1814"
+    },
+    {
+      "model_id": "vlcs__convnext_tiny__split02__seed2",
+      "architecture": "convnext_tiny",
+      "split": "2",
+      "seed": "2",
+      "status": "AUDITED",
+      "completed_rounds": 30,
+      "client_steps": {
+        "0": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "1": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "2": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "3": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "4": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "5": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "6": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "7": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "8": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "9": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "10": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "11": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "12": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "13": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "14": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "15": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "16": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "17": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "18": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "19": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "20": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "21": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "22": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "23": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "24": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "25": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "26": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "27": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "28": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        },
+        "29": {
+          "CALTECH": 24,
+          "LABELME": 27,
+          "PASCAL": 42,
+          "SUN": 44
+        }
+      },
+      "state_sha256": "0417026af5d883d19c02c60750debbd5d6e69b732259467d42679cd881bdec3e",
+      "logits_sha256": "05f831a4a0c1505a85414498cfeaaf16ad10f1ccd18b9c1f6bdda28b6a25a42a",
+      "audit_sha256": "ffa3fcae10b5002a705c6b24e858c8327560ffdc2606c50f1871de72abb51318"
+    },
+    {
+      "model_id": "vlcs__resnet18__split03__seed0",
+      "architecture": "resnet18",
+      "split": "3",
+      "seed": "0",
+      "status": "AUDITED",
+      "completed_rounds": 30,
+      "client_steps": {
+        "0": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "1": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "2": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "3": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "4": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "5": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "6": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "7": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "8": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "9": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "10": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "11": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "12": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "13": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "14": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "15": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "16": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "17": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "18": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "19": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "20": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "21": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "22": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "23": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "24": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "25": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "26": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "27": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "28": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "29": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        }
+      },
+      "state_sha256": "097463fb45602a919e0f84fac5cd9a18fb57bb8a7b442eb5628f37f9f7f3597c",
+      "logits_sha256": "d9bb0de2e410883d256255a56238deda8c6401f912fc614dcd640cdf82ed9fe1",
+      "audit_sha256": "83bcccba52bc6b8b975966d46fe3f7d1d1001c8879c12802a8fa7b7c9fd54826"
+    },
+    {
+      "model_id": "vlcs__convnext_tiny__split03__seed0",
+      "architecture": "convnext_tiny",
+      "split": "3",
+      "seed": "0",
+      "status": "AUDITED",
+      "completed_rounds": 30,
+      "client_steps": {
+        "0": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "1": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "2": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "3": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "4": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "5": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "6": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "7": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "8": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "9": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "10": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "11": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "12": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "13": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "14": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "15": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "16": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "17": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "18": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "19": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "20": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "21": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "22": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "23": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "24": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "25": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "26": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "27": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "28": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "29": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        }
+      },
+      "state_sha256": "33bdf9486fe1ebc2e2969d5e17a9018412dad27a679a5660efbc95a82d2f73e3",
+      "logits_sha256": "cc8d1ecd0dd637420fdcf46a26209b6428e2aca4203de010c03686e228d2208d",
+      "audit_sha256": "0d4cb3927dc1fc34e89dcd0599b35ece3fd72eb1f37cc05e2b156f52db0ca531"
+    },
+    {
+      "model_id": "vlcs__resnet18__split03__seed1",
+      "architecture": "resnet18",
+      "split": "3",
+      "seed": "1",
+      "status": "AUDITED",
+      "completed_rounds": 30,
+      "client_steps": {
+        "0": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "1": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "2": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "3": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "4": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "5": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "6": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "7": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "8": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "9": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "10": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "11": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "12": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "13": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "14": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "15": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "16": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "17": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "18": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "19": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "20": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "21": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "22": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "23": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "24": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "25": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "26": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "27": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "28": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "29": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        }
+      },
+      "state_sha256": "8c02188b9afec3e4a6ea20a399a1cb3148ee60ced19a3f87ba06edcb86839bbe",
+      "logits_sha256": "8202e10c51daa2678ab1c3aafec079eddbbc8606467997d6407796959f11f9fd",
+      "audit_sha256": "941ebb711932c56d8b81d2698ac84ac7cbcf415cf2ed58547e42dba3ab71265b"
+    },
+    {
+      "model_id": "vlcs__convnext_tiny__split03__seed1",
+      "architecture": "convnext_tiny",
+      "split": "3",
+      "seed": "1",
+      "status": "AUDITED",
+      "completed_rounds": 30,
+      "client_steps": {
+        "0": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "1": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "2": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "3": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "4": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "5": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "6": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "7": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "8": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "9": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "10": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "11": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "12": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "13": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "14": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "15": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "16": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "17": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "18": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "19": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "20": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "21": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "22": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "23": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "24": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "25": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "26": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "27": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "28": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "29": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        }
+      },
+      "state_sha256": "8d83acb75dc26398b3d4a23fe1138ec0352200c9e744343e4f9f2ead5007e612",
+      "logits_sha256": "ebe53b805853a865d16c27e64316bfe6f251395878d64567e83124c79346d0eb",
+      "audit_sha256": "7cfa2a76e5ef887c7a346b6b87e71a7a220c2bc6ecbbe6ffa33e47847e158f98"
+    },
+    {
+      "model_id": "vlcs__resnet18__split03__seed2",
+      "architecture": "resnet18",
+      "split": "3",
+      "seed": "2",
+      "status": "AUDITED",
+      "completed_rounds": 30,
+      "client_steps": {
+        "0": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "1": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "2": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "3": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "4": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "5": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "6": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "7": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "8": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "9": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "10": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "11": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "12": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "13": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "14": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "15": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "16": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "17": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "18": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "19": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "20": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "21": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "22": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "23": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "24": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "25": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "26": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "27": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "28": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "29": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        }
+      },
+      "state_sha256": "5c1d50cda1e1c82c325cc04d9fb3d7aee1334e819a51ad9fff454ecaeeeb8465",
+      "logits_sha256": "6ca94e2f31691c6892c532f697e6afbe7aae8a0ee58571aeb1e274da1dde9dcf",
+      "audit_sha256": "81e75c9cc0594dc84627fd041048bc27e68664163c5552ae559ee1b3029e10a9"
+    },
+    {
+      "model_id": "vlcs__convnext_tiny__split03__seed2",
+      "architecture": "convnext_tiny",
+      "split": "3",
+      "seed": "2",
+      "status": "AUDITED",
+      "completed_rounds": 30,
+      "client_steps": {
+        "0": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "1": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "2": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "3": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "4": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "5": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "6": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "7": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "8": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "9": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "10": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "11": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "12": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "13": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "14": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "15": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "16": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "17": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "18": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "19": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "20": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "21": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "22": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "23": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "24": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "25": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "26": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "27": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "28": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        },
+        "29": {
+          "CALTECH": 21,
+          "LABELME": 48,
+          "PASCAL": 49,
+          "SUN": 62
+        }
+      },
+      "state_sha256": "122e064824b934788f26773b994613e2183c76b191e564beffa4e87bc1260116",
+      "logits_sha256": "b70fe461fd3d21d5c6c761033b68fec0d5b51e5f9801002075c7ad4242d6a7ea",
+      "audit_sha256": "7671c1881089b30d14c10b7aaabf255d5687960a10236d949ee5f74a2174079b"
+    },
+    {
+      "model_id": "vlcs__resnet18__split04__seed0",
+      "architecture": "resnet18",
+      "split": "4",
+      "seed": "0",
+      "status": "AUDITED",
+      "completed_rounds": 30,
+      "client_steps": {
+        "0": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "1": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "2": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "3": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "4": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "5": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "6": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "7": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "8": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "9": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "10": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "11": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "12": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "13": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "14": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "15": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "16": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "17": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "18": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "19": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "20": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "21": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "22": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "23": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "24": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "25": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "26": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "27": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "28": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "29": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        }
+      },
+      "state_sha256": "32d2419327fae10d8f7f003c14d0708206ef23f18e25a2f6fb209eeb002dec68",
+      "logits_sha256": "49e01a0602544613f229031db7c456d1e173d71ed13a5d1cb3d07f5a2e990d0a",
+      "audit_sha256": "d0aaa78c48265cac42fe2aa061cef8e1aa368cdba0c63a05b366e065dc81f9f4"
+    },
+    {
+      "model_id": "vlcs__convnext_tiny__split04__seed0",
+      "architecture": "convnext_tiny",
+      "split": "4",
+      "seed": "0",
+      "status": "AUDITED",
+      "completed_rounds": 30,
+      "client_steps": {
+        "0": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "1": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "2": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "3": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "4": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "5": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "6": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "7": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "8": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "9": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "10": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "11": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "12": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "13": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "14": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "15": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "16": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "17": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "18": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "19": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "20": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "21": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "22": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "23": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "24": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "25": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "26": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "27": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "28": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "29": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        }
+      },
+      "state_sha256": "d1083643daa51c7e0c383c504d41496f8a8ab14fdf34f752a5ff898034f67c40",
+      "logits_sha256": "a9e20d6c6fbb2edbae80753adafbaed1ca24f45ec7b87a63d97e8dc4c801cacf",
+      "audit_sha256": "604f4d4798c87a00e2af5c804eb88548cec6cb4ef69d698b6ed585461bb9b6bc"
+    },
+    {
+      "model_id": "vlcs__resnet18__split04__seed1",
+      "architecture": "resnet18",
+      "split": "4",
+      "seed": "1",
+      "status": "AUDITED",
+      "completed_rounds": 30,
+      "client_steps": {
+        "0": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "1": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "2": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "3": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "4": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "5": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "6": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "7": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "8": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "9": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "10": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "11": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "12": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "13": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "14": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "15": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "16": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "17": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "18": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "19": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "20": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "21": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "22": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "23": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "24": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "25": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "26": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "27": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "28": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "29": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        }
+      },
+      "state_sha256": "eaebd6c9eef6f476d2952a056acefb73b1babeb2f9e9d6280fe473f698c6692a",
+      "logits_sha256": "55fa2b7b7a30cfae73264da93d47e40dd77c99c97fd707eb162de091f8d6a167",
+      "audit_sha256": "ef3621b8eebfcc64505f48c3dd986e497c4bbfa8d5c8965bb439d32f83ef19d6"
+    },
+    {
+      "model_id": "vlcs__convnext_tiny__split04__seed1",
+      "architecture": "convnext_tiny",
+      "split": "4",
+      "seed": "1",
+      "status": "AUDITED",
+      "completed_rounds": 30,
+      "client_steps": {
+        "0": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "1": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "2": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "3": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "4": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "5": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "6": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "7": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "8": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "9": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "10": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "11": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "12": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "13": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "14": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "15": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "16": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "17": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "18": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "19": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "20": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "21": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "22": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "23": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "24": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "25": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "26": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "27": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "28": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "29": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        }
+      },
+      "state_sha256": "a4fb5baaf418b5756c338c89c2f5eb3756c069d199fd5b23c2aaef68d31f5cc3",
+      "logits_sha256": "b2bfc64a3b89837c050936845c9d697cdc8709f3ad699eccc28af988cf6ca8b0",
+      "audit_sha256": "ecab1ca403890bc7da7ae2db3e9ba9bd1b77f8a640684782c1d254dc1bf8bcc2"
+    },
+    {
+      "model_id": "vlcs__resnet18__split04__seed2",
+      "architecture": "resnet18",
+      "split": "4",
+      "seed": "2",
+      "status": "AUDITED",
+      "completed_rounds": 30,
+      "client_steps": {
+        "0": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "1": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "2": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "3": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "4": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "5": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "6": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "7": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "8": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "9": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "10": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "11": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "12": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "13": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "14": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "15": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "16": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "17": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "18": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "19": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "20": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "21": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "22": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "23": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "24": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "25": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "26": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "27": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "28": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "29": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        }
+      },
+      "state_sha256": "74af8782fc46cf7b7e1b555af9cd271386e7a89c60a73c1facf43b7ef9653e2a",
+      "logits_sha256": "55b9ae08555c6ac944d9a00657e806d99b47a78567d4ce92a21e0b5bd356741d",
+      "audit_sha256": "0e1925f0a946125135853514e36c6cab75bfc452170fc32ed410cc3941523027"
+    },
+    {
+      "model_id": "vlcs__convnext_tiny__split04__seed2",
+      "architecture": "convnext_tiny",
+      "split": "4",
+      "seed": "2",
+      "status": "AUDITED",
+      "completed_rounds": 30,
+      "client_steps": {
+        "0": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "1": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "2": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "3": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "4": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "5": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "6": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "7": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "8": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "9": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "10": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "11": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "12": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "13": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "14": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "15": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "16": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "17": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "18": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "19": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "20": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "21": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "22": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "23": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "24": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "25": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "26": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "27": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "28": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        },
+        "29": {
+          "CALTECH": 6,
+          "LABELME": 25,
+          "PASCAL": 29,
+          "SUN": 39
+        }
+      },
+      "state_sha256": "5218fd84c5aed0591469b154a05b2d91dfe9d5a1cdbed230cd3c734e18ff2b8f",
+      "logits_sha256": "f3410b65851c66f3495044b50a04b30fc3ca14c9ad914948904911287bb813db",
+      "audit_sha256": "a1bfdf8cb723c615b2174682885814b6235fb55c668d4159b5f651c1fc619d71"
+    }
+  ],
+  "gpu_seconds": 15126.25696182251,
+  "active_gpu_since": null,
+  "run_status": "ANALYZED",
+  "decision": "KILL"
+}

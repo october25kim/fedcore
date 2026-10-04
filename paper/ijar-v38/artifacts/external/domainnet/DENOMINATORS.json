@@ -1,0 +1,31 @@
+{
+  "budgets": [
+    256,
+    512,
+    1024
+  ],
+  "candidate_flags": 1512000,
+  "contrasts": 16,
+  "flags_expected": 1512000,
+  "models": 30,
+  "per_domain_draws": {
+    "256": 42,
+    "512": 85,
+    "1024": 170
+  },
+  "per_model_delta_rows": 240,
+  "primary_expected": 54000,
+  "primary_rows": 54000,
+  "replicates": 100,
+  "rows_expected": 162000,
+  "rows_total": 162000,
+  "secondary_subset_models": {
+    "DESCRIPTIVE_person_known_splits_1_2": 12,
+    "SECONDARY_person_unknown_splits_0_3_4": 18
+  },
+  "ts": [
+    0.5,
+    1.0
+  ],
+  "validity_groups": 1260
+}

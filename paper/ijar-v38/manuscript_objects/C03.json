@@ -1,0 +1,5 @@
+{
+  "ledger_id": "C03",
+  "object_type": "paragraph",
+  "text": "The purpose of the area under the receiver operating characteristic curve (AUROC) diagnostic is to test whether score ranking alone predicts certifiable utility. Across all 450 conditions, AUROC and Holm-certified ECA have Spearman correlation 0.66 and Pearson correlation 0.57. Nevertheless, 7/45 top-decile conditions refuse, while 13/225 conditions at or below the median certify. Most high-quartile CIFAR-100 conditions still refuse. AUROC is therefore associated with certification but does not determine the accepted-risk decision."
+}

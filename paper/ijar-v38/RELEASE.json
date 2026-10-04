@@ -1,0 +1,76 @@
+{
+  "release": "FedCORE-IJAR-v38-evidence-upgrade",
+  "date": "2026-10-04",
+  "status": "PUBLIC_RELEASE_BOUND",
+  "manuscript_sha256": "5f7762730782a44664a331d24fce76e6efd5a8f13d5fc63dd7124bf4b5d6b2de",
+  "rendered_pdf_sha256": "10f0509b984586226506b5238feeb81a6bc00c6781e64fdcca991c11bf5b6312",
+  "public_repository": "https://github.com/october25kim/fedcore",
+  "release_tag": "v0.8.0",
+  "pacs_source_tag": "pacs-local-v1-fa016c1",
+  "release_asset": "FedCORE_IJAR_v38_evidence_release.zip",
+  "release_directory": "paper/ijar-v38",
+  "scope": "v38 manuscript, theorem contract, same-target valid comparators, adverse VLCS and DomainNet fixed-frame evaluations, complete PACS denominator, count-to-decision replay, and hash-bound PACS training assets",
+  "ledger_entries": 27,
+  "ledger_composition": {
+    "figures": 7,
+    "tables": 6,
+    "abstract_claims": 4,
+    "prose_claims": 10
+  },
+  "historical_release": "paper/ijar-v37 remains available and is not the v38 governing binding",
+  "scientific_delta": "v38 adds a fixed-prior betting comparator under the identical full-simplex target and evidence contract, retains adverse VLCS and DomainNet fixed-frame evaluations, publishes a hash-bound 30-model PACS training package, and explicitly separates the client-weight credal set from the induced deployment-distribution set.",
+  "comparator": {
+    "target": "full simplex over client weights",
+    "roster": 450,
+    "alpha": 0.2,
+    "held_fixed": [
+      "predictor",
+      "12-member proposal-frozen selector family",
+      "realized audit counts",
+      "risk and coverage budgets",
+      "Holm family correction",
+      "coverage lower-confidence rule"
+    ],
+    "H_certified": 177,
+    "H_mean_effective_certified_acceptance": 0.08342402472238086,
+    "fixed_prior_betting_certified": 81,
+    "fixed_prior_betting_mean_effective_certified_acceptance": 0.03967575669089694,
+    "paired_H_wins_losses_ties": [160, 0, 290],
+    "scope_limit": "This registered fixed-prior construction does not establish dominance over all valid betting procedures."
+  },
+  "external_fixed_frame": {
+    "VLCS": {
+      "decision": "KILL",
+      "protocol_timing": "locally frozen before training and prediction; not externally timestamped",
+      "source_population_transport_claimed": false
+    },
+    "DomainNet": {
+      "decision": "KILL",
+      "transfer_label": "NOT_TRANSFER",
+      "protocol_timing": "sealed before image download, decoding, and prediction",
+      "source_population_transport_claimed": false
+    }
+  },
+  "pacs_training_reproduction": {
+    "source_commit": "fa016c199a7c846bbe20b64d54ab34164adf7647",
+    "source_tree": "8adbb6fea6b5f7eef4ea8e7f78b484103bf08024",
+    "scientific_image_id": "sha256:62c35527e56f5a05c026598ffda355e2b2b80256d966e5d9202ba639a5bfde8a",
+    "models": 30,
+    "terminal_failures": 0,
+    "registered_result": "VALID_NEGATIVE",
+    "release_asset_manifest": "reproduction/pacs_v3/RELEASE_ASSETS.sha256",
+    "raw_dataset_redistributed": false,
+    "independent_clean_machine_rerun_completed": false
+  },
+  "officehome_74_to_92": {
+    "classification": "target_and_information_sensitivity",
+    "full_simplex_to_traffic_informed_credal_set": true,
+    "same_target_method_gain": false
+  },
+  "verification": {
+    "release_integrity": "Run python paper/ijar-v38/verify_release.py from the tagged checkout",
+    "unit": "Run make unit from the tagged checkout",
+    "pacs_assets": "Run paper/ijar-v38/reproduction/pacs_v3/verify_release_assets.sh against the downloaded asset directory",
+    "verification_environment": "Public tagged checkout"
+  }
+}

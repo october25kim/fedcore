@@ -1,0 +1,64 @@
+{
+  "decision": "KILL",
+  "protocol_sha256": "f750087a7fd18284f75b98b71ebec892dae1ec273a0adabaf15b5472e633212d",
+  "models": 30,
+  "primary_rows": 54000,
+  "all_rows": 162000,
+  "candidate_flags": 1512000,
+  "primary_contrasts": [
+    {
+      "architecture": "resnet18",
+      "t": 0.5,
+      "positive_method": "DIRECT_BETTING_H",
+      "negative_method": "CP_IUT_H",
+      "mean_delta": 0.0,
+      "lower": 0.0,
+      "upper": 0.0,
+      "models": 15,
+      "audit_blocks": 100
+    },
+    {
+      "architecture": "resnet18",
+      "t": 1.0,
+      "positive_method": "CP_IUT_H",
+      "negative_method": "DIRECT_BETTING_H",
+      "mean_delta": 0.0,
+      "lower": 0.0,
+      "upper": 0.0,
+      "models": 15,
+      "audit_blocks": 100
+    },
+    {
+      "architecture": "convnext_tiny",
+      "t": 0.5,
+      "positive_method": "DIRECT_BETTING_H",
+      "negative_method": "CP_IUT_H",
+      "mean_delta": 0.01591236978053264,
+      "lower": 0.010514522021612885,
+      "upper": 0.022161440049456235,
+      "models": 15,
+      "audit_blocks": 100
+    },
+    {
+      "architecture": "convnext_tiny",
+      "t": 1.0,
+      "positive_method": "CP_IUT_H",
+      "negative_method": "DIRECT_BETTING_H",
+      "mean_delta": 0.0016374427599315888,
+      "lower": 0.00026693218239077555,
+      "upper": 0.0035598732543567764,
+      "models": 15,
+      "audit_blocks": 100
+    }
+  ],
+  "bootstrap": {
+    "seed": 2026092301,
+    "resamples": 20000,
+    "quantiles": [
+      0.00625,
+      0.99375
+    ],
+    "indices_sha256": "49136baacfb3e2cdb80ab374c7bed3fd9da9337f492df240e72a10cff277d81c"
+  },
+  "scope": "Conditional audit variation given fixed frames and trained models. Not population generalization or V1 superiority. PACS HOLD unchanged."
+}

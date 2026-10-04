@@ -1,0 +1,70 @@
+{
+  "G1_DOWNLOAD": "PASS",
+  "addendum_to": "FEDCORE-S1-DOMAINNET6-PACSCLS-20260925-v2",
+  "label_lists_sha256": {
+    "clipart_test.txt": "62c8e36aaba1c41ad9e249099739707220a44c08f167b37ef420f34a31628a6b",
+    "clipart_train.txt": "affdadf5f95a7583e6b98030a3d35007e2613ee4dd942393c5a705ec2b429312",
+    "infograph_test.txt": "413cfa54ac92e7e6b242f4f09fbd9c8ace85c4deaf3cb6c81ff6b68264460136",
+    "infograph_train.txt": "36b44cbd41a2915e0dc73b4f4be8862a6f3c220f93c8d63fb2439beeae3aefda",
+    "painting_test.txt": "11472b13b5188e09f06918b12eebb660588c97a20e43e268d9b02e3e37eb8f97",
+    "painting_train.txt": "f1da38d50a702fddf1329f85bc607d7a2abcae7e6aec75e1fd49cc1bd340d47b",
+    "quickdraw_test.txt": "2a00a60650a453c65c356da748fec54084a197272137c440e7d52d08947357bf",
+    "quickdraw_train.txt": "3a5edd3bc215772010eebc87f158707703dd7e48091d13b816af81326a9d1c0f",
+    "real_test.txt": "2b3f75bcde309aeb5931292084b2162e936b5f189e3bb1ad716f0f74c460864c",
+    "real_train.txt": "19d483256d24aef19e581b65eda8333fd918aef3eb733fe499ff384120e3a289",
+    "sketch_test.txt": "3fb48fca18c507c4321f007c3f62b308ec232ff6928cbfe2af64e76ec366e840",
+    "sketch_train.txt": "72f4bc6afa5702a1ccba800d0053c1427de87439dfaf246dbc9a2e71abfec54f"
+  },
+  "note": "DATA_BINDING addendum: records archive identity only; not an analysis choice.",
+  "protocol_sha256": "06dd7e1a22f3d504dc76dd115b3f1803754ffe022a9d436e7dcef8a20c7c142b",
+  "zips": {
+    "clipart": {
+      "bytes": 1270909081,
+      "expected_bytes_HEAD": 1270909081,
+      "path": "/home/sanghoon/Desktop/Workspace/Fedcore/data/domainnet_s1v2/zips/clipart.zip",
+      "sha256": "f8f248a3e8bbc9868c523ae24e6601b4c2ad102afc60c0efeb4f3255df22354d",
+      "size_match": true,
+      "url": "https://csr.bu.edu/ftp/visda/2019/multi-source/groundtruth/clipart.zip"
+    },
+    "infograph": {
+      "bytes": 4338659804,
+      "expected_bytes_HEAD": 4338659804,
+      "path": "/home/sanghoon/Desktop/Workspace/Fedcore/data/domainnet_s1v2/zips/infograph.zip",
+      "sha256": "891e14f476317e97b6f06d6498c11d0a5b8d0c8b57210765ed9beb072da611fa",
+      "size_match": true,
+      "url": "https://csr.bu.edu/ftp/visda/2019/multi-source/infograph.zip"
+    },
+    "painting": {
+      "bytes": 3679366174,
+      "expected_bytes_HEAD": 3679366174,
+      "path": "/home/sanghoon/Desktop/Workspace/Fedcore/data/domainnet_s1v2/zips/painting.zip",
+      "sha256": "fa47e6d405503ea0286cabd767f176bd30e988b63ddd7b9db16cf030c9770015",
+      "size_match": true,
+      "url": "https://csr.bu.edu/ftp/visda/2019/multi-source/groundtruth/painting.zip"
+    },
+    "quickdraw": {
+      "bytes": 459920701,
+      "expected_bytes_HEAD": 459920701,
+      "path": "/home/sanghoon/Desktop/Workspace/Fedcore/data/domainnet_s1v2/zips/quickdraw.zip",
+      "sha256": "9f37df2a8c3733703dbb35ad9964202a65f675ca30137756457537536b485d84",
+      "size_match": true,
+      "url": "https://csr.bu.edu/ftp/visda/2019/multi-source/quickdraw.zip"
+    },
+    "real": {
+      "bytes": 6062039589,
+      "expected_bytes_HEAD": 6062039589,
+      "path": "/home/sanghoon/Desktop/Workspace/Fedcore/data/domainnet_s1v2/zips/real.zip",
+      "sha256": "d7fe010b430c5b510f85d657d38c4a1924822695fabea4fef57bd00dba251d63",
+      "size_match": true,
+      "url": "https://csr.bu.edu/ftp/visda/2019/multi-source/real.zip"
+    },
+    "sketch": {
+      "bytes": 2633992926,
+      "expected_bytes_HEAD": 2633992926,
+      "path": "/home/sanghoon/Desktop/Workspace/Fedcore/data/domainnet_s1v2/zips/sketch.zip",
+      "sha256": "23a7dbae7016b343e934399beaa8a68728fb5e570ebe2c71df9b75cf91c499fc",
+      "size_match": true,
+      "url": "https://csr.bu.edu/ftp/visda/2019/multi-source/sketch.zip"
+    }
+  }
+}

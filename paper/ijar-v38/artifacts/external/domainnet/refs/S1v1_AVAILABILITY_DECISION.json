@@ -1,0 +1,241 @@
+{
+  "decision_id": "FEDCORE-S1-AVAILABILITY-DECISION-20260925",
+  "protocol_id": "FEDCORE-S1-DOMAINNET-PACSCLS-20260923-v1",
+  "protocol_sha256_verified": "e7dc391888db2abc9993e19762ff84959098a10063bc67566d2f5cbb9d1a3173",
+  "protocol_sha256_match_box_and_mac": true,
+  "decided_kst": "2026-09-25T20:10:00+09:00",
+  "outcome": "INVALID_BY_PROTOCOL",
+  "outcome_category": "INVALID (availability/support)",
+  "precedence_applied": "INVALID > INCOMPLETE > HOLD_VALIDITY > KILL > CONFIRM > HOLD; INVALID is highest precedence",
+  "reason": "Required class name 'person' does not exist as a DomainNet label (case-insensitive exact match after strip) in any of the 6 standard domains. Protocol rules dataset.missing_class_in_domain and dataset.domain_support_required mandate INVALID; silent class-list change is itself INVALID.",
+  "protocol_clauses_triggered": [
+    "dataset.class_filter: case-insensitive exact match after strip",
+    "dataset.missing_class_in_domain: required class empty after filter -> INVALID for that support requirement",
+    "dataset.domain_support_required: missing required support -> INVALID (do not silently drop domains/classes)",
+    "gates.INVALID: silent domain/class list change forbidden",
+    "availability_gates.fail_policy: no inference/cert GPU work until all four gates PASS"
+  ],
+  "class_gate": {
+    "status": "FAIL",
+    "required": [
+      "dog",
+      "elephant",
+      "giraffe",
+      "guitar",
+      "horse",
+      "house",
+      "person"
+    ],
+    "present": [
+      "dog",
+      "elephant",
+      "giraffe",
+      "guitar",
+      "horse",
+      "house"
+    ],
+    "absent": [
+      "person"
+    ],
+    "evidence_sources": [
+      {
+        "source": "Official DomainNet cleaned split lists https://csr.bu.edu/ftp/visda/2019/multi-source/domainnet/txt/{domain}_{train,test}.txt (linked from https://ai.bu.edu/M3SDA/)",
+        "n_classes": 345,
+        "person_present": false,
+        "file_hashes": "evidence/official_cleaned_txt.sha256"
+      },
+      {
+        "source": "Official DomainNet original split lists https://csr.bu.edu/ftp/visda/2019/multi-source/{groundtruth/txt|txt}/{domain}_{train,test}.txt",
+        "n_classes": 345,
+        "person_present": false,
+        "file_hashes": "evidence/official_original_txt.sha256"
+      },
+      {
+        "source": "workstation4 local extracted copies (4 domains, 345 class dirs each)",
+        "person_present": false,
+        "classdir_set_equals_official": true,
+        "detail": "evidence/LOCAL_DOMAINNET_WS4.json"
+      }
+    ],
+    "nearest_non_matching_labels_NOT_substituted": [
+      "face",
+      "hand",
+      "foot",
+      "arm",
+      "leg",
+      "yoga",
+      "the_mona_lisa",
+      "smiley_face",
+      "beard",
+      "moustache"
+    ],
+    "substitution_performed": false,
+    "counts_per_domain_train_plus_test_cleaned": {
+      "dog": {
+        "clipart": 70,
+        "infograph": 220,
+        "painting": 718,
+        "quickdraw": 500,
+        "real": 779,
+        "sketch": 310
+      },
+      "elephant": {
+        "clipart": 115,
+        "infograph": 187,
+        "painting": 424,
+        "quickdraw": 500,
+        "real": 783,
+        "sketch": 266
+      },
+      "giraffe": {
+        "clipart": 133,
+        "infograph": 168,
+        "painting": 105,
+        "quickdraw": 500,
+        "real": 591,
+        "sketch": 186
+      },
+      "guitar": {
+        "clipart": 100,
+        "infograph": 201,
+        "painting": 202,
+        "quickdraw": 500,
+        "real": 626,
+        "sketch": 181
+      },
+      "horse": {
+        "clipart": 200,
+        "infograph": 210,
+        "painting": 521,
+        "quickdraw": 500,
+        "real": 595,
+        "sketch": 101
+      },
+      "house": {
+        "clipart": 107,
+        "infograph": 305,
+        "painting": 105,
+        "quickdraw": 500,
+        "real": 374,
+        "sketch": 144
+      },
+      "person": {}
+    },
+    "counts_per_domain_train_plus_test_original": {
+      "dog": {
+        "clipart": 70,
+        "infograph": 225,
+        "painting": 721,
+        "quickdraw": 500,
+        "real": 782,
+        "sketch": 311
+      },
+      "elephant": {
+        "clipart": 115,
+        "infograph": 188,
+        "painting": 425,
+        "quickdraw": 500,
+        "real": 789,
+        "sketch": 266
+      },
+      "giraffe": {
+        "clipart": 134,
+        "infograph": 172,
+        "painting": 105,
+        "quickdraw": 500,
+        "real": 594,
+        "sketch": 186
+      },
+      "guitar": {
+        "clipart": 103,
+        "infograph": 204,
+        "painting": 203,
+        "quickdraw": 500,
+        "real": 632,
+        "sketch": 183
+      },
+      "horse": {
+        "clipart": 201,
+        "infograph": 216,
+        "painting": 521,
+        "quickdraw": 500,
+        "real": 645,
+        "sketch": 103
+      },
+      "house": {
+        "clipart": 108,
+        "infograph": 306,
+        "painting": 105,
+        "quickdraw": 500,
+        "real": 374,
+        "sketch": 144
+      },
+      "person": {}
+    }
+  },
+  "availability_gates": [
+    {
+      "id": 1,
+      "gate": "DomainNet archive present on research host with SHA recorded",
+      "status": "NOT_PASSED",
+      "detail": "No archive on either host. workstation4 has two extracted partial copies (clipart/painting/real/sketch only; infograph+quickdraw missing; no zip, so no archive sha). ubuntu-4070 has none. Official zips are reachable, but download was NOT performed because gate 2 fails irrecoverably."
+    },
+    {
+      "id": 2,
+      "gate": "All 7 class names nonempty across required domains after filtering",
+      "status": "FAIL",
+      "detail": "person absent in all 6 domains (class does not exist in DomainNet 345-class taxonomy)."
+    },
+    {
+      "id": 3,
+      "gate": "All 30 V1 checkpoints present and hash-bound",
+      "status": "PASS",
+      "detail": "30/30 latest.pt present on ubuntu-4070 outputs/fedcore_v1_run/checkpoints; 30/30 sha256 match outputs/fedcore_v1_full_run/RUN_ARTIFACTS.txt (sha256 3e113f3253a4beb2c6d945f8ca1488165d6296e5568e600b4851a9547b5ba63d)",
+      "hashes": "evidence/V1_CHECKPOINT_SHA256.txt"
+    },
+    {
+      "id": 4,
+      "gate": "Runner wiring dry-check PASS without touching test outcomes",
+      "status": "NOT_RUN",
+      "detail": "Stopped before runner authoring because gate 2 FAIL makes the sealed protocol INVALID."
+    }
+  ],
+  "v1_code_binding": {
+    "status": "RECORDED",
+    "detail": "V1 code file sha256 match values recorded in outputs/fedcore_v1_run/RUN_STATE.json",
+    "hashes": "evidence/V1_CODE_SHA256.txt"
+  },
+  "resources": {
+    "ubuntu-4070": {
+      "gpu": "RTX 4070 Ti SUPER, GPU0 idle (37MiB used, 0%)",
+      "disk_root_avail": "365G of 915G"
+    },
+    "workstation4": {
+      "gpu0": "TITAN RTX idle (6MiB, 0%)",
+      "gpu1": "Unknown Error (not touched)",
+      "gpu2_3": "100% util other users (not touched)",
+      "disk_data_avail": "11T of 15T"
+    }
+  },
+  "execution": {
+    "gpu_hours_used": {
+      "ubuntu-4070": 0.0,
+      "workstation4": 0.0
+    },
+    "downloads_performed": "only official split .txt label lists (~24MB total, to box), no image archives",
+    "inference_executed": false,
+    "certification_executed": false,
+    "DomainNet_outcomes_viewed": false,
+    "DomainNet_images_decoded": false
+  },
+  "not_done_by_rule": [
+    "no synonym substitution (person->face/hand)",
+    "no protocol amendment",
+    "no 6-class fallback",
+    "no GPU work",
+    "no download of image archives",
+    "no DECISION.json/CONTRASTS.csv (no run)"
+  ],
+  "fidelity": "see FIDELITY.md",
+  "next_step": "User decision on a NEW separately sealed protocol v2 (options listed in REPORT_ko.md). S1 v1 remains INVALID_BY_PROTOCOL permanently; v2 must not be presented as S1 v1."
+}

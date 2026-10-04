@@ -1,0 +1,74 @@
+{
+  "status": "PASS_SOURCE_GATE",
+  "archive_sha256": "be890e12eb64a75d64b67235b365fd8933cfc005d796c7763506fa9616437469",
+  "images": 10720,
+  "fold_manifest_sha256": "b104caa23d292d69c7ec2dfc24ba2348288eb98c0b109e0df376eed01fbf62b4",
+  "source_check_sha256": "1b62c17d02771c8f9960f390202e28f5f466c0df00caf78ede573d8a8ce1a2ef",
+  "old_source_overlap_summary": {
+    "officehome": {
+      "files": 15588,
+      "same_size": 0,
+      "overlaps": [],
+      "errors": 0
+    },
+    "isic2019": {
+      "files": 50662,
+      "same_size": 0,
+      "overlaps": [],
+      "errors": 0
+    }
+  },
+  "small_image_screen": {
+    "CIFAR10": {
+      "rows": 60000,
+      "dimensions": [
+        32,
+        32
+      ],
+      "exact_227_overlap_excluded": true
+    },
+    "CIFAR100": {
+      "rows": 60000,
+      "dimensions": [
+        32,
+        32
+      ],
+      "exact_227_overlap_excluded": true
+    },
+    "PathMNIST": {
+      "shapes": {
+        "train_images": [
+          89996,
+          28,
+          28,
+          3
+        ],
+        "val_images": [
+          10004,
+          28,
+          28,
+          3
+        ],
+        "test_images": [
+          7180,
+          28,
+          28,
+          3
+        ]
+      },
+      "exact_227_overlap_excluded": true
+    },
+    "CIFAR101": {
+      "shape": [
+        2000,
+        32,
+        32,
+        3
+      ],
+      "exact_227_overlap_excluded": true
+    }
+  },
+  "PACS_exact_overlap": 0,
+  "class_conflicts": 0,
+  "scope": "Declared G2DM fixed empirical frame. Exact RGB only; not near-duplicate, semantic original-label audit, ImageNet pretraining disjointness or original-byte identity."
+}

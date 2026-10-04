@@ -1,0 +1,303 @@
+{
+  "protocol_id": "FEDCORE-V2-VLCS-20260923-v1",
+  "status": "FROZEN_BEFORE_TRAINING_AND_PREDICTIONS",
+  "external_registry_registration": false,
+  "target_claim": "External fixed-frame replication of the DIRECT versus CP ordering at t=.5 and t=1; no learned selector, no new testing principle, no source-population guarantee.",
+  "parent_map": "../reports/EXECUTION_REPORT_ko.md",
+  "dataset": {
+    "name": "VLCS (G2DM-distributed image frame)",
+    "domains": [
+      "CALTECH",
+      "LABELME",
+      "PASCAL",
+      "SUN"
+    ],
+    "classes": [
+      "0",
+      "1",
+      "2",
+      "3",
+      "4"
+    ],
+    "source_paper": "https://github.com/belaalb/G2DM",
+    "author_project": "https://github.com/belaalb/G2DM",
+    "verified_archive_path": "data/revision_vlcs_20260923/vlcs.tar.gz",
+    "verified_archive_sha256": "be890e12eb64a75d64b67235b365fd8933cfc005d796c7763506fa9616437469",
+    "splits": [
+      {
+        "split": 0,
+        "known": [
+          "2",
+          "3",
+          "4"
+        ],
+        "unknown": [
+          "0",
+          "1"
+        ]
+      },
+      {
+        "split": 1,
+        "known": [
+          "0",
+          "1",
+          "2"
+        ],
+        "unknown": [
+          "3",
+          "4"
+        ]
+      },
+      {
+        "split": 2,
+        "known": [
+          "0",
+          "2",
+          "4"
+        ],
+        "unknown": [
+          "1",
+          "3"
+        ]
+      },
+      {
+        "split": 3,
+        "known": [
+          "1",
+          "2",
+          "4"
+        ],
+        "unknown": [
+          "0",
+          "3"
+        ]
+      },
+      {
+        "split": 4,
+        "known": [
+          "1",
+          "2",
+          "3"
+        ],
+        "unknown": [
+          "0",
+          "4"
+        ]
+      }
+    ],
+    "class_split_rule": "First five lexicographic SHA256 hashes of protocol_id|class_split|comma_joined_known among sorted 3-of-5 numeric label IDs; no semantic relabeling.",
+    "identity": "SHA256 of uint32-big-endian width,height followed by decoded EXIF-transposed RGB bytes",
+    "duplicate_rule": "Collapse identical RGB content within a domain and class; conflicting class labels INVALID; same content across domains kept but assigned the same role",
+    "role_rule": "H=int(SHA256(protocol_id|role|image_identity)); training if 5*H<3*2**256; proposal if 5*H<4*2**256; audit otherwise",
+    "role_is_global_across_class_splits": true,
+    "unknown_training_role": "unused; never reallocated",
+    "overlap_with_old_audit_sources": "Exact RGB identity check required before training; any detected overlap HOLD, no silent deletion",
+    "domain_support_required": "All class/domain combinations present; nonempty known-class training per domain and nonempty proposal/audit per domain",
+    "standard_PACS_DG_protocol": false,
+    "source_roles": "Use archive full and test folders, collapse identical RGB within domain/class; train/crossval are duplicate partition views and are retained in source audit only. Verify 10729 source entries before deduplication. New global roles ignore the supplied train/test partition.",
+    "provenance_gate": "All images decode; five label IDs in four domains; class-conflicting identity INVALID; same identity global role; exact overlap with PACS and required prior image sources checked before training. State the G2DM distribution; do not claim byte/pixel equality with DomainBed or original constituent sources."
+  },
+  "training": {
+    "architectures": [
+      "resnet18",
+      "convnext_tiny"
+    ],
+    "seeds": [
+      0,
+      1,
+      2
+    ],
+    "models": 30,
+    "weights": {
+      "resnet18": "ResNet18_Weights.IMAGENET1K_V1",
+      "convnext_tiny": "ConvNeXt_Tiny_Weights.IMAGENET1K_V1"
+    },
+    "head": "Fresh 3-class Linear head; numeric known label order ascending",
+    "loss": "CrossEntropyLoss(mean), no dummy head, no label smoothing, no class weighting",
+    "trainable": "all parameters",
+    "federated_rounds": 30,
+    "local_epochs": 1,
+    "clients_per_round": "all 4, sequential domain order",
+    "batch_size": 32,
+    "drop_last": false,
+    "optimizer": {
+      "name": "AdamW",
+      "lr": 0.0001,
+      "weight_decay": 0.05,
+      "betas": [
+        0.9,
+        0.999
+      ],
+      "eps": 1e-08,
+      "amsgrad": false,
+      "foreach": false,
+      "fused": false,
+      "reset_each_client_round": true
+    },
+    "warmup_rounds": 2,
+    "lr_rule": "r=0,1: base_lr*(r+1)/2; r=2..29: base_lr*.5*(1+cos(pi*(r-2)/28))",
+    "aggregation": "known training sample-count weighted float64 mean of floating parameters and buffers, cast to original dtype; integer buffers from largest-client model, lexical domain tie break",
+    "precision": "FP32, no AMP, no TF32, no compile; deterministic algorithms required",
+    "train_transform": "EXIF transpose/RGB; RandomResizedCrop(224,scale=(.08,1),ratio=(.75,4/3),bilinear,antialias=True); HorizontalFlip(.5); ToTensor; ImageNet mean/std",
+    "inference_transform": "EXIF transpose/RGB; Resize(shorter=256,bilinear,antialias=True); CenterCrop(224); ToTensor; ImageNet mean/std",
+    "checkpoint": "final round only",
+    "hyperparameter_search": false,
+    "rng": "seed(label,parts)=big-endian integer of first 8 SHA256 bytes of protocol_id|label|json.dumps(parts,separators=(comma,colon),ensure_ascii=True). Torch seed modulo 2**63, NumPy PCG64 full uint64. model_init parts=[arch,split,seed]; local_training parts=[arch,split,seed,round,domain]; num_workers=0",
+    "run_order": "split ascending, seed ascending, architecture order resnet18 then convnext_tiny"
+  },
+  "candidate_family": {
+    "size": 12,
+    "score_order": [
+      "msp",
+      "energy",
+      "margin"
+    ],
+    "gamma_order": [
+      0.3,
+      0.5,
+      0.7,
+      1.0
+    ],
+    "scores": "softmax-known max; logsumexp-known at T=1 (negative energy, higher accepts); top1-top2 known probability",
+    "thresholds": "unique numpy.quantile(proposal_scores,linspace(0,1,300),method=linear); no extra endpoints",
+    "proposal": "pool all proposal domains unweighted by record; maximize accepted count subject to K/A<=gamma/5, A>=1; exact rational risk comparisons; tie smaller threshold",
+    "minimum_proposal_coverage": 0.01,
+    "infeasible": "reject-all slot retained in M=12; never replace",
+    "certified_selection": "maximum common positive acceptance LCB; tie smaller gamma, lexical score alias, candidate index"
+  },
+  "audit": {
+    "alpha": 0.2,
+    "delta_r": 0.05,
+    "delta_c": 0.05,
+    "J": 4,
+    "protection_t": [
+      0.5,
+      1.0
+    ],
+    "protection_weights": [
+      0.5,
+      0.5
+    ],
+    "protection_set": "(1-t)*uniform+t*simplex",
+    "primary_budget": 512,
+    "secondary_budgets": [
+      256,
+      1024
+    ],
+    "budget_unit": "with-replacement audit draws, not unique acquired labels",
+    "allocation": "equal per client; 64/128/256 per domain",
+    "replicates": 100,
+    "draws": "nested fixed-size prefixes; NumPy PCG64 uniform integer draws; no adaptive stopping",
+    "draw_seed": "Use frozen seed function with label=audit_draw and parts=[split,domain,replicate]; choose indices from source-identity-sorted domain audit list",
+    "coupling": "same (split,domain,replicate) stream across architectures, training seeds, all methods, both t and all budgets; independent replicate streams",
+    "certifier_information": "proposal eligibility plus n,A,K count tensors; no full-frame labels, error rates, future outcomes or full acceptance masks",
+    "common_acceptance_tail": "delta_c/(J*M)=.05/48",
+    "risk_engines": "Frozen seven constructions in manuscript Section 4.4 and Supplement S19; unchanged stakes and family size.",
+    "guarantee_scope": "Per fixed model, budget, t and prespecified procedure; not simultaneous over all reported experiment rows",
+    "full_frame_truth": "Only post-decision evaluator may compute exact empirical risks and acceptance from full audit frame"
+  },
+  "procedures": {
+    "fixed_controls": [
+      "RATIO",
+      "MASS_CP",
+      "HOEFFDING_H",
+      "DIRECT_BETTING_H",
+      "SCALE_H",
+      "CP_IUT_H",
+      "COMPOSED_CP_BETTING_H"
+    ],
+    "primary_rule": {
+      "name": "V1_SCALE_CP",
+      "0.5": "SCALE_H",
+      "1.0": "CP_IUT_H"
+    },
+    "diagnostic_control": {
+      "name": "GEOMETRY_DIRECT_CP",
+      "0.5": "DIRECT_BETTING_H",
+      "1.0": "CP_IUT_H"
+    },
+    "diagnostic_role": "Both derived rules are descriptive controls; no V1 performance gate is applied to VLCS.",
+    "per_t_tuning": false
+  },
+  "analysis": {
+    "primary_metric": "ECA=common acceptance lower bound of selected certified candidate; refusal=0",
+    "per_arch_estimand": "Separately by protection task: average ECA difference across all 15 fixed models per architecture; signs and gate as hypotheses.",
+    "statistical_unit": "one complete audit-replicate block across all 30 models and all conditions; 100 independent RNG blocks conditional on fixed inputs",
+    "never_independent_units": [
+      "overlapping class splits",
+      "shared-image training seeds",
+      "multiple candidates",
+      "two t values",
+      "three budgets",
+      "derived policy rows"
+    ],
+    "primary_comparisons": 4,
+    "additional_diagnostic_comparisons": 0,
+    "CI": "20000 paired whole-audit-block percentile resamples; shared indices; linear quantiles .00625 and .99375 for four primary contrasts.",
+    "CI_scope": "Approximate simultaneous conditional Monte Carlo uncertainty; not source-population, architecture-population, or finite-sample coverage guarantee",
+    "bootstrap_seed": 2026092301,
+    "support": "report all per-model deltas, per-split seed means, win/tie/loss and each t separately; no selective model exclusion",
+    "secondary": [
+      "ECA by each budget and t",
+      "certification/refusal rate",
+      "post-decision empirical joint failure",
+      "unique source labels/draws",
+      "domain-level values",
+      "walltime/GPU time"
+    ],
+    "missing": "retain full matrix; incomplete or failed run not treated as refusal or imputed zero"
+  },
+  "denominators": {
+    "models": 30,
+    "candidates_per_model": 12,
+    "audit_replicates": 100,
+    "t_values": 2,
+    "budgets": 3,
+    "fixed_procedures": 7,
+    "derived_rules": 2,
+    "primary_fixed_procedure_rows": 42000,
+    "all_fixed_procedure_rows": 126000,
+    "primary_derived_rule_rows": 12000,
+    "all_derived_rule_rows": 36000,
+    "primary_total_rows": 54000,
+    "all_total_rows": 162000,
+    "primary_candidate_method_flags": 504000,
+    "all_candidate_method_flags": 1512000,
+    "independent_block_units_conditional": 100
+  },
+  "preexecution_amendments": [
+    "Before any VLCS prediction/training: remove inherited PACS 16-comparison analysis text that conflicted with the explicitly stated four-contrast V2 gate. No scientific threshold, hypothesis, class split, or seed changed."
+  ],
+  "execution_binding": {
+    "code_commit_or_source_hash": null,
+    "dependency_lock_hash": null,
+    "dataset_manifest_hash": null,
+    "weight_file_hashes": null,
+    "fold_manifest_hash": null,
+    "training_or_inference_executed": false
+  },
+  "hypotheses": {
+    "H05": "DIRECT_BETTING_H minus CP_IUT_H positive at t=.5, separately for each architecture",
+    "H1": "CP_IUT_H minus DIRECT_BETTING_H positive at t=1, separately for each architecture",
+    "primary_budget": 512,
+    "primary_contrasts": 4,
+    "minimum_effect": 0.01,
+    "gate": "CONFIRM if every signed architecture/task contrast is >=.01 and every Bonferroni-adjusted paired audit-block bootstrap lower bound is >0. KILL if any upper bound <=0; otherwise HOLD. INVALID/INCOMPLETE precede performance. Conditional fixed-model Monte Carlo intervals only. Existing PACS gate untouched.",
+    "bootstrap": "20000 paired whole-audit-block resamples shared over all 30 models and both tasks; PCG64 seed 2026092301; equal model weights. Quantiles .00625/.99375 for 4 contrasts. Separate per-seed and per-split summaries, no new-model confidence claim."
+  },
+  "TV_control_scope": "Not an empirical primary comparator on this geometry: center uniform has eta=3t/4. At t=.5 or1, eta>alpha=.2; the sufficient condition D_w+eta<=0 is impossible even if every accepted prediction is correct and acceptance=1. Report analytically, not as a new measured win.",
+  "run_constraints": {
+    "host": "ubuntu-4070",
+    "root": "~/Desktop/Workspace/Fedcore",
+    "max_gpu_hours": 48,
+    "models": 30,
+    "automatic_hyperparameter_search": false,
+    "keep_all_outcomes": true,
+    "no_retuning_after_failure": true,
+    "resource_accounting": "persist cumulative GPU-section wall time at every round; fail closed at cap or validation failure; no stop based on favorable performance"
+  },
+  "primary_analysis": "hypotheses is the sole V2 scientific gate; V1 and GEOMETRY_DIRECT_CP are descriptive controls alongside all seven fixed procedures.",
+  "specification_version": 2,
+  "supersedes_sha256": "6a6b3f267f5f8258f72d08692e333aef399d38ff7b2193261981d8a6f5aa36a6",
+  "amendment_reason": "Before any VLCS prediction/training: remove inherited PACS 16-comparison analysis text that conflicted with the explicitly stated four-contrast V2 gate. No scientific threshold, hypothesis, class split, or seed changed."
+}

@@ -1,0 +1,39 @@
+{
+  "ledger_id": "T03",
+  "object_type": "numbered_table",
+  "table_number": 3,
+  "table_index": 4,
+  "caption": "Table 3. Matched full-simplex confidence-allocation sensitivity across all 450 conditions. Entries report certified/450 and mean ECA (%) from one fixed audit. Refusals contribute zero. H, S, and B share the predictor, 12 proposal-frozen candidates, full-simplex target, total confidence budget, and realized count tensor. H uses Holm-IUT, S uses family-only simultaneous allocation, and B additionally divides by client. Confidence rows are sensitivity settings rather than independent replications.",
+  "rows": [
+    [
+      "Joint confidence\nAll 450 conditions",
+      "Holm-IUT\n(H)",
+      "Family-only\n(S)",
+      "Family + stratum\n(B)"
+    ],
+    [
+      "0.90",
+      "177; 8.3",
+      "177; 8.2",
+      "130; 6.0"
+    ],
+    [
+      "0.95",
+      "157; 7.4",
+      "157; 7.3",
+      "114; 5.1"
+    ],
+    [
+      "0.98",
+      "127; 6.0",
+      "127; 5.9",
+      "87; 4.0"
+    ],
+    [
+      "0.99",
+      "113; 5.2",
+      "113; 5.1",
+      "70; 3.3"
+    ]
+  ]
+}
