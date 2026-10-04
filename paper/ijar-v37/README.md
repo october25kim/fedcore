@@ -9,8 +9,8 @@ releases and the execution-time PACS protocol identifiers remain unchanged.
 ## Binding
 
 - Manuscript version: v37
-- Manuscript SHA-256: `e0e8934121136fcc09ae49571f50082d22cc82c9a0a752b65eb01cdfb9197acf`
-- Rendered PDF SHA-256: `f4b768c9aaba7f7305e3282f417fe8fd706f713dfcedfcdf587273d461650f99`
+- Manuscript SHA-256: `e9b9a3800b6d29a9ae6922f0e2ce9bf303754d3faf1b8b88b09c3f4839be2219`
+- Rendered PDF SHA-256: `a1c9ffa01890930e73d4c6ca7131632cbd39c8224f11bd52e43dba2d221934b5`
 - Release tag: `v0.7.0`
 - PACS source tag: `pacs-local-v1-fa016c1`
 - Release asset: `FedCORE_IJAR_v37_evidence_release.zip`

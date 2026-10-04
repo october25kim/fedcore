@@ -1,9 +1,9 @@
 {
   "manuscript_version": "v37",
   "manuscript_filename": "manuscript/01_FedCORE_IJAR_Manuscript_v37_PublicBound.docx",
-  "manuscript_sha256": "e0e8934121136fcc09ae49571f50082d22cc82c9a0a752b65eb01cdfb9197acf",
+  "manuscript_sha256": "e9b9a3800b6d29a9ae6922f0e2ce9bf303754d3faf1b8b88b09c3f4839be2219",
   "rendered_pdf_filename": "manuscript/01_FedCORE_IJAR_Manuscript_v37_PublicBound.pdf",
-  "rendered_pdf_sha256": "f4b768c9aaba7f7305e3282f417fe8fd706f713dfcedfcdf587273d461650f99",
+  "rendered_pdf_sha256": "a1c9ffa01890930e73d4c6ca7131632cbd39c8224f11bd52e43dba2d221934b5",
   "release_tag": "v0.7.0",
   "pacs_source_tag": "pacs-local-v1-fa016c1",
   "baseline_commit": "cbb23f3",

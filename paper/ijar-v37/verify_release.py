@@ -20,8 +20,8 @@ from xml.etree import ElementTree as ET
 ROOT = Path(__file__).resolve().parent
 REPO = ROOT.parents[1]
 PACS = ROOT / "artifacts" / "pacs"
-DOCX_SHA256 = "e0e8934121136fcc09ae49571f50082d22cc82c9a0a752b65eb01cdfb9197acf"
-PDF_SHA256 = "f4b768c9aaba7f7305e3282f417fe8fd706f713dfcedfcdf587273d461650f99"
+DOCX_SHA256 = "e9b9a3800b6d29a9ae6922f0e2ce9bf303754d3faf1b8b88b09c3f4839be2219"
+PDF_SHA256 = "a1c9ffa01890930e73d4c6ca7131632cbd39c8224f11bd52e43dba2d221934b5"
 RELEASE_TAG = "v0.7.0"
 SOURCE_TAG = "pacs-local-v1-fa016c1"
 SOURCE_COMMIT = "fa016c199a7c846bbe20b64d54ab34164adf7647"
