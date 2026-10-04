@@ -1,0 +1,45 @@
+{
+  "status": "COMPLETE_NEGATIVE_UNDER_PREDECLARED_UTILITY_GATES",
+  "evidence_source": "FINAL_VALIDATION.json and primary registered count-to-decision tensors",
+  "risk_target": 0.20,
+  "mixture_set": "full simplex over four PACS domains",
+  "planned_models": 30,
+  "evaluable_models": 30,
+  "accounted_models": 30,
+  "terminal_model_failures": 0,
+  "primary_rows": 90,
+  "candidate_rows": 1080,
+  "candidate_rows_per_procedure": 360,
+  "certified_models": {
+    "H": 3,
+    "S": 3,
+    "B": 3
+  },
+  "mean_effective_certified_acceptance": {
+    "H": 0.03866772986037437,
+    "S": 0.03866772986037437,
+    "B": 0.03556827642844303
+  },
+  "conditional_certified_coverage": {
+    "H": 0.38667729860374367,
+    "S": 0.38667729860374367,
+    "B": 0.35568276428443024
+  },
+  "candidate_gate_counts": {
+    "H": {"proposal_feasible": 360, "positive_coverage_lcb": 321, "risk_gate_passed": 11, "selected": 3},
+    "S": {"proposal_feasible": 360, "positive_coverage_lcb": 321, "risk_gate_passed": 11, "selected": 3},
+    "B": {"proposal_feasible": 360, "positive_coverage_lcb": 321, "risk_gate_passed": 8, "selected": 3}
+  },
+  "selected_model_set": [
+    "pacs__convnext_tiny__split02__seed0",
+    "pacs__convnext_tiny__split02__seed1",
+    "pacs__convnext_tiny__split02__seed2"
+  ],
+  "mean_S_minus_B": 0.003099453431931335,
+  "absolute_H_gates_passed": 0,
+  "gain_gates_passed": 1,
+  "independent_replay_status": "PASS_INDEPENDENT_REPLAY",
+  "replay_candidate_rows": 1080,
+  "replay_mismatches": 0,
+  "scope": "Same hashed empirical frame with fresh training seeds; not an untouched-dataset confirmation, independent source-population replication, or transportability study."
+}

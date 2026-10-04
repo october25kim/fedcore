@@ -1,0 +1,10 @@
+{
+  "source_commit": "fa016c199a7c846bbe20b64d54ab34164adf7647",
+  "source_tree": "8adbb6fea6b5f7eef4ea8e7f78b484103bf08024",
+  "public_source_ref": "refs/tags/pacs-local-v1-fa016c1",
+  "runtime_file_count": 217,
+  "source_manifest_sha256": "42be3850f5be7381990e6f00ffedab71c0bc8112c093f795667957b76b037d15",
+  "execution_image_id": "sha256:62c35527e56f5a05c026598ffda355e2b2b80256d966e5d9202ba639a5bfde8a",
+  "source_probe_status": "PASS_STEP2C0_REGISTERED_STOPPED_CONTAINER_SOURCE_PROBE",
+  "source_scope": "The public source ref reproduces the exact scientific runner and count-to-decision implementation used by the registered PACS campaign. Dataset files, pretrained initialization archives, checkpoints, and container layers are not redistributed."
+}

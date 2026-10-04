@@ -1,0 +1,28 @@
+{
+  "release": "FedCORE-IJAR-v37-public-release",
+  "date": "2026-10-04",
+  "status": "VERSIONED_RELEASE",
+  "manuscript_sha256": "3cdf07988c670016e00be135bd93ee8e5d8477811b6f40284e0e945c0f703c4d",
+  "rendered_pdf_sha256": "ef585347079765f70990312326a7c9e4107ecd29363b99e65d0a8fe8cd903699",
+  "public_repository": "https://github.com/october25kim/fedcore",
+  "baseline_commit": "cbb23f3",
+  "release_tag": "v0.7.0",
+  "pacs_source_tag": "pacs-local-v1-fa016c1",
+  "release_asset": "FedCORE_IJAR_v37_evidence_release.zip",
+  "release_directory": "paper/ijar-v37",
+  "scope": "v37 manuscript, theorem contract, aggregate evidence, complete PACS denominator, count-to-decision replay, and exact-source binding",
+  "ledger_entries": 24,
+  "ledger_composition": {
+    "figures": 7,
+    "tables": 6,
+    "abstract_claims": 3,
+    "prose_claims": 8
+  },
+  "historical_release": "paper/ijar-v34 remains available and is not the v37 binding",
+  "scientific_delta": "v37 removes the secondary allocation case study from the governing manuscript and adds the complete registered 30-model PACS fresh-seed rerun, independent replay, and exact source provenance.",
+  "verification": {
+    "release_integrity": "Run python paper/ijar-v37/verify_release.py from the tagged checkout",
+    "unit": "Run make unit from the tagged checkout",
+    "verification_environment": "Public tagged checkout"
+  }
+}

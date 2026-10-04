@@ -1,0 +1,11 @@
+architecture,split,total_models,H_certified,S_certified,B_certified
+resnet18,0,3,0,0,0
+resnet18,1,3,0,0,0
+resnet18,2,3,0,0,0
+resnet18,3,3,0,0,0
+resnet18,4,3,0,0,0
+convnext_tiny,0,3,0,0,0
+convnext_tiny,1,3,0,0,0
+convnext_tiny,2,3,3,3,3
+convnext_tiny,3,3,0,0,0
+convnext_tiny,4,3,0,0,0

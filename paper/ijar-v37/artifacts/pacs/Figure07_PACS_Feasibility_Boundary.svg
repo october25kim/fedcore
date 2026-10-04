@@ -1,0 +1,90 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="820" viewBox="0 0 1800 820">
+  <rect width="1800" height="820" fill="#ffffff"/>
+  <style>
+    .title { font-family: Arial, sans-serif; font-size: 34px; font-weight: 700; fill: #171717; }
+    .panel { font-family: Arial, sans-serif; font-size: 28px; font-weight: 700; fill: #171717; }
+    .head { font-family: Arial, sans-serif; font-size: 24px; font-weight: 600; fill: #333333; }
+    .label { font-family: Arial, sans-serif; font-size: 26px; font-weight: 600; fill: #1d1d1d; }
+    .value { font-family: Arial, sans-serif; font-size: 28px; font-weight: 700; fill: #111111; }
+    .small { font-family: Arial, sans-serif; font-size: 21px; font-weight: 400; fill: #444444; }
+    .note { font-family: Arial, sans-serif; font-size: 21px; font-weight: 400; fill: #333333; }
+    .box { fill: #ffffff; stroke-width: 4; rx: 12; }
+  </style>
+  <text x="45" y="52" class="title">Registered PACS rerun: the risk gate, not proposal construction, limited certification</text>
+
+  <text x="55" y="105" class="panel">(a) Candidate-level gates</text>
+  <text x="188" y="151" text-anchor="middle" class="head">Proposal feasible</text>
+  <text x="423" y="140" text-anchor="middle" class="head">Positive coverage</text>
+  <text x="423" y="165" text-anchor="middle" class="small">lower bound</text>
+  <text x="658" y="151" text-anchor="middle" class="head">Risk gate passed</text>
+  <text x="893" y="140" text-anchor="middle" class="head">Selected and</text>
+  <text x="893" y="165" text-anchor="middle" class="small">certified</text>
+
+  <text x="58" y="253" class="label" fill="#0072B2">H</text>
+  <rect x="105" y="200" width="166" height="82" class="box" stroke="#0072B2"/>
+  <text x="188" y="237" text-anchor="middle" class="value">360</text><text x="188" y="264" text-anchor="middle" class="small">100.0%</text>
+  <path d="M278 241 H325" stroke="#777" stroke-width="3"/><path d="M325 241 l-13 -8 v16 z" fill="#777"/>
+  <rect x="340" y="200" width="166" height="82" class="box" stroke="#0072B2"/>
+  <text x="423" y="237" text-anchor="middle" class="value">321</text><text x="423" y="264" text-anchor="middle" class="small">89.2%</text>
+  <path d="M513 241 H560" stroke="#777" stroke-width="3"/><path d="M560 241 l-13 -8 v16 z" fill="#777"/>
+  <rect x="575" y="200" width="166" height="82" class="box" stroke="#0072B2"/>
+  <text x="658" y="237" text-anchor="middle" class="value">11</text><text x="658" y="264" text-anchor="middle" class="small">3.1%</text>
+  <path d="M748 241 H795" stroke="#777" stroke-width="3"/><path d="M795 241 l-13 -8 v16 z" fill="#777"/>
+  <rect x="810" y="200" width="166" height="82" class="box" stroke="#0072B2"/>
+  <text x="893" y="237" text-anchor="middle" class="value">3</text><text x="893" y="264" text-anchor="middle" class="small">0.8%</text>
+
+  <text x="58" y="373" class="label" fill="#E69F00">S</text>
+  <rect x="105" y="320" width="166" height="82" class="box" stroke="#E69F00"/>
+  <text x="188" y="357" text-anchor="middle" class="value">360</text><text x="188" y="384" text-anchor="middle" class="small">100.0%</text>
+  <path d="M278 361 H325" stroke="#777" stroke-width="3"/><path d="M325 361 l-13 -8 v16 z" fill="#777"/>
+  <rect x="340" y="320" width="166" height="82" class="box" stroke="#E69F00"/>
+  <text x="423" y="357" text-anchor="middle" class="value">321</text><text x="423" y="384" text-anchor="middle" class="small">89.2%</text>
+  <path d="M513 361 H560" stroke="#777" stroke-width="3"/><path d="M560 361 l-13 -8 v16 z" fill="#777"/>
+  <rect x="575" y="320" width="166" height="82" class="box" stroke="#E69F00"/>
+  <text x="658" y="357" text-anchor="middle" class="value">11</text><text x="658" y="384" text-anchor="middle" class="small">3.1%</text>
+  <path d="M748 361 H795" stroke="#777" stroke-width="3"/><path d="M795 361 l-13 -8 v16 z" fill="#777"/>
+  <rect x="810" y="320" width="166" height="82" class="box" stroke="#E69F00"/>
+  <text x="893" y="357" text-anchor="middle" class="value">3</text><text x="893" y="384" text-anchor="middle" class="small">0.8%</text>
+
+  <text x="58" y="493" class="label" fill="#6B6B6B">B</text>
+  <rect x="105" y="440" width="166" height="82" class="box" stroke="#6B6B6B"/>
+  <text x="188" y="477" text-anchor="middle" class="value">360</text><text x="188" y="504" text-anchor="middle" class="small">100.0%</text>
+  <path d="M278 481 H325" stroke="#777" stroke-width="3"/><path d="M325 481 l-13 -8 v16 z" fill="#777"/>
+  <rect x="340" y="440" width="166" height="82" class="box" stroke="#6B6B6B"/>
+  <text x="423" y="477" text-anchor="middle" class="value">321</text><text x="423" y="504" text-anchor="middle" class="small">89.2%</text>
+  <path d="M513 481 H560" stroke="#777" stroke-width="3"/><path d="M560 481 l-13 -8 v16 z" fill="#777"/>
+  <rect x="575" y="440" width="166" height="82" class="box" stroke="#6B6B6B"/>
+  <text x="658" y="477" text-anchor="middle" class="value">8</text><text x="658" y="504" text-anchor="middle" class="small">2.2%</text>
+  <path d="M748 481 H795" stroke="#777" stroke-width="3"/><path d="M795 481 l-13 -8 v16 z" fill="#777"/>
+  <rect x="810" y="440" width="166" height="82" class="box" stroke="#6B6B6B"/>
+  <text x="893" y="477" text-anchor="middle" class="value">3</text><text x="893" y="504" text-anchor="middle" class="small">0.8%</text>
+
+  <text x="80" y="573" class="note">All 360 proposal-frozen candidates were feasible, but only 8–11 passed the risk gate.</text>
+
+  <line x1="1020" y1="90" x2="1020" y2="690" stroke="#D0D0D0" stroke-width="2"/>
+  <text x="1060" y="105" class="panel">(b) Model-level certification</text>
+  <text x="1105" y="170" class="head">Architecture</text>
+  <text x="1300" y="170" text-anchor="middle" class="head">Split 0</text>
+  <text x="1400" y="170" text-anchor="middle" class="head">Split 1</text>
+  <text x="1500" y="170" text-anchor="middle" class="head">Split 2</text>
+  <text x="1600" y="170" text-anchor="middle" class="head">Split 3</text>
+  <text x="1700" y="170" text-anchor="middle" class="head">Split 4</text>
+  <text x="1060" y="258" class="label">ResNet18</text>
+  <text x="1060" y="378" class="label">ConvNeXt-Tiny</text>
+  <g fill="#F1F3F5" stroke="#FFFFFF" stroke-width="4">
+    <rect x="1250" y="200" width="100" height="100"/><rect x="1350" y="200" width="100" height="100"/><rect x="1450" y="200" width="100" height="100"/><rect x="1550" y="200" width="100" height="100"/><rect x="1650" y="200" width="100" height="100"/>
+    <rect x="1250" y="320" width="100" height="100"/><rect x="1350" y="320" width="100" height="100"/><rect x="1550" y="320" width="100" height="100"/><rect x="1650" y="320" width="100" height="100"/>
+  </g>
+  <rect x="1450" y="320" width="100" height="100" fill="#0072B2" stroke="#FFFFFF" stroke-width="4"/>
+  <g class="value" text-anchor="middle">
+    <text x="1300" y="260">0/3</text><text x="1400" y="260">0/3</text><text x="1500" y="260">0/3</text><text x="1600" y="260">0/3</text><text x="1700" y="260">0/3</text>
+    <text x="1300" y="380">0/3</text><text x="1400" y="380">0/3</text><text x="1500" y="380" fill="#FFFFFF">3/3</text><text x="1600" y="380">0/3</text><text x="1700" y="380">0/3</text>
+  </g>
+  <text x="1405" y="475" text-anchor="middle" class="note">The same three ConvNeXt-Tiny split-two models certified under H, S, and B.</text>
+  <text x="1405" y="515" text-anchor="middle" class="note">All other 27 models were refused.</text>
+
+  <line x1="55" y1="640" x2="1745" y2="640" stroke="#D0D0D0" stroke-width="2"/>
+  <text x="55" y="685" class="small">Candidate percentages use 360 candidates per procedure (30 models × 12 frozen selectors). Model cells report certified seeds out of three.</text>
+  <text x="55" y="717" class="small">The candidate and model panels use different denominators and should not be read as one sequential funnel.</text>
+  <text x="55" y="767" class="small">Source: registered PACS primary count and decision tensors; risk target 0.20; full-simplex protection.</text>
+</svg>

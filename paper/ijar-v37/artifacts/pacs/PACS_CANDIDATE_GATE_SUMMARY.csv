@@ -1,0 +1,4 @@
+procedure,total_candidates,proposal_feasible,positive_coverage_lcb,risk_gate_passed,candidate_certified,selected_and_certified
+H,360,360,321,11,11,3
+S,360,360,321,11,11,3
+B,360,360,321,8,8,3
