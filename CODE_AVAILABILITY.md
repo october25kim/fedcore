@@ -1,21 +1,11 @@
 # Code availability
 
-The analysis materials associated with this manuscript are available in the
-Fed-CORE repository at https://github.com/october25kim/fedcore.
-The repository root contains aggregate certification counts, frozen protocols,
-matched-comparison and mechanism-analysis code, the complete PACS audit tensors
-and outcomes, and CPU replay instructions. The Git commit identifying this
-snapshot should be cited when referring to its results. Earlier tags, including
-v0.4.2, do not identify this revision.
+The following paragraph appears in the v6 manuscript.
 
-The upload verification replayed all 8,100 primary H/S/B decisions and all
-1,512,000 PACS candidate-method risk flags, 126,000 fixed-procedure selections,
-and 162,000 PACS outcome rows from the saved aggregate counts. The original
-PACS HOLD decision and complete contrast family are retained. These checks
-verify count-level analysis, not independent retraining or regeneration of
-record-level logits. Dataset images, predictor checkpoints and record-level
-logits are not redistributed in this snapshot.
+Count-level data, frozen protocols, analysis code, and CPU replay instructions are publicly available at https://github.com/october25kim/fedcore. The repository documents the contents and reproduction scope of the primary certification, matched Office-Home comparisons, designed-count analyses, and PACS audit. Replay from the saved counts reproduced all 1,512,000 PACS risk flags, 126,000 fixed-procedure selections, and 162,000 outcome rows. These checks verify count-level analysis and do not constitute independent retraining of all thirty models. Raw datasets, model checkpoints, and record-level logits are not included in the repository.
 
-This text replaces the earlier manuscript paragraph that deferred publication
-of the complete analysis archive until article acceptance. The manuscript
-copy in this repository is the unmodified supplied file, for provenance.
+## Snapshot identification
+
+Cite the current Git commit when identifying this analysis snapshot. Earlier
+tags, including v0.4.2, do not identify this revision. The evidence map and
+additional replay limits are documented in [README.md](README.md).

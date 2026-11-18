@@ -1,7 +1,8 @@
-# Fed-CORE: IJMLC v5 analysis snapshot
+# Fed-CORE: IJMLC v6 analysis snapshot
 
 This repository contains the current analysis materials associated with
-`FedCORE_IJMLC_Submission_Final_v5.docx`, as supplied on 18 November 2026.
+[`FedCORE_IJMLC_Submission_Final_v6.docx`](manuscript/FedCORE_IJMLC_Submission_Final_v6.docx),
+revised from the supplied v5 manuscript on 18 November 2026.
 It contains frozen aggregate counts, protocols, analysis code and recorded
 outputs. It does not introduce a new experiment. NICO++ is outside this release.
 
@@ -96,11 +97,15 @@ sampling independence or source-population validity from counts alone. The
 existing ISIC source-overlap limitation and other historical exclusions remain
 in force. No upstream FedPD/FedOSS/FOOGD training runners are added.
 
-The supplied manuscript is preserved byte for byte. Its Code availability
-paragraph predates this upload and mentions the withdrawn historical v0.4.2 tag;
-use the repository root and its current Git commit instead. Replacement wording is provided
-in [CODE_AVAILABILITY.md](CODE_AVAILABILITY.md). Do not interpret this snapshot
-as a claim that every historical raw-data experiment has been reproduced.
+The v6 manuscript updates the public repository address, availability wording,
+ethics scope and editorial cross-references from v5. Scientific results, native
+equations, Word tables and embedded artwork are preserved. Version lineage and
+hashes are recorded in [MANUSCRIPT_BINDING.json](MANUSCRIPT_BINDING.json).
+See the [IJMLC file check](verification/IJMLC_SUBMISSION_CHECK.md): text updates
+are complete, but artwork resolution and labeling corrections remain. The
+current [Code availability statement](CODE_AVAILABILITY.md) explains the replay
+scope; this release does not claim reproduction of every historical raw-data
+experiment.
 
 Source code follows the repository's MIT license. Dataset providers retain
 their terms; raw datasets are not redistributed here. See the repository's
