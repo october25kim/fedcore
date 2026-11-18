@@ -1,0 +1,29 @@
+{
+  "status": "PASS",
+  "date": "2026-11-18",
+  "source_commit": "0b6cfe607aca8ad1cc01a6e6b18cb3474d35e8d0",
+  "change": "Move the current analysis snapshot to the repository root and remove other tracked files.",
+  "unchanged_snapshot_files": 128,
+  "scientific_code_and_data_changed": false,
+  "replays_at_repository_root": {
+    "pacs_counts": {
+      "status": "PASS",
+      "models": 30,
+      "candidate_method_flags": 1512000,
+      "outcomes": 162000,
+      "primary_outcomes": 54000,
+      "max_statistic_error": 1.3100631690576847e-14,
+      "scope": "Saved aggregate counts to candidate decisions, selections and all outcome rows. No training, raw images or logits."
+    },
+    "b3": {
+      "status": "PASS",
+      "cells": 450,
+      "non_reject_all": 443,
+      "union_minimum": 0.953,
+      "certification_only_minimum": 0.958,
+      "cells_with_different_targets": 442,
+      "new_simulation": false
+    }
+  },
+  "previous_eight_checks": "verification/RUN_REPORT.json"
+}
