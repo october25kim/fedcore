@@ -1,20 +1,22 @@
 # IJMLC submission file check
 
-Checked on 18 November 2026 against the International Journal of Machine Learning and Cybernetics guidance. Status: **text updates complete; artwork corrections remain**. This is a file and presentation check, not a new scientific validation or a journal submission.
+Checked on 18 November 2026 against the International Journal of Machine Learning and Cybernetics guidance. Status: **text and requested artwork corrections complete**. This is a file and presentation check, not a new scientific validation or a journal submission.
 
 ## Version lineage
 
 | Item | Source | Revised file |
 | --- | --- | --- |
-| Manuscript | FedCORE_IJMLC_Submission_Final_v5.docx | FedCORE_IJMLC_Submission_Final_v6.docx |
+| Manuscript, editorial revision | FedCORE_IJMLC_Submission_Final_v5.docx | FedCORE_IJMLC_Submission_Final_v6.docx |
+| Manuscript, artwork revision | FedCORE_IJMLC_Submission_Final_v6.docx | FedCORE_IJMLC_Submission_Final_v7.docx |
 | Cover letter | FedCORE_IJMLC_Cover_Letter_v4.docx | FedCORE_IJMLC_Cover_Letter_v5.docx |
 
-The manuscript source is the v5 file recorded at repository commit `202c3949029fd66fc3a32795a30a954c6c38217d`. No alternative manuscript version was used as the editing base. The cover letter is supplied separately, outside the public repository.
+The manuscript source is the v5 file recorded at repository commit `202c3949029fd66fc3a32795a30a954c6c38217d`. The artwork revision uses v6 from commit `50f34f2c93e3938de4f37a36bdabe0062b7884f7`, maintaining the v5 → v6 → v7 lineage. The cover letter is supplied separately, outside the public repository.
 
 | File | SHA-256 |
 | --- | --- |
 | Source manuscript v5 | `0a7093f55b10d50e1bd12f95869fa024b4ee5ad69a35392628a8eb7d2fffe5c6` |
 | Revised manuscript v6 | `d2860e939d654ae3bd50bcb0785aba35c74d8a0533eb0168d3009a527148a591` |
+| Revised manuscript v7 | `4d03f3c2638afdd59032aa4192e717dc03963562407feeddc2fff0c328a04673` |
 | Revised cover letter v5 | `fa7f598a47581a4b37b8214ed19a9195137a2c187adf919b8cef5e0e48cd12a4` |
 
 ## Completed edits
@@ -25,7 +27,7 @@ The manuscript source is the v5 file recorded at repository commit `202c3949029f
 - Adjusted early figure references and added explicit callouts for Figures 3, 6 and 8. Made the Figure 3 caption label bold.
 - Added a statement describing the use of existing benchmark datasets and the absence of new participant recruitment; no institutional exemption was asserted.
 
-All native equation elements, table elements, drawing elements and embedded image bytes were preserved exactly. Scientific results, numerical values and experiment protocols were not revised. No new training or NICO++ evaluation was performed.
+In v6, native equation elements, table elements, drawing elements and embedded image bytes were preserved exactly. In v7, all 312 native equation elements and 15 Word table elements remain byte-preserved; the nine images and their display dimensions were intentionally updated. Only the captions of Figures 3, 5 and 9 changed; all other paragraph text is unchanged. Scientific results, numerical values and experiment protocols were not revised. No new training or NICO++ evaluation was performed.
 
 ## File findings
 
@@ -37,31 +39,35 @@ All native equation elements, table elements, drawing elements and embedded imag
 | Declarations | Author contribution, competing interests, funding, data/code availability and AI-assisted tools disclosure are present; ethics scope added. Existing funding statements retained. |
 | Citations and references | Author-year citations, alphabetically arranged references and DOI links are present. Individual bibliographic records and DOI destinations were not comprehensively reverified. |
 | Review artifacts | No tracked changes or comments detected; automatic page numbering retained. |
-| Rendered layout | Manuscript: 45 pages. Cover letter: one page. Every page was visually inspected; edited pages were rechecked after the final changes. No layout clipping was observed. Figure 7's small lettering remains an artwork concern. |
+| Rendered layout | Manuscript: 45 pages. Cover letter: one page. The v6 review covered every page. In v7, 36 pages are pixel-identical to that review; all nine changed pages (5, 14, 19, 29, 30, 31, 33, 34 and 35) were visually inspected. No clipping or legend overlap was observed in the final renders. |
 | Public repository | Manuscript points to the current repository and explains its replay limits. |
 
-## Artwork findings and remaining corrections
+## Completed artwork corrections
 
-Effective resolution was measured from the embedded pixel dimensions and the actual insertion width. All nine embedded figures are PNG color diagrams, plots or mixed illustrations. At their current sizes, all fall below 600 dpi; these are not purely photographic halftones.
+All nine figures were regenerated from original vector geometry or unchanged archived plot data, rather than enlarging old PNGs. The manuscript embeds 600 dpi PNG exports; lossless TIFF and EPS/PDF/SVG companions are supplied in [figures](../figures/). Fonts are embedded in all nine PDF companions. Vector companions are supplied for line art. The native 28 × 28 PathMNIST patches retain their original information.
 
-| Figure | Embedded pixels | Width (inches) | Effective dpi |
+| Figure | New raster pixels | Width (inches) | Effective horizontal dpi |
 | --- | --- | --- | --- |
-| 1 | 1872 × 875 | 6.24 | 300.0 |
-| 2 | 2175 × 1695 | 6.20 | 350.8 |
-| 3 | 1606 × 704 | 6.10 | 263.3 |
-| 4 | 1872 × 960 | 6.24 | 300.0 |
-| 5 | 1872 × 1425 | 5.80 | 322.8 |
-| 6 | 1872 × 1605 | 6.24 | 300.0 |
-| 7 | 3000 × 1850 | 5.30 | 566.0 |
-| 8 | 3600 × 1440 | 6.24 | 576.9 |
-| 9 | 1872 × 1185 | 5.80 | 322.8 |
+| 1 | 3744 × 1750 | 6.24 | 600.0 |
+| 2 | 3720 × 2900 | 6.20 | 600.0 |
+| 3 | 3660 × 1605 | 6.10 | 600.0 |
+| 4 | 3744 × 1920 | 6.24 | 600.0 |
+| 5 | 3480 × 2649 | 5.80 | 600.0 |
+| 6 | 3744 × 3210 | 6.24 | 600.0 |
+| 7 | 3744 × 1950 | 6.24 | 600.0 |
+| 8 | 3744 × 1500 | 6.24 | 600.0 |
+| 9 | 3744 × 2370 | 6.24 | 600.0 |
 
-1. Re-export artwork from the existing plotting sources or vector originals at the final display size. Do not increase PNG pixel dimensions by interpolation merely to change the reported resolution. Matching vector companions were located for Figures 1, 2, 3, 4 and 6, but have not been substituted into this version.
-2. Change Figure 3 panel labels A/B to a/b and synchronize its caption.
-3. Move the overall titles embedded in Figures 1, 4, 5, 6, 7, 8 and 9 into their captions. Retain necessary panel descriptions and axis labels.
-4. Increase Figure 7's smallest lettering during export and inspect it at the final physical size.
+- Figure 3: A/B changed to (a)/(b), with matching caption.
+- Figure 5: all three visual sections labeled (a)–(c), with matching caption.
+- Figures 1, 4, 5, 6, 7, 8 and 9: overall titles removed from the image; descriptions remain in captions and text.
+- Figure 1: mathematical membership symbol outlined to prevent font substitution.
+- Figure 7: final width increased to 6.24 inches; lettering at least 8 pt; dataset, certification and quartile legends separated. The original footer's numerical statements remain in Appendix B.5.
+- Figure 8: original saved confidence intervals preserved; vertical limits expanded to include the full bands and the n = 514 reference line retained.
+- Figure 9: label/colorbar margins corrected; caption identifies the native 28 × 28-pixel patches.
+- Word image compression disabled; all figure placement and caption layouts visually checked.
 
-These corrections concern presentation and require no additional experiments. The current v6 retains the original figures and should not be described as fully compliant with all artwork requirements.
+The source hashes, geometric preservation, image-format checks and manuscript invariants are recorded in [IJMLC_ARTWORK_CHECK.json](IJMLC_ARTWORK_CHECK.json). This is an artwork and document check, not an independent scientific replication. No new experiments were needed.
 
 ## Journal guidance used
 

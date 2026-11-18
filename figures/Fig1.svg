@@ -1,0 +1,92 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<svg xmlns="http://www.w3.org/2000/svg" width="6.24in" height="2.9166666666666665in" viewBox="0 0 1872 875" role="img" aria-label="Fed-CORE certifies a frozen decision rule before deployment">
+<defs>
+<marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L9,3 z" fill="#172033"/></marker>
+<filter id="shadow" x="-10%" y="-10%" width="120%" height="130%"><feDropShadow dx="0" dy="3" stdDeviation="4" flood-opacity="0.12"/></filter>
+</defs>
+<rect width="100%" height="100%" fill="white"/>
+<text x="38.00" y="140.00" font-family="Arial, Helvetica, DejaVu Sans, sans-serif" font-size="32" font-weight="700" fill="#17324D" text-anchor="start">Predeployment certification</text>
+<rect x="38.00" y="160.00" width="270.00" height="260.00" rx="18.00" fill="#EAF3FA" stroke="#0072B2" stroke-width="3" opacity="1"/>
+<text x="173.00" y="208.00" font-family="Arial, Helvetica, DejaVu Sans, sans-serif" font-size="30" font-weight="700" fill="#0072B2" text-anchor="middle">Fixed pipeline</text>
+<text x="173.00" y="252.00" font-family="Arial, Helvetica, DejaVu Sans, sans-serif" font-size="30" font-weight="500" fill="#172033" text-anchor="middle">
+<tspan x="173.00" dy="0.00">fixed model</tspan>
+<tspan x="173.00" dy="37.50">checkpoint</tspan>
+<tspan x="173.00" dy="37.50">preprocessing</tspan>
+<tspan x="173.00" dy="37.50">label mapping</tspan>
+<tspan x="173.00" dy="37.50">oriented score</tspan>
+</text>
+<rect x="345.00" y="160.00" width="285.00" height="260.00" rx="18.00" fill="#EEF2FF" stroke="#3455B2" stroke-width="3" opacity="1"/>
+<text x="487.50" y="208.00" font-family="Arial, Helvetica, DejaVu Sans, sans-serif" font-size="30" font-weight="700" fill="#3455B2" text-anchor="middle">Proposal fold only</text>
+<text x="487.50" y="252.00" font-family="Arial, Helvetica, DejaVu Sans, sans-serif" font-size="30" font-weight="500" fill="#172033" text-anchor="middle">
+<tspan x="487.50" dy="0.00">freeze rule</tspan>
+<tspan x="487.50" dy="37.50">or family</tspan>
+<tspan x="487.50" dy="37.50">thresholds and</tspan>
+<tspan x="487.50" dy="37.50">tie rules</tspan>
+<tspan x="487.50" dy="37.50">no audit outcomes</tspan>
+</text>
+<rect x="667.00" y="160.00" width="320.00" height="260.00" rx="18.00" fill="#E7F6F3" stroke="#0F766E" stroke-width="3" opacity="1"/>
+<text x="827.00" y="208.00" font-family="Arial, Helvetica, DejaVu Sans, sans-serif" font-size="30" font-weight="700" fill="#0F766E" text-anchor="middle">Certification fold</text>
+<text x="827.00" y="252.00" font-family="Arial, Helvetica, DejaVu Sans, sans-serif" font-size="30" font-weight="500" fill="#172033" text-anchor="middle">
+<tspan x="827.00" dy="0.00">independent audits</tspan>
+<tspan x="827.00" dy="37.50">counts (A, K, n)</tspan>
+<tspan x="827.00" dy="37.50">per rule and stratum</tspan>
+</text>
+<rect x="1024.00" y="160.00" width="315.00" height="260.00" rx="18.00" fill="#EDF7FB" stroke="#246B8E" stroke-width="3" opacity="1"/>
+<text x="1181.50" y="208.00" font-family="Arial, Helvetica, DejaVu Sans, sans-serif" font-size="30" font-weight="700" fill="#246B8E" text-anchor="middle">Server certificate</text>
+<text x="1181.50" y="252.00" font-family="Arial, Helvetica, DejaVu Sans, sans-serif" font-size="30" font-weight="500" fill="#172033" text-anchor="middle">
+<tspan x="1181.50" dy="0.00">risk decision passes</tspan>
+<tspan x="1181.50" dy="37.50">coverage LCB &gt; 0</tspan>
+<tspan x="1181.50" dy="37.50">validity gates pass</tspan>
+</text>
+<rect x="1440.00" y="155.00" width="390.00" height="92.00" rx="18.00" fill="#EAF7F1" stroke="#009E73" stroke-width="3" opacity="1"/>
+<text x="1635.00" y="203.00" font-family="Arial, Helvetica, DejaVu Sans, sans-serif" font-size="30" font-weight="700" fill="#009E73" text-anchor="middle">PASS. Deploy frozen rule</text>
+<text x="1635.00" y="247.00" font-family="Arial, Helvetica, DejaVu Sans, sans-serif" font-size="30" font-weight="500" fill="#172033" text-anchor="middle">
+</text>
+<rect x="1440.00" y="270.00" width="390.00" height="92.00" rx="18.00" fill="#FFF2E8" stroke="#D55E00" stroke-width="3" opacity="1"/>
+<text x="1635.00" y="318.00" font-family="Arial, Helvetica, DejaVu Sans, sans-serif" font-size="30" font-weight="700" fill="#D55E00" text-anchor="middle">FAIL. Cannot certify</text>
+<text x="1635.00" y="362.00" font-family="Arial, Helvetica, DejaVu Sans, sans-serif" font-size="30" font-weight="500" fill="#172033" text-anchor="middle">
+</text>
+<line x1="308.00" y1="268.00" x2="337.00" y2="268.00" stroke="#172033" stroke-width="4" opacity="1" marker-end="url(#arrow)"/>
+<line x1="630.00" y1="268.00" x2="659.00" y2="268.00" stroke="#172033" stroke-width="4" opacity="1" marker-end="url(#arrow)"/>
+<line x1="987.00" y1="268.00" x2="1016.00" y2="268.00" stroke="#172033" stroke-width="4" opacity="1" marker-end="url(#arrow)"/>
+<path d="M1339 268 L1385 268 L1432 201" fill="none" stroke="#172033" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<path d="M1339 268 L1385 268 L1432 316" fill="none" stroke="#172033" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<text x="38.00" y="470.00" font-family="Arial, Helvetica, DejaVu Sans, sans-serif" font-size="32" font-weight="700" fill="#17324D" text-anchor="start">Deployment after a passing certificate</text>
+<rect x="55.00" y="535.00" width="320.00" height="195.00" rx="18.00" fill="#F5F7FB" stroke="#4D6280" stroke-width="3" opacity="1"/>
+<text x="215.00" y="583.00" font-family="Arial, Helvetica, DejaVu Sans, sans-serif" font-size="30" font-weight="700" fill="#4D6280" text-anchor="middle">Future client traffic</text>
+<text x="215.00" y="627.00" font-family="Arial, Helvetica, DejaVu Sans, sans-serif" font-size="30" font-weight="500" fill="#172033" text-anchor="middle">
+<tspan x="215.00" dy="0.00">heterogeneous</tspan>
+<tspan x="215.00" dy="37.50">requests</tspan>
+</text>
+<rect x="500.00" y="535.00" width="350.00" height="170.00" rx="18.00" fill="#EAF7F1" stroke="#009E73" stroke-width="3" opacity="1"/>
+<text x="675.00" y="583.00" font-family="Arial, Helvetica, DejaVu Sans, sans-serif" font-size="30" font-weight="700" fill="#009E73" text-anchor="middle">Deployed frozen rule</text>
+<text x="675.00" y="627.00" font-family="Arial, Helvetica, DejaVu Sans, sans-serif" font-size="30" font-weight="500" fill="#172033" text-anchor="middle">
+<tspan x="675.00" dy="0.00">fixed predictor and score</tspan>
+<tspan x="675.00" dy="37.50">fixed accept-or-defer rule</tspan>
+</text>
+<rect x="1000.00" y="495.00" width="360.00" height="155.00" rx="18.00" fill="#EAF7F1" stroke="#009E73" stroke-width="3" opacity="1"/>
+<text x="1180.00" y="543.00" font-family="Arial, Helvetica, DejaVu Sans, sans-serif" font-size="30" font-weight="700" fill="#009E73" text-anchor="middle">Accepted predictions</text>
+<text x="1180.00" y="587.00" font-family="Arial, Helvetica, DejaVu Sans, sans-serif" font-size="30" font-weight="500" fill="#172033" text-anchor="middle">
+<tspan x="1180.00" dy="0.00">count toward</tspan>
+<tspan x="1180.00" dy="37.50">aggregate risk</tspan>
+</text>
+<rect x="1000.00" y="680.00" width="360.00" height="155.00" rx="18.00" fill="#F3F5F7" stroke="#6B7280" stroke-width="3" opacity="1"/>
+<text x="1180.00" y="728.00" font-family="Arial, Helvetica, DejaVu Sans, sans-serif" font-size="30" font-weight="700" fill="#6B7280" text-anchor="middle">Deferred inputs</text>
+<text x="1180.00" y="772.00" font-family="Arial, Helvetica, DejaVu Sans, sans-serif" font-size="30" font-weight="500" fill="#172033" text-anchor="middle">
+<tspan x="1180.00" dy="0.00">sent to a fallback process</tspan>
+</text>
+<rect x="1440.00" y="535.00" width="390.00" height="205.00" rx="18.00" fill="#FAFBFC" stroke="#6B7280" stroke-width="3" opacity="1" stroke-dasharray="12 8"/>
+<text x="1635.00" y="583.00" font-family="Arial, Helvetica, DejaVu Sans, sans-serif" font-size="30" font-weight="700" fill="#6B7280" text-anchor="middle">Independent test fold</text>
+<text x="1635.00" y="627.00" font-family="Arial, Helvetica, DejaVu Sans, sans-serif" font-size="30" font-weight="500" fill="#172033" text-anchor="middle">
+<tspan x="1635.00" dy="0.00">diagnostic only</tspan>
+<tspan x="1635.00" dy="37.50">no retuning</tspan>
+<tspan x="1635.00" dy="37.50">no recertification</tspan>
+</text>
+<line x1="375.00" y1="620.00" x2="492.00" y2="620.00" stroke="#172033" stroke-width="4" opacity="1" marker-end="url(#arrow)"/>
+<path d="M850 620 L930 620 L992 562" fill="none" stroke="#172033" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<path d="M850 620 L930 620 L992 732" fill="none" stroke="#172033" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"/>
+<path d="M1440 201 L1395 201 L1395 435 L675 435 L675 527" fill="none" stroke="#172033" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"/>
+
+<text x="1455.00" y="400.00" font-family="Arial, Helvetica, DejaVu Sans, sans-serif" font-size="28" font-weight="600" fill="#009E73" text-anchor="start">Certificate pass</text>
+<text x="1455.00" y="434.00" font-family="Arial, Helvetica, DejaVu Sans, sans-serif" font-size="28" font-weight="600" fill="#009E73" text-anchor="start">enables deployment</text>
+<path d="M15.60000 13.25625 Q16.61250 15.07500 18.01875 15.93750 Q19.42500 16.80000 21.32812 16.80000 Q23.89219 16.80000 25.28438 15.00469 Q26.67656 13.21406 26.67656 9.90469 L26.67656 0.00000 L23.96719 0.00000 L23.96719 9.81562 Q23.96719 12.17344 23.12813 13.31250 Q22.29375 14.45625 20.58281 14.45625 Q18.48750 14.45625 17.26875 13.06406 Q16.05469 11.67656 16.05469 9.27187 L16.05469 0.00000 L13.34531 0.00000 L13.34531 9.81562 Q13.34531 12.18750 12.51094 13.32188 Q11.67656 14.45625 9.93281 14.45625 Q7.86562 14.45625 6.64687 13.05937 Q5.43281 11.66250 5.43281 9.27187 L5.43281 0.00000 L2.72344 0.00000 L2.72344 16.40625 L5.43281 16.40625 L5.43281 13.85625 Q6.35625 15.36562 7.64531 16.08281 Q8.93437 16.80000 10.70625 16.80000 Q12.49687 16.80000 13.74844 15.89062 Q15.00000 14.98594 15.60000 13.25625 Z M32.04844 16.40625 L34.74375 16.40625 L34.74375 0.00000 L32.04844 0.00000 L32.04844 16.40625 Z M32.04844 22.79531 L34.74375 22.79531 L34.74375 19.37813 L32.04844 19.37813 L32.04844 22.79531 Z M54.02344 16.40625 L48.08906 8.42344 L54.32812 0.00000 L51.15000 0.00000 L46.37344 6.44531 L41.60156 0.00000 L38.41875 0.00000 L44.79375 8.58281 L38.96250 16.40625 L42.14062 16.40625 L46.49063 10.56094 L50.84062 16.40625 L54.02344 16.40625 Z M60.80625 21.06563 L60.80625 16.40625 L66.35625 16.40625 L66.35625 14.31094 L60.80625 14.31094 L60.80625 5.40469 Q60.80625 3.39844 61.35469 2.82656 Q61.90312 2.25469 63.59062 2.25469 L66.35625 2.25469 L66.35625 0.00000 L63.59062 0.00000 Q60.46875 0.00000 59.28281 1.16250 Q58.09687 2.32969 58.09687 5.40469 L58.09687 14.31094 L56.11875 14.31094 L56.11875 16.40625 L58.09687 16.40625 L58.09687 21.06563 L60.80625 21.06563 Z M69.62344 6.47344 L69.62344 16.40625 L72.31875 16.40625 L72.31875 6.57656 Q72.31875 4.24688 73.22344 3.07969 Q74.13281 1.91719 75.95156 1.91719 Q78.13125 1.91719 79.39687 3.30937 Q80.66719 4.70156 80.66719 7.10625 L80.66719 16.40625 L83.36250 16.40625 L83.36250 0.00000 L80.66719 0.00000 L80.66719 2.52188 Q79.68750 1.02656 78.38906 0.30000 Q77.09531 -0.42656 75.37969 -0.42656 Q72.55312 -0.42656 71.08594 1.33125 Q69.62344 3.08906 69.62344 6.47344 Z M76.40625 16.80000 L76.40625 16.80000 Z M98.41875 13.88906 Q97.96406 14.15156 97.42969 14.27344 Q96.89531 14.40000 96.25312 14.40000 Q93.96563 14.40000 92.74219 12.91406 Q91.51875 11.42812 91.51875 8.64375 L91.51875 0.00000 L88.80938 0.00000 L88.80938 16.40625 L91.51875 16.40625 L91.51875 13.85625 Q92.37188 15.35156 93.73125 16.07344 Q95.09531 16.80000 97.04531 16.80000 Q97.32187 16.80000 97.65937 16.76250 Q97.99688 16.72969 98.40469 16.65469 L98.41875 13.88906 Z M114.61875 8.87812 L114.61875 7.56094 L102.22500 7.56094 Q102.40313 4.77656 103.90313 3.31875 Q105.40313 1.86094 108.08437 1.86094 Q109.63594 1.86094 111.09375 2.24063 Q112.55156 2.62031 113.99062 3.38437 L113.99062 0.83437 Q112.53750 0.22031 111.01406 -0.10312 Q109.49062 -0.42656 107.92500 -0.42656 Q103.99688 -0.42656 101.70469 1.85625 Q99.41250 4.14375 99.41250 8.04375 Q99.41250 12.07031 101.58750 14.43281 Q103.76250 16.80000 107.45625 16.80000 Q110.76562 16.80000 112.69219 14.66719 Q114.61875 12.53906 114.61875 8.87812 Z M111.92344 9.67031 Q111.89531 11.87812 110.68594 13.19531 Q109.47656 14.51719 107.48438 14.51719 Q105.22969 14.51719 103.87500 13.24219 Q102.52031 11.96719 102.31406 9.65156 L111.92344 9.67031 Z M135.03750 20.23125 L142.61250 0.00000 L139.75781 0.00000 L135.15469 12.13125 L129.50156 0.00000 L126.64687 0.00000 L133.83750 15.73125 L132.75469 18.63281 Q132.06562 20.47969 130.50000 20.47969 L129.09375 20.47969 L129.09375 22.79531 L130.80469 22.76250 Q134.11406 22.72031 135.03750 20.23125 Z M158.06719 9.18281 Q158.17031 8.10000 159.09375 6.34219 Q160.17656 4.30781 162.22500 3.16406 Q164.23594 2.05313 166.40156 2.03437 L176.61094 2.03437 L176.61094 -0.29531 L166.40156 -0.29531 Q163.58906 -0.29531 160.98750 1.15312 Q158.39062 2.60625 156.99844 5.18438 Q155.60625 7.76250 155.60625 10.50469 Q155.60625 13.21406 156.99844 15.79219 Q158.39062 18.37031 160.98750 19.83281 Q163.58906 21.30000 166.40156 21.30000 L176.61094 21.30000 L176.61094 18.97031 L166.40156 18.97031 Q164.23594 18.95625 162.22500 17.82656 Q160.19062 16.66875 159.09375 14.64844 Q158.15625 12.89062 158.02500 11.52656 L176.61094 11.52656 L176.61094 9.18281 L158.06719 9.18281 Z M192.06562 0.00000 L188.94375 0.00000 L197.29219 21.87187 L200.64844 21.87187 L208.98281 0.00000 L205.90781 0.00000 L198.96562 18.95625 L192.06562 0.00000 Z" fill="#172033" transform="translate(109.14687500000001,702) scale(1,-1)" aria-label="mixture λ ∈ Λ"/></svg>

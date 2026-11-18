@@ -1,8 +1,8 @@
-# Fed-CORE: IJMLC v6 analysis snapshot
+# Fed-CORE: IJMLC v7 analysis snapshot
 
 This repository contains the current analysis materials associated with
-[`FedCORE_IJMLC_Submission_Final_v6.docx`](manuscript/FedCORE_IJMLC_Submission_Final_v6.docx),
-revised from the supplied v5 manuscript on 18 November 2026.
+[`FedCORE_IJMLC_Submission_Final_v7.docx`](manuscript/FedCORE_IJMLC_Submission_Final_v7.docx),
+revised from v6 (based on the supplied v5) on 18 November 2026.
 It contains frozen aggregate counts, protocols, analysis code and recorded
 outputs. It does not introduce a new experiment. NICO++ is outside this release.
 
@@ -57,7 +57,7 @@ The report and logs are in [verification/](verification/).
 | Primary H/S/B comparison, including Table 10 | `source_package/historical/inputs/results/theorem_aligned_wr_450_v3/` | All 2,700 cell/alpha cases and 8,100 procedure decisions |
 | Other historical appendix diagnostics | Historical material outside this current snapshot | Not included in the current replay scope |
 
-The current tree contains only this analysis snapshot and its license notices.
+The current tree contains this analysis snapshot, the current manuscript, publication artwork and license notices.
 Earlier version folders and the legacy application source have been removed.
 The eight replay commands above use files within this repository tree.
 
@@ -92,20 +92,26 @@ count-only PACS certifier and analysis modules against all saved audit tensors.
 audit. `PROVENANCE.json` records the copied source hashes.
 
 This is an aggregate-count and outcome replay release. It does not regenerate
-images, training splits, predictor checkpoints or logits, and cannot establish
+benchmark images, training splits, predictor checkpoints or logits, and cannot establish
 sampling independence or source-population validity from counts alone. The
 existing ISIC source-overlap limitation and other historical exclusions remain
 in force. No upstream FedPD/FedOSS/FOOGD training runners are added.
 
-The v6 manuscript updates the public repository address, availability wording,
-ethics scope and editorial cross-references from v5. Scientific results, native
-equations, Word tables and embedded artwork are preserved. Version lineage and
-hashes are recorded in [MANUSCRIPT_BINDING.json](MANUSCRIPT_BINDING.json).
-See the [IJMLC file check](verification/IJMLC_SUBMISSION_CHECK.md): text updates
-are complete, but artwork resolution and labeling corrections remain. The
-current [Code availability statement](CODE_AVAILABILITY.md) explains the replay
-scope; this release does not claim reproduction of every historical raw-data
-experiment.
+The v6 revision updated the public repository address, availability wording,
+ethics scope and editorial cross-references from v5. The v7 revision replaces
+all nine figures with exports from original vectors or unchanged plot data,
+corrects panel labels and three captions, and improves Figure 7's lettering.
+Scientific results, 312 native equation elements and all 15 Word tables remain
+unchanged. Version lineage and hashes are in
+[MANUSCRIPT_BINDING.json](MANUSCRIPT_BINDING.json).
+
+The [publication artwork](figures/) includes 600 dpi PNG/TIFF and vector
+EPS/PDF/SVG companions. The [IJMLC file check](verification/IJMLC_SUBMISSION_CHECK.md)
+and [artwork verification](verification/IJMLC_ARTWORK_CHECK.json) record the
+completed corrections and the 45-page render review. No additional experiments
+were performed. The [Code availability statement](CODE_AVAILABILITY.md)
+explains the replay scope; this release does not claim reproduction of every
+historical raw-data experiment.
 
 Source code follows the repository's MIT license. Dataset providers retain
 their terms; raw datasets are not redistributed here. See the repository's

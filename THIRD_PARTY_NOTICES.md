@@ -6,7 +6,7 @@ and dependencies retain their own terms and are not relicensed by Fed-CORE.
 The count-level replay uses NumPy, SciPy, pandas and mpmath. These packages are
 installed separately using requirements.txt and are not vendored here.
 
-The supplied manuscript contains illustrative PathMNIST tissue patches from
+The supplied manuscript and standalone Figure 9 contain illustrative PathMNIST tissue patches from
 the MedMNIST Dataset, distributed under CC BY 4.0. Retain the benchmark and
 source-data citations in the manuscript. See the provider's
 [license and citation notice](https://github.com/MedMNIST/MedMNIST#license-and-citation).

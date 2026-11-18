@@ -1,18 +1,32 @@
 {
-  "manuscript": "manuscript/FedCORE_IJMLC_Submission_Final_v6.docx",
-  "sha256": "d2860e939d654ae3bd50bcb0785aba35c74d8a0533eb0168d3009a527148a591",
+  "manuscript": "manuscript/FedCORE_IJMLC_Submission_Final_v7.docx",
+  "sha256": "4d03f3c2638afdd59032aa4192e717dc03963562407feeddc2fff0c328a04673",
   "byte_preserved": false,
   "date": "2026-11-18",
   "analysis_scope": "See README.md for the governing-file map and replay limitations.",
-  "availability_statement": "The v6 manuscript points to https://github.com/october25kim/fedcore and describes the public count-level replay scope.",
+  "availability_statement": "The v7 manuscript points to https://github.com/october25kim/fedcore and describes the public count-level replay scope.",
   "historical_base_commit": "e55f8ea02155c1f85bb4d34efebe880f4ee8ba12",
-  "source_manuscript": "FedCORE_IJMLC_Submission_Final_v5.docx",
-  "source_sha256": "0a7093f55b10d50e1bd12f95869fa024b4ee5ad69a35392628a8eb7d2fffe5c6",
-  "source_repository_commit": "202c3949029fd66fc3a32795a30a954c6c38217d",
+  "source_manuscript": "FedCORE_IJMLC_Submission_Final_v6.docx",
+  "source_sha256": "d2860e939d654ae3bd50bcb0785aba35c74d8a0533eb0168d3009a527148a591",
+  "source_repository_commit": "50f34f2c93e3938de4f37a36bdabe0062b7884f7",
   "scientific_results_unchanged": true,
   "native_equation_elements_byte_preserved": true,
   "table_elements_byte_preserved": true,
-  "drawing_elements_and_embedded_images_byte_preserved": true,
+  "drawing_elements_and_embedded_images_byte_preserved": false,
   "submission_check": "verification/IJMLC_SUBMISSION_CHECK.md",
-  "submission_check_status": "TEXT_UPDATED_ARTWORK_ACTION_REQUIRED"
+  "submission_check_status": "TEXT_AND_ARTWORK_CORRECTIONS_COMPLETE",
+  "drawing_update": "Nine figures re-exported from original vector geometry or unchanged plot data; display dimensions adjusted for readability.",
+  "artwork_check": "verification/IJMLC_ARTWORK_CHECK.json",
+  "lineage": [
+    {
+      "version": "v5",
+      "sha256": "0a7093f55b10d50e1bd12f95869fa024b4ee5ad69a35392628a8eb7d2fffe5c6",
+      "repository_commit": "202c3949029fd66fc3a32795a30a954c6c38217d"
+    },
+    {
+      "version": "v6",
+      "sha256": "d2860e939d654ae3bd50bcb0785aba35c74d8a0533eb0168d3009a527148a591",
+      "repository_commit": "50f34f2c93e3938de4f37a36bdabe0062b7884f7"
+    }
+  ]
 }

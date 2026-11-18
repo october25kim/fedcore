@@ -1,0 +1,637 @@
+{
+  "date": "2026-11-18",
+  "status": "ARTWORK_CORRECTIONS_COMPLETE",
+  "source_inputs": [
+    {
+      "file": "Fig1.svg",
+      "original_filename": "Figure1_Workflow_CertificatePass_v33.svg",
+      "sha256": "4e1e458b700e3f716c340fa3faa448fe10dfc4f3d38202e1a4e8f85ea2f862f9"
+    },
+    {
+      "file": "Fig2.svg",
+      "original_filename": "protection_differences.svg",
+      "sha256": "1e39c3f73d6f8cd7c9d6d7b2a7869e5cd84a4cfab3a3e69e7fae2ceb097992b6"
+    },
+    {
+      "file": "Fig3.svg",
+      "original_filename": "FIGURE3_mechanisms.svg",
+      "sha256": "904b9e2ba55d1d2b43e8675958adb4902595265ab5c9ee649826204d4ada008d"
+    },
+    {
+      "file": "Fig4.svg",
+      "original_filename": "Figure2_TargetMismatch_Simplified_v27.svg",
+      "sha256": "2f462fab746357fbcb148480bff0aa836bcf253a00582b1856c6d3ae7371881f"
+    },
+    {
+      "file": "plot_validity.py",
+      "original_filename": "make_figure3_v27.py",
+      "sha256": "cd00e28eda4c8a2ef253e12cf08aca91375e11ac2c6f35d2c3f5b59e925812ae"
+    },
+    {
+      "file": "make_figure3_v22.py",
+      "original_filename": "make_figure3_v22.py",
+      "sha256": "b6aef8616aa252d000618a5a4655257cb779355e2dd5dc4c4226ccee67df9137"
+    },
+    {
+      "file": "plot_wr.py",
+      "original_filename": "make_wr_figures.py",
+      "sha256": "b5d6ecb8c5ba066b02483873450a6949d94216df18600a9f17130419b306a122"
+    },
+    {
+      "file": "validity.csv",
+      "original_filename": "validity_B1000_per_cell.csv",
+      "sha256": "9048ed6e6ed726c79a07588e4a9884f8d54d6b2df8f28b5ee9a0f39cb0678d19"
+    },
+    {
+      "file": "precision.csv",
+      "original_filename": "precision_B10000_summary_20_cells.csv",
+      "sha256": "ae8a1661893c7e7a42f8a8ae332f4fb27045a4c2a0e1e89e42507b54faa1ac4c"
+    },
+    {
+      "file": "Fig6_headline.csv",
+      "original_filename": "Figure4_headline_alpha020.csv",
+      "sha256": "4edf788c1eb6361283e1dbfb8636d7b4fb4b640bff61d6acea47f370c2ec48fd"
+    },
+    {
+      "file": "Fig6_contrasts.csv",
+      "original_filename": "Figure4_panels_b_c_S_minus_B.csv",
+      "sha256": "ac6e463da3885effc0ef9163a1235d20a397f4fc712c5ffedbe7ad157c17e5b4"
+    },
+    {
+      "file": "Fig6_floors.csv",
+      "original_filename": "Figure4_panel_a_count_floors.csv",
+      "sha256": "bb19b1044bb15760613e2f72c8bf7d1f7797d2da5c3716165c0e0307677063a8"
+    },
+    {
+      "file": "Fig7_data.csv",
+      "original_filename": "Figure3_NeuralMetric_Certifiability.csv",
+      "sha256": "8b1a71c2ca7fa8c9be23c672438eb7b0dffd85255df7e8a7d43c4694aa7a859c"
+    },
+    {
+      "file": "Fig7_original_qa.json",
+      "original_filename": "Figure3_NeuralMetric_Certifiability_QA.json",
+      "sha256": "262f40850eb1df17719a7a9bf61f2c85cd5b5079c55c245ab8f3e4301fc5acfb"
+    },
+    {
+      "file": "Fig8_data.csv",
+      "original_filename": "Figure6_AuditSizeSensitivity_Uncertainty.csv",
+      "sha256": "dda3cd75a50f1c187d7d928a97b178c7ec25d6782d159dbc6874e08e9cf16c66"
+    },
+    {
+      "file": "Fig9_split.csv",
+      "original_filename": "Figure7_panel_b_split_primary.csv",
+      "sha256": "6789a382f705cb26c347687edd840de8fbd2684b3ff57e425f04d57a6a24fb2e"
+    },
+    {
+      "file": "Fig9_frontier.csv",
+      "original_filename": "Figure7_panel_c_alpha_frontier.csv",
+      "sha256": "7e37733d65f23579d09512669a56d2239b8cb1a7fb94922e050d429d9371ece5"
+    },
+    {
+      "file": "Fig9_samples.npz",
+      "original_filename": "pathmnist_first_test_per_class.npz",
+      "sha256": "ed5a16de98e905e9b097c65b37a50188665d71fed661c09ee81dc69541495e59"
+    }
+  ],
+  "source_hashes_preserved": true,
+  "svg_geometry": {
+    "1": {
+      "original_geometric_elements": 22,
+      "original_geometry_preserved": true
+    },
+    "2": {
+      "original_geometric_elements": 127,
+      "original_geometry_preserved": true
+    },
+    "3": {
+      "original_geometric_elements": 19,
+      "original_geometry_preserved": true
+    },
+    "4": {
+      "original_geometric_elements": 199,
+      "original_geometry_preserved": true
+    }
+  },
+  "original_source_image_matches": {
+    "7": {
+      "source_filename": "Figure3_NeuralMetric_Certifiability.png",
+      "source_sha256": "5cb15acc8f8b90abb77c7bbae0e7754a60ad7ed713ff0bc3e93eb9edfb3a518b",
+      "difference_bbox": [
+        463,
+        47,
+        2539,
+        103
+      ],
+      "difference_scope": "overall-title strip only"
+    },
+    "8": {
+      "source_filename": "Figure6_AuditSizeSensitivity_Uncertainty.png",
+      "source_sha256": "e297f41f168640182a4ef2256233b4122072a3e701348d5e7c8becfba5485c3a",
+      "difference_bbox": null,
+      "difference_scope": "identical"
+    },
+    "9": {
+      "source_filename": "Figure7_PathMNIST_TheoremAlignedWR.png",
+      "source_sha256": "3704c6fb5b6212b36fe8f5ead616c3b66f34ff8e1f9587882f885b0281b078d1",
+      "difference_bbox": [
+        332,
+        21,
+        1542,
+        63
+      ],
+      "difference_scope": "overall-title strip only"
+    }
+  },
+  "exports": {
+    "1": {
+      "width_inches": 6.24,
+      "height_inches": 2.9166666666666665,
+      "pixels": [
+        3744,
+        1750
+      ],
+      "effective_dpi_x": 600.0,
+      "effective_dpi_y": 600.0,
+      "method": "Re-rendered from original vector geometry",
+      "minimum_font_pt": null,
+      "removed_overall_titles": [
+        "Fed-CORE certifies a frozen decision rule before deployment"
+      ]
+    },
+    "2": {
+      "width_inches": 6.2,
+      "height_inches": 4.831724628171479,
+      "pixels": [
+        3720,
+        2900
+      ],
+      "effective_dpi_x": 600.0,
+      "effective_dpi_y": 600.1997678202696,
+      "method": "Re-rendered from original vector geometry",
+      "minimum_font_pt": null,
+      "removed_overall_titles": []
+    },
+    "3": {
+      "width_inches": 6.1,
+      "height_inches": 2.673973097112861,
+      "pixels": [
+        3660,
+        1605
+      ],
+      "effective_dpi_x": 600.0,
+      "effective_dpi_y": 600.2304218142466,
+      "method": "Re-rendered from original vector geometry",
+      "minimum_font_pt": null,
+      "removed_overall_titles": []
+    },
+    "4": {
+      "width_inches": 6.24,
+      "height_inches": 3.2,
+      "pixels": [
+        3744,
+        1920
+      ],
+      "effective_dpi_x": 600.0,
+      "effective_dpi_y": 600.0,
+      "method": "Re-rendered from original vector geometry",
+      "minimum_font_pt": null,
+      "removed_overall_titles": [
+        "Certificates protect the audited target only"
+      ]
+    },
+    "5": {
+      "width_inches": 5.8,
+      "height_inches": 4.4150645231846015,
+      "pixels": [
+        3480,
+        2649
+      ],
+      "effective_dpi_x": 600.0,
+      "effective_dpi_y": 599.9912314054397,
+      "method": "Replotted from unchanged archived validity and precision tables",
+      "minimum_font_pt": 7.8
+    },
+    "validity_summary": {
+      "fedcore_noJ": {
+        "min": 0.953,
+        "q05": 0.994,
+        "median": 1.0,
+        "cells_below_0_95": 0
+      },
+      "bonferroni_delta_over_J": {
+        "min": 0.987,
+        "q05": 1.0,
+        "median": 1.0,
+        "cells_below_0_95": 0
+      },
+      "pooled_CP_intentionally_invalid": {
+        "min": 0.0,
+        "q05": 0.0709,
+        "median": 0.5725,
+        "cells_below_0_95": 443
+      },
+      "precision_label": "Post-hoc precision check, 10,000 audit repetitions",
+      "precision_cells": 20,
+      "precision_min": 0.9543,
+      "precision_min_lower": 0.9500295537216406
+    },
+    "6": {
+      "width_inches": 6.24,
+      "height_inches": 5.35,
+      "pixels": [
+        3744,
+        3210
+      ],
+      "effective_dpi_x": 600.0,
+      "effective_dpi_y": 600.0,
+      "method": "Replotted from unchanged count-floor and S-minus-B contrast tables",
+      "minimum_font_pt": 7.8
+    },
+    "allocation_summary": {
+      "count_floors_at_alpha_0_20": {
+        "No split": 14,
+        "Client split": 21,
+        "Family split": 25,
+        "Both splits": 32
+      },
+      "headline_certified_cells": {
+        "H": 177,
+        "S": 177,
+        "B": 130
+      },
+      "headline_effective_certified_coverage": {
+        "H": 0.08342402472238086,
+        "S": 0.0816592568534411,
+        "B": 0.06018240780185294
+      },
+      "panel_b_c_effect": "S_minus_B",
+      "bootstrap_replicates": 20000,
+      "bootstrap_seed": 20260825
+    },
+    "7": {
+      "width_inches": 6.24,
+      "height_inches": 3.25,
+      "pixels": [
+        3744,
+        1950
+      ],
+      "effective_dpi_x": 600.0,
+      "effective_dpi_y": 600.0,
+      "method": "Replotted from the original 450-cell AUROC/certification table; all quartile counts checked",
+      "minimum_font_pt": 8.0
+    },
+    "ranking_quartiles": {
+      "cifar10": [
+        2,
+        38,
+        35,
+        38
+      ],
+      "cifar100": [
+        1,
+        38,
+        5,
+        38
+      ],
+      "officehome": [
+        18,
+        25,
+        21,
+        25
+      ],
+      "pathmnist": [
+        1,
+        13,
+        10,
+        13
+      ]
+    },
+    "ranking_original_summary": {
+      "below_median_certified": 13,
+      "below_median_n": 225,
+      "median": 0.7220775,
+      "q90": 0.8669564000000001,
+      "spearman": 0.6615282312525805,
+      "top_decile_n": 45,
+      "top_decile_refused": 7
+    },
+    "8": {
+      "width_inches": 6.24,
+      "height_inches": 2.5,
+      "pixels": [
+        3744,
+        1500
+      ],
+      "effective_dpi_x": 600.0,
+      "effective_dpi_y": 600.0,
+      "method": "Replotted from unchanged saved point estimates and paired hierarchical intervals; y-limits include full intervals",
+      "minimum_font_pt": 8.0
+    },
+    "audit_size_rows": 16,
+    "9": {
+      "width_inches": 6.24,
+      "height_inches": 3.95,
+      "pixels": [
+        3744,
+        2370
+      ],
+      "effective_dpi_x": 600.0,
+      "effective_dpi_y": 600.0,
+      "method": "Replotted from unchanged split/frontier tables and the original nine 28-pixel benchmark patches; native patch information preserved",
+      "minimum_font_pt": 8.0
+    },
+    "pathmnist_summary": {
+      "gallery": "nine fixed visual-context images in one horizontal row",
+      "procedure": "H: full-simplex Holm/IUT with family-simultaneous coverage LCB",
+      "primary_alpha": 0.2,
+      "primary_by_condition": [
+        {
+          "condition": "d0.5",
+          "n_cells": 25,
+          "certified": 14,
+          "effective_certified_coverage": 0.19469046071792906
+        },
+        {
+          "condition": "d5",
+          "n_cells": 25,
+          "certified": 12,
+          "effective_certified_coverage": 0.1892288897281319
+        }
+      ],
+      "overall_primary": {
+        "n_cells": 50,
+        "certified": 26,
+        "effective_certified_coverage": 0.1919596752230305
+      },
+      "layout_checks": "one-row gallery; captions and panel titles within canvas; no checked overlaps"
+    }
+  },
+  "raster_checks": {
+    "1": {
+      "pixels": [
+        3744,
+        1750
+      ],
+      "tiff_dpi": [
+        600.0,
+        600.0
+      ],
+      "png_tiff_pixels_identical": true
+    },
+    "2": {
+      "pixels": [
+        3720,
+        2900
+      ],
+      "tiff_dpi": [
+        600.0,
+        600.0
+      ],
+      "png_tiff_pixels_identical": true
+    },
+    "3": {
+      "pixels": [
+        3660,
+        1605
+      ],
+      "tiff_dpi": [
+        600.0,
+        600.0
+      ],
+      "png_tiff_pixels_identical": true
+    },
+    "4": {
+      "pixels": [
+        3744,
+        1920
+      ],
+      "tiff_dpi": [
+        600.0,
+        600.0
+      ],
+      "png_tiff_pixels_identical": true
+    },
+    "5": {
+      "pixels": [
+        3480,
+        2649
+      ],
+      "tiff_dpi": [
+        600.0,
+        600.0
+      ],
+      "png_tiff_pixels_identical": true
+    },
+    "6": {
+      "pixels": [
+        3744,
+        3210
+      ],
+      "tiff_dpi": [
+        600.0,
+        600.0
+      ],
+      "png_tiff_pixels_identical": true
+    },
+    "7": {
+      "pixels": [
+        3744,
+        1950
+      ],
+      "tiff_dpi": [
+        600.0,
+        600.0
+      ],
+      "png_tiff_pixels_identical": true
+    },
+    "8": {
+      "pixels": [
+        3744,
+        1500
+      ],
+      "tiff_dpi": [
+        600.0,
+        600.0
+      ],
+      "png_tiff_pixels_identical": true
+    },
+    "9": {
+      "pixels": [
+        3744,
+        2370
+      ],
+      "tiff_dpi": [
+        600.0,
+        600.0
+      ],
+      "png_tiff_pixels_identical": true
+    }
+  },
+  "pdf_fonts": {
+    "1": {
+      "font_records": [
+        "GVGADB+Arial-BoldMT                  TrueType          WinAnsi          yes yes yes      7  0",
+        "SIGCOJ+ArialMT                       TrueType          WinAnsi          yes yes yes      8  0"
+      ],
+      "embedded_fonts_verified": true
+    },
+    "2": {
+      "font_records": [
+        "IJZXBN+Helvetica                     CID TrueType      Identity-H       yes yes yes      7  0",
+        "EHTZBJ+Helvetica                     TrueType          WinAnsi          yes yes yes      8  0"
+      ],
+      "embedded_fonts_verified": true
+    },
+    "3": {
+      "font_records": [
+        "IJZXBN+Helvetica                     CID TrueType      Identity-H       yes yes yes      7  0",
+        "DNTNQR+Helvetica                     TrueType          WinAnsi          yes yes yes      8  0"
+      ],
+      "embedded_fonts_verified": true
+    },
+    "4": {
+      "font_records": [
+        "UUMDOV+ArialMT                       TrueType          WinAnsi          yes yes yes      7  0",
+        "ASEAHS+Arial-BoldMT                  TrueType          WinAnsi          yes yes yes      8  0"
+      ],
+      "embedded_fonts_verified": true
+    },
+    "5": {
+      "font_records": [
+        "FNROEH+ArialMT                       CID TrueType      Identity-H       yes yes yes     15  0"
+      ],
+      "embedded_fonts_verified": true
+    },
+    "6": {
+      "font_records": [
+        "QHQMEM+Arial-BoldMT                  CID TrueType      Identity-H       yes yes yes     16  0",
+        "FMCNDN+ArialMT                       CID TrueType      Identity-H       yes yes yes     23  0"
+      ],
+      "embedded_fonts_verified": true
+    },
+    "7": {
+      "font_records": [
+        "GSJNEI+ArialMT                       CID TrueType      Identity-H       yes yes yes     23  0"
+      ],
+      "embedded_fonts_verified": true
+    },
+    "8": {
+      "font_records": [
+        "DUSKCE+Arial-BoldMT                  CID TrueType      Identity-H       yes yes yes     19  0",
+        "GALQOT+ArialMT                       CID TrueType      Identity-H       yes yes yes     26  0"
+      ],
+      "embedded_fonts_verified": true
+    },
+    "9": {
+      "font_records": [
+        "HIYPGR+Arial-BoldMT                  CID TrueType      Identity-H       yes yes yes     27  0",
+        "KKJDRP+ArialMT                       CID TrueType      Identity-H       yes yes yes     34  0"
+      ],
+      "embedded_fonts_verified": true
+    }
+  },
+  "manuscript": {
+    "source_file": "FedCORE_IJMLC_Submission_Final_v6.docx",
+    "source_sha256": "d2860e939d654ae3bd50bcb0785aba35c74d8a0533eb0168d3009a527148a591",
+    "output_file": "FedCORE_IJMLC_Submission_Final_v7.docx",
+    "output_sha256": "4d03f3c2638afdd59032aa4192e717dc03963562407feeddc2fff0c328a04673",
+    "embedded_figures_replaced": 9,
+    "caption_changes": [
+      {
+        "before": "Fig. 3 A: scalar TV transfer versus direct MASS-CP on all 1,200 Office-Home candidates. The dashed line denotes equal contrasts; passing risk requires a nonpositive contrast. B: exhaustive one-factor count-state comparisons, 384 pairs per factor. Order changes include ties; none is a strict reversal. These are descriptive finite enumerations",
+        "after": "Fig. 3 (a): scalar TV transfer versus direct MASS-CP on all 1,200 Office-Home candidates. The dashed line denotes equal contrasts; passing risk requires a nonpositive contrast. (b): exhaustive one-factor count-state comparisons, 384 pairs per factor. Order changes include ties; none is a strict reversal. These are descriptive finite enumerations"
+      },
+      {
+        "before": "Fig. 5 Cell-wise empirical bound validity on 450 fixed reservoirs. Validity is the fraction of repeated audits in which the reported upper confidence bound covers the exact worst-client conditional risk computed from the complete frozen reservoir. Panel (a) compares Fed-CORE, a conservative clientwise Bonferroni reference, and a pooled negative control. Panel (b) shows 95% Wilson intervals for the 20 lowest apparent Fed-CORE cells after 10,000 audit repetitions",
+        "after": "Fig. 5 Cell-wise empirical bound validity on 450 fixed reservoirs. Validity is the fraction of repeated audits in which the reported upper confidence bound covers the exact worst-client conditional risk computed from the complete frozen reservoir. Panel (a) compares Fed-CORE, a conservative clientwise Bonferroni reference, and a pooled negative control. Panels (b) and (c) show 95% Wilson intervals for the 20 lowest apparent Fed-CORE cells after 10,000 audit repetitions"
+      },
+      {
+        "before": "Fig. 9 PathMNIST certification by open-set split and accepted-error target under the theorem-aligned Holm/IUT procedure. Panel (a) shows one deterministic test patch per tissue category. Panel (b) summarizes five repetitions per split and heterogeneity level at \u03b1 = 0.20, colored by effective certified acceptance. Panel (c) shows the accepted-error frontier. All results use one prespecified with-replacement audit per client; clients are synthetic Dirichlet partitions, not hospitals",
+        "after": "Fig. 9 PathMNIST certification by open-set split and accepted-error target under the theorem-aligned Holm/IUT procedure. Panel (a) shows one deterministic 28 \u00d7 28-pixel test patch per tissue category. Panel (b) summarizes five repetitions per split and heterogeneity level at \u03b1 = 0.20, colored by effective certified acceptance. Panel (c) shows the accepted-error frontier. All results use one prespecified with-replacement audit per client; clients are synthetic Dirichlet partitions, not hospitals"
+      }
+    ],
+    "native_elements": {
+      "m:oMath": {
+        "count": 312,
+        "byte_preserved": true
+      },
+      "w:tbl": {
+        "count": 15,
+        "byte_preserved": true
+      }
+    },
+    "all_other_paragraph_text_unchanged": true,
+    "numerical_results_unchanged": true,
+    "new_experiments": false
+  },
+  "page_comparison": {
+    "pages": 45,
+    "prior_pages": 45,
+    "changed": [
+      5,
+      14,
+      19,
+      29,
+      30,
+      31,
+      33,
+      34,
+      35
+    ],
+    "unchanged": [
+      15,
+      28,
+      16,
+      17,
+      13,
+      12,
+      10,
+      38,
+      39,
+      11,
+      1,
+      3,
+      2,
+      6,
+      7,
+      4,
+      43,
+      9,
+      8,
+      42,
+      40,
+      41,
+      45,
+      44,
+      20,
+      21,
+      23,
+      37,
+      36,
+      22,
+      26,
+      32,
+      27,
+      25,
+      18,
+      24
+    ]
+  },
+  "visual_inspection": {
+    "nine_final_figures": "passed",
+    "changed_manuscript_pages": [
+      5,
+      14,
+      19,
+      29,
+      30,
+      31,
+      33,
+      34,
+      35
+    ],
+    "remaining_pages": "36 pages pixel-identical to the previously inspected v6 render",
+    "clipping_or_legend_overlap": "none observed in final renders"
+  },
+  "scope": "Artwork re-export and caption synchronization only; no training, audit simulation, bootstrap rerun or NICO++ evaluation. Native 28x28 PathMNIST patches retain their original image information."
+}

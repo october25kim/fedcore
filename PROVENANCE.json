@@ -559,12 +559,13 @@
       "source_filename": "rejectall_validity_fixed.csv"
     },
     {
-      "path": "manuscript/FedCORE_IJMLC_Submission_Final_v6.docx",
-      "sha256": "d2860e939d654ae3bd50bcb0785aba35c74d8a0533eb0168d3009a527148a591",
-      "source_filename": "FedCORE_IJMLC_Submission_Final_v5.docx",
-      "source_sha256": "0a7093f55b10d50e1bd12f95869fa024b4ee5ad69a35392628a8eb7d2fffe5c6",
-      "source_repository_commit": "202c3949029fd66fc3a32795a30a954c6c38217d",
-      "transformation": "Editorial updates to repository availability, ethics scope, appendix/figure references and one caption label; scientific results, equations, tables and embedded images retained."
+      "path": "manuscript/FedCORE_IJMLC_Submission_Final_v7.docx",
+      "sha256": "4d03f3c2638afdd59032aa4192e717dc03963562407feeddc2fff0c328a04673",
+      "source_filename": "FedCORE_IJMLC_Submission_Final_v6.docx",
+      "source_sha256": "d2860e939d654ae3bd50bcb0785aba35c74d8a0533eb0168d3009a527148a591",
+      "source_repository_commit": "50f34f2c93e3938de4f37a36bdabe0062b7884f7",
+      "transformation": "Nine artwork replacements from original vectors or frozen plot data; three caption updates; all native equation/table elements and all other paragraph text retained.",
+      "artwork_provenance": "verification/IJMLC_ARTWORK_CHECK.json"
     }
   ]
 }
