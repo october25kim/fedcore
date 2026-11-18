@@ -1,0 +1,32 @@
+{
+  "candidate_flags": 1512000,
+  "decision": "HOLD",
+  "detail": {
+    "all_14_ci_lower_gt_0": false,
+    "any_fixed_ci_upper_le_0": false,
+    "g_by_arch": {
+      "convnext_tiny": 0.015626814934086953,
+      "resnet18": 0.0003380993227023714
+    },
+    "incomplete_reasons": [],
+    "invalid_reasons": [],
+    "validity_flagged_groups": 0,
+    "validity_threshold_p": 3.968253968253968e-05
+  },
+  "dry_run": false,
+  "gpu_seconds": 12913.592147585936,
+  "logits_source": "train",
+  "models": 30,
+  "note": "frozen V1 outcome",
+  "primary_rows": 54000,
+  "profile": "full",
+  "protocol_id": "FEDCORE-V1-PACS-20260916-v1",
+  "protocol_sha256": "a8c944d57246d2fc46b175982cdada76f1c797da30090a35fbb344bad0cb7c50",
+  "rounds": 30,
+  "rounds_override": false,
+  "rows_total": 162000,
+  "utc": "2026-09-17T12:51:21.891927+00:00",
+  "validity_groups": 1260,
+  "validity_threshold_p": 3.968253968253968e-05,
+  "wiring_check_only": false
+}

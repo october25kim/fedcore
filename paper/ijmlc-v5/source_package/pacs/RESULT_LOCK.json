@@ -1,0 +1,108 @@
+{
+  "lock_id": "FEDCORE-V1-RESULT-LOCK-20260918",
+  "locked_utc": "2026-09-18T00:04:25.515494+00:00",
+  "lock_meaning": "Scientific outcome of FEDCORE-V1-PACS-20260916-v1 is frozen as HOLD. No budget/replicate/endpoint/protocol change after viewing. No new training from this lock. Manuscript not edited in this step.",
+  "protocol_id": "FEDCORE-V1-PACS-20260916-v1",
+  "protocol_sha256": "a8c944d57246d2fc46b175982cdada76f1c797da30090a35fbb344bad0cb7c50",
+  "manuscript_sha256": "281dd1becfe19dd98e5b35b842dc49fbf0a6b882f51f6abd2b8ed19223cf3f8a",
+  "decision": "HOLD",
+  "decision_detail": {
+    "all_14_ci_lower_gt_0": false,
+    "any_fixed_ci_upper_le_0": false,
+    "g_by_arch": {
+      "convnext_tiny": 0.015626814934086953,
+      "resnet18": 0.0003380993227023714
+    },
+    "incomplete_reasons": [],
+    "invalid_reasons": [],
+    "validity_flagged_groups": 0,
+    "validity_threshold_p": 3.968253968253968e-05
+  },
+  "denominators": {
+    "models": "30/30",
+    "primary_rows": "54000/54000",
+    "rows_total": "162000/162000",
+    "candidate_flags": "1512000/1512000",
+    "validity_groups": 1260,
+    "validity_flagged_groups": 0
+  },
+  "g_by_arch": {
+    "convnext_tiny": 0.015626814934086953,
+    "resnet18": 0.0003380993227023714
+  },
+  "independent_verification": {
+    "all_match": true,
+    "n_checks": 88,
+    "recomputed_decision": "HOLD",
+    "artifact": "artifacts/VERIFY_INDEPENDENT.json",
+    "sha256": "40dae9e78df52df77f3c12db80c4f778e4ba3c20bf021068d40163a948f659b1"
+  },
+  "runner_check": {
+    "status": "PASS_RUNNER_WIRING",
+    "artifact": "artifacts/RUNNER_CHECK_VALIDATION.json",
+    "sha256": "ed44a219abe01ff8d936e73c30937d4e52fae8d1ec05931fbdc7610726a5dfb2"
+  },
+  "source_binding": {
+    "decision": "PASS_SOURCE_BINDING",
+    "artifact": "artifacts/SOURCE_BINDING_R2_DECISION.json",
+    "sha256": "1d35453cbffc44e410ae889b8115e675a551e4678657896dbafaeb74b46e7f75"
+  },
+  "prohibited_after_lock": [
+    "change B/replicates/alpha/t/procedures after viewing outcome",
+    "reinterpret HOLD as CONFIRM or KILL by post-hoc threshold change",
+    "claim V1 selection-rule superiority over strongest fixed / GEOMETRY_DIRECT_CP",
+    "new PACS training or endpoint expansion without new sealed protocol"
+  ],
+  "allowed_next": [
+    "claim-evidence map revision (this package)",
+    "manuscript change plan without editing yet",
+    "journal-prospect refresh under HOLD",
+    "optional E2/E3 that do not alter V1 outcome files"
+  ],
+  "ubuntu_paths": {
+    "workdir": "/home/sanghoon/Desktop/Workspace/Fedcore",
+    "run_dir": "outputs/fedcore_v1_run",
+    "full_run_report": "outputs/fedcore_v1_full_run/REPORT_ko.md",
+    "active": "outputs/FEDCORE_V1_ACTIVE.json"
+  },
+  "local_package": "/Users/october25kim/Documents/Codex/2026-09-16/neurocomputing-desk-reject/outputs/fedcore_v1_result_lock_20260918",
+  "artifacts": {
+    "CONTRASTS.csv": {
+      "sha256": "0019f09809208f860f7e7778e486d31312d6260a837cf9ad36d2382f79232e90",
+      "bytes": 2631
+    },
+    "DECISION.json": {
+      "sha256": "027b18bceb69188531d1e423b64b61c981964f3515563ddd5a1264f86ce2312a",
+      "bytes": 933
+    },
+    "FEDCORE_V1_ACTIVE.json": {
+      "sha256": "48e2105a5bf99d6c09433be1fdc3e466b3fbefe83aebfa5d087d64b6282146c5",
+      "bytes": 5029
+    },
+    "FULL_RUN_REPORT_ko.md": {
+      "sha256": "27fe8d3fa4f59a20e4353e3dc9df0695266612fe39ca3a97ee7eb9feba9cb83e",
+      "bytes": 19792
+    },
+    "RUNNER_CHECK_VALIDATION.json": {
+      "sha256": "ed44a219abe01ff8d936e73c30937d4e52fae8d1ec05931fbdc7610726a5dfb2",
+      "bytes": 14964
+    },
+    "SOURCE_BINDING_R2_DECISION.json": {
+      "sha256": "1d35453cbffc44e410ae889b8115e675a551e4678657896dbafaeb74b46e7f75",
+      "bytes": 4656
+    },
+    "SUMMARY.json": {
+      "sha256": "27eab5e61b45d76045bef9d8187973357f56ef12f368837c1790c462ed09c66a",
+      "bytes": 26363
+    },
+    "VERIFY_INDEPENDENT.json": {
+      "sha256": "40dae9e78df52df77f3c12db80c4f778e4ba3c20bf021068d40163a948f659b1",
+      "bytes": 52327
+    }
+  },
+  "prior_active_status": "V1_COMPLETE_DECISION_HOLD",
+  "gpu_seconds_run": 12913.592147585936,
+  "manuscript_edited": false,
+  "new_experiment": false,
+  "training": false
+}

@@ -1,0 +1,25 @@
+{
+  "status": "PASS",
+  "scope": "Independent arithmetic and LTT-specialization reconstruction from frozen client counts; no new audit samples, inference, or training.",
+  "checks": {
+    "count_tensor_hashes": 2700,
+    "cp_iut_candidate_equivalences": 32400,
+    "H_S_cell_equivalences": 2700,
+    "archived_decisions_reconstructed": 8100
+  },
+  "roster": {
+    "cifar100": 150,
+    "cifar10": 150,
+    "officehome": 100,
+    "pathmnist": 50
+  },
+  "max_absolute_numeric_difference": 8.951173136040325e-16,
+  "inputs": {
+    "inputs/results/theorem_aligned_wr_450_v3/primary_run/primary_candidate_counts.csv.gz": "898ddf057a3a0ed6e00323cc57e97c7bb68dbc0a3de204fac7c6f9760a83b9b4",
+    "inputs/results/theorem_aligned_wr_450_v3/primary_run/primary_per_cell_procedures.csv": "e5e8c370222b2c52fedb25e00a562f65ea2db384809ce77006e6474028f1ea66",
+    "inputs/results/theorem_aligned_wr_450_v3/governing/family_manifest.csv.gz": "8771ded5334910dec3be688861df161a80cf19dfd4868053f661ec26fa2a5470"
+  },
+  "script_sha256": "e1b5bcc8dbf9f78f2331681b82ede8299e8b2e77601a1751d5bfda794a836fab",
+  "elapsed_seconds": 1.7151629169820808,
+  "limitation": "Does not reconstruct raw-image inference, sampling provenance, or independence from count triples alone."
+}

@@ -1,0 +1,43 @@
+{
+  "status": "PASS",
+  "scope": "All seven risk constructions independently recomputed from original client triples, including non-CP statistics, common acceptance bounds, and candidate-level pass flags; no training, inference, or new audit draws.",
+  "checks": {
+    "original_count_rows_matched": 162000,
+    "common_acceptance_lcb": 162000,
+    "ratio_D": 162000,
+    "ratio_min_denominator": 162000,
+    "mass_cp_D": 162000,
+    "hoeffding_p": 162000,
+    "betting_p": 162000,
+    "scale_p": 162000,
+    "cp_iut_p": 162000,
+    "composed_p": 162000,
+    "betting_min_log_e": 162000,
+    "scale_min_log_e": 162000,
+    "worst_empirical_contrast": 162000,
+    "candidate_pass_flags": 1134000
+  },
+  "max_absolute_difference_by_quantity": {
+    "common_acceptance_lcb": 2.220446049250313e-16,
+    "ratio_D": 4.163336342344337e-17,
+    "ratio_min_denominator": 2.220446049250313e-16,
+    "mass_cp_D": 4.163336342344337e-17,
+    "hoeffding_p": 3.885780586188048e-16,
+    "betting_p": 4.773959005888173e-15,
+    "scale_p": 4.218847493575595e-15,
+    "cp_iut_p": 0.0,
+    "composed_p": 6.8833827526759706e-15,
+    "betting_min_log_e": 1.1368683772161603e-13,
+    "scale_min_log_e": 1.1368683772161603e-13,
+    "worst_empirical_contrast": 5.551115123125783e-17
+  },
+  "original_candidate_triples": 32400,
+  "candidate_protection_rows": 162000,
+  "inputs": {
+    "inputs/results/theorem_aligned_wr_450_v3/primary_run/primary_candidate_counts.csv.gz": "898ddf057a3a0ed6e00323cc57e97c7bb68dbc0a3de204fac7c6f9760a83b9b4",
+    "evidence/protection_recheck/results/candidate_diagnostics.csv.gz": "66886ea1cc570adbb597012522981bf8f1d7c64f0b4139defe60c5bc9913a657"
+  },
+  "script_sha256": "fc269d8b0de1bdd36f3e3cb601c3561246a4c393221ec1f9680ae9cfc7433bfa",
+  "elapsed_seconds": 4.014490458997898,
+  "limits": "Numerical reconstruction establishes code-to-formula agreement on archived inputs. It does not establish historical sample independence, unseen-population transfer, or fresh empirical superiority."
+}

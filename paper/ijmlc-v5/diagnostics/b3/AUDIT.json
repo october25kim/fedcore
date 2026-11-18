@@ -1,0 +1,94 @@
+{
+  "status": "VERIFIED_DIFFERENT_EMPIRICAL_TARGETS",
+  "sources": {
+    "figure5_validity": {
+      "sha256": "9048ed6e6ed726c79a07588e4a9884f8d54d6b2df8f28b5ee9a0f39cb0678d19"
+    },
+    "figure5_truth": {
+      "sha256": "6710b0cee3165e28bfc3d45ce261b9eeb019029b5a90dce0604c27807fda21e4"
+    },
+    "certification_only_validity": {
+      "sha256": "2f9c2344d91e00d982e7c223be9273fee2cd09f697ab14d6153a4780201852c7"
+    },
+    "figure5_precision": {
+      "sha256": "ae8a1661893c7e7a42f8a8ae332f4fb27045a4c2a0e1e89e42507b54faa1ac4c"
+    },
+    "figure5_generator": {
+      "sha256": "bf9545f34d41750d045dea8858148b3938e61519fd4a915cc6836feb98b181b4"
+    },
+    "certification_only_generator": {
+      "sha256": "05b4e139a3b4b3e7526c0e2216eccad6a0e3d2e1c99344e504773b12940a5a5a"
+    }
+  },
+  "figure5_all": {
+    "cells": 450,
+    "minimum": 0.953,
+    "q05": 0.994,
+    "median": 1.0,
+    "below_095": 0
+  },
+  "figure5_positive_subset": {
+    "cells": 443,
+    "minimum": 0.953,
+    "q05": 0.994,
+    "median": 1.0,
+    "below_095": 0
+  },
+  "certification_only_all": {
+    "cells": 450,
+    "minimum": 0.958,
+    "q05": 0.989,
+    "median": 1.0,
+    "below_095": 0
+  },
+  "certification_only_positive_subset": {
+    "cells": 443,
+    "minimum": 0.958,
+    "q05": 0.989,
+    "median": 1.0,
+    "below_095": 0
+  },
+  "rejectall_ids": [
+    "cifar10_proser_fedavg__split01__seed0__d0.1",
+    "cifar10_proser_fedavg__split02__seed0__d0.1",
+    "cifar10_proser_fedavg__split06__seed0__d0.1",
+    "resnext29_8x64d__pathmnist_split_04__seed0__d0.5",
+    "resnext29_8x64d__pathmnist_split_04__seed3__d5.0",
+    "resnext29_8x64d__pathmnist_split_04__seed4__d0.5",
+    "resnext29_8x64d__pathmnist_split_04__seed4__d5.0"
+  ],
+  "both_runs_rejectall_validity": 1.0,
+  "same_cell_target_differences": 442,
+  "target_comparison_atol": 1e-12,
+  "figure5_minimum_cells": [
+    {
+      "semantic_id": "officehome_convnext_frozen__split09__seed1",
+      "B": 1000,
+      "simulation_seed": 2510814331,
+      "ucb_coverage_count": 953,
+      "true_worst_client_risk": 0.3036093418259023,
+      "true_min_client_coverage": 0.2887798896382587
+    },
+    {
+      "semantic_id": "officehome_convnext_full__split09__seed0",
+      "B": 1000,
+      "simulation_seed": 2839590600,
+      "ucb_coverage_count": 953,
+      "true_worst_client_risk": 0.2685337726523888,
+      "true_min_client_coverage": 0.3614318706697459
+    }
+  ],
+  "certification_only_minimum_cells": [
+    {
+      "sid": "officehome_convnext_full__split09__seed0",
+      "rejectall": 0,
+      "validity": 0.958,
+      "target": 0.2486486486486486
+    }
+  ],
+  "figure5_target": "source-deduplicated certification plus diagnostic-test union per client; original certification-fold draw size",
+  "certification_only_target": "certification-fold records only; separate nested-binomial count simulation, 1000 repetitions, master seed 20260830",
+  "new_training": false,
+  "new_audit_draws": false,
+  "verification_scope": "Reaggregation of archived cellwise results, reservoir-truth checks, and generating-code inspection; no raw-to-logit reconstruction or rerun."
+}

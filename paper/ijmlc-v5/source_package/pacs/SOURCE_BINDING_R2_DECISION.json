@@ -1,0 +1,58 @@
+{
+  "GPU_hours": 0,
+  "active_pointer_ubuntu": "outputs/FEDCORE_V1_ACTIVE.json left unchanged (HOLD_PROVENANCE_AND_END_TO_END_RUNNER); the provenance half is closed by this revision, the end-to-end runner half is not",
+  "automatic_runner_or_training_launch": false,
+  "blocking_items": [],
+  "counts": {
+    "all_rows_completed": 0,
+    "all_rows_expected": 162000,
+    "candidate_flags_completed": 0,
+    "candidate_flags_expected": 1512000,
+    "models_completed": 0,
+    "models_expected": 30,
+    "primary_rows_completed": 0,
+    "primary_rows_expected": 54000
+  },
+  "decision": "PASS_SOURCE_BINDING",
+  "execution_status": "COMPLETED_READ_ONLY_WITHIN_CAPS",
+  "frozen_protocol_changed": false,
+  "frozen_protocol_sha256": "a8c944d57246d2fc46b175982cdada76f1c797da30090a35fbb344bad0cb7c50",
+  "gate_components": {
+    "PACS_comparison": "PASS_INDEPENDENT_DISTRIBUTION carried from r1 by hash (9991/9991 identity+label+domain match with flwrlabs/pacs@394113073258ead631f617d2e13bb377c0715c4b); not rerun",
+    "prohibited_exact_overlap": "None found. Every old-source image population is outside the 227x227 identity space of the 9991 used PACS images (CIFAR-10/100 32x32; PathMNIST 28x28; CIFAR-10.1 32x32; Tiny-ImageNet 64x64 (120000 scanned); FEMNIST 28x28; TissueMNIST 28x28; SVHN 32x32; Fed-ISIC2019 raw 25331 files min 576x450 and preprocessed 25331 files 224..346 x 223..298, 0 at 227x227; Office-Home 15588 files 0 at 227x227 plus prior full identity screen with 0 overlaps).",
+    "required_sources_bound": {
+      "CIFAR-10": "150/150 cells, 1285500/1285500 ids",
+      "CIFAR-10.1 v6": "2000/2000 rows",
+      "CIFAR-100": "150/150 cells, 1285500/1285500 ids",
+      "Fed-ISIC2019 (Table 7)": "50/50 cells at metadata level (fold+metadata hashes, unit counts, accounting); logit frames unreadable (root 0600)",
+      "OfficeHome": "100/100 cells, 881670/881670 ids, 15080/15080 manifest-to-disk",
+      "PathMNIST": "50/50 cells, 346450/346450 ids"
+    }
+  },
+  "manuscript_edited": false,
+  "meaning": "Input gate for the V1 PACS experiment: proceed to full-runner verification. NOT training READY, NOT a performance PASS, no new predictor claim.",
+  "new_inference": 0,
+  "new_training": 0,
+  "next_single_step": "Full-runner verification (orchestration, resume/time-cap, aggregation, bootstrap, post-decision truth wiring) on ubuntu-4070 with GPU 0, synthetic/dry inputs only; no PACS training until that passes.",
+  "non_blocking_open_items": [
+    "Fed-ISIC2019: 50 canonical logit npz files (runs/oneshot/full/logits_canonical_v1) are owner root, mode 0600 -> frame-level binding needs the owner to grant read access or provide their SHA-256 + sample-id manifests; no bypass attempted",
+    "Fed-ISIC2019: training export recorded image paths only (pixel_provenance paths-checked-content-not-hashed); r2 recorded a content baseline of the preprocessed root (manifest sha256 a4f8d77e7d60d56fa97f54549f6662788bc6c0239d2809ed8a562be46aed39a4)",
+    "FEMNIST / TissueMNIST / SVHN: usage scope documented as found (N1 campaign / sweep artifacts / no evidence); rows retained, none deleted",
+    "Author-original PACS ZIP byte equivalence unverified (unchanged)"
+  ],
+  "not_claimed": [
+    "near-duplicate absence",
+    "ImageNet-1K pretraining overlap",
+    "author-original PACS archive byte identity",
+    "any performance or validity result"
+  ],
+  "old_source_integrity_observations_not_affecting_gate": [
+    "Fed-ISIC2019 preprocessed root: 50 byte-identical JPEG pairs; two pairs cross the train/audit boundary with conflicting labels (lesion BCN_0000237 NV in an audit role vs lesion BCN_0003560 MEL in train) in 19 of the 50 Table 7 cells; one audit-eligible image (ISIC_0012970) duplicates a dropped null-lesion image. Relevant to manuscript section 5.9 / Table 7 wording (\"exactly one image per lesion\", train/audit boundary); nothing deleted or changed; manuscript not edited.",
+    "Fed-ISIC2019 folds for splits 04-09: 7 images of 7 documented cross-center MEL lesions carry lesion-level center vidir_modern in the train role while their image-level metadata center is vidir_molemax (A-002 audit-pool exclusion); audit roles unaffected.",
+    "Manuscript data availability paragraph omits ISIC 2019 / Fed-ISIC2019 (Table 7 source).",
+    "Office-Home sample_id equals sha256(normalized_relpath)[:16] (200/200 probed) rather than the path+content derivation stated in the module docstring; content is bound separately by content_sha256."
+  ],
+  "policy_rollout": 0,
+  "revision": "r2 (supersedes r1 PARTIAL_HANDOFF / HOLD_MISSING_PROVENANCE; r1 artifacts preserved unchanged)",
+  "utc": "2026-09-17T06:32:41.622355+00:00"
+}

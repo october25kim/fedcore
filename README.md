@@ -1,5 +1,10 @@
 # Fed-CORE — Federated Certified Open-Set Recognition
 
+> **Latest manuscript analysis snapshot (18 November 2026):**
+> [IJMLC v5: counts, code, PACS outcomes and replay instructions](paper/ijmlc-v5/README.md).
+> This additive release preserves the existing historical packages. PACS remains
+> HOLD; no NICO++ experiment or new model training is part of this upload.
+
 Fed-CORE certifies, with a **finite-sample distribution-free upper confidence
 bound**, the **accepted selective risk** of a federated-trained open-set
 classifier — the probability that an *accepted* prediction is wrong — under

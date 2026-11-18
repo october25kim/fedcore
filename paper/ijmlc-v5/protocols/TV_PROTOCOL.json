@@ -1,0 +1,50 @@
+{
+  "id": "FEDCORE-TV-MECHANISM-20260923-v1",
+  "status": "FROZEN_BEFORE_NEW_TV_OUTCOMES",
+  "design": "retrospective fixed-count analysis; historical outcomes were already known; not independent preregistration",
+  "cells": 100,
+  "dataset": "OfficeHome",
+  "candidates": 12,
+  "alpha": 0.2,
+  "traffic_draws": 1000,
+  "confidence": {
+    "traffic": 0.02,
+    "risk": 0.04,
+    "acceptance": 0.04
+  },
+  "primary_center": "traffic counts / 1000, identical to historical draw reconstructed from frozen seed",
+  "sensitivity_center": "minimum enclosing L1/2 radius over simplex centers using traffic geometry only; rationalized center, radius recomputed exactly; LP upper gap <=1e-8",
+  "common_acceptance": "original Table5 box minimum of CP lower endpoints at .04/(4*12); positive gate and tie rule unchanged for all methods",
+  "native_TV_acceptance": "center-weighted same CP acceptance limits minus radius, recorded separately, not used for primary ranking",
+  "TV_methods": [
+    "TV_MASS_CP",
+    "TV_HOEFFDING_H",
+    "TV_DIRECT_BETTING_H",
+    "TV_SCALE_H"
+  ],
+  "stronger_diagnostic": "TV_COMPOSED_CP_BETTING_H uses min(1,2*min(TV_DIRECT_BETTING_H member p, CP_IUT_H member p)) then Holm; not a free best-of selector",
+  "risk_test": "X=A*(error-alpha), D_w=sum w_j E[X_j]. TV risk condition D_w+eta<=0. Shifted fixed-stratum bets use X+eta; no iid pooling. Eight historical stakes and SCALE weights fixed. M=12 includes infeasible slots.",
+  "comparison_methods": [
+    "RATIO",
+    "DIRECT_BETTING_H",
+    "SCALE_H"
+  ],
+  "PASS_CONDITIONAL_TV_COMPARISON": "At least one prespecified direct method exceeds EACH of four primary-center TV procedures by >=0.01 overall ECA, with positive differences in both 50-cell adaptation arms, and exact geometry slack validates. No general method superiority or external-transfer claim.",
+  "KILL_DIRECT_UTILITY_CLAIM": "Every prespecified direct method has nonpositive mean difference versus the strongest primary-center TV method by aggregate mean. Preserve all results.",
+  "other_results": "HOLD; validity/input/numeric failure INVALID before performance",
+  "sensitivity": "Both centers, four native TV tests, composed diagnostic, every outcome and candidate flag reported; no outcome-based center/test selection for deployment. Report whether center sensitivity changes the primary conclusion.",
+  "mechanism": "For all 1200 candidates decompose direct MASS-CP contrast into empirical worst contrast and endpoint inflation; TV-minus-direct into eta minus geometry contrast. Enumerate original 256 E2 states and all same-t pairs differing in exactly one of n/f_index/q_index. Preserve duplicate realized counts and label them. No new rule or performance rollout.",
+  "numeric": "Reuse exact outward CP rational bounds; exact radius/slack; independently reconstruct shifted products with 60-digit arithmetic and Holm, minimum threshold margin 1e-12; assertions fail closed.",
+  "GPU_stage": "Only after CPU validity and mechanistic findings are examined; independent VLCS performance protocol separately frozen before training. Existing PACS HOLD never changed.",
+  "input_hashes": {
+    "source_package/input/reference_cells.json": "0cb7313267e047581947d76422ed4e084308776dc2b72be716dfed79c4efc6a7",
+    "source_package/input/traffic_payload.json": "a033030628d286885ec5efe1cc29be4912c15e842d4745586604680e23f3621a",
+    "source_package/input/reference_candidates.csv": "33007f2c4aa478512656ca6bff2773c7c64dab754eda2aa62f99cd9ab1d84aee",
+    "source_package/input/primary_candidate_counts.csv.gz": "898ddf057a3a0ed6e00323cc57e97c7bb68dbc0a3de204fac7c6f9760a83b9b4",
+    "source_package/results/outcomes.csv": "8efccfa43bfec81a3dc68c0cc8a622bbe120dd69dcb1a843a41c9d1ed90d7f8e",
+    "source_package/results/candidate_method_flags.csv": "0931dcfeaa9c3c17974347a0a3a7a4e3a703f2d461313343f86d0d834d92a8bc",
+    "source_package/results/solver_verification.csv": "779d2f840d367f1bf11eb7f9767f5cdba384d1373f531a53a593dbf657559669",
+    "source_package/e2/STATES.csv": "67fab68bf9cb4a90f08c47a1fb4d150b13fc8582331323fb2355e363870e0093",
+    "source_package/e2/RANKINGS.csv": "2d3ea941cddd02d746ad13c91e6ef02e1c3a93aafa0df88ebc8fbfd33ce7ae99"
+  }
+}

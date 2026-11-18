@@ -1,0 +1,111 @@
+{
+  "experiment": "FedCORE_E2_finite_count_state_mechanism_audit",
+  "created_asia_seoul": "2026-09-18T11:10:21+09:00",
+  "machineId_requested": "0d480a29-a8d7-419a-b0a9-fc9ed0af7a3a",
+  "execution_host_note": "Computed on Grok Bot box; Mac MCP file ops unavailable at run time",
+  "J": 4,
+  "M": 12,
+  "alpha": 0.2,
+  "delta_r": 0.05,
+  "delta_c": 0.05,
+  "n_grid": [
+    64,
+    128,
+    256,
+    512
+  ],
+  "f_grid": [
+    [
+      "0",
+      "0",
+      "0",
+      "0"
+    ],
+    [
+      "1/8",
+      "1/8",
+      "1/8",
+      "1/8"
+    ],
+    [
+      "1/2",
+      "1/2",
+      "1/2",
+      "1/2"
+    ],
+    [
+      "1/8",
+      "1/4",
+      "1/2",
+      "1"
+    ]
+  ],
+  "q_grid": [
+    [
+      "0",
+      "0",
+      "0",
+      "0"
+    ],
+    [
+      "1/10",
+      "1/10",
+      "1/10",
+      "1/10"
+    ],
+    [
+      "3/10",
+      "1/20",
+      "1/20",
+      "1/20"
+    ],
+    [
+      "3/10",
+      "3/10",
+      "1/20",
+      "1/20"
+    ]
+  ],
+  "t_grid": [
+    0.0,
+    0.5,
+    0.75,
+    1.0
+  ],
+  "A_formula": "A_j = floor(n * f_j) with fractions.Fraction then floor",
+  "K_formula": "K_j = floor(A_j * q_j) with fractions.Fraction then floor",
+  "n_states": 256,
+  "logical_flags": 21504,
+  "slots_design": "12 identical dependent clones of same (n,A,K); M=12 multiplicity applies",
+  "eca_rule": "if any certified with common LCB>0: ECA=that LCB; else refusal ECA=0",
+  "ranking_rule": "order by ECA desc; ties by procedure name",
+  "reversal_definition": "fixed t; exists procedures i,j with strict ECA order flip between two states",
+  "primary": "count of strict ranking-reversal state-pairs at each fixed t; witnesses; formula explanation",
+  "decisions": [
+    "PASS_IDENTIFIABILITY",
+    "FAIL_FOR_HYPOTHESIS",
+    "INCONCLUSIVE",
+    "INVALID"
+  ],
+  "prohibitions": [
+    "No CI/significance",
+    "Not a sample of real frequencies",
+    "Do not claim causal attribution rates among rectangular/tail/gate",
+    "Do not invent new methods",
+    "Do not report unverified counterfactuals as deployment results",
+    "Do not touch V1 outcomes, retrain, or change RESULT_LOCK"
+  ],
+  "formulas_version_note": "independent_reconstruction_e2_20260918_v1;math_parity_with_frozen_count_only_certify;source_note: reconstruct_protection_statistics.py unavailable on box;formulas_rewritten_not_imported_from_v1_pacs_certifier",
+  "procedures": [
+    "RATIO",
+    "MASS_CP",
+    "HOEFFDING_H",
+    "DIRECT_BETTING_H",
+    "SCALE_H",
+    "CP_IUT_H",
+    "COMPOSED_CP_BETTING_H"
+  ],
+  "STATES_csv_sha256": "67fab68bf9cb4a90f08c47a1fb4d150b13fc8582331323fb2355e363870e0093",
+  "seal": "STATES.csv hash sealed before flag computation",
+  "cpu_only": true
+}

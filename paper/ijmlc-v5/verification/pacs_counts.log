@@ -1,0 +1,9 @@
+{
+  "status": "PASS",
+  "models": 30,
+  "candidate_method_flags": 1512000,
+  "outcomes": 162000,
+  "primary_outcomes": 54000,
+  "max_statistic_error": 1.3100631690576847e-14,
+  "scope": "Saved aggregate counts to candidate decisions, selections and all outcome rows. No training, raw images or logits."
+}

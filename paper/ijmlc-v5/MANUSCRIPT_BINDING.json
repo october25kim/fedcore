@@ -1,0 +1,9 @@
+{
+  "manuscript": "manuscript/FedCORE_IJMLC_Submission_Final_v5.docx",
+  "sha256": "0a7093f55b10d50e1bd12f95869fa024b4ee5ad69a35392628a8eb7d2fffe5c6",
+  "byte_preserved": true,
+  "date": "2026-11-18",
+  "analysis_scope": "See README.md for the governing-file map and replay limitations.",
+  "availability_statement": "The supplied manuscript predates this upload; CODE_AVAILABILITY.md provides replacement text.",
+  "historical_base_commit": "e55f8ea02155c1f85bb4d34efebe880f4ee8ba12"
+}

@@ -1,0 +1,29 @@
+{
+  "status": "VALID_DESCRIPTIVE_ANALYSIS",
+  "designed_states": 256,
+  "reproduced_flags": 21504,
+  "flag_mismatches": 0,
+  "max_ECA_difference": 1.1102230246251565e-16,
+  "one_factor_state_pairs": 1152,
+  "method_pair_comparisons": 24192,
+  "strict_reversal_state_pairs": 0,
+  "order_change_state_pairs": 355,
+  "unique_realized_states": 204,
+  "PACS_outcomes": 162000,
+  "PACS_models": 30,
+  "PACS_primary_outcomes": 54000,
+  "scope": "Designed states are not empirical frequencies. Mechanism labels overlap. PACS outcome comparisons do not establish count-level causation. Existing PACS HOLD preserved."
+}
+   axis    t  pairs  strict_reversal_state_pairs  order_change_state_pairs  identical_realized_pairs
+f_index 0.00     96                            0                        57                         0
+f_index 0.50     96                            0                        25                         0
+f_index 0.75     96                            0                        23                         0
+f_index 1.00     96                            0                        21                         0
+      n 0.00     96                            0                        45                         0
+      n 0.50     96                            0                        23                         0
+      n 0.75     96                            0                        22                         0
+      n 1.00     96                            0                        20                         0
+q_index 0.00     96                            0                        43                        25
+q_index 0.50     96                            0                        24                        25
+q_index 0.75     96                            0                        26                        25
+q_index 1.00     96                            0                        26                        25

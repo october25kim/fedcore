@@ -1,0 +1,68 @@
+{
+  "status": "PASS_REPLAY_AND_NUMERICAL_VERIFICATION",
+  "scope": "Retrospective reference-setting comparison only; no new training or population evidence",
+  "summary": {
+    "RATIO": {
+      "cells": 100,
+      "certified": 92,
+      "eca": 0.1929670363715731,
+      "sd": 0.07121148837680984
+    },
+    "MASS_CP": {
+      "cells": 100,
+      "certified": 83,
+      "eca": 0.1619672740818413,
+      "sd": 0.08263752155289655
+    },
+    "HOEFFDING_H": {
+      "cells": 100,
+      "certified": 36,
+      "eca": 0.08531271934191142,
+      "sd": 0.11592337766378888
+    },
+    "DIRECT_BETTING_H": {
+      "cells": 100,
+      "certified": 100,
+      "eca": 0.26011802277880525,
+      "sd": 0.04462123484080156
+    },
+    "SCALE_H": {
+      "cells": 100,
+      "certified": 100,
+      "eca": 0.26122326180352173,
+      "sd": 0.04505271983192296
+    },
+    "CP_IUT_H": {
+      "cells": 100,
+      "certified": 74,
+      "eca": 0.15508915005507704,
+      "sd": 0.10041179408626968
+    },
+    "COMPOSED_CP_BETTING_H": {
+      "cells": 100,
+      "certified": 100,
+      "eca": 0.25613589813895926,
+      "sd": 0.045369673350874454
+    }
+  },
+  "denominators": {
+    "cells": 100,
+    "count_rows": 4800,
+    "candidate_states": 1200,
+    "flags": 8400,
+    "outcomes": 700
+  },
+  "exact_CP_endpoints": 20149,
+  "high_precision_p_max_abs_difference": 8.881784197001252e-15,
+  "high_precision_Holm_flag_mismatches": 0,
+  "reference_RATIO_flag_mismatches": 0,
+  "reference_RATIO_ucb_max_abs_difference": 2.4145740962211448e-11,
+  "max_LP_vertex_gap": 1.3877787807814457e-17,
+  "protocol_sha256": "015e69c897b251b15f40a937cd5226ad346a33a2175b9e471f4a55014898ce95",
+  "versions": {
+    "python": "3.11.15 (main, Mar 11 2026, 17:14:47) [Clang 20.1.8 ]",
+    "numpy": "2.4.4",
+    "scipy": "1.17.1",
+    "mpmath": "1.3.0"
+  }
+}

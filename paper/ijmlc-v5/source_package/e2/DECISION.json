@@ -1,0 +1,104 @@
+{
+  "decision": "PASS_IDENTIFIABILITY",
+  "created_asia_seoul": "2026-09-18T11:10:21+09:00",
+  "n_states": 256,
+  "logical_flags": 21504,
+  "identical_slot_integrity_failures": 0,
+  "ranking_reversal_state_pairs_by_t": {
+    "0.0": 25,
+    "0.5": 0,
+    "0.75": 2,
+    "1.0": 0
+  },
+  "ranking_reversal_state_pairs_total": 27,
+  "key_contrast_pairwise_flip_state_pairs_by_t": {
+    "DIRECT_vs_CP": {
+      "0.0": 0,
+      "0.5": 0,
+      "0.75": 2,
+      "1.0": 0
+    },
+    "SCALE_vs_CP": {
+      "0.0": 0,
+      "0.5": 0,
+      "0.75": 2,
+      "1.0": 0
+    },
+    "RATIO_vs_DIRECT": {
+      "0.0": 0,
+      "0.5": 0,
+      "0.75": 0,
+      "1.0": 0
+    },
+    "RATIO_vs_SCALE": {
+      "0.0": 0,
+      "0.5": 0,
+      "0.75": 0,
+      "1.0": 0
+    }
+  },
+  "n_witnesses_written": 3,
+  "witnesses": [
+    {
+      "index": 1,
+      "t": 0.75,
+      "state_id_1": 34,
+      "state_id_2": 246,
+      "flipped_pairs": [
+        "CP_IUT_H>DIRECT_BETTING_H",
+        "CP_IUT_H>SCALE_H"
+      ]
+    },
+    {
+      "index": 2,
+      "t": 0.75,
+      "state_id_1": 146,
+      "state_id_2": 246,
+      "flipped_pairs": [
+        "CP_IUT_H>DIRECT_BETTING_H",
+        "CP_IUT_H>SCALE_H"
+      ]
+    },
+    {
+      "index": 3,
+      "t": 0.0,
+      "state_id_1": 32,
+      "state_id_2": 112,
+      "flipped_pairs": [
+        "CP_IUT_H>RATIO",
+        "CP_IUT_H>MASS_CP",
+        "CP_IUT_H>HOEFFDING_H"
+      ]
+    }
+  ],
+  "interpretation_limits": [
+    "Identifiability of count-state effects on procedure ranking at fixed t only.",
+    "Not average performance superiority.",
+    "256 states are a designed grid, not a sample of real frequencies.",
+    "No CI/significance.",
+    "Do not claim causal attribution rates among rectangular/tail/gate.",
+    "Geometry-alone hypothesis: if PASS, ranking can reverse under count-profile change at fixed t, so geometry (t) alone cannot explain all procedure differences; strengthen limitation that constructions differ. If FAIL, narrow the claim that count profiles reverse rankings under this sealed grid."
+  ],
+  "geometry_alone_implication": "PASS_IDENTIFIABILITY implies procedure ranking is not determined by t alone under this sealed count grid; geometry-alone causal attribution among procedures should be narrowed / limitations strengthened.",
+  "STATES_csv_sha256": "67fab68bf9cb4a90f08c47a1fb4d150b13fc8582331323fb2355e363870e0093",
+  "E2_PROTOCOL_sha256_at_seal": "d5219f2e4baaec77d1c12b69eafeb4e28b719dc022d14de994e065c5550c97af",
+  "formulas_version_note": "independent_reconstruction_e2_20260918_v1;math_parity_with_frozen_count_only_certify;source_note: reconstruct_protection_statistics.py unavailable on box;formulas_rewritten_not_imported_from_v1_pacs_certifier",
+  "v1_result_lock": {
+    "touched": false,
+    "box_handoff_PROTOCOL_sha256": "a8c944d57246d2fc46b175982cdada76f1c797da30090a35fbb344bad0cb7c50",
+    "box_handoff_RUN_BINDING_sha256": "63ae9a3a483d514ef79bbfc71730c6421ebb6d003502fb1ec69d4ddc58bd464e",
+    "mac_live_RESULT_LOCK_confirmation": "UNAVAILABLE_NO_MAC_MCP"
+  },
+  "formula_crosscheck": {
+    "reference": "v1_pacs_certifier.certify (read-only parity check; NOT used to produce E2 flags)",
+    "states_checked": 256,
+    "pass_flag_and_eca_mismatches": 0,
+    "note": "Independent rewrite matched frozen count-only math on all sealed states."
+  },
+  "mac_output_write": {
+    "requested_path": "/Users/october25kim/Documents/Codex/2026-09-16/neurocomputing-desk-reject/outputs/fedcore_e2_count_state_20260918/",
+    "machineId": "0d480a29-a8d7-419a-b0a9-fc9ed0af7a3a",
+    "status": "BLOCKED_NO_MCP_cursor-app-control",
+    "box_path": "/workspace/outputs/fedcore_e2_count_state_20260918"
+  }
+}

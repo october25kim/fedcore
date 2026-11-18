@@ -1,0 +1,13 @@
+axis,t,pairs,strict_reversal_state_pairs,order_change_state_pairs,identical_realized_pairs
+f_index,0.0,96,0,57,0
+f_index,0.5,96,0,25,0
+f_index,0.75,96,0,23,0
+f_index,1.0,96,0,21,0
+n,0.0,96,0,45,0
+n,0.5,96,0,23,0
+n,0.75,96,0,22,0
+n,1.0,96,0,20,0
+q_index,0.0,96,0,43,25
+q_index,0.5,96,0,24,25
+q_index,0.75,96,0,26,25
+q_index,1.0,96,0,26,25

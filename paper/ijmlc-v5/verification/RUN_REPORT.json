@@ -1,0 +1,54 @@
+{
+  "date": "2026-11-18",
+  "python": "3.12.14",
+  "dependencies": {
+    "numpy": "2.3.5",
+    "scipy": "1.18.1",
+    "pandas": "2.2.3",
+    "mpmath": "1.3.0"
+  },
+  "status": "PASS",
+  "checks": {
+    "primary": {
+      "script": "source_package/historical/code/reconstruct_ltt.py",
+      "exit_code": 0,
+      "seconds": 9.49
+    },
+    "protection": {
+      "script": "source_package/historical/code/reconstruct_protection_statistics.py",
+      "exit_code": 0,
+      "seconds": 11.77
+    },
+    "officehome": {
+      "script": "source_package/code/replay_table8_matched.py",
+      "exit_code": 0,
+      "seconds": 149.11
+    },
+    "tables_pacs_e2": {
+      "script": "source_package/code/replay_remaining_tables.py",
+      "exit_code": 0,
+      "seconds": 2.2
+    },
+    "tv": {
+      "script": "code/tv_comparison.py",
+      "exit_code": 0,
+      "seconds": 89.07
+    },
+    "mechanism": {
+      "script": "code/mechanism_analysis.py",
+      "exit_code": 0,
+      "seconds": 1.11
+    },
+    "pacs_counts": {
+      "script": "pacs_replay/replay_counts.py",
+      "exit_code": 0,
+      "seconds": 3.92
+    },
+    "b3": {
+      "script": "diagnostics/b3/replay.py",
+      "exit_code": 0,
+      "seconds": 0.18
+    }
+  },
+  "scope": "CPU replay of existing aggregate counts and archived outcomes. No new training or NICO++ experiment."
+}

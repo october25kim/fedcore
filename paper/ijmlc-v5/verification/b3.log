@@ -1,0 +1,9 @@
+{
+  "status": "PASS",
+  "cells": 450,
+  "non_reject_all": 443,
+  "union_minimum": 0.953,
+  "certification_only_minimum": 0.958,
+  "cells_with_different_targets": 442,
+  "new_simulation": false
+}

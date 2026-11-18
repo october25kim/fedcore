@@ -1,0 +1,30 @@
+{
+  "table3": {
+    "all_outcomes": 94500,
+    "reference_outcomes": 3150,
+    "summary_rows": 28
+  },
+  "pacs": {
+    "outcomes": 162000,
+    "primary_outcomes": 54000,
+    "models": 30,
+    "contrasts": 16,
+    "bootstrap_resamples": 20000,
+    "max_abs_error": 9.497611030973019e-17,
+    "decision": "HOLD",
+    "level": "Saved outcomes to contrasts; no retraining or logit export replay"
+  },
+  "e2": {
+    "states": 256,
+    "flags": 21504,
+    "max_eca_error": 1.1102230246251565e-16,
+    "reversal_state_pairs": {
+      "0.0": 25,
+      "0.5": 0,
+      "0.75": 2,
+      "1.0": 0
+    },
+    "level": "Designed-count formula replay; not deployment-frequency evidence"
+  },
+  "status": "PASS"
+}
